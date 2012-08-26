@@ -1,6 +1,27 @@
-# Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
-bin
-obj
-
-# mstest test results
-TestResults
+*.suo
+*.user
+*.FileListAbsolute.txt
+bin/
+obj/
+*.ncb
+*.nlb
+*.aps
+*.clw
+*.pdb
+*.obj
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.scc
+*.sig
+_ReSharper*/
+*.orig
