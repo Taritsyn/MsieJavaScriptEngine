@@ -156,8 +156,8 @@
   <data name="Runtime_ItemNotFound" xml:space="preserve">
     <value>Элемент с именем "{0}" не найден!</value>
   </data>
-  <data name="Runtime_JsEngineInitializationFailed" xml:space="preserve">
-    <value>При инициализации JavaScript-движка произошла ошибка!</value>
+  <data name="Runtime_JsEngineNotLoaded" xml:space="preserve">
+    <value>Не удалось загрузить ни один из JavaScript-движков! Возможно, на вашем компьютере не установлен браузер Internet Explorer.</value>
   </data>
   <data name="Runtime_PropertyNameIsForbidden" xml:space="preserve">
     <value>Имя свойства "{0}" запрещено, т.к. одна из его частей совпадает с зарезервированным словом JavaScript!</value>

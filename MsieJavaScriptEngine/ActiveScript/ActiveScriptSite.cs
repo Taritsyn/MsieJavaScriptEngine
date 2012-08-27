@@ -103,7 +103,7 @@
 
 			if (_jsEngine == null)
 			{
-				throw new NullReferenceException(Strings.Runtime_JsEngineInitializationFailed);
+				throw new JsEngineLoadException(Strings.Runtime_JsEngineNotLoaded);
 			}
 		}
 

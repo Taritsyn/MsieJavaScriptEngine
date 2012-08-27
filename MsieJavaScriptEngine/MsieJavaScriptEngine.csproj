@@ -57,6 +57,7 @@
     <Compile Include="ActiveScript\ScriptTextFlags.cs" />
     <Compile Include="ActiveScript\ScriptThreadState.cs" />
     <Compile Include="ActiveScript\ScriptTypeLibFlags.cs" />
+    <Compile Include="JsEngineLoadException.cs" />
     <Compile Include="JsEngines\ChakraJsEngine.cs" />
     <Compile Include="JsEngines\JsEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +72,7 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="MsieJsEngine.cs" />
+    <Compile Include="UndefinedValueException.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

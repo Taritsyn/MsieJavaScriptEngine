@@ -27,11 +27,6 @@
 		const string MSIE_JAVASCRIPT_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.msieJavaScriptEngine.min.js";
 
 		/// <summary>
-		/// The error code is encountered in accessing to the undefined value
-		/// </summary>
-		const int VALUE_UNDEFINED_ERROR_CODE = -2146823279;
-
-		/// <summary>
 		/// Regular expression for working with JS-names
 		/// </summary>
 		private static readonly Regex _jsNameRegex = new Regex(@"^[A-Za-z_\$]+[0-9A-Za-z_\$]*$",
@@ -247,26 +242,11 @@
 
 		private object EvaluateInner(string expression)
 		{
-			object result;
-			try
-			{
-				result = _activeScriptSite.ExecuteScriptText(expression, true);
-			}
-			catch (ActiveScriptException e)
-			{
-				if (e.ErrorCode == VALUE_UNDEFINED_ERROR_CODE)
-				{
-					result = null;
-				}
-				else
-				{
-					throw;
-				}
-			}
+			object result = _activeScriptSite.ExecuteScriptText(expression, true);
 
 			if (result == null)
 			{
-				throw new NullReferenceException(
+				throw new UndefinedValueException(
 					string.Format(Strings.Runtime_ExpressionResultIsUndefined, expression));
 			}
 
@@ -515,7 +495,7 @@ else {{
 
 			if (!HasVariableInner(variableName))
 			{
-				throw new NullReferenceException(
+				throw new UndefinedValueException(
 					string.Format(Strings.Runtime_VariableNotExist, variableName));
 			}
 
@@ -550,7 +530,7 @@ else {{
 
 			if (!HasVariableInner(variableName))
 			{
-				throw new NullReferenceException(
+				throw new UndefinedValueException(
 					string.Format(Strings.Runtime_VariableNotExist, variableName));
 			}
 
@@ -583,7 +563,7 @@ else {{
 
 			if (!HasVariableInner(variableName))
 			{
-				throw new NullReferenceException(
+				throw new UndefinedValueException(
 					string.Format(Strings.Runtime_VariableNotExist, variableName));
 			}
 

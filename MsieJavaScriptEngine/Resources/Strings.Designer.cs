@@ -178,11 +178,11 @@ namespace MsieJavaScriptEngine.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to During initialization of JavaScript engine error has occurred..
+        ///   Looks up a localized string similar to Could not load none of the JavaScript engines. Perhaps you have not installed the Internet Explorer browser..
         /// </summary>
-        internal static string Runtime_JsEngineInitializationFailed {
+        internal static string Runtime_JsEngineNotLoaded {
             get {
-                return ResourceManager.GetString("Runtime_JsEngineInitializationFailed", resourceCulture);
+                return ResourceManager.GetString("Runtime_JsEngineNotLoaded", resourceCulture);
             }
         }
         

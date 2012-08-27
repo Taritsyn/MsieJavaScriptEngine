@@ -156,8 +156,8 @@
   <data name="Runtime_ItemNotFound" xml:space="preserve">
     <value>Item with name '{0}' not found.</value>
   </data>
-  <data name="Runtime_JsEngineInitializationFailed" xml:space="preserve">
-    <value>During initialization of JavaScript engine error has occurred.</value>
+  <data name="Runtime_JsEngineNotLoaded" xml:space="preserve">
+    <value>Could not load none of the JavaScript engines. Perhaps you have not installed the Internet Explorer browser.</value>
   </data>
   <data name="Runtime_PropertyNameIsForbidden" xml:space="preserve">
     <value>Property name '{0}' is forbidden, as one of its parts matches with the reserved word of JavaScript language.</value>
