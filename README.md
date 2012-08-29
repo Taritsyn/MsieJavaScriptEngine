@@ -14,5 +14,5 @@ This library can be installed through NuGet - [http://nuget.org/packages/MsieJav
 # Credits
 
 * [SassAndCoffee.JavaScript](http://github.com/xpaulbettsx/SassAndCoffee) - [License: Microsoft Public License (Ms-PL)](http://github.com/xpaulbettsx/SassAndCoffee/blob/master/COPYING) Part of the code of this library served as the basis for MSIE JS Engine.
-* [Javascript Tutorial from TutorialsPoint.com](http://www.tutorialspoint.com/javascript/) The materials of this tutorial were used to create the JavaScript Array Polyfills library (polyfills.js).
+* [ECMAScript 5 Polyfill](http://nuget.org/packages/ES5) - Adds support for many of the new functions in ECMAScript 5 to downlevel browsers using the samples provided by Douglas Crockford in his ["ECMAScript 5: The New Parts"](http://channel9.msdn.com/Events/MIX/MIX11/EXT13) talk.
 * [Microsoft Ajax Minifier](http://ajaxmin.codeplex.com/) - [License: Apache License 2.0 (Apache)](http://ajaxmin.codeplex.com/license) JS-files, that used MSIE JS Engine, minificated by using ajaxmin.exe.

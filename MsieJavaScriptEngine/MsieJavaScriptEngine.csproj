@@ -76,6 +76,8 @@
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\ES5.js" />
+    <EmbeddedResource Include="Resources\ES5.min.js" />
     <Content Include="Resources\msieJavaScriptEngine.js" />
     <EmbeddedResource Include="Resources\msieJavaScriptEngine.min.js" />
   </ItemGroup>
@@ -91,15 +93,11 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\polyfills.js" />
-    <EmbeddedResource Include="Resources\polyfills.min.js" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd "$(ProjectDir)..\Binaries\MicrosoftAjaxMinifier\"
 
-ajaxmin.exe "$(ProjectDir)Resources\polyfills.js" –out "$(ProjectDir)Resources\polyfills.min.js" –clobber
+ajaxmin.exe "$(ProjectDir)Resources\ES5.js" –out "$(ProjectDir)Resources\ES5.min.js" –clobber
 ajaxmin.exe "$(ProjectDir)Resources\msieJavaScriptEngine.js" –out "$(ProjectDir)Resources\msieJavaScriptEngine.min.js" –clobber</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

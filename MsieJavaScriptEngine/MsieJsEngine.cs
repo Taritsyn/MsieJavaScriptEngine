@@ -17,9 +17,9 @@
 	public sealed class MsieJsEngine : IDisposable
 	{
 		/// <summary>
-		/// Name of resource, which contains a JavaScript-polyfills
+		/// Name of resource, which contains a ECMAScript 5 Polyfill
 		/// </summary>
-		const string JS_POLYFILLS_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.polyfills.min.js";
+		const string ES5_POLYFILL_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.ES5.min.js";
 
 		/// <summary>
 		/// Name of resource, which contains a MsieJavaScript library
@@ -97,14 +97,24 @@
 		/// <summary>
 		/// Constructs instance of MSIE JS-engine
 		/// </summary>
-		public MsieJsEngine()
+		public MsieJsEngine() : this(false)
+		{ }
+
+		/// <summary>
+		/// Constructs instance of MSIE JS-engine
+		/// </summary>
+		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
+		public MsieJsEngine(bool useEcmaScript5Polyfill)
 		{
 			_activeScriptSite = new ActiveScriptSite();
 			_jsSerializer = new JavaScriptSerializer();
 
 			Type type = GetType();
 
-			ExecuteResource(JS_POLYFILLS_RESOURCE_NAME, type);
+			if (useEcmaScript5Polyfill)
+			{
+				ExecuteResource(ES5_POLYFILL_RESOURCE_NAME, type);
+			}
 			ExecuteResource(MSIE_JAVASCRIPT_LIBRARY_RESOURCE_NAME, type);
 		}
 
