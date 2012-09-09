@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveScript\ActiveScriptErrorFormatter.cs" />
     <Compile Include="ActiveScript\ActiveScriptException.cs" />
     <Compile Include="ActiveScript\ActiveScriptParserWrapper.cs" />
     <Compile Include="ActiveScript\IActiveScript.cs" />
@@ -72,6 +73,7 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="MsieJsEngine.cs" />
+    <Compile Include="StringBuilderExtensions.cs" />
     <Compile Include="UndefinedValueException.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
