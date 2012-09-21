@@ -115,20 +115,29 @@ namespace MsieJavaScriptEngine.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File.
-        /// </summary>
-        internal static string ErrorDetails_File {
-            get {
-                return ResourceManager.GetString("ErrorDetails_File", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Help keyword.
         /// </summary>
         internal static string ErrorDetails_HelpKeyword {
             get {
                 return ResourceManager.GetString("ErrorDetails_HelpKeyword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line number.
+        /// </summary>
+        internal static string ErrorDetails_LineNumber {
+            get {
+                return ResourceManager.GetString("ErrorDetails_LineNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line source.
+        /// </summary>
+        internal static string ErrorDetails_LineSource {
+            get {
+                return ResourceManager.GetString("ErrorDetails_LineSource", resourceCulture);
             }
         }
         

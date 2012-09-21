@@ -68,7 +68,7 @@
 		public ActiveScriptSite()
             : this(DateTime.UtcNow.ToString("o")) 
 		{ }
-
+		
 		/// <summary>
 		/// Constructs instance of ActiveScriptSiteWrapper
 		/// </summary>
@@ -106,7 +106,7 @@
 				throw new JsEngineLoadException(Strings.Runtime_JsEngineNotLoaded);
 			}
 		}
-
+		
 		/// <summary>
 		/// Destructs instance of ActiveScriptSiteWrapper
 		/// </summary>
@@ -260,10 +260,7 @@
 				{
 					throw last;
 				}
-				else
-				{
-					throw;
-				}
+				throw;
 			}
 
 			// Check for parse error

@@ -13,9 +13,8 @@
 		/// Generates a detailed error message
 		/// </summary>
 		/// <param name="activeScriptException">Active script exception</param>
-		/// <param name="filePath">File path</param>
 		/// <returns>Detailed error message</returns>
-		public static string Format(ActiveScriptException activeScriptException, string filePath)
+		public static string Format(ActiveScriptException activeScriptException)
 		{
 			var errorMessage = new StringBuilder();
 			errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_Message,
@@ -34,7 +33,13 @@
 				errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_HelpKeyword,
 					activeScriptException.HelpLink);
 			}
-			errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_File, filePath);
+			errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_LineNumber,
+				activeScriptException.LineNumber.ToString());
+			if (!string.IsNullOrWhiteSpace(activeScriptException.SourceError))
+			{
+				errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_LineSource,
+					activeScriptException.SourceError);
+			}
 
 			return errorMessage.ToString();
 		}

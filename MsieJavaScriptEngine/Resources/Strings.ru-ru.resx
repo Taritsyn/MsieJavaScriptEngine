@@ -135,11 +135,14 @@
   <data name="ErrorDetails_ErrorWCode" xml:space="preserve">
     <value>WCode</value>
   </data>
-  <data name="ErrorDetails_File" xml:space="preserve">
-    <value>Файл</value>
-  </data>
   <data name="ErrorDetails_HelpKeyword" xml:space="preserve">
     <value>Ключевые слова из справки</value>
+  </data>
+  <data name="ErrorDetails_LineNumber" xml:space="preserve">
+    <value>Номер строки</value>
+  </data>
+  <data name="ErrorDetails_LineSource" xml:space="preserve">
+    <value>Содержимое строки</value>
   </data>
   <data name="ErrorDetails_Message" xml:space="preserve">
     <value>Сообщение об ошибке</value>
