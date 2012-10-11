@@ -22,6 +22,11 @@
 		const string ES5_POLYFILL_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.ES5.min.js";
 
 		/// <summary>
+		/// Name of resource, which contains a JSON2 library
+		/// </summary>
+		const string JSON2_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.json2.min.js";
+
+		/// <summary>
 		/// Name of resource, which contains a MsieJavaScript library
 		/// </summary>
 		const string MSIE_JAVASCRIPT_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.msieJavaScriptEngine.min.js";
@@ -104,7 +109,16 @@
 		/// Constructs instance of MSIE JS-engine
 		/// </summary>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		public MsieJsEngine(bool useEcmaScript5Polyfill)
+		public MsieJsEngine(bool useEcmaScript5Polyfill) 
+			: this(useEcmaScript5Polyfill, false)
+		{ }
+
+		/// <summary>
+		/// Constructs instance of MSIE JS-engine
+		/// </summary>
+		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
+		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
+		public MsieJsEngine(bool useEcmaScript5Polyfill, bool useJson2Library)
 		{
 			_activeScriptSite = new ActiveScriptSite();
 			_jsSerializer = new JavaScriptSerializer();
@@ -115,6 +129,12 @@
 			{
 				ExecuteResource(ES5_POLYFILL_RESOURCE_NAME, type);
 			}
+
+			if (useJson2Library)
+			{
+				ExecuteResource(JSON2_LIBRARY_RESOURCE_NAME, type);
+			}
+
 			ExecuteResource(MSIE_JAVASCRIPT_LIBRARY_RESOURCE_NAME, type);
 		}
 

@@ -11,7 +11,7 @@
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
-			_msieJsEngine = new MsieJsEngine(true);
+			_msieJsEngine = new MsieJsEngine(true, true);
 		}
 
 		[Test]

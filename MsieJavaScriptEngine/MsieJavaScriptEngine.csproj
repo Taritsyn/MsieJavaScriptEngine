@@ -80,6 +80,8 @@
   <ItemGroup>
     <Content Include="Resources\ES5.js" />
     <EmbeddedResource Include="Resources\ES5.min.js" />
+    <Content Include="Resources\json2.js" />
+    <EmbeddedResource Include="Resources\json2.min.js" />
     <Content Include="Resources\msieJavaScriptEngine.js" />
     <EmbeddedResource Include="Resources\msieJavaScriptEngine.min.js" />
   </ItemGroup>
@@ -100,6 +102,7 @@
     <PreBuildEvent>cd "$(ProjectDir)..\Binaries\MicrosoftAjaxMinifier\"
 
 ajaxmin.exe "$(ProjectDir)Resources\ES5.js" –out "$(ProjectDir)Resources\ES5.min.js" –clobber
+ajaxmin.exe "$(ProjectDir)Resources\json2.js" –out "$(ProjectDir)Resources\json2.min.js" –clobber
 ajaxmin.exe "$(ProjectDir)Resources\msieJavaScriptEngine.js" –out "$(ProjectDir)Resources\msieJavaScriptEngine.min.js" –clobber</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
