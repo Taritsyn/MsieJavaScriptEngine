@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.1.0
+           README file for MSIE JavaScript Engine for .NET 1.1.1
 
    ----------------------------------------------------------------------
 
@@ -19,9 +19,7 @@
    =============
    RELEASE NOTES
    =============
-   1. Added ability of using the Douglas Crockford's JSON2 library 
-      (http://github.com/douglascrockford/JSON-js);
-   2. By default using the JSON2 library is disabled.
+   Assembly MsieJavaScriptEngine.dll now signed.
 
    ============
    PROJECT SITE

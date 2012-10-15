@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MsieJavaScriptEngine</id>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 	<title>MSIE JavaScript Engine for .NET</title>
     <authors>Andrey Taritsyn</authors>
     <owners>Andrey Taritsyn</owners>
@@ -12,8 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This project is a .NET-wrapper for working with the Internet Explorer's JavaScript engines (Chakra and Classic JavaScript Engine). Project was based on part of the code of the library SassAndCoffee.JavaScript (http://github.com/xpaulbettsx/SassAndCoffee).</description>
     <summary>This project is a .NET-wrapper for working with the Internet Explorer's JavaScript engines (Chakra and Classic JavaScript Engine).</summary>
-	<releaseNotes>1. Added ability of using the Douglas Crockford's JSON2 library (http://github.com/douglascrockford/JSON-js);
-2. By default using the JSON2 library is disabled.</releaseNotes>
+	<releaseNotes>Assembly MsieJavaScriptEngine.dll now signed.</releaseNotes>
 	<copyright>Copyright 2012 Andrey Taritsyn - http://www.taritsyn.ru</copyright>
     <language>en-US</language>
     <tags>JavaScript ECMAScript MSIE IE Chakra</tags>
