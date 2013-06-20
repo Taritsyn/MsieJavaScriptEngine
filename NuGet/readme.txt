@@ -1,11 +1,11 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.1.1
+           README file for MSIE JavaScript Engine for .NET 1.1.2
 
    ----------------------------------------------------------------------
 
-          Copyright 2012 Andrey Taritsyn - http://www.taritsyn.ru
+          Copyright 2013 Andrey Taritsyn - http://www.taritsyn.ru
 		  
 		  
    ===========
@@ -19,7 +19,7 @@
    =============
    RELEASE NOTES
    =============
-   Assembly MsieJavaScriptEngine.dll now signed.
+   JSON2 library was updated to version of May 26, 2013.
 
    ============
    PROJECT SITE
