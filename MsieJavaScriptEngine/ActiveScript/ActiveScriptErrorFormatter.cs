@@ -3,6 +3,7 @@
 	using System.Text;
 
 	using Resources;
+	using Utilities;
 	
 	/// <summary>
 	/// Responsible for formatting Active Script Error Message

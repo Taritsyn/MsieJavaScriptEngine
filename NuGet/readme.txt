@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.1.2
+           README file for MSIE JavaScript Engine for .NET 1.1.3
 
    ----------------------------------------------------------------------
 
@@ -19,7 +19,7 @@
    =============
    RELEASE NOTES
    =============
-   JSON2 library was updated to version of May 26, 2013.
+   Access modifier of the JsEngineLoadException class has changed to public.
 
    ============
    PROJECT SITE

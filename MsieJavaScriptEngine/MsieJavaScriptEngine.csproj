@@ -79,9 +79,9 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="MsieJsEngine.cs" />
-    <Compile Include="StringBuilderExtensions.cs" />
+    <Compile Include="Utilities\StringBuilderExtensions.cs" />
     <Compile Include="UndefinedValueException.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\ES5.js" />
@@ -110,8 +110,13 @@
   <PropertyGroup>
     <PreBuildEvent>cd "$(ProjectDir)..\Binaries\WebGrease\"
 
+del "$(ProjectDir)Resources\ES5.min.js"
 wg.exe -m -in:"$(ProjectDir)Resources\ES5.js" -out:"$(ProjectDir)Resources\ES5.min.js"
+
+del "$(ProjectDir)Resources\json2.min.js"
 wg.exe -m -in:"$(ProjectDir)Resources\json2.js" -out:"$(ProjectDir)Resources\json2.min.js"
+
+del "$(ProjectDir)Resources\msieJavaScriptEngine.min.js"
 wg.exe -m -in:"$(ProjectDir)Resources\msieJavaScriptEngine.js" -out:"$(ProjectDir)Resources\msieJavaScriptEngine.min.js"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

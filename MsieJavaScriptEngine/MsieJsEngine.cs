@@ -9,6 +9,7 @@
 
 	using ActiveScript;
 	using Resources;
+	using Utilities;
 
 	/// <summary>
 	/// .NET-wrapper for working with the Internet Explorer's JS engines 
@@ -35,7 +36,7 @@
 		/// Regular expression for working with JS-names
 		/// </summary>
 		private static readonly Regex _jsNameRegex = new Regex(@"^[A-Za-z_\$]+[0-9A-Za-z_\$]*$",
-			RegexOptions.IgnoreCase | RegexOptions.Compiled);
+			RegexOptions.Compiled);
 
 		/// <summary>
 		/// List of supported types
@@ -57,7 +58,7 @@
 		/// </summary>
 		private static readonly Regex _jsPropertyNameRegex = 
 			new Regex(@"^[A-Za-z_\$]+[0-9A-Za-z_\$]*(\.[A-Za-z_\$]+[0-9A-Za-z_\$]*)*$",
-				RegexOptions.IgnoreCase | RegexOptions.Compiled);
+				RegexOptions.Compiled);
 
 		/// <summary>
 		/// List of reserved words of JavaScript language
@@ -87,6 +88,11 @@
 		/// Instance of site for the Windows Script engine
 		/// </summary>
 		private readonly ActiveScriptSite _activeScriptSite;
+
+		/// <summary>
+		/// Synchronizer of code execution
+		/// </summary>
+		private readonly object _executionSynchronizer = new object();
 
 		/// <summary>
 		/// JS-serializer
@@ -248,7 +254,7 @@
 					string.Format(Strings.Common_ArgumentIsEmpty, "expression"), "expression");
 			}
 
-			return EvaluateInner(expression);
+			return InnerEvaluate(expression);
 		}
 
 		/// <summary>
@@ -265,14 +271,19 @@
 					string.Format(Strings.Common_ArgumentIsEmpty, "expression"), "expression");
 			}
 
-			object result = EvaluateInner(expression);
+			object result = InnerEvaluate(expression);
 
 			return ConvertToType<T>(result);
 		}
 
-		private object EvaluateInner(string expression)
+		private object InnerEvaluate(string expression)
 		{
-			object result = _activeScriptSite.ExecuteScriptText(expression, true);
+			object result;
+
+			lock (_executionSynchronizer)
+			{
+				result = _activeScriptSite.ExecuteScriptText(expression, true);
+			}
 
 			if (result == null)
 			{
@@ -295,7 +306,10 @@
 					string.Format(Strings.Common_ArgumentIsEmpty, "code"), "code");
 			}
 
-			_activeScriptSite.ExecuteScriptText(code, false);
+			lock (_executionSynchronizer)
+			{
+				_activeScriptSite.ExecuteScriptText(code, false);
+			}
 		}
 
 		/// <summary>
@@ -376,10 +390,10 @@
 
 			ValidateVariableName(variableName);
 
-			return HasVariableInner(variableName);
+			return InnerHasVariable(variableName);
 		}
 
-		private bool HasVariableInner(string variableName)
+		private bool InnerHasVariable(string variableName)
 		{
 			string expression = string.Format("(typeof {0} !== 'undefined');", variableName);
 			var result = Evaluate<bool>(expression);
@@ -402,7 +416,7 @@
 
 			ValidateVariableName(variableName);
 
-			return GetVariableValueInner(variableName);
+			return InnerGetVariableValue(variableName);
 		}
 
 		/// <summary>
@@ -421,12 +435,12 @@
 
 			ValidateVariableName(variableName);
 
-			object result = GetVariableValueInner(variableName);
+			object result = InnerGetVariableValue(variableName);
 
 			return ConvertToType<T>(result);
 		}
 
-		private object GetVariableValueInner(string variableName)
+		private object InnerGetVariableValue(string variableName)
 		{
 			string expression = string.Format("{0};", variableName);
 			object result = Evaluate(expression);
@@ -523,7 +537,7 @@ else {{
 			ValidateVariableName(variableName);
 			ValidatePropertyName(propertyName);
 
-			if (!HasVariableInner(variableName))
+			if (!InnerHasVariable(variableName))
 			{
 				throw new UndefinedValueException(
 					string.Format(Strings.Runtime_VariableNotExist, variableName));
@@ -558,13 +572,13 @@ else {{
 			ValidateVariableName(variableName);
 			ValidatePropertyName(propertyName);
 
-			if (!HasVariableInner(variableName))
+			if (!InnerHasVariable(variableName))
 			{
 				throw new UndefinedValueException(
 					string.Format(Strings.Runtime_VariableNotExist, variableName));
 			}
 
-			return GetPropertyValueInner(variableName, propertyName);
+			return InnerGetPropertyValue(variableName, propertyName);
 		}
 
 		/// <summary>
@@ -591,18 +605,18 @@ else {{
 			ValidateVariableName(variableName);
 			ValidatePropertyName(propertyName);
 
-			if (!HasVariableInner(variableName))
+			if (!InnerHasVariable(variableName))
 			{
 				throw new UndefinedValueException(
 					string.Format(Strings.Runtime_VariableNotExist, variableName));
 			}
 
-			object result = GetPropertyValueInner(variableName, propertyName);
+			object result = InnerGetPropertyValue(variableName, propertyName);
 
 			return ConvertToType<T>(result);
 		}
 
-		private object GetPropertyValueInner(string variableName, string propertyName)
+		private object InnerGetPropertyValue(string variableName, string propertyName)
 		{
 			string expression = string.Format("{0}.{1};", variableName, propertyName);
 			object result = Evaluate(expression);
@@ -712,7 +726,7 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 
 			ValidateFunctionName(functionName);
 
-			return CallFunctionInner(functionName, args);
+			return InnerCallFunction(functionName, args);
 		}
 
 		/// <summary>
@@ -737,14 +751,21 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 
 			ValidateFunctionName(functionName);
 
-			object result = CallFunctionInner(functionName, args);
+			object result = InnerCallFunction(functionName, args);
 
 			return ConvertToType<T>(result);
 		}
 
-		private object CallFunctionInner(string functionName, params object[] args)
+		private object InnerCallFunction(string functionName, params object[] args)
 		{
-			return _activeScriptSite.CallFunction(functionName, args);
+			object result;
+
+			lock (_executionSynchronizer)
+			{
+				result = _activeScriptSite.CallFunction(functionName, args);
+			}
+
+			return result;
 		}
 
 		/// <summary>

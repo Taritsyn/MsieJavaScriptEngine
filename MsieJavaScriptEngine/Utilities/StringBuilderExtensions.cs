@@ -1,4 +1,4 @@
-﻿namespace MsieJavaScriptEngine
+﻿namespace MsieJavaScriptEngine.Utilities
 {
 	using System.Text;
 	using System.Text.RegularExpressions;

@@ -5,7 +5,7 @@
 	/// <summary>
 	/// The exception that is thrown when a loading of JavaScript engine is failed
 	/// </summary>
-	internal sealed class JsEngineLoadException : Exception
+	public sealed class JsEngineLoadException : Exception
 	{
 		/// <summary>
 		/// Initializes a new instance of the MsieJavaScriptEngine.JsEngineLoadException class 

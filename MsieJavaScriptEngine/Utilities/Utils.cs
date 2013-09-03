@@ -1,4 +1,4 @@
-﻿namespace MsieJavaScriptEngine
+﻿namespace MsieJavaScriptEngine.Utilities
 {
 	using System;
 	using System.IO;
