@@ -43,6 +43,7 @@
 		/// </summary>
 		private static readonly Type[] _supportedTypes = new[]
 		{
+			typeof(Undefined),
 			typeof(SByte), typeof(Byte), typeof(Int16), typeof(UInt16), 
 			typeof(Int32), typeof(UInt32), typeof(Int64), typeof(UInt64), 
 			typeof(Char), typeof(Single), typeof(Double), typeof(Boolean), 
@@ -153,8 +154,23 @@
 		}
 
 
+        /// <summary>
+        /// Converts a value to JSON string
+        /// </summary>
+        /// <param name="value">The value to serialize</param>
+        /// <returns>The serialized JSON string</returns>
+        private string Serialize(object value)
+		{
+            if (value is Undefined)
+			{
+				return "undefined";
+			}
+
+            return _jsSerializer.Serialize(value);
+		}
+
 		/// <summary>
-		/// Converts the given value to the specified type
+		/// Converts a given value to the specified type
 		/// </summary>
 		/// <typeparam name="T">The type to which value will be converted</typeparam>
 		/// <param name="value">The value to convert</param>
@@ -185,6 +201,46 @@
 			}
 
 			return result;
+		}
+
+        /// <summary>
+        /// Executes a mapping from the host type to a script type
+        /// </summary>
+        /// <param name="value">The source value</param>
+        /// <returns>The mapped value</returns>
+        internal object MapToScriptType(object value)
+		{
+			if (value == null)
+			{
+				return DBNull.Value;
+			}
+
+			if (value is Undefined)
+			{
+				return null;
+			}
+
+			return value;
+		}
+
+        /// <summary>
+        /// Executes a mapping from the script type to a host type
+        /// </summary>
+        /// <param name="value">The source value</param>
+        /// <returns>The mapped value</returns>
+		internal object MapToHostType(object value)
+		{
+			if (value == null)
+			{
+				return Undefined.Value;
+			}
+
+			if (value is DBNull)
+			{
+				return null;
+			}
+
+			return value;
 		}
 
 		/// <summary>
@@ -282,13 +338,7 @@
 
 			lock (_executionSynchronizer)
 			{
-				result = _activeScriptSite.ExecuteScriptText(expression, true);
-			}
-
-			if (result == null)
-			{
-				throw new UndefinedValueException(
-					string.Format(Strings.Runtime_ExpressionResultIsUndefined, expression));
+				result = MapToHostType(_activeScriptSite.ExecuteScriptText(expression, true));
 			}
 
 			return result;
@@ -463,7 +513,7 @@
 
 			ValidateVariableName(variableName);
 
-			string serializeValue = _jsSerializer.Serialize(value);
+			string serializeValue = Serialize(value);
 			string code = string.Format(@"if (typeof {0} !== 'undefined') {{
 	{0} = {1};
 }}
@@ -647,7 +697,7 @@ else {{
 			ValidateVariableName(variableName);
 			ValidatePropertyName(propertyName);
 
-			string serializeValue = _jsSerializer.Serialize(value);
+			string serializeValue = Serialize(value);
 			string code = string.Format(@"if (typeof {0} === 'undefined') {{
 	var {0} = {{}};	
 }}
@@ -719,14 +769,11 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 					string.Format(Strings.Common_ArgumentIsEmpty, "functionName"), "functionName");
 			}
 
-			if (args == null)
-			{
-				throw new ArgumentNullException("args", Strings.Common_ValueIsNull);
-			}
-
 			ValidateFunctionName(functionName);
 
-			return InnerCallFunction(functionName, args);
+			object result = InnerCallFunction(functionName, args);
+
+			return result;
 		}
 
 		/// <summary>
@@ -744,11 +791,6 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 					string.Format(Strings.Common_ArgumentIsEmpty, "functionName"), "functionName");
 			}
 
-			if (args == null)
-			{
-				throw new ArgumentNullException("args", Strings.Common_ValueIsNull);
-			}
-
 			ValidateFunctionName(functionName);
 
 			object result = InnerCallFunction(functionName, args);
@@ -760,9 +802,25 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 		{
 			object result;
 
+			if (args == null)
+			{
+				args = new object[] { null };
+			}
+
+			int argumentCount = args.Length;
+			var processedArgs = new object[argumentCount];
+
+			if (argumentCount > 0)
+			{
+				for (int argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++)
+				{
+					processedArgs[argumentIndex] = MapToScriptType(args[argumentIndex]);
+				}
+			}
+
 			lock (_executionSynchronizer)
 			{
-				result = _activeScriptSite.CallFunction(functionName, args);
+				result = MapToHostType(_activeScriptSite.CallFunction(functionName, processedArgs));
 			}
 
 			return result;

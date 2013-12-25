@@ -1,9 +1,10 @@
 var msieJavaScript = (function () {
 	var setPropertyValue = function (obj, propertyName, value) {
 		if (propertyName.indexOf(".") !== -1) {
-			var parts = propertyName.split(".");
-			var partCount = parts.length;
-			var parent = obj;
+			var parts = propertyName.split("."),
+				partCount = parts.length,
+				parent = obj
+				;
 
 			for (var partIndex = 0; partIndex < partCount; partIndex += 1) {
 				var part = parts[partIndex];

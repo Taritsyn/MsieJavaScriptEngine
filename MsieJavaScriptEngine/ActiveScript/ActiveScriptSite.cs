@@ -2,9 +2,9 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Globalization;
 	using System.Reflection;
 	using System.Runtime.InteropServices;
-	using System.Globalization;
 	using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 	using JsEngines;

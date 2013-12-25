@@ -124,7 +124,7 @@
     <value>Параметр с именем "{0}" не должен содержать значение равное null!</value>
   </data>
   <data name="Common_FileNotExist" xml:space="preserve">
-    <value>Файл {0} не существует!</value>
+    <value>Файл "{0}" не существует!</value>
   </data>
   <data name="Common_ValueIsNull" xml:space="preserve">
     <value>Значение не должно быть равно null!</value>
@@ -153,9 +153,6 @@
   <data name="Resources_ResourceIsNull" xml:space="preserve">
     <value>Ресурс с именем "{0}" содержит значение равное null!</value>
   </data>
-  <data name="Runtime_ExpressionResultIsUndefined" xml:space="preserve">
-    <value>Результат выражения "{0}" имеет значение равное undefined!</value>
-  </data>
   <data name="Runtime_FunctionNameIsForbidden" xml:space="preserve">
     <value>Имя функции "{0}" запрещено, т.к. входит в список зарезервированных слов JavaScript!</value>
   </data>
@@ -163,7 +160,7 @@
     <value>Имя функции "{0}" имеет некорректный формат!</value>
   </data>
   <data name="Runtime_InvalidParserImplementationError" xml:space="preserve">
-    <value>Парсер, переданный вами, не реализует интерфейсы IActiveScriptParse32 и IActiveScriptParse64!</value>
+    <value>Парсер, переданный вами, не реализует интерфейсы `IActiveScriptParse32` и `IActiveScriptParse64`!</value>
   </data>
   <data name="Runtime_InvalidPropertyNameFormat" xml:space="preserve">
     <value>Имя свойства "{0}" имеет некорректный формат!</value>
@@ -181,7 +178,7 @@
     <value>Имя свойства "{0}" запрещено, т.к. одна из его частей совпадает с зарезервированным словом JavaScript!</value>
   </data>
   <data name="Runtime_TypeUnsupported" xml:space="preserve">
-    <value>Невозможно привести значение к типу "{0}"! Данный тип не поддерживается.</value>
+    <value>Невозможно привести значение к типу `{0}`! Данный тип не поддерживается.</value>
   </data>
   <data name="Runtime_VariableNameIsForbidden" xml:space="preserve">
     <value>Имя переменной "{0}" запрещено, т.к. входит в список зарезервированных слов JavaScript!</value>

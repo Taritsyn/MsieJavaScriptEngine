@@ -124,7 +124,7 @@
     <value>The parameter '{0}' must be a non-nullable.</value>
   </data>
   <data name="Common_FileNotExist" xml:space="preserve">
-    <value>File {0} not exist.</value>
+    <value>File '{0}' not exist.</value>
   </data>
   <data name="Common_ValueIsNull" xml:space="preserve">
     <value>Value cannot be null.</value>
@@ -153,9 +153,6 @@
   <data name="Resources_ResourceIsNull" xml:space="preserve">
     <value>Resource with name '{0}' is null.</value>
   </data>
-  <data name="Runtime_ExpressionResultIsUndefined" xml:space="preserve">
-    <value>The result of the expression '{0}' is undefined.</value>
-  </data>
   <data name="Runtime_FunctionNameIsForbidden" xml:space="preserve">
     <value>The function name '{0}' is forbidden, as is contained in the list of reserved words of JavaScript language.</value>
   </data>
@@ -163,7 +160,7 @@
     <value>The function name '{0}' has incorrect format.</value>
   </data>
   <data name="Runtime_InvalidParserImplementationError" xml:space="preserve">
-    <value>The parser you passed implements neither IActiveScriptParse32 nor IActiveScriptParse64.</value>
+    <value>The parser you passed implements neither `IActiveScriptParse32` nor `IActiveScriptParse64`.</value>
   </data>
   <data name="Runtime_InvalidPropertyNameFormat" xml:space="preserve">
     <value>Property name '{0}' has incorrect format.</value>
@@ -181,7 +178,7 @@
     <value>Property name '{0}' is forbidden, as one of its parts matches with the reserved word of JavaScript language.</value>
   </data>
   <data name="Runtime_TypeUnsupported" xml:space="preserve">
-    <value>Cannot convert to '{0}'. The type is unsupported.</value>
+    <value>Cannot convert to `{0}`. The type is unsupported.</value>
   </data>
   <data name="Runtime_VariableNameIsForbidden" xml:space="preserve">
     <value>The variable name '{0}' is forbidden, as is contained in the list of reserved words of JavaScript language.</value>

@@ -34,17 +34,12 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>MsieJavaScriptEngine.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\MsieJavaScriptEngine.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveScript\ActiveScriptErrorFormatter.cs" />
@@ -79,6 +74,7 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="MsieJsEngine.cs" />
+    <Compile Include="Undefined.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />
     <Compile Include="UndefinedValueException.cs" />
     <Compile Include="Utilities\Utils.cs" />
@@ -104,7 +100,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="MsieJavaScriptEngine.snk" />
+    <None Include="..\MsieJavaScriptEngine.snk">
+      <Link>MsieJavaScriptEngine.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
