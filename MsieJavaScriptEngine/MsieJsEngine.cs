@@ -1,13 +1,12 @@
 ﻿namespace MsieJavaScriptEngine
 {
 	using System;
-	using System.Linq;
 	using System.Reflection;
 	using System.Text;
-	using System.Text.RegularExpressions;
 	using System.Web.Script.Serialization;
 
 	using ActiveScript;
+	using Helpers;
 	using Resources;
 	using Utilities;
 
@@ -31,59 +30,6 @@
 		/// Name of resource, which contains a MsieJavaScript library
 		/// </summary>
 		const string MSIE_JAVASCRIPT_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.msieJavaScriptEngine.min.js";
-
-		/// <summary>
-		/// Regular expression for working with JS-names
-		/// </summary>
-		private static readonly Regex _jsNameRegex = new Regex(@"^[A-Za-z_\$]+[0-9A-Za-z_\$]*$",
-			RegexOptions.Compiled);
-
-		/// <summary>
-		/// List of supported types
-		/// </summary>
-		private static readonly Type[] _supportedTypes = new[]
-		{
-			typeof(Undefined),
-			typeof(SByte), typeof(Byte), typeof(Int16), typeof(UInt16), 
-			typeof(Int32), typeof(UInt32), typeof(Int64), typeof(UInt64), 
-			typeof(Char), typeof(Single), typeof(Double), typeof(Boolean), 
-			typeof(Decimal), typeof(String), 
-            typeof(Nullable<SByte>), typeof(Nullable<Byte>), typeof(Nullable<Int16>), typeof(Nullable<UInt16>), 
-			typeof(Nullable<Int32>), typeof(Nullable<UInt32>), typeof(Nullable<Int64>), typeof(Nullable<UInt64>), 
-			typeof(Nullable<Char>), typeof(Nullable<Single>), typeof(Nullable<Double>), typeof(Nullable<Boolean>), 
-			typeof(Nullable<Decimal>)              		
-		};
-
-		/// <summary>
-		/// Regular expression for working with property names
-		/// </summary>
-		private static readonly Regex _jsPropertyNameRegex = 
-			new Regex(@"^[A-Za-z_\$]+[0-9A-Za-z_\$]*(\.[A-Za-z_\$]+[0-9A-Za-z_\$]*)*$",
-				RegexOptions.Compiled);
-
-		/// <summary>
-		/// List of reserved words of JavaScript language
-		/// </summary>
-		private static readonly string[] _jsReservedWords = new[]
-		{
-		    "abstract",
-		    "boolean", "break", "byte",
-		    "case", "catch", "char", "class", "const", "continue",
-		    "debugger", "default", "delete", "do", "double",
-		    "else", "enum", "export", "extends",
-		    "false", "final", "finally", "float", "for", "function",
-		    "goto",
-		    "if", "implements", "import", "in", "instanceof", "int",
-		    "interface",
-		    "long",
-		    "native", "new", "null",
-		    "package", "private", "protected", "public",
-		    "return",
-		    "short", "static", "super", "switch", "synchronized",
-		    "this", "throw", "throws", "transient", "true", "try", "typeof",
-		    "var", "volatile", "void",
-		    "while", "with"
-		};
 
 		/// <summary>
 		/// Instance of site for the Windows Script engine
@@ -154,19 +100,19 @@
 		}
 
 
-        /// <summary>
-        /// Converts a value to JSON string
-        /// </summary>
-        /// <param name="value">The value to serialize</param>
-        /// <returns>The serialized JSON string</returns>
-        private string Serialize(object value)
+		/// <summary>
+		/// Converts a value to JSON string
+		/// </summary>
+		/// <param name="value">The value to serialize</param>
+		/// <returns>The serialized JSON string</returns>
+		private string Serialize(object value)
 		{
-            if (value is Undefined)
+			if (value is Undefined)
 			{
 				return "undefined";
 			}
 
-            return _jsSerializer.Serialize(value);
+			return _jsSerializer.Serialize(value);
 		}
 
 		/// <summary>
@@ -175,7 +121,7 @@
 		/// <typeparam name="T">The type to which value will be converted</typeparam>
 		/// <param name="value">The value to convert</param>
 		/// <returns>The value that has been converted to the target type</returns>
-		private T ConvertToType<T>(object value)
+		public T ConvertToType<T>(object value)
 		{
 			return (T)ConvertToType(value, typeof(T));
 		}
@@ -190,7 +136,7 @@
 		{
 			object result;
 			
-			if (_supportedTypes.Contains(targetType))
+			if (ValidationHelpers.IsSupportedType(targetType))
 			{
 				result = _jsSerializer.ConvertToType(value, targetType);
 			}
@@ -203,12 +149,12 @@
 			return result;
 		}
 
-        /// <summary>
-        /// Executes a mapping from the host type to a script type
-        /// </summary>
-        /// <param name="value">The source value</param>
-        /// <returns>The mapped value</returns>
-        internal object MapToScriptType(object value)
+		/// <summary>
+		/// Executes a mapping from the host type to a script type
+		/// </summary>
+		/// <param name="value">The source value</param>
+		/// <returns>The mapped value</returns>
+		private static object MapToScriptType(object value)
 		{
 			if (value == null)
 			{
@@ -223,12 +169,12 @@
 			return value;
 		}
 
-        /// <summary>
-        /// Executes a mapping from the script type to a host type
-        /// </summary>
-        /// <param name="value">The source value</param>
-        /// <returns>The mapped value</returns>
-		internal object MapToHostType(object value)
+		/// <summary>
+		/// Executes a mapping from the script type to a host type
+		/// </summary>
+		/// <param name="value">The source value</param>
+		/// <returns>The mapped value</returns>
+		private static object MapToHostType(object value)
 		{
 			if (value == null)
 			{
@@ -241,60 +187,6 @@
 			}
 
 			return value;
-		}
-
-		/// <summary>
-		/// Checks a format of the name
-		/// </summary>
-		/// <param name="name">The name</param>
-		/// <returns>Result of check (true - correct format; false - wrong format)</returns>
-		public bool CheckNameFormat(string name)
-		{
-			return _jsNameRegex.IsMatch(name);
-		}
-
-		/// <summary>
-		/// Checks a allowability of the name (compares with the list of 
-		/// reserved words of JavaScript language)
-		/// </summary>
-		/// <param name="name">The name</param>
-		/// <returns>Result of check (true - allowed; false - forbidden)</returns>
-		public bool CheckNameAllowability(string name)
-		{
-			return !_jsReservedWords.Contains(name);
-		}
-
-		/// <summary>
-		/// Checks a format of property name
-		/// </summary>
-		/// <param name="propertyName">Property name</param>
-		/// <returns>Result of check (true - correct format; false - wrong format)</returns>
-		public bool CheckPropertyNameFormat(string propertyName)
-		{
-			return _jsPropertyNameRegex.IsMatch(propertyName);
-		}
-
-		/// <summary>
-		/// Checks a allowability of property name (compares one of its parts with the 
-		/// list of reserved words of JavaScript language)
-		/// </summary>
-		/// <param name="propertyName">Property name</param>
-		/// <returns>Result of check (true - allowed; false - forbidden)</returns>
-		public bool CheckPropertyNameAllowability(string propertyName)
-		{
-			bool isAllowed = false;
-			string[] parts = propertyName.Split('.');
-
-			foreach(string part in parts)
-			{
-				isAllowed = CheckNameAllowability(part);
-				if (!isAllowed)
-				{
-					break;
-				}
-			}
-
-			return isAllowed;
 		}
 
 		/// <summary>
@@ -338,8 +230,10 @@
 
 			lock (_executionSynchronizer)
 			{
-				result = MapToHostType(_activeScriptSite.ExecuteScriptText(expression, true));
+				result = _activeScriptSite.ExecuteScriptText(expression, true);
 			}
+
+			result = MapToHostType(result);
 
 			return result;
 		}
@@ -551,13 +445,13 @@ else {{
 		/// <param name="variableName">Variable name</param>
 		private void ValidateVariableName(string variableName)
 		{
-			if (!CheckNameFormat(variableName))
+			if (!ValidationHelpers.CheckNameFormat(variableName))
 			{
 				throw new FormatException(
 					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
 			}
 
-			if (!CheckNameAllowability(variableName))
+			if (!ValidationHelpers.CheckNameAllowability(variableName))
 			{
 				throw new FormatException(
 					string.Format(Strings.Runtime_VariableNameIsForbidden, variableName));
@@ -742,13 +636,13 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 		/// <param name="propertyName">Property name</param>
 		private void ValidatePropertyName(string propertyName)
 		{
-			if (!CheckPropertyNameFormat(propertyName))
+			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
 			{
 				throw new FormatException(
 					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
 			}
 
-			if (!CheckPropertyNameAllowability(propertyName))
+			if (!ValidationHelpers.CheckPropertyNameAllowability(propertyName))
 			{
 				throw new FormatException(
 					string.Format(Strings.Runtime_PropertyNameIsForbidden, propertyName));
@@ -802,11 +696,6 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 		{
 			object result;
 
-			if (args == null)
-			{
-				args = new object[] { null };
-			}
-
 			int argumentCount = args.Length;
 			var processedArgs = new object[argumentCount];
 
@@ -820,8 +709,10 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 
 			lock (_executionSynchronizer)
 			{
-				result = MapToHostType(_activeScriptSite.CallFunction(functionName, processedArgs));
+				result = _activeScriptSite.CallFunction(functionName, processedArgs);
 			}
+
+			result = MapToHostType(result);
 
 			return result;
 		}
@@ -832,13 +723,13 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 		/// <param name="functionName">Function name</param>
 		private void ValidateFunctionName(string functionName)
 		{
-			if (!CheckNameFormat(functionName))
+			if (!ValidationHelpers.CheckNameFormat(functionName))
 			{
 				throw new FormatException(
 					string.Format(Strings.Runtime_InvalidFunctionNameFormat, functionName));
 			}
 
-			if (!CheckNameAllowability(functionName))
+			if (!ValidationHelpers.CheckNameAllowability(functionName))
 			{
 				throw new FormatException(
 					string.Format(Strings.Runtime_FunctionNameIsForbidden, functionName));

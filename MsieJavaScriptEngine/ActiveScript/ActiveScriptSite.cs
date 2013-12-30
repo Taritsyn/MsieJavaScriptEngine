@@ -66,7 +66,7 @@
 		/// Constructs instance of ActiveScriptSiteWrapper
 		/// </summary>
 		public ActiveScriptSite()
-            : this(DateTime.UtcNow.ToString("o")) 
+ 		   : this(DateTime.UtcNow.ToString("o")) 
 		{ }
 		
 		/// <summary>

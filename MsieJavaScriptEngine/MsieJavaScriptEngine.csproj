@@ -59,6 +59,7 @@
     <Compile Include="ActiveScript\ScriptTextFlags.cs" />
     <Compile Include="ActiveScript\ScriptThreadState.cs" />
     <Compile Include="ActiveScript\ScriptTypeLibFlags.cs" />
+    <Compile Include="Helpers\ValidationHelpers.cs" />
     <Compile Include="JsEngineLoadException.cs" />
     <Compile Include="JsEngines\ChakraJsEngine.cs" />
     <Compile Include="JsEngines\JsEngine.cs" />

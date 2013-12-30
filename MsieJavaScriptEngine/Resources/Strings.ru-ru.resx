@@ -1,189 +1,189 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
+	Microsoft ResX Schema 
+	
+	Version 2.0
+	
+	The primary goals of this format is to allow a simple XML format 
+	that is mostly human readable. The generation and parsing of the 
+	various data types are done through the TypeConverter classes 
+	associated with the data types.
+	
+	Example:
+	
+	... ado.net/XML headers & schema ...
+	<resheader name="resmimetype">text/microsoft-resx</resheader>
+	<resheader name="version">2.0</resheader>
+	<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+	<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+	<data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+	<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+	<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+		<value>[base64 mime encoded serialized .NET Framework object]</value>
+	</data>
+	<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+		<value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+		<comment>This is a comment</comment>
+	</data>
+				
+	There are any number of "resheader" rows that contain simple 
+	name/value pairs.
+	
+	Each data row contains a name, and value. The row also contains a 
+	type or mimetype. Type corresponds to a .NET class that support 
+	text/value conversion through the TypeConverter architecture. 
+	Classes that don't support this are serialized and stored with the 
+	mimetype set.
+	
+	The mimetype is used for serialized objects, and tells the 
+	ResXResourceReader how to depersist the object. This is currently not 
+	extensible. For a given mimetype the value must be set accordingly:
+	
+	Note - application/x-microsoft.net.object.binary.base64 is the format 
+	that the ResXResourceWriter will generate, however the reader can 
+	read any of the formats listed below.
+	
+	mimetype: application/x-microsoft.net.object.binary.base64
+	value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+	
+	mimetype: application/x-microsoft.net.object.soap.base64
+	value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
 
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
+	mimetype: application/x-microsoft.net.object.bytearray.base64
+	value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+	<xsd:element name="root" msdata:IsDataSet="true">
+	  <xsd:complexType>
+		<xsd:choice maxOccurs="unbounded">
+		  <xsd:element name="metadata">
+			<xsd:complexType>
+			  <xsd:sequence>
+				<xsd:element name="value" type="xsd:string" minOccurs="0" />
+			  </xsd:sequence>
+			  <xsd:attribute name="name" use="required" type="xsd:string" />
+			  <xsd:attribute name="type" type="xsd:string" />
+			  <xsd:attribute name="mimetype" type="xsd:string" />
+			  <xsd:attribute ref="xml:space" />
+			</xsd:complexType>
+		  </xsd:element>
+		  <xsd:element name="assembly">
+			<xsd:complexType>
+			  <xsd:attribute name="alias" type="xsd:string" />
+			  <xsd:attribute name="name" type="xsd:string" />
+			</xsd:complexType>
+		  </xsd:element>
+		  <xsd:element name="data">
+			<xsd:complexType>
+			  <xsd:sequence>
+				<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+				<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+			  </xsd:sequence>
+			  <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+			  <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+			  <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+			  <xsd:attribute ref="xml:space" />
+			</xsd:complexType>
+		  </xsd:element>
+		  <xsd:element name="resheader">
+			<xsd:complexType>
+			  <xsd:sequence>
+				<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+			  </xsd:sequence>
+			  <xsd:attribute name="name" type="xsd:string" use="required" />
+			</xsd:complexType>
+		  </xsd:element>
+		</xsd:choice>
+	  </xsd:complexType>
+	</xsd:element>
   </xsd:schema>
   <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
+	<value>text/microsoft-resx</value>
   </resheader>
   <resheader name="version">
-    <value>2.0</value>
+	<value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Common_ArgumentIsEmpty" xml:space="preserve">
-    <value>Параметр с именем "{0}" не должен содержать пустую строку!</value>
+	<value>Параметр с именем "{0}" не должен содержать пустую строку!</value>
   </data>
   <data name="Common_ArgumentIsNull" xml:space="preserve">
-    <value>Параметр с именем "{0}" не должен содержать значение равное null!</value>
+	<value>Параметр с именем "{0}" не должен содержать значение равное null!</value>
   </data>
   <data name="Common_FileNotExist" xml:space="preserve">
-    <value>Файл "{0}" не существует!</value>
+	<value>Файл "{0}" не существует!</value>
   </data>
   <data name="Common_ValueIsNull" xml:space="preserve">
-    <value>Значение не должно быть равно null!</value>
+	<value>Значение не должно быть равно null!</value>
   </data>
   <data name="ErrorDetails_ErrorCode" xml:space="preserve">
-    <value>Код ошибки</value>
+	<value>Код ошибки</value>
   </data>
   <data name="ErrorDetails_ErrorWCode" xml:space="preserve">
-    <value>WCode</value>
+	<value>WCode</value>
   </data>
   <data name="ErrorDetails_HelpKeyword" xml:space="preserve">
-    <value>Ключевые слова из справки</value>
+	<value>Ключевые слова из справки</value>
   </data>
   <data name="ErrorDetails_LineNumber" xml:space="preserve">
-    <value>Номер строки</value>
+	<value>Номер строки</value>
   </data>
   <data name="ErrorDetails_LineSource" xml:space="preserve">
-    <value>Содержимое строки</value>
+	<value>Содержимое строки</value>
   </data>
   <data name="ErrorDetails_Message" xml:space="preserve">
-    <value>Сообщение об ошибке</value>
+	<value>Сообщение об ошибке</value>
   </data>
   <data name="ErrorDetails_Subcategory" xml:space="preserve">
-    <value>Подкатегория</value>
+	<value>Подкатегория</value>
   </data>
   <data name="Resources_ResourceIsNull" xml:space="preserve">
-    <value>Ресурс с именем "{0}" содержит значение равное null!</value>
+	<value>Ресурс с именем "{0}" содержит значение равное null!</value>
   </data>
   <data name="Runtime_FunctionNameIsForbidden" xml:space="preserve">
-    <value>Имя функции "{0}" запрещено, т.к. входит в список зарезервированных слов JavaScript!</value>
+	<value>Имя функции "{0}" запрещено, т.к. входит в список зарезервированных слов JavaScript!</value>
   </data>
   <data name="Runtime_InvalidFunctionNameFormat" xml:space="preserve">
-    <value>Имя функции "{0}" имеет некорректный формат!</value>
+	<value>Имя функции "{0}" имеет некорректный формат!</value>
   </data>
   <data name="Runtime_InvalidParserImplementationError" xml:space="preserve">
-    <value>Парсер, переданный вами, не реализует интерфейсы `IActiveScriptParse32` и `IActiveScriptParse64`!</value>
+	<value>Парсер, переданный вами, не реализует интерфейсы `IActiveScriptParse32` и `IActiveScriptParse64`!</value>
   </data>
   <data name="Runtime_InvalidPropertyNameFormat" xml:space="preserve">
-    <value>Имя свойства "{0}" имеет некорректный формат!</value>
+	<value>Имя свойства "{0}" имеет некорректный формат!</value>
   </data>
   <data name="Runtime_InvalidVariableNameFormat" xml:space="preserve">
-    <value>Имя переменной "{0}" имеет некорректный формат!</value>
+	<value>Имя переменной "{0}" имеет некорректный формат!</value>
   </data>
   <data name="Runtime_ItemNotFound" xml:space="preserve">
-    <value>Элемент с именем "{0}" не найден!</value>
+	<value>Элемент с именем "{0}" не найден!</value>
   </data>
   <data name="Runtime_JsEngineNotLoaded" xml:space="preserve">
-    <value>Не удалось загрузить ни один из JavaScript-движков! Возможно, на вашем компьютере не установлен браузер Internet Explorer.</value>
+	<value>Не удалось загрузить ни один из JavaScript-движков! Возможно, на вашем компьютере не установлен браузер Internet Explorer.</value>
   </data>
   <data name="Runtime_PropertyNameIsForbidden" xml:space="preserve">
-    <value>Имя свойства "{0}" запрещено, т.к. одна из его частей совпадает с зарезервированным словом JavaScript!</value>
+	<value>Имя свойства "{0}" запрещено, т.к. одна из его частей совпадает с зарезервированным словом JavaScript!</value>
   </data>
   <data name="Runtime_TypeUnsupported" xml:space="preserve">
-    <value>Невозможно привести значение к типу `{0}`! Данный тип не поддерживается.</value>
+	<value>Невозможно привести значение к типу `{0}`! Данный тип не поддерживается.</value>
   </data>
   <data name="Runtime_VariableNameIsForbidden" xml:space="preserve">
-    <value>Имя переменной "{0}" запрещено, т.к. входит в список зарезервированных слов JavaScript!</value>
+	<value>Имя переменной "{0}" запрещено, т.к. входит в список зарезервированных слов JavaScript!</value>
   </data>
   <data name="Runtime_VariableNotExist" xml:space="preserve">
-    <value>Переменная с именем "{0}" не существует!</value>
+	<value>Переменная с именем "{0}" не существует!</value>
   </data>
 </root>

@@ -1,7 +1,7 @@
 Change log
 ==========
 
-## December 25, 2013 - v1.2.0
+## December 30, 2013 - v1.2.0
  * Fixed errors in ECMAScript 5 Polyfill
  * Added support of JavaScript `undefined` type
 

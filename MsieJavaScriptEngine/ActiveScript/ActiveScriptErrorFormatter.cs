@@ -1,5 +1,6 @@
 ﻿namespace MsieJavaScriptEngine.ActiveScript
 {
+	using System.Globalization;
 	using System.Text;
 
 	using Resources;
@@ -35,7 +36,7 @@
 					activeScriptException.HelpLink);
 			}
 			errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_LineNumber,
-				activeScriptException.LineNumber.ToString());
+				activeScriptException.LineNumber.ToString(CultureInfo.InvariantCulture));
 			if (!string.IsNullOrWhiteSpace(activeScriptException.SourceError))
 			{
 				errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_LineSource,
