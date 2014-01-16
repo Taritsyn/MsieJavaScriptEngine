@@ -1,4 +1,4 @@
-Copyright 2013 Andrey Taritsyn - http://www.taritsyn.ru
+Copyright 2014 Andrey Taritsyn - http://www.taritsyn.ru
 
 Microsoft Public License (Ms-PL)
 

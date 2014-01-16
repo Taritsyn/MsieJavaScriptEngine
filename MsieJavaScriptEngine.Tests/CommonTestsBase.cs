@@ -9,19 +9,16 @@
 	using MsieJavaScriptEngine;
 
 	[TestFixture]
-	public class CommonTests
+	public abstract class CommonTestsBase
 	{
-		private MsieJsEngine _jsEngine;
+		protected MsieJsEngine _jsEngine;
 
 		[TestFixtureSetUp]
-		public void SetUp()
-		{
-			_jsEngine = new MsieJsEngine(false, false);
-		}
+		public abstract void SetUp();
 
 		#region Evaluation of code
 		[Test]
-		public void EvaluationOfExpressionWithUndefinedResultIsCorrect()
+		public virtual void EvaluationOfExpressionWithUndefinedResultIsCorrect()
 		{
 			// Arrange
 			const string input = "undefined";
@@ -35,7 +32,7 @@
 		}
 
 		[Test]
-		public void EvaluationOfExpressionWithNullResultIsCorrect()
+		public virtual void EvaluationOfExpressionWithNullResultIsCorrect()
 		{
 			// Arrange
 			const string input = "null";
@@ -49,7 +46,7 @@
 		}
 
 		[Test]
-		public void EvaluationOfExpressionWithBooleanResultIsCorrect()
+		public virtual void EvaluationOfExpressionWithBooleanResultIsCorrect()
 		{
 			// Arrange
 			const string input1 = "7 > 5";
@@ -68,7 +65,7 @@
 		}
 
 		[Test]
-		public void EvaluationOfExpressionWithIntegerResultIsCorrect()
+		public virtual void EvaluationOfExpressionWithIntegerResultIsCorrect()
 		{
 			// Arrange
 			const string input = "7 * 8 - 20";
@@ -82,7 +79,7 @@
 		}
 
 		[Test]
-		public void EvaluationOfExpressionWithDoubleResultIsCorrect()
+		public virtual void EvaluationOfExpressionWithDoubleResultIsCorrect()
 		{
 			// Arrange
 			const string input = "Math.PI + 0.22";
@@ -96,7 +93,7 @@
 		}
 
 		[Test]
-		public void EvaluationOfExpressionWithStringResultIsCorrect()
+		public virtual void EvaluationOfExpressionWithStringResultIsCorrect()
 		{
 			// Arrange
 			const string input = "'Hello, ' + \"Vasya\" + '?';";
@@ -112,7 +109,7 @@
 
 		#region Execution of code
 		[Test]
-		public void ExecutionOfCodeIsCorrect()
+		public virtual void ExecutionOfCodeIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function add(num1, num2) {
@@ -130,7 +127,7 @@
 		}
 
 		[Test]
-		public void ExecutionOfFileIsCorrect()
+		public virtual void ExecutionOfFileIsCorrect()
 		{
 			// Arrange
 			string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"../../Resources/square.js");
@@ -146,7 +143,7 @@
 		}
 
 		[Test]
-		public void ExecutionOfResourceByTypeIsCorrect()
+		public virtual void ExecutionOfResourceByTypeIsCorrect()
 		{
 			// Arrange
 			const string resourceName = "MsieJavaScriptEngine.Tests.Resources.cube.js";
@@ -162,7 +159,7 @@
 		}
 
 		[Test]
-		public void ExecutionOfResourceByAssemblyIsCorrect()
+		public virtual void ExecutionOfResourceByAssemblyIsCorrect()
 		{
 			// Arrange
 			const string resourceName = "MsieJavaScriptEngine.Tests.Resources.power.js";
@@ -180,7 +177,7 @@
 
 		#region Calling of functions
 		[Test]
-		public void CallingOfFunctionWithoutParametersIsCorrect()
+		public virtual void CallingOfFunctionWithoutParametersIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function hooray() {
@@ -197,7 +194,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithUndefinedResultIsCorrect()
+		public virtual void CallingOfFunctionWithUndefinedResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function testUndefined(value) {
@@ -218,7 +215,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithNullResultIsCorrect()
+		public virtual void CallingOfFunctionWithNullResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function testNull(value) {
@@ -239,7 +236,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithBooleanResultIsCorrect()
+		public virtual void CallingOfFunctionWithBooleanResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function inverse(value) {
@@ -257,7 +254,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithIntegerResultIsCorrect()
+		public virtual void CallingOfFunctionWithIntegerResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function negate(value) {
@@ -275,7 +272,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithDoubleResultIsCorrect()
+		public virtual void CallingOfFunctionWithDoubleResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function triple(value) {
@@ -293,7 +290,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithStringResultIsCorrect()
+		public virtual void CallingOfFunctionWithStringResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function greeting(name) {
@@ -311,7 +308,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithManyParametersIsCorrect()
+		public virtual void CallingOfFunctionWithManyParametersIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function determineArgumentsTypes() {
@@ -340,7 +337,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithManyParametersAndBooleanResultIsCorrect()
+		public virtual void CallingOfFunctionWithManyParametersAndBooleanResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function and() {
@@ -373,7 +370,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithManyParametersAndIntegerResultIsCorrect()
+		public virtual void CallingOfFunctionWithManyParametersAndIntegerResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function sum() {
@@ -398,7 +395,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithManyParametersAndDoubleResultIsCorrect()
+		public virtual void CallingOfFunctionWithManyParametersAndDoubleResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function sum() {
@@ -423,7 +420,7 @@
 		}
 
 		[Test]
-		public void CallingOfFunctionWithManyParametersAndStringResultIsCorrect()
+		public virtual void CallingOfFunctionWithManyParametersAndStringResultIsCorrect()
 		{
 			// Arrange
 			const string functionCode = @"function concatenate() {
@@ -450,7 +447,7 @@
 
 		#region Getting, setting and removing variables
 		[Test]
-		public void SettingAndGettingVariableWithUndefinedValueIsCorrect()
+		public virtual void SettingAndGettingVariableWithUndefinedValueIsCorrect()
 		{
 			// Arrange
 			const string variableName = "myVar1";
@@ -467,7 +464,7 @@
 		}
 
 		[Test]
-		public void SettingAndGettingVariableWithNullValueIsCorrect()
+		public virtual void SettingAndGettingVariableWithNullValueIsCorrect()
 		{
 			// Arrange
 			const string variableName = "myVar2";
@@ -484,7 +481,7 @@
 		}
 
 		[Test]
-		public void SettingAndGettingVariableWithBooleanValueIsCorrect()
+		public virtual void SettingAndGettingVariableWithBooleanValueIsCorrect()
 		{
 			// Arrange
 			const string variableName = "isVisible";
@@ -511,7 +508,7 @@
 		}
 
 		[Test]
-		public void SettingAndGettingVariableWithIntegerValueIsCorrect()
+		public virtual void SettingAndGettingVariableWithIntegerValueIsCorrect()
 		{
 			// Arrange
 			const string variableName = "amount";
@@ -538,7 +535,7 @@
 		}
 		
 		[Test]
-		public void SettingAndGettingVariableWithDoubleValueIsCorrect()
+		public virtual void SettingAndGettingVariableWithDoubleValueIsCorrect()
 		{
 			// Arrange
 			const string variableName = "price";
@@ -565,7 +562,7 @@
 		}
 
 		[Test]
-		public void SettingAndGettingVariableWithStringValueIsCorrect()
+		public virtual void SettingAndGettingVariableWithStringValueIsCorrect()
 		{
 			// Arrange
 			const string variableName = "word";
@@ -592,7 +589,7 @@
 		}
 
 		[Test]
-		public void RemovingVariableIsCorrect()
+		public virtual void RemovingVariableIsCorrect()
 		{
 			// Arrange
 			const string variableName = "price";
@@ -612,7 +609,134 @@
 
 		#region Getting, setting and removing properties
 		[Test]
-		public void SettingAndGettingPropertyWithUndefinedValue()
+		public virtual void SettingAndGettingSimplePropertyWithUndefinedValue()
+		{
+			// Arrange
+			const string objectName = "employee";
+			const string propertyName = "firstName";
+			object input = Undefined.Value;
+
+			// Act
+			_jsEngine.SetPropertyValue(objectName, propertyName, input);
+			bool propertyExists = _jsEngine.HasProperty(objectName, propertyName);
+			var output = _jsEngine.GetPropertyValue(objectName, propertyName);
+
+			// Assert
+			Assert.IsFalse(propertyExists);
+			Assert.AreEqual(input, output);
+		}
+
+		[Test]
+		public virtual void SettingAndGettingSimplePropertyWithNullValue()
+		{
+			// Arrange
+			const string objectName = "employee";
+			const string propertyName = "firstName";
+			const string input = null;
+
+			// Act
+			_jsEngine.SetPropertyValue(objectName, propertyName, input);
+			bool propertyExists = _jsEngine.HasProperty(objectName, propertyName);
+			var output = _jsEngine.GetPropertyValue(objectName, propertyName);
+
+			// Assert
+			Assert.IsTrue(propertyExists);
+			Assert.AreEqual(input, output);
+		}
+
+		[Test]
+		public virtual void SettingAndGettingSimplePropertyWithBooleanValue()
+		{
+			// Arrange
+			const string objectName = "employee";
+			const string propertyName = "isAdmin";
+			const bool input = true;
+
+			// Act
+			_jsEngine.SetPropertyValue(objectName, propertyName, input);
+			bool propertyExists = _jsEngine.HasProperty(objectName, propertyName);
+			var output = _jsEngine.GetPropertyValue<bool>(objectName, propertyName);
+
+			// Assert
+			Assert.IsTrue(propertyExists);
+			Assert.AreEqual(input, output);
+		}
+
+		[Test]
+		public virtual void SettingAndGettingSimplePropertyWithIntegerValue()
+		{
+			// Arrange
+			const string objectName = "employee";
+			const string propertyName = "age";
+			const int input = 29;
+
+			// Act
+			_jsEngine.SetPropertyValue(objectName, propertyName, input);
+			bool propertyExists = _jsEngine.HasProperty(objectName, propertyName);
+			var output = _jsEngine.GetPropertyValue<int>(objectName, propertyName);
+
+			// Assert
+			Assert.IsTrue(propertyExists);
+			Assert.AreEqual(input, output);
+		}
+
+		[Test]
+		public virtual void SettingAndGettingSimplePropertyWithDoubleValue()
+		{
+			// Arrange
+			const string objectName = "employee";
+			const string propertyName = "salary";
+			const double input = 3510.75;
+
+			// Act
+			_jsEngine.SetPropertyValue(objectName, propertyName, input);
+			bool propertyExists = _jsEngine.HasProperty(objectName, propertyName);
+			var output = _jsEngine.GetPropertyValue<double>(objectName, propertyName);
+
+			// Assert
+			Assert.IsTrue(propertyExists);
+			Assert.AreEqual(input, output);
+		}
+
+		[Test]
+		public virtual void SettingAndGettingSimplePropertyWithStringValue()
+		{
+			// Arrange
+			const string objectName = "employee";
+			const string propertyName = "lastName";
+			const string input = "Pupkin";
+
+			// Act
+			_jsEngine.SetPropertyValue(objectName, propertyName, input);
+			bool propertyExists = _jsEngine.HasProperty(objectName, propertyName);
+			var output = _jsEngine.GetPropertyValue<string>(objectName, propertyName);
+
+			// Assert
+			Assert.IsTrue(propertyExists);
+			Assert.AreEqual(input, output);
+		}
+
+		[Test]
+		public virtual void RemovingSimplePropertyIsCorrect()
+		{
+			// Arrange
+			const string objectName = "employee";
+			const string propertyName = "position";
+			const string input = "senior manager";
+
+			// Act
+			_jsEngine.SetPropertyValue(objectName, propertyName, input);
+			bool priceBeforeRemovingExists = _jsEngine.HasProperty(objectName, propertyName);
+			_jsEngine.RemoveProperty(objectName, propertyName);
+			bool priceAfterRemovingExists = _jsEngine.HasProperty(objectName, propertyName);
+
+			// Assert
+			Assert.IsTrue(priceBeforeRemovingExists);
+			Assert.IsFalse(priceAfterRemovingExists);
+		}
+
+		[Test]
+		public virtual void SettingAndGettingComplexPropertyWithUndefinedValue()
 		{
 			// Arrange
 			const string objectName = "shop";
@@ -630,7 +754,7 @@
 		}
 
 		[Test]
-		public void SettingAndGettingPropertyWithNullValue()
+		public virtual void SettingAndGettingComplexPropertyWithNullValue()
 		{
 			// Arrange
 			const string objectName = "shop";
@@ -648,7 +772,7 @@
 		}
 
 		[Test]
-		public void SettingAndGettingPropertyWithBooleanValue()
+		public virtual void SettingAndGettingComplexPropertyWithBooleanValue()
 		{
 			// Arrange
 			const string objectName = "shop";
@@ -666,7 +790,7 @@
 		}
 
 		[Test]
-		public void SettingAndGettingPropertyWithIntegerValue()
+		public virtual void SettingAndGettingComplexPropertyWithIntegerValue()
 		{
 			// Arrange
 			const string objectName = "shop";
@@ -684,7 +808,7 @@
 		}
 
 		[Test]
-		public void SettingAndGettingPropertyWithDoubleValue()
+		public virtual void SettingAndGettingComplexPropertyWithDoubleValue()
 		{
 			// Arrange
 			const string objectName = "shop";
@@ -702,7 +826,7 @@
 		}
 
 		[Test]
-		public void SettingAndGettingPropertyWithStringValue()
+		public virtual void SettingAndGettingComplexPropertyWithStringValue()
 		{
 			// Arrange
 			const string objectName = "shop";
@@ -720,7 +844,7 @@
 		}
 
 		[Test]
-		public void RemovingPropertyIsCorrect()
+		public virtual void RemovingComplexPropertyIsCorrect()
 		{
 			// Arrange
 			const string objectName = "shop";
@@ -740,7 +864,7 @@
 		#endregion
 
 		[TestFixtureTearDown]
-		public void TearDown()
+		public virtual void TearDown()
 		{
 			if (_jsEngine != null)
 			{

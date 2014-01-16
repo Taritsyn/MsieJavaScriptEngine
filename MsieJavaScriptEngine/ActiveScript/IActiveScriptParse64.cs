@@ -2,7 +2,8 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using ComTypes = System.Runtime.InteropServices.ComTypes;
+
+	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
 	/// <summary>
 	/// If the Windows Script engine allows raw text code scriptlets to be added to the script
@@ -21,9 +22,10 @@
 	/// to call IPersist*::InitNew, IActiveScriptParse::InitNew, or IPersist*::Load more
 	/// than once.
 	/// </remarks>
-	[Guid("C7EF7658-E1EE-480E-97EA-D52CB4D76D17")]
+	[ComImport]
+	[Guid("c7ef7658-e1ee-480e-97ea-d52cb4d76d17")]
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-	internal interface IActiveScriptParser64
+	internal interface IActiveScriptParse64
 	{
 		/// <summary>
 		/// Initializes the scripting engine
@@ -63,7 +65,7 @@
 		/// Exactly how (and if) the scripting engine makes use of this information depends
 		/// on the scripting engine. Set this parameter to NULL if the host did not use a
 		/// delimiter to mark the end of the scriptlet.</param>
-		/// <param name="sourceContextCookie">Application-defined value that is used for
+		/// <param name="pSourceContextCookie">Application-defined value that is used for
 		/// debugging purposes</param>
 		/// <param name="startingLineNumber">Zero-based value that specifies which line the
 		/// parsing will begin at</param>
@@ -75,17 +77,17 @@
 		/// <param name="exceptionInfo">Exception information. This structure should be
 		/// filled in if DISP_E_EXCEPTION is returned</param>
 		void AddScriptlet(
-			[MarshalAs(UnmanagedType.LPWStr)] string defaultName,
-			[MarshalAs(UnmanagedType.LPWStr)] string code,
-			[MarshalAs(UnmanagedType.LPWStr)] string itemName,
-			[MarshalAs(UnmanagedType.LPWStr)] string subItemName,
-			[MarshalAs(UnmanagedType.LPWStr)] string eventName,
-			[MarshalAs(UnmanagedType.LPWStr)] string delimiter,
-			IntPtr sourceContextCookie,
-			uint startingLineNumber,
-			ScriptTextFlags flags,
-			[MarshalAs(UnmanagedType.BStr)] out string name,
-			out ComTypes.EXCEPINFO exceptionInfo);
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string defaultName,
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string code,
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string itemName,
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string subItemName,
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string eventName,
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string delimiter,
+			[In] IntPtr pSourceContextCookie,
+			[In] uint startingLineNumber,
+			[In] ScriptTextFlags flags,
+			[Out] [MarshalAs(UnmanagedType.BStr)] out string name,
+			[Out] out EXCEPINFO exceptionInfo);
 
 		/// <summary>
 		/// Parses the given code scriptlet, adding declarations into the namespace and
@@ -109,7 +111,7 @@
 		/// (and if) the scripting engine makes use of this information depends on the
 		/// scripting engine. Set this parameter to NULL if the host did not use a delimiter
 		/// to mark the end of the scriptlet.</param>
-		/// <param name="sourceContextCookie">Application-defined value that is used for
+		/// <param name="pSourceContextCookie">Application-defined value that is used for
 		/// debugging purposes</param>
 		/// <param name="startingLineNumber">Zero-based value that specifies which line the
 		/// parsing will begin at</param>
@@ -119,14 +121,14 @@
 		/// <param name="exceptionInfo">The exception information. This structure is filled
 		/// if IActiveScriptParse::ParseScriptText returns DISP_E_EXCEPTION.</param>
 		void ParseScriptText(
-			[MarshalAs(UnmanagedType.LPWStr)] string code,
-			[MarshalAs(UnmanagedType.LPWStr)] string itemName,
-			[MarshalAs(UnmanagedType.IUnknown)] object context,
-			[MarshalAs(UnmanagedType.LPWStr)] string delimiter,
-			IntPtr sourceContextCookie,
-			uint startingLineNumber,
-			ScriptTextFlags flags,
-			out object result,
-			out ComTypes.EXCEPINFO exceptionInfo);
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string code,
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string itemName,
+			[In] [MarshalAs(UnmanagedType.IUnknown)] object context,
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string delimiter,
+			[In] IntPtr pSourceContextCookie,
+			[In] uint startingLineNumber,
+			[In] ScriptTextFlags flags,
+			[Out] out object result,
+			[Out] out EXCEPINFO exceptionInfo);
 	}
 }

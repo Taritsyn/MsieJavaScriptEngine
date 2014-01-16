@@ -21,7 +21,7 @@
 	/// than once.
 	/// </remarks>
 	[ComVisible(false)]
-	internal interface IActiveScriptParserWrapper 
+	internal interface IActiveScriptParseWrapper : IDisposable
 	{
 		/// <summary>
 		/// Initializes the scripting engine.

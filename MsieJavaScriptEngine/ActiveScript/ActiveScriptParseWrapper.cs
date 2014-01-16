@@ -1,51 +1,131 @@
 ﻿namespace MsieJavaScriptEngine.ActiveScript
 {
 	using System;
-	using ComTypes = System.Runtime.InteropServices.ComTypes;
 
+	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
+	using Helpers;
 	using Resources;
 
-	internal sealed class ActiveScriptParserWrapper : IActiveScriptParserWrapper 
+	internal sealed class ActiveScriptParseWrapper : IActiveScriptParseWrapper
 	{
-		private readonly IActiveScriptParser32 _parser32;
-		private readonly IActiveScriptParser64 _parser64;
-		private ComTypes.EXCEPINFO _exceptionInfo;
+		/// <summary>
+		/// Flag that the current process is a 64-bit process
+		/// </summary>
+		private readonly bool _is64Bit;
+
+		/// <summary>
+		/// Pointer to an instance of 32-bit ActiveScript parser
+		/// </summary>
+		private IntPtr _pActiveScriptParse32 = IntPtr.Zero;
+
+		/// <summary>
+		/// Instance of 32-bit ActiveScript parser
+		/// </summary>
+		private IActiveScriptParse32 _activeScriptParse32;
+
+		/// <summary>
+		/// Pointer to an instance of 64-bit ActiveScript parser
+		/// </summary>
+		private IntPtr _pActiveScriptParse64 = IntPtr.Zero;
+
+		/// <summary>
+		/// Instance of 64-bit ActiveScript parser
+		/// </summary>
+		private IActiveScriptParse64 _activeScriptParse64;
+
+		/// <summary>
+		/// Last COM exception
+		/// </summary>
+		private EXCEPINFO _lastException;
+
+		/// <summary>
+		/// Flag that object is destroyed
+		/// </summary>
+		private bool _disposed;
 		
 		/// <summary>
-		/// Gets the last COM exception
+		/// Gets a last COM exception
 		/// </summary>
-		public ComTypes.EXCEPINFO LastException
+		public EXCEPINFO LastException
 		{
-			get { return _exceptionInfo; }
+			get { return _lastException; }
 		}
 
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ActiveScriptParserWrapper"/> class
+		/// Constructs instance of the <see cref="ActiveScriptParseWrapper"/> class
 		/// </summary>
-		/// <param name="parser">The parser. Must implement IActiveScriptParse32 or IActiveScriptParse64.</param>
-		public ActiveScriptParserWrapper(object parser) 
+		/// <param name="pActiveScript">Pointer to an instance of native JavaScript engine</param>
+		/// <param name="activeScript">Instance of native JavaScript engine.
+		/// Must implement IActiveScriptParse32 or IActiveScriptParse64.</param>
+		public ActiveScriptParseWrapper(IntPtr pActiveScript, IActiveScript activeScript)
 		{
-			_parser32 = parser as IActiveScriptParser32;
-			_parser64 = parser as IActiveScriptParser64;
+			_is64Bit = Environment.Is64BitProcess;
+
+			if (_is64Bit)
+			{
+				_pActiveScriptParse64 = ComHelpers.QueryInterface<IActiveScriptParse64>(pActiveScript);
+				_activeScriptParse64 = activeScript as IActiveScriptParse64;
+			}
+			else
+			{
+				_pActiveScriptParse32 = ComHelpers.QueryInterface<IActiveScriptParse32>(pActiveScript);
+				_activeScriptParse32 = activeScript as IActiveScriptParse32;
+			}
+
+			if (_activeScriptParse64 == null && _activeScriptParse32 == null)
+			{
+				throw new NotSupportedException(Strings.Runtime_InvalidParserImplementationError);
+			}
 		}
 
+		/// <summary>
+		/// Destructs instance of <see cref="ActiveScriptSiteWrapper"/>
+		/// </summary>
+		~ActiveScriptParseWrapper()
+		{
+			Dispose(false);
+		}
+
+
+		/// <summary>
+		/// Destroys object
+		/// </summary>
+		/// <param name="disposing">Flag, allowing destruction of 
+		/// managed objects contained in fields of class</param>
+		private void Dispose(bool disposing)
+		{
+			if (!_disposed)
+			{
+				_disposed = true;
+
+				if (_is64Bit)
+				{
+					_activeScriptParse64 = null;
+					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse64);
+				}
+				else
+				{
+					_activeScriptParse32 = null;
+					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse32);
+				}
+			}
+		}
+
+		#region IActiveScriptParseWrapper implementation
 
 		/// <summary>
 		/// Initializes the scripting engine
 		/// </summary>
 		public void InitNew() {
-			if (_parser32 != null)
+			if (_is64Bit)
 			{
-				_parser32.InitNew();
-			}
-			else if (_parser64 != null)
-			{
-				_parser64.InitNew();
+				_activeScriptParse64.InitNew();
 			}
 			else
 			{
-				throw new NotImplementedException(Strings.Runtime_InvalidParserImplementationError);
+				_activeScriptParse32.InitNew();
 			}
 		}
 
@@ -106,9 +186,9 @@
 
 			string name;
 
-			if (_parser32 != null)
+			if (_is64Bit)
 			{
-				_parser32.AddScriptlet(
+				_activeScriptParse64.AddScriptlet(
 					defaultName,
 					code,
 					itemName,
@@ -119,26 +199,22 @@
 					startingLineNumber,
 					flags,
 					out name,
-					out _exceptionInfo);
-			}
-			else if (_parser64 != null)
-			{
-				_parser64.AddScriptlet(
-					defaultName,
-					code,
-					itemName,
-					subItemName,
-					eventName,
-					delimiter,
-					sourceContextCookie,
-					startingLineNumber,
-					flags,
-					out name,
-					out _exceptionInfo);
+					out _lastException);
 			}
 			else
 			{
-				throw new NotImplementedException(Strings.Runtime_InvalidParserImplementationError);
+				_activeScriptParse32.AddScriptlet(
+					defaultName,
+					code,
+					itemName,
+					subItemName,
+					eventName,
+					delimiter,
+					sourceContextCookie,
+					startingLineNumber,
+					flags,
+					out name,
+					out _lastException);
 			}
 
 			return name;
@@ -186,9 +262,9 @@
 
 			object result;
 
-			if (_parser32 != null)
+			if (_is64Bit)
 			{
-				_parser32.ParseScriptText(
+				_activeScriptParse64.ParseScriptText(
 					code,
 					itemName,
 					context,
@@ -197,27 +273,38 @@
 					startingLineNumber,
 					flags,
 					out result,
-					out _exceptionInfo);
-			}
-			else if (_parser64 != null)
-			{
-				_parser64.ParseScriptText(
-					code,
-					itemName,
-					context,
-					delimiter,
-					sourceContextCookie,
-					startingLineNumber,
-					flags,
-					out result,
-					out _exceptionInfo);
+					out _lastException);
 			}
 			else
 			{
-				throw new NotImplementedException(Strings.Runtime_InvalidParserImplementationError);
+				_activeScriptParse32.ParseScriptText(
+					code,
+					itemName,
+					context,
+					delimiter,
+					sourceContextCookie,
+					startingLineNumber,
+					flags,
+					out result,
+					out _lastException);
 			}
 
 			return result;
 		}
+
+		#endregion
+
+		#region IDisposable implementation
+
+		/// <summary>
+		/// Destroys object
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(true /* disposing */);
+			GC.SuppressFinalize(this);
+		}
+
+		#endregion
 	}
 }

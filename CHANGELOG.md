@@ -1,6 +1,11 @@
 Change log
 ==========
 
+## January 16, 2014 - v1.3.0
+ * Added support of the JsRT version of Chakra
+ * Now the MSIE JavaScript Engine can work in 4 modes: `Auto` (selected by default), `Classic`, `ChakraActiveScript` and `ChakraJsRt`
+ * Following methods are obsolete: `HasProperty`, `GetPropertyValue`, `SetPropertyValue` and `RemoveProperty`
+
 ## December 30, 2013 - v1.2.0
  * Fixed errors in ECMAScript 5 Polyfill
  * Added support of JavaScript `undefined` type

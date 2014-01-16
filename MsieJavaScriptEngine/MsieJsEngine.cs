@@ -3,257 +3,195 @@
 	using System;
 	using System.Reflection;
 	using System.Text;
-	using System.Web.Script.Serialization;
 
 	using ActiveScript;
 	using Helpers;
+	using JsRt;
 	using Resources;
 	using Utilities;
 
 	/// <summary>
-	/// .NET-wrapper for working with the Internet Explorer's JS engines 
-	/// (Chakra and classic JS engine)
+	/// .NET-wrapper for working with the Internet Explorer's JavaScript engines 
 	/// </summary>
 	public sealed class MsieJsEngine : IDisposable
 	{
 		/// <summary>
-		/// Name of resource, which contains a ECMAScript 5 Polyfill
+		/// JavaScript engine
 		/// </summary>
-		const string ES5_POLYFILL_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.ES5.min.js";
-
-		/// <summary>
-		/// Name of resource, which contains a JSON2 library
-		/// </summary>
-		const string JSON2_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.json2.min.js";
-
-		/// <summary>
-		/// Name of resource, which contains a MsieJavaScript library
-		/// </summary>
-		const string MSIE_JAVASCRIPT_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.msieJavaScriptEngine.min.js";
-
-		/// <summary>
-		/// Instance of site for the Windows Script engine
-		/// </summary>
-		private readonly ActiveScriptSite _activeScriptSite;
-
-		/// <summary>
-		/// Synchronizer of code execution
-		/// </summary>
-		private readonly object _executionSynchronizer = new object();
-
-		/// <summary>
-		/// JS-serializer
-		/// </summary>
-		private readonly JavaScriptSerializer _jsSerializer;
+		private IInnerJsEngine _jsEngine;
 
 		/// <summary>
 		/// Flag that object is destroyed
 		/// </summary>
 		private bool _disposed;
 
+		/// <summary>
+		/// Gets a name of JavaScript engine mode
+		/// </summary>
+		public string Mode
+		{
+			get { return _jsEngine.Mode; }
+		}
+
 
 		/// <summary>
-		/// Constructs instance of MSIE JS-engine
+		/// Constructs instance of MSIE JavaScript engine
 		/// </summary>
-		public MsieJsEngine() : this(false)
+		public MsieJsEngine()
+			: this(JsEngineMode.Auto)
 		{ }
 
 		/// <summary>
-		/// Constructs instance of MSIE JS-engine
+		/// Constructs instance of MSIE JavaScript engine
+		/// </summary>
+		/// <param name="engineMode">JavaScript engine mode</param>
+		public MsieJsEngine(JsEngineMode engineMode)
+			: this(engineMode, false)
+		{ }
+
+		/// <summary>
+		/// Constructs instance of MSIE JavaScript engine
+		/// </summary>
+		/// <param name="engineMode">JavaScript engine mode</param>
+		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
+		public MsieJsEngine(JsEngineMode engineMode, bool useEcmaScript5Polyfill)
+			: this(engineMode, useEcmaScript5Polyfill, false)
+		{ }
+
+		/// <summary>
+		/// Constructs instance of MSIE JavaScript engine
 		/// </summary>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		public MsieJsEngine(bool useEcmaScript5Polyfill) 
+		public MsieJsEngine(bool useEcmaScript5Polyfill)
 			: this(useEcmaScript5Polyfill, false)
 		{ }
 
 		/// <summary>
-		/// Constructs instance of MSIE JS-engine
+		/// Constructs instance of MSIE JavaScript engine
 		/// </summary>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
 		public MsieJsEngine(bool useEcmaScript5Polyfill, bool useJson2Library)
-		{
-			_activeScriptSite = new ActiveScriptSite();
-			_jsSerializer = new JavaScriptSerializer();
-
-			Type type = GetType();
-
-			if (useEcmaScript5Polyfill)
-			{
-				ExecuteResource(ES5_POLYFILL_RESOURCE_NAME, type);
-			}
-
-			if (useJson2Library)
-			{
-				ExecuteResource(JSON2_LIBRARY_RESOURCE_NAME, type);
-			}
-
-			ExecuteResource(MSIE_JAVASCRIPT_LIBRARY_RESOURCE_NAME, type);
-		}
+			: this(JsEngineMode.Auto, useEcmaScript5Polyfill, useJson2Library)
+		{ }
 
 		/// <summary>
-		/// Destructs instance of MSIE JS engine
+		/// Constructs instance of MSIE JavaScript engine
 		/// </summary>
-		~MsieJsEngine()
+		/// <param name="engineMode">JavaScript engine mode</param>
+		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
+		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
+		public MsieJsEngine(JsEngineMode engineMode, bool useEcmaScript5Polyfill, bool useJson2Library)
 		{
-			Dispose(false);
+			JsEngineMode processedEngineMode = engineMode;
+
+			if (engineMode == JsEngineMode.Auto)
+			{
+				if (ChakraJsRtJsEngine.IsSupported())
+				{
+					processedEngineMode = JsEngineMode.ChakraJsRt;
+				}
+				else if (ChakraActiveScriptJsEngine.IsSupported())
+				{
+					processedEngineMode = JsEngineMode.ChakraActiveScript;
+				}
+				else if (ClassicActiveScriptJsEngine.IsSupported())
+				{
+					processedEngineMode = JsEngineMode.Classic;
+				}
+				else
+				{
+					throw new JsEngineLoadException(Strings.Runtime_JsEnginesNotFound);
+				}
+			}
+
+			switch (processedEngineMode)
+			{
+				case JsEngineMode.ChakraJsRt:
+					_jsEngine = new ChakraJsRtJsEngine();
+					break;
+				case JsEngineMode.ChakraActiveScript:
+					_jsEngine = new ChakraActiveScriptJsEngine(useEcmaScript5Polyfill, useJson2Library);
+					break;
+				case JsEngineMode.Classic:
+					_jsEngine = new ClassicActiveScriptJsEngine(useEcmaScript5Polyfill, useJson2Library);
+					break;
+				default:
+					throw new NotSupportedException(
+						string.Format(Strings.Runtime_JsEngineModeNotSupported, processedEngineMode));
+			}
 		}
 
 
-		/// <summary>
-		/// Converts a value to JSON string
-		/// </summary>
-		/// <param name="value">The value to serialize</param>
-		/// <returns>The serialized JSON string</returns>
-		private string Serialize(object value)
+		private void VerifyNotDisposed()
 		{
-			if (value is Undefined)
+			if (_disposed)
 			{
-				return "undefined";
+				throw new ObjectDisposedException(ToString());
 			}
-
-			return _jsSerializer.Serialize(value);
-		}
-
-		/// <summary>
-		/// Converts a given value to the specified type
-		/// </summary>
-		/// <typeparam name="T">The type to which value will be converted</typeparam>
-		/// <param name="value">The value to convert</param>
-		/// <returns>The value that has been converted to the target type</returns>
-		public T ConvertToType<T>(object value)
-		{
-			return (T)ConvertToType(value, typeof(T));
-		}
-
-		/// <summary>
-		/// Converts the specified value to the specified type
-		/// </summary>
-		/// <param name="value">The value to convert</param>
-		/// <param name="targetType">The type to convert the value to</param>
-		/// <returns>The value that has been converted to the target type</returns>
-		private object ConvertToType(object value, Type targetType)
-		{
-			object result;
-			
-			if (ValidationHelpers.IsSupportedType(targetType))
-			{
-				result = _jsSerializer.ConvertToType(value, targetType);
-			}
-			else
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Runtime_TypeUnsupported, targetType), "value");
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Executes a mapping from the host type to a script type
-		/// </summary>
-		/// <param name="value">The source value</param>
-		/// <returns>The mapped value</returns>
-		private static object MapToScriptType(object value)
-		{
-			if (value == null)
-			{
-				return DBNull.Value;
-			}
-
-			if (value is Undefined)
-			{
-				return null;
-			}
-
-			return value;
-		}
-
-		/// <summary>
-		/// Executes a mapping from the script type to a host type
-		/// </summary>
-		/// <param name="value">The source value</param>
-		/// <returns>The mapped value</returns>
-		private static object MapToHostType(object value)
-		{
-			if (value == null)
-			{
-				return Undefined.Value;
-			}
-
-			if (value is DBNull)
-			{
-				return null;
-			}
-
-			return value;
 		}
 
 		/// <summary>
 		/// Evaluates an expression
 		/// </summary>
-		/// <param name="expression">JS-expression</param>
+		/// <param name="expression">JavaScript expression</param>
 		/// <returns>Result of the expression</returns>
 		public object Evaluate(string expression)
 		{
+			VerifyNotDisposed();
+
 			if (string.IsNullOrWhiteSpace(expression))
 			{
 				throw new ArgumentException(
 					string.Format(Strings.Common_ArgumentIsEmpty, "expression"), "expression");
 			}
 
-			return InnerEvaluate(expression);
+			return _jsEngine.Evaluate(expression);
 		}
 
 		/// <summary>
 		/// Evaluates an expression
 		/// </summary>
 		/// <typeparam name="T">Type of result</typeparam>
-		/// <param name="expression">JS-expression</param>
+		/// <param name="expression">JavaScript expression</param>
 		/// <returns>Result of the expression</returns>
 		public T Evaluate<T>(string expression)
 		{
+			VerifyNotDisposed();
+
 			if (string.IsNullOrWhiteSpace(expression))
 			{
 				throw new ArgumentException(
 					string.Format(Strings.Common_ArgumentIsEmpty, "expression"), "expression");
 			}
 
-			object result = InnerEvaluate(expression);
-
-			return ConvertToType<T>(result);
-		}
-
-		private object InnerEvaluate(string expression)
-		{
-			object result;
-
-			lock (_executionSynchronizer)
+			Type returnValueType = typeof(T);
+			if (!ValidationHelpers.IsSupportedType(returnValueType))
 			{
-				result = _activeScriptSite.ExecuteScriptText(expression, true);
+				throw new NotSupportedTypeException(
+				string.Format(Strings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
 			}
 
-			result = MapToHostType(result);
+			object result = _jsEngine.Evaluate(expression);
 
-			return result;
+			return JsTypeConverter.ConvertToType<T>(result);
 		}
 
 		/// <summary>
 		/// Executes a code
 		/// </summary>
-		/// <param name="code">Code</param>
+		/// <param name="code">JavaScript code</param>
 		public void Execute(string code)
 		{
+			VerifyNotDisposed();
+
 			if (string.IsNullOrWhiteSpace(code))
 			{
 				throw new ArgumentException(
 					string.Format(Strings.Common_ArgumentIsEmpty, "code"), "code");
 			}
 
-			lock (_executionSynchronizer)
-			{
-				_activeScriptSite.ExecuteScriptText(code, false);
-			}
+			_jsEngine.Execute(code);
 		}
 
 		/// <summary>
@@ -263,6 +201,8 @@
 		/// <param name="encoding">Text encoding</param>
 		public void ExecuteFile(string path, Encoding encoding = null)
 		{
+			VerifyNotDisposed();
+
 			if (string.IsNullOrWhiteSpace(path))
 			{
 				throw new ArgumentException(
@@ -280,6 +220,8 @@
 		/// <param name="type">Type from assembly that containing an embedded resource</param>
 		public void ExecuteResource(string resourceName, Type type)
 		{
+			VerifyNotDisposed();
+
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
@@ -303,6 +245,8 @@
 		/// <param name="assembly">Assembly that containing an embedded resource</param>
 		public void ExecuteResource(string resourceName, Assembly assembly)
 		{
+			VerifyNotDisposed();
+
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
@@ -320,336 +264,6 @@
 		}
 
 		/// <summary>
-		/// Сhecks for the existence of a variable
-		/// </summary>
-		/// <param name="variableName">Variable name</param>
-		/// <returns>Result of check (true - exists; false - not exists</returns>
-		public bool HasVariable(string variableName)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			ValidateVariableName(variableName);
-
-			return InnerHasVariable(variableName);
-		}
-
-		private bool InnerHasVariable(string variableName)
-		{
-			string expression = string.Format("(typeof {0} !== 'undefined');", variableName);
-			var result = Evaluate<bool>(expression);
-
-			return result;
-		}
-
-		/// <summary>
-		/// Gets a value of variable
-		/// </summary>
-		/// <param name="variableName">Variable name</param>
-		/// <returns>Value of variable</returns>
-		public object GetVariableValue(string variableName)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			ValidateVariableName(variableName);
-
-			return InnerGetVariableValue(variableName);
-		}
-
-		/// <summary>
-		/// Gets a value of variable
-		/// </summary>
-		/// <typeparam name="T">Type of variable</typeparam>
-		/// <param name="variableName">Variable name</param>
-		/// <returns>Value of variable</returns>
-		public T GetVariableValue<T>(string variableName)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			ValidateVariableName(variableName);
-
-			object result = InnerGetVariableValue(variableName);
-
-			return ConvertToType<T>(result);
-		}
-
-		private object InnerGetVariableValue(string variableName)
-		{
-			string expression = string.Format("{0};", variableName);
-			object result = Evaluate(expression);
-
-			return result;
-		}
-
-		/// <summary>
-		/// Sets a value of variable
-		/// </summary>
-		/// <param name="variableName">Variable name</param>
-		/// <param name="value">Value of variable</param>
-		public void SetVariableValue(string variableName, object value)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			ValidateVariableName(variableName);
-
-			string serializeValue = Serialize(value);
-			string code = string.Format(@"if (typeof {0} !== 'undefined') {{
-	{0} = {1};
-}}
-else {{
-	var {0} = {1};
-}}", variableName, serializeValue);
-
-			Execute(code);
-		}
-
-		/// <summary>
-		/// Removes a variable
-		/// </summary>
-		/// <param name="variableName">Variable name</param>
-		public void RemoveVariable(string variableName)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			ValidateVariableName(variableName);
-
-			string code = string.Format(@"if (typeof {0} !== 'undefined') {{
-	{0} = undefined;
-}}", variableName);
-
-			Execute(code);
-		}
-
-		/// <summary>
-		/// Starts a validation of variable name
-		/// </summary>
-		/// <param name="variableName">Variable name</param>
-		private void ValidateVariableName(string variableName)
-		{
-			if (!ValidationHelpers.CheckNameFormat(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
-			}
-
-			if (!ValidationHelpers.CheckNameAllowability(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_VariableNameIsForbidden, variableName));
-			}
-		}
-
-		/// <summary>
-		/// Сhecks for the existence of a property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Property name</param>
-		/// <returns>Result of check (true - exists; false - not exists)</returns>
-		public bool HasProperty(string variableName, string propertyName)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			ValidateVariableName(variableName);
-			ValidatePropertyName(propertyName);
-
-			if (!InnerHasVariable(variableName))
-			{
-				throw new UndefinedValueException(
-					string.Format(Strings.Runtime_VariableNotExist, variableName));
-			}
-
-			string expression = string.Format("(typeof {0}.{1} !== 'undefined');", variableName, propertyName);
-			var result = Evaluate<bool>(expression);
-
-			return result;
-		}
-
-		/// <summary>
-		/// Gets a value of property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Property name</param>
-		/// <returns>Value of property</returns>
-		public object GetPropertyValue(string variableName, string propertyName)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			ValidateVariableName(variableName);
-			ValidatePropertyName(propertyName);
-
-			if (!InnerHasVariable(variableName))
-			{
-				throw new UndefinedValueException(
-					string.Format(Strings.Runtime_VariableNotExist, variableName));
-			}
-
-			return InnerGetPropertyValue(variableName, propertyName);
-		}
-
-		/// <summary>
-		/// Gets a value of property
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Property name</param>
-		/// <returns>Value of property</returns>
-		public T GetPropertyValue<T>(string variableName, string propertyName)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			ValidateVariableName(variableName);
-			ValidatePropertyName(propertyName);
-
-			if (!InnerHasVariable(variableName))
-			{
-				throw new UndefinedValueException(
-					string.Format(Strings.Runtime_VariableNotExist, variableName));
-			}
-
-			object result = InnerGetPropertyValue(variableName, propertyName);
-
-			return ConvertToType<T>(result);
-		}
-
-		private object InnerGetPropertyValue(string variableName, string propertyName)
-		{
-			string expression = string.Format("{0}.{1};", variableName, propertyName);
-			object result = Evaluate(expression);
-
-			return result;
-		}
-
-		/// <summary>
-		/// Sets a value of property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Property name</param>
-		/// <param name="value">Value of property</param>
-		public void SetPropertyValue(string variableName, string propertyName, object value)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			ValidateVariableName(variableName);
-			ValidatePropertyName(propertyName);
-
-			string serializeValue = Serialize(value);
-			string code = string.Format(@"if (typeof {0} === 'undefined') {{
-	var {0} = {{}};	
-}}
-
-msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName, serializeValue);
-
-			Execute(code);
-		}
-
-		/// <summary>
-		/// Removes a property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Property name</param>
-		public void RemoveProperty(string variableName, string propertyName)
-		{
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			ValidateVariableName(variableName);
-			ValidatePropertyName(propertyName);
-
-			string code = string.Format(@"if (typeof {0}.{1} !== 'undefined') {{
-	delete {0}.{1};
-}}", variableName, propertyName);
-
-			Execute(code);
-		}
-
-		/// <summary>
-		/// Starts a validation of property name
-		/// </summary>
-		/// <param name="propertyName">Property name</param>
-		private void ValidatePropertyName(string propertyName)
-		{
-			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
-			}
-
-			if (!ValidationHelpers.CheckPropertyNameAllowability(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_PropertyNameIsForbidden, propertyName));
-			}
-		}
-
-		/// <summary>
 		/// Calls a function
 		/// </summary>
 		/// <param name="functionName">Function name</param>
@@ -657,15 +271,21 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 		/// <returns>Result of the function execution</returns>
 		public object CallFunction(string functionName, params object[] args)
 		{
+			VerifyNotDisposed();
+
 			if (string.IsNullOrWhiteSpace(functionName))
 			{
 				throw new ArgumentException(
 					string.Format(Strings.Common_ArgumentIsEmpty, "functionName"), "functionName");
 			}
 
-			ValidateFunctionName(functionName);
+			if (!ValidationHelpers.CheckNameFormat(functionName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidFunctionNameFormat, functionName));
+			}
 
-			object result = InnerCallFunction(functionName, args);
+			object result = _jsEngine.CallFunction(functionName, args);
 
 			return result;
 		}
@@ -679,88 +299,397 @@ msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName,
 		/// <returns>Result of the function execution</returns>
 		public T CallFunction<T>(string functionName, params object[] args)
 		{
+			VerifyNotDisposed();
+
 			if (string.IsNullOrWhiteSpace(functionName))
 			{
 				throw new ArgumentException(
 					string.Format(Strings.Common_ArgumentIsEmpty, "functionName"), "functionName");
 			}
 
-			ValidateFunctionName(functionName);
-
-			object result = InnerCallFunction(functionName, args);
-
-			return ConvertToType<T>(result);
-		}
-
-		private object InnerCallFunction(string functionName, params object[] args)
-		{
-			object result;
-
-			int argumentCount = args.Length;
-			var processedArgs = new object[argumentCount];
-
-			if (argumentCount > 0)
+			Type returnValueType = typeof(T);
+			if (!ValidationHelpers.IsSupportedType(returnValueType))
 			{
-				for (int argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++)
-				{
-					processedArgs[argumentIndex] = MapToScriptType(args[argumentIndex]);
-				}
+				throw new NotSupportedTypeException(
+				string.Format(Strings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
 			}
 
-			lock (_executionSynchronizer)
-			{
-				result = _activeScriptSite.CallFunction(functionName, processedArgs);
-			}
-
-			result = MapToHostType(result);
-
-			return result;
-		}
-
-		/// <summary>
-		/// Starts a validation of function name
-		/// </summary>
-		/// <param name="functionName">Function name</param>
-		private void ValidateFunctionName(string functionName)
-		{
 			if (!ValidationHelpers.CheckNameFormat(functionName))
 			{
 				throw new FormatException(
 					string.Format(Strings.Runtime_InvalidFunctionNameFormat, functionName));
 			}
 
-			if (!ValidationHelpers.CheckNameAllowability(functionName))
+			object result = _jsEngine.CallFunction(functionName, args);
+
+			return JsTypeConverter.ConvertToType<T>(result);
+		}
+
+		/// <summary>
+		/// Сhecks for the existence of a variable
+		/// </summary>
+		/// <param name="variableName">Name of variable</param>
+		/// <returns>Result of check (true - exists; false - not exists</returns>
+		public bool HasVariable(string variableName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
 			{
 				throw new FormatException(
-					string.Format(Strings.Runtime_FunctionNameIsForbidden, functionName));
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
 			}
+
+			return _jsEngine.HasVariable(variableName);
 		}
-		
+
+		/// <summary>
+		/// Gets a value of variable
+		/// </summary>
+		/// <param name="variableName">Name of variable</param>
+		/// <returns>Value of variable</returns>
+		public object GetVariableValue(string variableName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
+			}
+
+			return _jsEngine.GetVariableValue(variableName);
+		}
+
+		/// <summary>
+		/// Gets a value of variable
+		/// </summary>
+		/// <typeparam name="T">Type of variable</typeparam>
+		/// <param name="variableName">Name of variable</param>
+		/// <returns>Value of variable</returns>
+		public T GetVariableValue<T>(string variableName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			Type returnValueType = typeof(T);
+			if (!ValidationHelpers.IsSupportedType(returnValueType))
+			{
+				throw new NotSupportedTypeException(
+					string.Format(Strings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
+			}
+
+			object result = _jsEngine.GetVariableValue(variableName);
+
+			return JsTypeConverter.ConvertToType<T>(result);
+		}
+
+		/// <summary>
+		/// Sets a value of variable
+		/// </summary>
+		/// <param name="variableName">Name of variable</param>
+		/// <param name="value">Value of variable</param>
+		public void SetVariableValue(string variableName, object value)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
+			}
+
+			if (value != null)
+			{
+				Type variableType = value.GetType();
+
+				if (!ValidationHelpers.IsSupportedType(variableType))
+				{
+					throw new NotSupportedTypeException(
+						string.Format(Strings.Runtime_VariableTypeNotSupported,
+							variableName, variableType.FullName));
+				}
+			}
+
+			_jsEngine.SetVariableValue(variableName, value);
+		}
+
+		/// <summary>
+		/// Removes a variable
+		/// </summary>
+		/// <param name="variableName">Name of variable</param>
+		public void RemoveVariable(string variableName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
+			}
+
+			_jsEngine.RemoveVariable(variableName);
+		}
+
+		/// <summary>
+		/// Сhecks for the existence of a property
+		/// </summary>
+		/// <param name="variableName">Name of variable that contains the object</param>
+		/// <param name="propertyName">Name of property</param>
+		/// <returns>Result of check (true - exists; false - not exists)</returns>
+		[Obsolete("This method is obsolete.", false)]
+		public bool HasProperty(string variableName, string propertyName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			if (string.IsNullOrWhiteSpace(propertyName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
+			}
+
+			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
+			}
+
+			return _jsEngine.HasProperty(variableName, propertyName);
+		}
+
+		/// <summary>
+		/// Gets a value of property
+		/// </summary>
+		/// <param name="variableName">Name of variable that contains the object</param>
+		/// <param name="propertyName">Name of property</param>
+		/// <returns>Value of property</returns>
+		[Obsolete("This method is obsolete.", false)]
+		public object GetPropertyValue(string variableName, string propertyName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			if (string.IsNullOrWhiteSpace(propertyName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
+			}
+
+			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
+			}
+
+			return _jsEngine.GetPropertyValue(variableName, propertyName);
+		}
+
+		/// <summary>
+		/// Gets a value of property
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="variableName">Name of variable that contains the object</param>
+		/// <param name="propertyName">Name of property</param>
+		/// <returns>Value of property</returns>
+		[Obsolete("This method is obsolete.", false)]
+		public T GetPropertyValue<T>(string variableName, string propertyName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			if (string.IsNullOrWhiteSpace(propertyName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
+			}
+
+			Type returnValueType = typeof(T);
+			if (!ValidationHelpers.IsSupportedType(returnValueType))
+			{
+				throw new NotSupportedTypeException(
+					string.Format(Strings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
+			}
+
+			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
+			}
+
+			object result = _jsEngine.GetPropertyValue(variableName, propertyName);
+
+			return JsTypeConverter.ConvertToType<T>(result);
+		}
+
+		/// <summary>
+		/// Sets a value to property
+		/// </summary>
+		/// <param name="variableName">Name of variable that contains the object</param>
+		/// <param name="propertyName">Name of property</param>
+		/// <param name="value">Value of property</param>
+		[Obsolete("This method is obsolete.", false)]
+		public void SetPropertyValue(string variableName, string propertyName, object value)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			if (string.IsNullOrWhiteSpace(propertyName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
+			}
+
+			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
+			}
+
+			if (value != null)
+			{
+				Type propertyType = value.GetType();
+
+				if (!ValidationHelpers.IsSupportedType(propertyType))
+				{
+					throw new NotSupportedTypeException(
+						string.Format(Strings.Runtime_PropertyTypeNotSupported,
+							variableName, propertyName, propertyType.FullName));
+				}
+			}
+
+			_jsEngine.SetPropertyValue(variableName, propertyName, value);
+		}
+
+		/// <summary>
+		/// Removes a property
+		/// </summary>
+		/// <param name="variableName">Name of variable that contains the object</param>
+		/// <param name="propertyName">Name of property</param>
+		[Obsolete("This method is obsolete.", false)]
+		public void RemoveProperty(string variableName, string propertyName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+			}
+
+			if (string.IsNullOrWhiteSpace(propertyName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
+			}
+
+			_jsEngine.RemoveProperty(variableName, propertyName);
+		}
+
+		#region IDisposable implementation
+
 		/// <summary>
 		/// Destroys object
 		/// </summary>
 		public void Dispose()
 		{
-			Dispose(true /* disposing */);
-			GC.SuppressFinalize(this);
-		}
-
-		/// <summary>
-		/// Destroys object
-		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of 
-		/// managed objects contained in fields of class</param>
-		public void Dispose(bool disposing)
-		{
 			if (!_disposed)
 			{
 				_disposed = true;
 
-				if (_activeScriptSite != null)
+				if (_jsEngine != null)
 				{
-					_activeScriptSite.Dispose();
+					_jsEngine.Dispose();
+					_jsEngine = null;
 				}
 			}
 		}
+
+		#endregion
 	}
 }

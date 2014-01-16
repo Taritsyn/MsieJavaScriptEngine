@@ -14,15 +14,7 @@
 		/// </summary>
 		private static readonly Type[] _supportedTypes =
 		{
-			typeof(Undefined),
-			typeof(SByte), typeof(Byte), typeof(Int16), typeof(UInt16),
-			typeof(Int32), typeof(UInt32), typeof(Int64), typeof(UInt64),
-			typeof(Char), typeof(Single), typeof(Double), typeof(Boolean),
-			typeof(Decimal), typeof(String),
-			typeof(Nullable<SByte>), typeof(Nullable<Byte>), typeof(Nullable<Int16>), typeof(Nullable<UInt16>),
-			typeof(Nullable<Int32>), typeof(Nullable<UInt32>), typeof(Nullable<Int64>), typeof(Nullable<UInt64>),
-			typeof(Nullable<Char>), typeof(Nullable<Single>), typeof(Nullable<Double>), typeof(Nullable<Boolean>),
-			typeof(Nullable<Decimal>)
+			typeof(Undefined), typeof(Boolean), typeof(Int32), typeof(Double), typeof(String)		 		
 		};
 
 		/// <summary>

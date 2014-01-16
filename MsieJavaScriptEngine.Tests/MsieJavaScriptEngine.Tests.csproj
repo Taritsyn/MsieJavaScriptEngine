@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1321404B-291F-4A07-8120-3DA4DAEFA3B4}</ProjectGuid>
+    <ProjectGuid>{B9D71EDB-31DD-444A-8606-07D873CA6E42}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MsieJavaScriptEngine.Tests</RootNamespace>
@@ -32,25 +31,39 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\MsieJavaScriptEngine\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonTests.cs" />
-    <Compile Include="Es5Tests.cs" />
+    <Compile Include="C_ChakraActiveScript\CommonTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="C_ChakraActiveScript\Es5Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="B_ChakraJsRt\CommonTests.cs" />
+    <Compile Include="B_ChakraJsRt\Es5Tests.cs" />
+    <Compile Include="D_Classic\CommonTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="D_Classic\Es5Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CommonTestsBase.cs" />
+    <Compile Include="A_Auto\CommonTests.cs" />
+    <Compile Include="A_Auto\Es5Tests.cs" />
+    <Compile Include="Es5TestsBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidationTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\MsieJavaScriptEngine\MsieJavaScriptEngine.csproj">
-      <Project>{0097B831-FFB7-4012-9D8A-6BEED3BD71FF}</Project>
+      <Project>{d672bc49-c454-4975-bd25-a555b9bdd793}</Project>
       <Name>MsieJavaScriptEngine</Name>
     </ProjectReference>
   </ItemGroup>
@@ -59,9 +72,7 @@
     <EmbeddedResource Include="Resources\power.js" />
     <Content Include="Resources\square.js" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

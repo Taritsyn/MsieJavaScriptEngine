@@ -2,13 +2,15 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using ComTypes = System.Runtime.InteropServices.ComTypes;
+
+	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
 	/// <summary>
 	/// Provides the methods necessary to initialize the scripting engine. The scripting engine must
 	/// implement the IActiveScript interface
 	/// </summary>
-	[Guid("BB1A2AE1-A4F9-11cf-8F20-00805F2CD064")]
+	[ComImport]
+	[Guid("bb1a2ae1-a4f9-11cf-8f20-00805f2cd064")]
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	internal interface IActiveScript 
 	{
@@ -16,34 +18,39 @@
 		/// Informs the scripting engine of the IActiveScriptSite interface site provided by the host.
 		/// Call this method before any other IActiveScript interface methods is used
 		/// </summary>
-		/// <param name="scriptSite">The host-supplied script site to be associated with this instance
+		/// <param name="site">The host-supplied script site to be associated with this instance
 		/// of the scripting engine. The site must be uniquely assigned to this scripting engine
 		/// instance; it cannot be shared with other scripting engines.</param>
-		void SetScriptSite(IActiveScriptSite scriptSite);
+		void SetScriptSite(
+			[In] IActiveScriptSite site);
 
 		/// <summary>
 		/// Retrieves the site object associated with the Windows Script engine
 		/// </summary>
 		/// <param name="iid">Identifier of the requested interface</param>
-		/// <param name="siteObject">The host's site object</param>
-		void GetScriptSite(Guid iid, out IActiveScriptSite siteObject);
+		/// <param name="site">The host's site object</param>
+		void GetScriptSite(
+			[In] Guid iid,
+			[Out] [MarshalAs(UnmanagedType.IUnknown, IidParameterIndex = 0)] out IActiveScriptSite site);
 
 		/// <summary>
 		/// Puts the scripting engine into the given state. This method can be called from non-base
 		/// threads without resulting in a non-base callout to host objects or to the IActiveScriptSite
 		/// interface.
 		/// </summary>
-		/// <param name="scriptState">Sets the scripting engine to the given state</param>
-		void SetScriptState(ScriptState scriptState);
+		/// <param name="state">Sets the scripting engine to the given state</param>
+		void SetScriptState(
+			[In] ScriptState state);
 
 		/// <summary>
 		/// Retrieves the current state of the scripting engine. This method can be called from
 		/// non-base threads without resulting in a non-base callout to host objects or to the
 		/// IActiveScriptSite interface.
 		/// </summary>
-		/// <param name="scriptState">The value indicates the current state of the scripting engine
+		/// <param name="state">The value indicates the current state of the scripting engine
 		/// associated with the calling thread</param>
-		void GetScriptState(out ScriptState scriptState);
+		void GetScriptState(
+			[Out] out ScriptState state);
 
 		/// <summary>
 		/// Causes the scripting engine to abandon any currently loaded script, lose its state, and
@@ -61,8 +68,10 @@
 		/// </summary>
 		/// <param name="name">The name of the item as viewed from the script. The name must be unique
 		/// and persistable</param>
-		/// <param name="itemFlags">Flags associated with an item</param>
-		void AddNamedItem([MarshalAs(UnmanagedType.LPWStr)] string name, ScriptItemFlags itemFlags);
+		/// <param name="flags">Flags associated with an item</param>
+		void AddNamedItem(
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string name,
+			[In] ScriptItemFlags flags);
 
 		/// <summary>
 		/// Adds a type library to the name space for the script. This is similar to the #include
@@ -73,7 +82,11 @@
 		/// <param name="majorVersion">Major version number</param>
 		/// <param name="minorVersion">Minor version number</param>
 		/// <param name="typeLibFlags">Option flags</param>
-		void AddTypeLib(Guid clsId, uint majorVersion, uint minorVersion, ScriptTypeLibFlags typeLibFlags);
+		void AddTypeLib(
+			[In] Guid clsId,
+			[In] uint majorVersion,
+			[In] uint minorVersion,
+			[In] ScriptTypeLibFlags typeLibFlags);
 
 		/// <summary>
 		/// Retrieves the IDispatch interface for the methods and properties associated with the
@@ -87,8 +100,8 @@
 		/// <param name="dispatch">The object associated with the script's global methods and
 		/// properties. If the scripting engine does not support such an object, NULL is returned.</param>
 		void GetScriptDispatch(
-			[MarshalAs(UnmanagedType.LPWStr)] string itemName,
-			[MarshalAs(UnmanagedType.IDispatch)] out object dispatch);
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string itemName,
+			[Out] [MarshalAs(UnmanagedType.IDispatch)] out object dispatch);
 
 		/// <summary>
 		/// Retrieves a scripting-engine-defined identifier for the currently executing thread.
@@ -99,7 +112,8 @@
 		/// The interpretation of this identifier is left to the scripting engine, but it can be
 		/// just a copy of the Windows thread identifier. If the Win32 thread terminates, this
 		/// identifier becomes unassigned and can subsequently be assigned to another thread.</param>
-		void GetCurrentScriptThreadId(out uint threadId);
+		void GetCurrentScriptThreadId(
+			[Out] out uint threadId);
 
 		/// <summary>
 		/// Retrieves a scripting-engine-defined identifier for the thread associated with the
@@ -113,14 +127,18 @@
 		/// but it can be just a copy of the Windows thread identifier. Note that if the Win32
 		/// thread terminates, this identifier becomes unassigned and may subsequently be
 		/// assigned to another thread.</param>
-		void GetScriptThreadId(uint win32ThreadId, out uint scriptThreadId);
+		void GetScriptThreadId(
+			[In] uint win32ThreadId,
+			[Out] out uint scriptThreadId);
 
 		/// <summary>
 		/// Retrieves the current state of a script thread
 		/// </summary>
 		/// <param name="scriptThreadId">Identifier of the thread for which the state is desired</param>
 		/// <param name="threadState">Thread state</param>
-		void GetScriptThreadState(uint scriptThreadId, out ScriptThreadState threadState);
+		void GetScriptThreadState(
+			[In] uint scriptThreadId,
+			[Out] out ScriptThreadState threadState);
 
 		/// <summary>
 		/// Interrupts the execution of a running script thread (an event sink, an immediate
@@ -131,9 +149,11 @@
 		/// <param name="scriptThreadId">Identifier of the thread to interrupt, or one of the
 		/// special thread identifier values</param>
 		/// <param name="exceptionInfo">The error information that should be reported to the aborted script.</param>
-		/// <param name="interruptFlags">Option flags associated with the interruption</param>
-		void InterruptScriptThread(uint scriptThreadId, ComTypes.EXCEPINFO exceptionInfo, 
-			ScriptInterruptFlags interruptFlags);
+		/// <param name="flags">Option flags associated with the interruption</param>
+		void InterruptScriptThread(
+			[In] uint scriptThreadId,
+			[In] EXCEPINFO exceptionInfo,
+			[In] ScriptInterruptFlags flags);
 
 		/// <summary>
 		/// Clones the current scripting engine (minus any current execution state), returning
@@ -144,6 +164,7 @@
 		/// <param name="script">The cloned scripting engine. The host must create a site and
 		/// call the IActiveScript.SetScriptSite method on the new scripting engine before it
 		/// will be in the initialized state and, therefore, usable.</param>
-		void Clone(out IActiveScript script);
+		void Clone(
+			[Out] [MarshalAs(UnmanagedType.Interface)] out IActiveScript script);
 	}
 }

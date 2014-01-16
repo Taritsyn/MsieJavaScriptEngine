@@ -1,14 +1,16 @@
 ﻿namespace MsieJavaScriptEngine.ActiveScript
 {
 	using System.Runtime.InteropServices;
-	using ComTypes = System.Runtime.InteropServices.ComTypes;
+
+	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
 	/// <summary>
 	/// An object implementing this interface is passed to the IActiveScriptSite.OnScriptError method
 	/// whenever the scripting engine encounters an unhandled error. The host then calls methods on
 	/// this object to obtain information about the error that occurred.
 	/// </summary>
-	[Guid("EAE1BA61-A4ED-11cf-8F20-00805F2CD064")]
+	[ComImport]
+	[Guid("eae1ba61-a4ed-11cf-8f20-00805f2cd064")]
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	internal interface IActiveScriptError 
 	{
@@ -17,7 +19,8 @@
 		/// a script
 		/// </summary>
 		/// <param name="exceptionInfo">An EXCEPINFO structure that receives error information</param>
-		void GetExceptionInfo(out ComTypes.EXCEPINFO exceptionInfo);
+		void GetExceptionInfo(
+			[Out] out EXCEPINFO exceptionInfo);
 
 		/// <summary>
 		/// Retrieves the location in the source code where an error occurred while the scripting engine
@@ -27,13 +30,17 @@
 		/// this parameter depends on the host application.</param>
 		/// <param name="lineNumber">The line number in the source file where the error occurred</param>
 		/// <param name="characterPosition">The character position in the line where the error occurred</param>
-		void GetSourcePosition(out uint sourceContext, out uint lineNumber, out int characterPosition);
+		void GetSourcePosition(
+			[Out] out uint sourceContext,
+			[Out] out uint lineNumber,
+			[Out] out int characterPosition);
 
 		/// <summary>
 		/// Retrieves the line in the source file where an error occurred while a scripting engine
 		/// was running a script
 		/// </summary>
 		/// <param name="sourceLine">The line of source code in which the error occurred</param>
-		void GetSourceLineText([MarshalAs(UnmanagedType.BStr)] out string sourceLine);
+		void GetSourceLineText(
+			[Out] [MarshalAs(UnmanagedType.BStr)] out string sourceLine);
 	}
 }

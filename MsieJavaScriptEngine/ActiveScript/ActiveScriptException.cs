@@ -5,10 +5,10 @@
 	using System.Runtime.InteropServices.ComTypes;
 
 	[Serializable]
-	public sealed class ActiveScriptException : Exception
+	internal sealed class ActiveScriptException : Exception
 	{
 		/// <summary>
-		/// Gets or sets the error code
+		/// Gets or sets a error code
 		/// </summary>
 		public int ErrorCode
 		{
@@ -17,7 +17,7 @@
 		}
 
 		/// <summary>
-		/// Gets or sets the WCode
+		/// Gets or sets a WCode
 		/// </summary>
 		public short ErrorWCode
 		{
@@ -26,7 +26,7 @@
 		}
 		
 		/// <summary>
-		/// Gets or sets the application specific source context
+		/// Gets or sets a application specific source context
 		/// </summary>
 		public uint SourceContext
 		{
@@ -35,7 +35,7 @@
 		}
 
 		/// <summary>
-		/// Gets or sets the subcategory of error
+		/// Gets or sets a subcategory of error
 		/// </summary>
 		public string Subcategory
 		{
@@ -44,7 +44,7 @@
 		}
 
 		/// <summary>
-		/// Gets or sets the line number on which the error occurred
+		/// Gets or sets a line number on which the error occurred
 		/// </summary>
 		public uint LineNumber
 		{
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		/// Gets or sets the column number on which the error occurred
+		/// Gets or sets a column number on which the error occurred
 		/// </summary>
 		public int ColumnNumber
 		{
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		/// Gets or sets the content of the line on which the error occurred
+		/// Gets or sets a content of the line on which the error occurred
 		/// </summary>
 		public string SourceError
 		{

@@ -3,6 +3,8 @@
 	using System;
 	using System.Runtime.InteropServices;
 
+	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
 	/// <summary>
 	/// Implemented by the host to create a site for the Windows Script engine. Usually, this site
 	/// will be associated with the container of all the objects that are visible to the script
@@ -11,7 +13,8 @@
 	/// for each HTML page being displayed. Each ActiveX control (or other automation object) on the
 	/// page, and the scripting engine itself, would be enumerable within this container.
 	/// </summary>
-	[Guid("DB01A1E3-A42B-11cf-8F20-00805F2CD064")]
+	[ComImport]
+	[Guid("db01a1e3-a42b-11cf-8f20-00805f2cd064")]
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	internal interface IActiveScriptSite 
 	{
@@ -22,7 +25,8 @@
 		/// </summary>
 		/// <param name="lcid">A variable that receives the locale identifier for user-interface
 		/// elements displayed by the scripting engine</param>
-		void GetLcid(out int lcid);
+		void GetLcid(
+			[Out] out int lcid);
 
 		/// <summary>
 		/// Allows the scripting engine to obtain information about an item added with the
@@ -41,7 +45,7 @@
 		/// object associated with the item name; this mechanism is used to create a simple class when
 		/// the named item was added with the ScriptItem.CodeOnly flag set in the
 		/// IActiveScript.AddNamedItem method.</param>
-		/// <param name="typeInfo">A variable that receives a pointer to the ITypeInfo interface
+		/// <param name="pTypeInfo">A variable that receives a pointer to the ITypeInfo interface
 		/// associated with the item. This parameter receives null if returnMask does not include the
 		/// ScriptInfo.ITypeInfo value, or if type information is not available for this item. If type
 		/// information is not available, the object cannot source events, and name binding must be
@@ -51,10 +55,10 @@
 		/// interface, the ITypeInfo interface retrieved is the same as the index zero ITypeInfo that
 		/// would be obtained using the IProvideMultipleTypeInfo.GetInfoOfIndex method.</param>
 		void GetItemInfo(
-			[MarshalAs(UnmanagedType.LPWStr)] string name,
-			ScriptInfoFlags returnMask,
-			[MarshalAs(UnmanagedType.IUnknown)] out object item,
-			out IntPtr typeInfo);
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string name,
+			[In] ScriptInfoFlags returnMask,
+			[Out] [MarshalAs(UnmanagedType.IUnknown)] out object item,
+			[Out] out IntPtr pTypeInfo);
 
 		/// <summary>
 		/// Retrieves a host-defined string that uniquely identifies the current document version. If
@@ -62,8 +66,9 @@
 		/// HTML page being edited with Notepad), the scripting engine can save this along with its
 		/// persisted state, forcing a recompile the next time the script is loaded.
 		/// </summary>
-		/// <param name="versionString">The host-defined document version string</param>
-		void GetDocVersionString([MarshalAs(UnmanagedType.BStr)] out string versionString);
+		/// <param name="version">The host-defined document version string</param>
+		void GetDocVersionString(
+			[Out] [MarshalAs(UnmanagedType.BStr)] out string version);
 
 		/// <summary>
 		/// Informs the host that the script has completed execution.
@@ -72,20 +77,24 @@
 		/// produced no result.</param>
 		/// <param name="exceptionInfo">Contains exception information generated when the script
 		/// terminated, or null if no exception was generated</param>
-		void OnScriptTerminate(object result, System.Runtime.InteropServices.ComTypes.EXCEPINFO exceptionInfo);
+		void OnScriptTerminate(
+			[In] object result,
+			[In] EXCEPINFO exceptionInfo);
 
 		/// <summary>
 		/// Informs the host that the scripting engine has changed states.
 		/// </summary>
-		/// <param name="scriptState">Indicates the new script state.</param>
-		void OnStateChange(ScriptState scriptState);
+		/// <param name="state">Indicates the new script state.</param>
+		void OnStateChange(
+			[In] ScriptState state);
 
 		/// <summary>
 		/// Informs the host that an execution error occurred while the engine was running the script.
 		/// </summary>
-		/// <param name="scriptError">A host can use this interface to obtain information about the
+		/// <param name="error">A host can use this interface to obtain information about the
 		/// execution error.</param>
-		void OnScriptError(IActiveScriptError scriptError);
+		void OnScriptError(
+			[In] IActiveScriptError error);
 
 		/// <summary>
 		/// Informs the host that the scripting engine has begun executing the script code.
