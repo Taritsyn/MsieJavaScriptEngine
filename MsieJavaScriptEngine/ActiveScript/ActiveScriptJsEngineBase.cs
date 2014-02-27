@@ -3,6 +3,7 @@
 	using System;
 	using System.Globalization;
 	using System.Runtime.InteropServices;
+	using System.Windows.Threading;
 
 	using Helpers;
 	using Resources;
@@ -22,11 +23,6 @@
 		/// Name of resource, which contains a JSON2 library
 		/// </summary>
 		private const string JSON2_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.json2.min.js";
-
-		/// <summary>
-		/// Name of resource, which contains a MsieJavaScript library
-		/// </summary>
-		private const string MSIE_JAVASCRIPT_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.msieJavaScriptEngine.min.js";
 
 		/// <summary>
 		/// Pointer to an instance of native JavaScript engine
@@ -54,9 +50,9 @@
 		private readonly string _lowerIeVersion;
 
 		/// <summary>
-		/// Synchronizer of code execution
+		/// <see cref="System.Windows.Threading.Dispatcher"/> for the thread currently executing
 		/// </summary>
-		private readonly object _executionSynchronizer = new object();
+		private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
 
 		/// <summary>
 		/// Flag that object is destroyed
@@ -188,6 +184,30 @@
 			return jsEngineException;
 		}
 
+		private void InvokeScript(Action action)
+		{
+			try
+			{
+				_dispatcher.Invoke(DispatcherPriority.Input, action);
+			}
+			catch (ActiveScriptException e)
+			{
+				throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+			}
+		}
+
+		private T InvokeScript<T>(Func<T> func)
+		{
+			try
+			{
+				return (T)_dispatcher.Invoke(DispatcherPriority.Input, func);
+			}
+			catch (ActiveScriptException e)
+			{
+				throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+			}
+		}
+
 		/// <summary>
 		/// Loads a resources
 		/// </summary>
@@ -206,8 +226,6 @@
 			{
 				ExecuteResource(JSON2_LIBRARY_RESOURCE_NAME, type);
 			}
-
-			ExecuteResource(MSIE_JAVASCRIPT_LIBRARY_RESOURCE_NAME, type);
 		}
 
 		/// <summary>
@@ -269,20 +287,7 @@
 
 		public object Evaluate(string expression)
 		{
-			object result;
-
-			lock (_executionSynchronizer)
-			{
-				try
-				{
-					result = _activeScriptSite.ExecuteScriptText(expression, true);
-				}
-				catch (ActiveScriptException e)
-				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-				}
-			}
-
+			object result = InvokeScript(() => _activeScriptSite.ExecuteScriptText(expression, true));
 			result = MapToHostType(result);
 
 			return result;
@@ -290,23 +295,14 @@
 
 		public void Execute(string code)
 		{
-			lock (_executionSynchronizer)
+			InvokeScript(() =>
 			{
-				try
-				{
-					_activeScriptSite.ExecuteScriptText(code, false);
-				}
-				catch (ActiveScriptException e)
-				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-				}
-			}
+				_activeScriptSite.ExecuteScriptText(code, false);
+			});
 		}
 
 		public object CallFunction(string functionName, params object[] args)
 		{
-			object result;
-
 			int argumentCount = args.Length;
 			var processedArgs = new object[argumentCount];
 
@@ -318,22 +314,18 @@
 				}
 			}
 
-			lock (_executionSynchronizer)
+			object result = InvokeScript(() =>
 			{
 				try
 				{
-					result = _activeScriptSite.CallFunction(functionName, processedArgs);
+					return _activeScriptSite.CallFunction(functionName, processedArgs);
 				}
 				catch (MissingMemberException)
 				{
 					throw new JsRuntimeException(
 						string.Format(Strings.Runtime_FunctionNotExist, functionName));
 				}
-				catch (ActiveScriptException e)
-				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-				}
-			}
+			});
 
 			result = MapToHostType(result);
 
@@ -342,43 +334,25 @@
 
 		public bool HasVariable(string variableName)
 		{
-			bool variableExist;
-
-			lock (_executionSynchronizer)
-			{
-				try
-				{
-					variableExist = _activeScriptSite.HasProperty(variableName);
-				}
-				catch (ActiveScriptException e)
-				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-				}
-			}
+			var variableExist = InvokeScript(() => _activeScriptSite.HasProperty(variableName));
 
 			return variableExist;
 		}
 
 		public object GetVariableValue(string variableName)
 		{
-			object variableValue;
-
-			lock (_executionSynchronizer)
+			object variableValue = InvokeScript(() =>
 			{
 				try
 				{
-					variableValue = _activeScriptSite.GetProperty(variableName);
+					return _activeScriptSite.GetProperty(variableName);
 				}
 				catch (MissingMemberException)
 				{
 					throw new JsRuntimeException(
 						string.Format(Strings.Runtime_VariableNotExist, variableName));
 				}
-				catch (ActiveScriptException e)
-				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-				}
-			}
+			});
 
 			object result = MapToHostType(variableValue);
 
@@ -389,130 +363,12 @@
 		{
 			object processedValue = MapToScriptType(value);
 
-			lock (_executionSynchronizer)
-			{
-				try
-				{
-					_activeScriptSite.SetProperty(variableName, processedValue);
-				}
-				catch (ActiveScriptException e)
-				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-				}
-			}
+			InvokeScript(() => _activeScriptSite.SetProperty(variableName, processedValue));
 		}
 
 		public void RemoveVariable(string variableName)
 		{
-			lock (_executionSynchronizer)
-			{
-				try
-				{
-					_activeScriptSite.DeleteProperty(variableName);
-				}
-				catch (ActiveScriptException e)
-				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-				}
-			}
-		}
-
-		public bool HasProperty(string variableName, string propertyName)
-		{
-			if (!ValidationHelpers.CheckNameAllowability(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_VariableNameIsForbidden, variableName));
-			}
-
-			if (!ValidationHelpers.CheckPropertyNameAllowability(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_PropertyNameIsForbidden, propertyName));
-			}
-
-			if (!HasVariable(variableName))
-			{
-				throw new JsRuntimeException(
-					string.Format(Strings.Runtime_VariableNotExist, variableName));
-			}
-
-			string expression = string.Format("(typeof {0}.{1} !== 'undefined');", 
-				variableName, propertyName);
-			var propertyExist = JsTypeConverter.ConvertToType<bool>(Evaluate(expression));
-
-			return propertyExist;
-		}
-
-		public object GetPropertyValue(string variableName, string propertyName)
-		{
-			if (!ValidationHelpers.CheckNameAllowability(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_VariableNameIsForbidden, variableName));
-			}
-
-			if (!ValidationHelpers.CheckPropertyNameAllowability(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_PropertyNameIsForbidden, propertyName));
-			}
-
-			if (!HasVariable(variableName))
-			{
-				throw new JsRuntimeException(
-					string.Format(Strings.Runtime_VariableNotExist, variableName));
-			}
-
-			string expression = string.Format("{0}.{1};", variableName, propertyName);
-			object propertyValue = Evaluate(expression);
-
-			return propertyValue;
-		}
-
-		public void SetPropertyValue(string variableName, string propertyName, object value)
-		{
-			if (!ValidationHelpers.CheckNameAllowability(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_VariableNameIsForbidden, variableName));
-			}
-
-			if (!ValidationHelpers.CheckPropertyNameAllowability(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_PropertyNameIsForbidden, propertyName));
-			}
-
-			string serializedValue = JsTypeConverter.Serialize(value);
-			string code = string.Format(@"if (typeof {0} === 'undefined') {{
-		var {0} = {{}};  
-}}
-
-msieJavaScript.setPropertyValue({0}, ""{1}"", {2})", variableName, propertyName, serializedValue);
-
-			Execute(code);
-		}
-
-		public void RemoveProperty(string variableName, string propertyName)
-		{
-			if (!ValidationHelpers.CheckNameAllowability(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_VariableNameIsForbidden, variableName));
-			}
-
-			if (!ValidationHelpers.CheckPropertyNameAllowability(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_PropertyNameIsForbidden, propertyName));
-			}
-
-			string code = string.Format(@"if (typeof {0}.{1} !== 'undefined') {{
-		delete {0}.{1};
-}}", variableName, propertyName);
-
-			Execute(code);
+			InvokeScript(() => _activeScriptSite.DeleteProperty(variableName));
 		}
 
 		#endregion

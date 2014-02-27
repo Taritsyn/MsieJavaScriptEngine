@@ -114,6 +114,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\MsieJavaScriptEngine.snk">
@@ -125,8 +126,6 @@
     <EmbeddedResource Include="Resources\ES5.min.js" />
     <Content Include="Resources\json2.js" />
     <EmbeddedResource Include="Resources\json2.min.js" />
-    <Content Include="Resources\msieJavaScriptEngine.js" />
-    <EmbeddedResource Include="Resources\msieJavaScriptEngine.min.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Strings.resx">
@@ -148,10 +147,7 @@ del "$(ProjectDir)Resources\ES5.min.js"
 wg.exe -m -in:"$(ProjectDir)Resources\ES5.js" -out:"$(ProjectDir)Resources\ES5.min.js"
 
 del "$(ProjectDir)Resources\json2.min.js"
-wg.exe -m -in:"$(ProjectDir)Resources\json2.js" -out:"$(ProjectDir)Resources\json2.min.js"
-
-del "$(ProjectDir)Resources\msieJavaScriptEngine.min.js"
-wg.exe -m -in:"$(ProjectDir)Resources\msieJavaScriptEngine.js" -out:"$(ProjectDir)Resources\msieJavaScriptEngine.min.js"</PreBuildEvent>
+wg.exe -m -in:"$(ProjectDir)Resources\json2.js" -out:"$(ProjectDir)Resources\json2.min.js"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

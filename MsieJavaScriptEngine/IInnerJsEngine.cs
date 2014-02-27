@@ -60,36 +60,5 @@
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		void RemoveVariable(string variableName);
-
-		/// <summary>
-		/// Сhecks for the existence of a property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Name of property</param>
-		/// <returns>Result of check (true - exists; false - not exists)</returns>
-		bool HasProperty(string variableName, string propertyName);
-
-		/// <summary>
-		/// Gets a value of property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Name of property</param>
-		/// <returns>Value of property</returns>
-		object GetPropertyValue(string variableName, string propertyName);
-
-		/// <summary>
-		/// Sets a value of property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Name of property</param>
-		/// <param name="value">Value of property</param>
-		void SetPropertyValue(string variableName, string propertyName, object value);
-
-		/// <summary>
-		/// Removes a property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Name of property</param>
-		void RemoveProperty(string variableName, string propertyName);
 	}
 }

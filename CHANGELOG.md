@@ -1,6 +1,13 @@
 Change log
 ==========
 
+## February 27, 2014 - v1.4.0
+ * Removed following methods: `HasProperty`, `GetPropertyValue`, `SetPropertyValue` and `RemoveProperty`
+ * Fixed [bug #3](http://github.com/Taritsyn/MsieJavaScriptEngine/issues/3) "execute code from different threads"
+ * Now in the `ChakraJsRt` mode is available a more detailed information about errors
+ * In ECMAScript 5 Polyfill improved a performance of the `String.prototype.trim` function
+ * JSON2 library was updated to version of February 4, 2014
+
 ## January 16, 2014 - v1.3.0
  * Added support of the JsRT version of Chakra
  * Now the MSIE JavaScript Engine can work in 4 modes: `Auto` (selected by default), `Classic`, `ChakraActiveScript` and `ChakraJsRt`

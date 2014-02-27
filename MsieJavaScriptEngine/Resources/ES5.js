@@ -23,7 +23,7 @@ if (!String.prototype.hasOwnProperty('trim')) {
 		return function () {
 			return this.replace(re, "$1");
 		};
-	} (/^\s*(\S*(\s+\S+)*)\s*$/));
+	} (/^\s*([\s\S]*\S)?\s*$/));
 }
 
 // Array.prototype.every

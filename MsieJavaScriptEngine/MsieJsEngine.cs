@@ -37,6 +37,8 @@
 		/// <summary>
 		/// Constructs instance of MSIE JavaScript engine
 		/// </summary>
+		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
+		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
 		public MsieJsEngine()
 			: this(JsEngineMode.Auto)
 		{ }
@@ -45,6 +47,8 @@
 		/// Constructs instance of MSIE JavaScript engine
 		/// </summary>
 		/// <param name="engineMode">JavaScript engine mode</param>
+		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
+		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
 		public MsieJsEngine(JsEngineMode engineMode)
 			: this(engineMode, false)
 		{ }
@@ -54,6 +58,8 @@
 		/// </summary>
 		/// <param name="engineMode">JavaScript engine mode</param>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
+		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
+		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
 		public MsieJsEngine(JsEngineMode engineMode, bool useEcmaScript5Polyfill)
 			: this(engineMode, useEcmaScript5Polyfill, false)
 		{ }
@@ -62,6 +68,8 @@
 		/// Constructs instance of MSIE JavaScript engine
 		/// </summary>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
+		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
+		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
 		public MsieJsEngine(bool useEcmaScript5Polyfill)
 			: this(useEcmaScript5Polyfill, false)
 		{ }
@@ -71,6 +79,8 @@
 		/// </summary>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
+		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
+		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
 		public MsieJsEngine(bool useEcmaScript5Polyfill, bool useJson2Library)
 			: this(JsEngineMode.Auto, useEcmaScript5Polyfill, useJson2Library)
 		{ }
@@ -81,6 +91,8 @@
 		/// <param name="engineMode">JavaScript engine mode</param>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
+		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
+		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
 		public MsieJsEngine(JsEngineMode engineMode, bool useEcmaScript5Polyfill, bool useJson2Library)
 		{
 			JsEngineMode processedEngineMode = engineMode;
@@ -136,6 +148,10 @@
 		/// </summary>
 		/// <param name="expression">JavaScript expression</param>
 		/// <returns>Result of the expression</returns>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public object Evaluate(string expression)
 		{
 			VerifyNotDisposed();
@@ -155,6 +171,12 @@
 		/// <typeparam name="T">Type of result</typeparam>
 		/// <param name="expression">JavaScript expression</param>
 		/// <returns>Result of the expression</returns>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value
+		/// is not supported.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public T Evaluate<T>(string expression)
 		{
 			VerifyNotDisposed();
@@ -181,6 +203,10 @@
 		/// Executes a code
 		/// </summary>
 		/// <param name="code">JavaScript code</param>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public void Execute(string code)
 		{
 			VerifyNotDisposed();
@@ -199,6 +225,11 @@
 		/// </summary>
 		/// <param name="path">Path to the JS-file</param>
 		/// <param name="encoding">Text encoding</param>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.IO.FileNotFoundException">Specified JS-file not found.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public void ExecuteFile(string path, Encoding encoding = null)
 		{
 			VerifyNotDisposed();
@@ -218,6 +249,11 @@
 		/// </summary>
 		/// <param name="resourceName">JS-resource name</param>
 		/// <param name="type">Type from assembly that containing an embedded resource</param>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.ArgumentNullException" />
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public void ExecuteResource(string resourceName, Type type)
 		{
 			VerifyNotDisposed();
@@ -243,6 +279,11 @@
 		/// </summary>
 		/// <param name="resourceName">JS-resource name</param>
 		/// <param name="assembly">Assembly that containing an embedded resource</param>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.ArgumentNullException" />
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public void ExecuteResource(string resourceName, Assembly assembly)
 		{
 			VerifyNotDisposed();
@@ -269,6 +310,13 @@
 		/// <param name="functionName">Function name</param>
 		/// <param name="args">Function arguments</param>
 		/// <returns>Result of the function execution</returns>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.FormatException">The function name has incorrect format.</exception>
+		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of one function
+		/// parameter is not supported.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public object CallFunction(string functionName, params object[] args)
 		{
 			VerifyNotDisposed();
@@ -285,6 +333,27 @@
 					string.Format(Strings.Runtime_InvalidFunctionNameFormat, functionName));
 			}
 
+			int argumentCount = args.Length;
+			if (argumentCount > 0)
+			{
+				for (int argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++)
+				{
+					object argument = args[argumentIndex];
+
+					if (argument != null)
+					{
+						Type argType = argument.GetType();
+
+						if (!ValidationHelpers.IsSupportedType(argType))
+						{
+							throw new NotSupportedTypeException(
+								string.Format(Strings.Runtime_FunctionParameterTypeNotSupported,
+									functionName, argType.FullName));
+						}
+					}
+				}
+			}
+
 			object result = _jsEngine.CallFunction(functionName, args);
 
 			return result;
@@ -297,6 +366,13 @@
 		/// <param name="functionName">Function name</param>
 		/// <param name="args">Function arguments</param>
 		/// <returns>Result of the function execution</returns>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.FormatException">The function name has incorrect format.</exception>
+		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value or
+		/// one function parameter is not supported.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public T CallFunction<T>(string functionName, params object[] args)
 		{
 			VerifyNotDisposed();
@@ -320,6 +396,27 @@
 					string.Format(Strings.Runtime_InvalidFunctionNameFormat, functionName));
 			}
 
+			int argumentCount = args.Length;
+			if (argumentCount > 0)
+			{
+				for (int argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++)
+				{
+					object argument = args[argumentIndex];
+
+					if (argument != null)
+					{
+						Type argType = argument.GetType();
+
+						if (!ValidationHelpers.IsSupportedType(argType))
+						{
+							throw new NotSupportedTypeException(
+								string.Format(Strings.Runtime_FunctionParameterTypeNotSupported,
+									functionName, argType.FullName));
+						}
+					}
+				}
+			}
+
 			object result = _jsEngine.CallFunction(functionName, args);
 
 			return JsTypeConverter.ConvertToType<T>(result);
@@ -330,6 +427,11 @@
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Result of check (true - exists; false - not exists</returns>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public bool HasVariable(string variableName)
 		{
 			VerifyNotDisposed();
@@ -354,6 +456,11 @@
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Value of variable</returns>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public object GetVariableValue(string variableName)
 		{
 			VerifyNotDisposed();
@@ -379,6 +486,13 @@
 		/// <typeparam name="T">Type of variable</typeparam>
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Value of variable</returns>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
+		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value 
+		/// is not supported.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public T GetVariableValue<T>(string variableName)
 		{
 			VerifyNotDisposed();
@@ -412,6 +526,13 @@
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		/// <param name="value">Value of variable</param>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
+		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of variable value
+		/// is not supported.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public void SetVariableValue(string variableName, object value)
 		{
 			VerifyNotDisposed();
@@ -447,6 +568,11 @@
 		/// Removes a variable
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public void RemoveVariable(string variableName)
 		{
 			VerifyNotDisposed();
@@ -464,211 +590,6 @@
 			}
 
 			_jsEngine.RemoveVariable(variableName);
-		}
-
-		/// <summary>
-		/// Сhecks for the existence of a property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Name of property</param>
-		/// <returns>Result of check (true - exists; false - not exists)</returns>
-		[Obsolete("This method is obsolete.", false)]
-		public bool HasProperty(string variableName, string propertyName)
-		{
-			VerifyNotDisposed();
-
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			if (!ValidationHelpers.CheckNameFormat(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
-			}
-
-			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
-			}
-
-			return _jsEngine.HasProperty(variableName, propertyName);
-		}
-
-		/// <summary>
-		/// Gets a value of property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Name of property</param>
-		/// <returns>Value of property</returns>
-		[Obsolete("This method is obsolete.", false)]
-		public object GetPropertyValue(string variableName, string propertyName)
-		{
-			VerifyNotDisposed();
-
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			if (!ValidationHelpers.CheckNameFormat(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
-			}
-
-			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
-			}
-
-			return _jsEngine.GetPropertyValue(variableName, propertyName);
-		}
-
-		/// <summary>
-		/// Gets a value of property
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Name of property</param>
-		/// <returns>Value of property</returns>
-		[Obsolete("This method is obsolete.", false)]
-		public T GetPropertyValue<T>(string variableName, string propertyName)
-		{
-			VerifyNotDisposed();
-
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			Type returnValueType = typeof(T);
-			if (!ValidationHelpers.IsSupportedType(returnValueType))
-			{
-				throw new NotSupportedTypeException(
-					string.Format(Strings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
-			}
-
-			if (!ValidationHelpers.CheckNameFormat(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
-			}
-
-			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
-			}
-
-			object result = _jsEngine.GetPropertyValue(variableName, propertyName);
-
-			return JsTypeConverter.ConvertToType<T>(result);
-		}
-
-		/// <summary>
-		/// Sets a value to property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Name of property</param>
-		/// <param name="value">Value of property</param>
-		[Obsolete("This method is obsolete.", false)]
-		public void SetPropertyValue(string variableName, string propertyName, object value)
-		{
-			VerifyNotDisposed();
-
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			if (!ValidationHelpers.CheckNameFormat(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
-			}
-
-			if (!ValidationHelpers.CheckPropertyNameFormat(propertyName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidPropertyNameFormat, propertyName));
-			}
-
-			if (value != null)
-			{
-				Type propertyType = value.GetType();
-
-				if (!ValidationHelpers.IsSupportedType(propertyType))
-				{
-					throw new NotSupportedTypeException(
-						string.Format(Strings.Runtime_PropertyTypeNotSupported,
-							variableName, propertyName, propertyType.FullName));
-				}
-			}
-
-			_jsEngine.SetPropertyValue(variableName, propertyName, value);
-		}
-
-		/// <summary>
-		/// Removes a property
-		/// </summary>
-		/// <param name="variableName">Name of variable that contains the object</param>
-		/// <param name="propertyName">Name of property</param>
-		[Obsolete("This method is obsolete.", false)]
-		public void RemoveProperty(string variableName, string propertyName)
-		{
-			VerifyNotDisposed();
-
-			if (string.IsNullOrWhiteSpace(variableName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "variableName"), "variableName");
-			}
-
-			if (string.IsNullOrWhiteSpace(propertyName))
-			{
-				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "propertyName"), "propertyName");
-			}
-
-			if (!ValidationHelpers.CheckNameFormat(variableName))
-			{
-				throw new FormatException(
-					string.Format(Strings.Runtime_InvalidVariableNameFormat, variableName));
-			}
-
-			_jsEngine.RemoveProperty(variableName, propertyName);
 		}
 
 		#region IDisposable implementation

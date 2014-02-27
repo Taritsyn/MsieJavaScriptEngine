@@ -196,6 +196,15 @@ namespace MsieJavaScriptEngine.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One of the function parameters &apos;{0}&apos; has a type `{1}`, which is not supported..
+        /// </summary>
+        internal static string Runtime_FunctionParameterTypeNotSupported {
+            get {
+                return ResourceManager.GetString("Runtime_FunctionParameterTypeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The function name &apos;{0}&apos; has incorrect format..
         /// </summary>
         internal static string Runtime_InvalidFunctionNameFormat {
@@ -241,7 +250,7 @@ namespace MsieJavaScriptEngine.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selected the &apos;{0}&apos; mode of JavaScript engine is not supported!.
+        ///   Looks up a localized string similar to Selected &apos;{0}&apos; mode of JavaScript engine is not supported!.
         /// </summary>
         internal static string Runtime_JsEngineModeNotSupported {
             get {
@@ -250,7 +259,7 @@ namespace MsieJavaScriptEngine.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to load of the {0} JavaScript engine. Try to install the Internet Explorer {1} or higher.
+        ///   Looks up a localized string similar to Failed to load a {0} JavaScript engine. Try to install the Internet Explorer {1} or higher.
         ///See more details:
         ///
         ///{2}.

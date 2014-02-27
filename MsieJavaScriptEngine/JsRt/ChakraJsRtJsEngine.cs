@@ -214,8 +214,47 @@
 		{
 			string message = jsException.Message;
 			string category = string.Empty;
+			int lineNumber = 0;
+			int columnNumber = 0;
+			string sourceFragment = string.Empty;
 
-			if (jsException is JavaScriptUsageException)
+			if (jsException is JavaScriptScriptException)
+			{
+				category = "Script error";
+
+				var jsScriptException = (JavaScriptScriptException)jsException;
+				JavaScriptValue errorValue = jsScriptException.Error;
+
+				JavaScriptPropertyId messagePropertyId = JavaScriptPropertyId.FromString("message");
+				JavaScriptValue messagePropertyValue = errorValue.GetProperty(messagePropertyId);
+				string scriptMessage = messagePropertyValue.ConvertToString().ToString();
+				if (!string.IsNullOrWhiteSpace(message))
+				{
+					message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
+				}
+
+				JavaScriptPropertyId linePropertyId = JavaScriptPropertyId.FromString("line");
+				if (errorValue.HasProperty(linePropertyId))
+				{
+					JavaScriptValue linePropertyValue = errorValue.GetProperty(linePropertyId);
+					lineNumber = (int)linePropertyValue.ConvertToNumber().ToDouble() + 1;
+				}
+
+				JavaScriptPropertyId columnPropertyId = JavaScriptPropertyId.FromString("column");
+				if (errorValue.HasProperty(columnPropertyId))
+				{
+					JavaScriptValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
+					columnNumber = (int)columnPropertyValue.ConvertToNumber().ToDouble() + 1;
+				}
+
+				JavaScriptPropertyId sourcePropertyId = JavaScriptPropertyId.FromString("source");
+				if (errorValue.HasProperty(sourcePropertyId))
+				{
+					JavaScriptValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
+					sourceFragment = sourcePropertyValue.ConvertToString().ToString();
+				}
+			}
+			else if (jsException is JavaScriptUsageException)
 			{
 				category = "Usage error";
 			}
@@ -227,91 +266,49 @@
 			{
 				category = "Fatal error";
 			}
-			else if (jsException is JavaScriptScriptException)
-			{
-				category = "Script error";
-
-				var jsScriptException = (JavaScriptScriptException)jsException;
-				JavaScriptPropertyId messageName = JavaScriptPropertyId.FromString("message");
-				JavaScriptValue messageValue = jsScriptException.Error.GetProperty(messageName);
-
-				string scriptMessage = messageValue.ToString();
-				if (!string.IsNullOrWhiteSpace(message))
-				{
-					message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
-				}
-			}
 
 			var jsEngineException = new JsRuntimeException(message, ENGINE_MODE_NAME)
 			{
-				Category = category,
 				ErrorCode = ((uint)jsException.ErrorCode).ToString(CultureInfo.InvariantCulture),
+				Category = category,
+				LineNumber = lineNumber,
+				ColumnNumber = columnNumber,
+				SourceFragment = sourceFragment,
 				HelpLink = jsException.HelpLink
 			};
 
 			return jsEngineException;
 		}
 
-		private bool InnerHasProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId)
+		private void InvokeScript(Action action)
 		{
-			bool propertyExist;
-
-			try
+			lock (_executionSynchronizer)
+			using (new JavaScriptContext.Scope(_jsContext))
 			{
-				propertyExist = obj.HasProperty(propertyId);
-			}
-			catch (JavaScriptException e)
-			{
-				throw ConvertJavaScriptExceptionToJsRuntimeException(e);
-			}
-
-			if (propertyExist)
-			{
-				JavaScriptValue propertyValue = InnerGetProperty(obj, propertyId);
-				propertyExist = (propertyValue.ValueType != JavaScriptValueType.Undefined);
-			}
-
-			return propertyExist;
-		}
-
-		private JavaScriptValue InnerGetProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId)
-		{
-			JavaScriptValue propertyValue;
-
-			try
-			{
-				propertyValue = obj.GetProperty(propertyId);
-			}
-			catch (JavaScriptException e)
-			{
-				throw ConvertJavaScriptExceptionToJsRuntimeException(e);
-			}
-
-			return propertyValue;
-		}
-
-		private void InnerSetProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId, 
-			JavaScriptValue propertyValue)
-		{
-			try
-			{
-				obj.SetProperty(propertyId, propertyValue, true);
-			}
-			catch (JavaScriptException e)
-			{
-				throw ConvertJavaScriptExceptionToJsRuntimeException(e);
+				try
+				{
+					action();
+				}
+				catch (JavaScriptException e)
+				{
+					throw ConvertJavaScriptExceptionToJsRuntimeException(e);
+				}
 			}
 		}
 
-		private void InnerDeleteProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId)
+		private T InvokeScript<T>(Func<T> func)
 		{
-			try
+			lock (_executionSynchronizer)
+			using (new JavaScriptContext.Scope(_jsContext))
 			{
-				obj.DeleteProperty(propertyId, true);
-			}
-			catch (JavaScriptException e)
-			{
-				throw ConvertJavaScriptExceptionToJsRuntimeException(e);
+				try
+				{
+					return func();
+				}
+				catch (JavaScriptException e)
+				{
+					throw ConvertJavaScriptExceptionToJsRuntimeException(e);
+				}
 			}
 		}
 
@@ -339,42 +336,19 @@
 
 		public object Evaluate(string expression)
 		{
-			object result;
-
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
+			object result = InvokeScript(() =>
 			{
-				JavaScriptValue resultValue;
+				JavaScriptValue resultValue = JavaScriptContext.RunScript(expression);
 
-				try
-				{
-					resultValue = JavaScriptContext.RunScript(expression);
-				}
-				catch (JavaScriptException e)
-				{
-					throw ConvertJavaScriptExceptionToJsRuntimeException(e);
-				}
-
-				result = MapToHostType(resultValue);
-			}
+				return MapToHostType(resultValue);
+			});
 
 			return result;
 		}
 
 		public void Execute(string code)
 		{
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
-			{
-				try
-				{
-					JavaScriptContext.RunScript(code);
-				}
-				catch (JavaScriptException e)
-				{
-					throw ConvertJavaScriptExceptionToJsRuntimeException(e);
-				}
-			}
+			InvokeScript(() => JavaScriptContext.RunScript(code));
 		}
 
 		public object CallFunction(string functionName, params object[] args)
@@ -413,338 +387,60 @@
 
 		public bool HasVariable(string variableName)
 		{
-			bool variableExist;
-
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
+			bool result = InvokeScript(() =>
 			{
+				JavaScriptValue globalObj = JavaScriptValue.GlobalObject;
 				JavaScriptPropertyId variableId = JavaScriptPropertyId.FromString(variableName);
-				variableExist = InnerHasProperty(JavaScriptValue.GlobalObject, variableId);
-			}
+				bool variableExist = globalObj.HasProperty(variableId);
 
-			return variableExist;
+				if (variableExist)
+				{
+					JavaScriptValue variableValue = globalObj.GetProperty(variableId);
+					variableExist = (variableValue.ValueType != JavaScriptValueType.Undefined);
+				}
+
+				return variableExist;
+			});
+
+			return result;
 		}
 
 		public object GetVariableValue(string variableName)
 		{
-			object result;
-
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
+			object result = InvokeScript(() =>
 			{
 				JavaScriptPropertyId variableId = JavaScriptPropertyId.FromString(variableName);
-				JavaScriptValue variableValue = InnerGetProperty(JavaScriptValue.GlobalObject, variableId);
+				JavaScriptValue variableValue = JavaScriptValue.GlobalObject.GetProperty(variableId);
 
-				result = MapToHostType(variableValue);
-			}
+				return MapToHostType(variableValue);
+			});
 
 			return result;
 		}
 
 		public void SetVariableValue(string variableName, object value)
 		{
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
+			InvokeScript(() =>
 			{
-				JavaScriptValue globalObj = JavaScriptValue.GlobalObject;
 				JavaScriptPropertyId variableId = JavaScriptPropertyId.FromString(variableName);
+				JavaScriptValue inputValue = MapToScriptType(value);
 
-				if (value is Undefined)
-				{
-					InnerDeleteProperty(globalObj, variableId);
-				}
-				else
-				{
-					JavaScriptValue inputValue = MapToScriptType(value);
-					InnerSetProperty(globalObj, variableId, inputValue);
-				}
-			}
+				JavaScriptValue.GlobalObject.SetProperty(variableId, inputValue, true);
+			});
 		}
 
 		public void RemoveVariable(string variableName)
 		{
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
-			{
-				JavaScriptValue globalObj = JavaScriptValue.GlobalObject;
-				JavaScriptPropertyId variableId = JavaScriptPropertyId.FromString(variableName);
-				bool variableExist = InnerHasProperty(globalObj, variableId);
-
-				if (variableExist)
-				{
-					InnerDeleteProperty(globalObj, variableId);
-				}
-			}
-		}
-
-		public bool HasProperty(string variableName, string propertyName)
-		{
-			bool propertyExist;
-
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
+			InvokeScript(() =>
 			{
 				JavaScriptValue globalObj = JavaScriptValue.GlobalObject;
 				JavaScriptPropertyId variableId = JavaScriptPropertyId.FromString(variableName);
 
-				bool variableExist = InnerHasProperty(globalObj, variableId);
-				if (!variableExist)
+				if (globalObj.HasProperty(variableId))
 				{
-					throw new JsRuntimeException(
-						string.Format(Strings.Runtime_VariableNotExist, variableName));
+					globalObj.SetProperty(variableId, JavaScriptValue.Undefined, true);
 				}
-
-				JavaScriptValue variableValue = InnerGetProperty(globalObj, variableId);
-
-				if (propertyName.IndexOf('.') != -1)
-				{
-					string[] propertyPartNames = propertyName.Split('.');
-					int propertyPartCount = propertyPartNames.Length;
-					JavaScriptValue parentObj = variableValue;
-					bool propertyPartExist = false;
-
-					for (int propertyPartIndex = 0; propertyPartIndex < propertyPartCount; propertyPartIndex++)
-					{
-						string propertyPartName = propertyPartNames[propertyPartIndex];
-						JavaScriptPropertyId propertyPartId = JavaScriptPropertyId.FromString(propertyPartName);
-						propertyPartExist = InnerHasProperty(parentObj, propertyPartId);
-
-						if (propertyPartExist)
-						{
-							JavaScriptValue propertyPartValue = InnerGetProperty(parentObj, propertyPartId);
-							parentObj = propertyPartValue;
-						}
-						else
-						{
-							return false;
-						}
-					}
-
-					propertyExist = propertyPartExist;
-				}
-				else
-				{
-					JavaScriptPropertyId propertyId = JavaScriptPropertyId.FromString(propertyName);
-					propertyExist = InnerHasProperty(variableValue, propertyId);
-				}
-			}
-
-			return propertyExist;
-		}
-
-		public object GetPropertyValue(string variableName, string propertyName)
-		{
-			object result;
-
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
-			{
-				JavaScriptValue globalObj = JavaScriptValue.GlobalObject;
-				JavaScriptPropertyId variableId = JavaScriptPropertyId.FromString(variableName);
-
-				bool variableExist = InnerHasProperty(globalObj, variableId);
-				if (!variableExist)
-				{
-					throw new JsRuntimeException(
-						string.Format(Strings.Runtime_VariableNotExist, variableName));
-				}
-
-				JavaScriptValue variableValue = InnerGetProperty(globalObj, variableId);
-				JavaScriptValue propertyValue = JavaScriptValue.Undefined;
-
-				if (propertyName.IndexOf('.') != -1)
-				{
-					string[] propertyPartNames = propertyName.Split('.');
-					int propertyPartCount = propertyPartNames.Length;
-					int lastpPopertyPartIndex = propertyPartCount - 1;
-					var propertyPathBuilder = new StringBuilder();
-					JavaScriptValue parentObj = variableValue;
-
-					for (int propertyPartIndex = 0; propertyPartIndex < propertyPartCount; propertyPartIndex++)
-					{
-						string propertyPartName = propertyPartNames[propertyPartIndex];
-						JavaScriptPropertyId propertyPartId = JavaScriptPropertyId.FromString(propertyPartName);
-
-						if (propertyPartIndex > 0)
-						{
-							propertyPathBuilder.Append(".");
-						}
-						propertyPathBuilder.Append(propertyPartName);
-
-						if (propertyPartIndex == lastpPopertyPartIndex)
-						{
-							propertyValue = InnerGetProperty(parentObj, propertyPartId);
-							break;
-						}
-
-						bool propertyPartExist = InnerHasProperty(parentObj, propertyPartId);
-						if (propertyPartExist)
-						{
-							JavaScriptValue propertyPartValue = InnerGetProperty(parentObj, propertyPartId);
-							parentObj = propertyPartValue;
-						}
-						else
-						{
-							throw new JsRuntimeException(
-								string.Format(Strings.Runtime_PropertyNotExist, 
-									variableName, propertyPathBuilder));
-						}
-					}
-
-					propertyPathBuilder.Clear();
-				}
-				else
-				{
-					JavaScriptPropertyId propertyId = JavaScriptPropertyId.FromString(propertyName);
-					propertyValue = InnerGetProperty(variableValue, propertyId);
-				}
-
-				result = MapToHostType(propertyValue);
-			}
-
-			return result;
-		}
-
-		public void SetPropertyValue(string variableName, string propertyName, object value)
-		{
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
-			{
-				JavaScriptValue globalObj = JavaScriptValue.GlobalObject;
-				JavaScriptPropertyId variableId = JavaScriptPropertyId.FromString(variableName);
-
-				bool variableExist = InnerHasProperty(globalObj, variableId);
-				JavaScriptValue variableValue;
-
-				if (variableExist)
-				{
-					variableValue = InnerGetProperty(globalObj, variableId);
-				}
-				else
-				{
-					variableValue = JavaScriptValue.CreateObject();
-					InnerSetProperty(globalObj, variableId, variableValue);
-				}
-
-				if (propertyName.IndexOf('.') != -1)
-				{
-					string[] propertyPartNames = propertyName.Split('.');
-					int propertyPartCount = propertyPartNames.Length;
-					int lastpPopertyPartIndex = propertyPartCount - 1;
-					JavaScriptValue parentObject = variableValue;
-
-					for (int propertyPartIndex = 0; propertyPartIndex < propertyPartCount; propertyPartIndex++)
-					{
-						string propertyPartName = propertyPartNames[propertyPartIndex];
-						JavaScriptPropertyId propertyPartId = JavaScriptPropertyId.FromString(propertyPartName);
-							
-						if (propertyPartIndex == lastpPopertyPartIndex)
-						{
-							JavaScriptValue propertyValue = MapToScriptType(value);
-							InnerSetProperty(parentObject, propertyPartId, propertyValue);
-							break;
-						}
-
-						bool propertyPartExist = InnerHasProperty(parentObject, propertyPartId);
-						JavaScriptValue propertyPartValue;
-
-						if (propertyPartExist)
-						{
-							propertyPartValue = InnerGetProperty(parentObject, propertyPartId);
-						}
-						else
-						{
-							propertyPartValue = JavaScriptValue.CreateObject();
-							InnerSetProperty(parentObject, propertyPartId, propertyPartValue);
-						}
-
-						parentObject = propertyPartValue;
-					}
-				}
-				else
-				{
-					JavaScriptPropertyId propertyId = JavaScriptPropertyId.FromString(propertyName);
-					JavaScriptValue propertyValue = MapToScriptType(value);
-
-					InnerSetProperty(variableValue, propertyId, propertyValue);
-				}
-			}
-		}
-
-		public void RemoveProperty(string variableName, string propertyName)
-		{
-			lock (_executionSynchronizer)
-			using (new JavaScriptContext.Scope(_jsContext))
-			{
-				JavaScriptValue globalObj = JavaScriptValue.GlobalObject;
-				JavaScriptPropertyId variableId = JavaScriptPropertyId.FromString(variableName);
-
-				bool variableExist = InnerHasProperty(globalObj, variableId);
-				if (!variableExist)
-				{
-					throw new JsRuntimeException(
-						string.Format(Strings.Runtime_VariableNotExist, variableName));
-				}
-
-				JavaScriptValue variableValue = InnerGetProperty(globalObj, variableId);
-
-				if (propertyName.IndexOf('.') != -1)
-				{
-					string[] propertyPartNames = propertyName.Split('.');
-					int propertyPartCount = propertyPartNames.Length;
-					int lastpPopertyPartIndex = propertyPartCount - 1;
-					var propertyPathBuilder = new StringBuilder();
-					JavaScriptValue parentObject = variableValue;
-						
-					for (int propertyPartIndex = 0; propertyPartIndex < propertyPartCount; propertyPartIndex++)
-					{
-						string propertyPartName = propertyPartNames[propertyPartIndex];
-						JavaScriptPropertyId propertyPartId = JavaScriptPropertyId.FromString(propertyPartName);
-
-						if (propertyPartIndex > 0)
-						{
-							propertyPathBuilder.Append(".");
-						}
-						propertyPathBuilder.Append(propertyPartName);
-
-						bool propertyPartExist = InnerHasProperty(parentObject, propertyPartId);
-
-						if (propertyPartIndex == lastpPopertyPartIndex)
-						{
-							if (propertyPartExist)
-							{
-								InnerDeleteProperty(parentObject, propertyPartId);
-							}
-
-							break;
-						}
-
-						if (propertyPartExist)
-						{
-							JavaScriptValue propertyPartValue = InnerGetProperty(parentObject, propertyPartId);
-							parentObject = propertyPartValue;
-						}
-						else
-						{
-							throw new JsRuntimeException(
-								string.Format(Strings.Runtime_PropertyNotExist, 
-									variableName, propertyPathBuilder));
-						}
-					}
-
-					propertyPathBuilder.Clear();
-				}
-				else
-				{
-					JavaScriptPropertyId propertyId = JavaScriptPropertyId.FromString(propertyName);
-					bool propertyExist = InnerHasProperty(variableValue, propertyId);
-
-					if (propertyExist)
-					{
-						InnerDeleteProperty(variableValue, propertyId);
-					}
-				}
-			}
+			});
 		}
 
 		#endregion

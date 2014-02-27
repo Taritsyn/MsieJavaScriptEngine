@@ -162,6 +162,9 @@
   <data name="Runtime_FunctionNotExist" xml:space="preserve">
     <value>The function with the name '{0}' does not exist.</value>
   </data>
+  <data name="Runtime_FunctionParameterTypeNotSupported" xml:space="preserve">
+    <value>One of the function parameters '{0}' has a type `{1}`, which is not supported.</value>
+  </data>
   <data name="Runtime_InvalidFunctionNameFormat" xml:space="preserve">
     <value>The function name '{0}' has incorrect format.</value>
   </data>
@@ -178,10 +181,10 @@
     <value>Item with name '{0}' not found.</value>
   </data>
   <data name="Runtime_JsEngineModeNotSupported" xml:space="preserve">
-    <value>Selected the '{0}' mode of JavaScript engine is not supported!</value>
+    <value>Selected '{0}' mode of JavaScript engine is not supported!</value>
   </data>
   <data name="Runtime_JsEngineNotLoaded" xml:space="preserve">
-    <value>Failed to load of the {0} JavaScript engine. Try to install the Internet Explorer {1} or higher.
+    <value>Failed to load a {0} JavaScript engine. Try to install the Internet Explorer {1} or higher.
 See more details:
 
 {2}</value>
