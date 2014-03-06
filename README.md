@@ -91,3 +91,11 @@ See the [changelog](CHANGELOG.md).
  * [ECMAScript 5 Polyfill](http://nuget.org/packages/ES5) - Adds support for many of the new functions in ECMAScript 5 to downlevel browsers using the samples provided by Douglas Crockford in his ["ECMAScript 5: The New Parts"](http://channel9.msdn.com/Events/MIX/MIX11/EXT13) talk.
  * [JSON2 library](http://github.com/douglascrockford/JSON-js) - Adds support of the JSON object from ECMAScript 5 to downlevel browsers.
  * [WebGrease](http://webgrease.codeplex.com/) - [License: Apache License 2.0 (Apache)](http://webgrease.codeplex.com/license) JS-files, that used MSIE JS Engine, minificated by using WG.exe.
+
+## Who's Using MSIE JavaScript Engine
+If you use the MSIE JavaScript Engine in some project, please send me a message so I can include it in this list:
+
+ * [Chevron](http://github.com/SimonCropp/Chevron) by Simon Cropp
+ * [JavaScript Engine Switcher](http://github.com/Taritsyn/JavaScriptEngineSwitcher) by Andrey Taritsyn
+ * [SquishIt](http://github.com/jetheredge/SquishIt) by Justin Etheredge and Alex Cuse
+ * [Strike](http://github.com/SimonCropp/Strike) by Simon Cropp
