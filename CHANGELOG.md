@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## March 22, 2014 - v1.4.1
+ * Fixed minor bugs
+
 ## February 27, 2014 - v1.4.0
  * Removed following methods: `HasProperty`, `GetPropertyValue`, `SetPropertyValue` and `RemoveProperty`
  * Fixed [bug #3](http://github.com/Taritsyn/MsieJavaScriptEngine/issues/3) "execute code from different threads"
