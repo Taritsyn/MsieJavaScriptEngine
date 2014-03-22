@@ -137,31 +137,21 @@
 				return JavaScriptValue.Undefined;
 			}
 
-			if (value is bool)
-			{
-				var processedValue = (bool)value;
-				return JavaScriptValue.FromBoolean(processedValue);
-			}
+			var typeCode = Type.GetTypeCode(value.GetType());
 
-			if (value is int)
+			switch (typeCode)
 			{
-				var processedValue = (int)value;
-				return JavaScriptValue.FromInt32(processedValue);
+				case TypeCode.Boolean:
+					return JavaScriptValue.FromBoolean((bool)value);
+				case TypeCode.Int32:
+					return JavaScriptValue.FromInt32((int)value);
+				case TypeCode.Double:
+					return JavaScriptValue.FromDouble((double)value);
+				case TypeCode.String:
+					return JavaScriptValue.FromString((string)value);
+				default:
+					return JavaScriptValue.FromObject(value);
 			}
-
-			if (value is double)
-			{
-				var processedValue = (double)value;
-				return JavaScriptValue.FromDouble(processedValue);
-			}
-
-			if (value is string)
-			{
-				var processedValue = (string)value;
-				return JavaScriptValue.FromString(processedValue);
-			}
-
-			return JavaScriptValue.FromObject(value);
 		}
 
 		/// <summary>
@@ -203,7 +193,7 @@
 					result = processedValue.ToObject();
 					break;
 				default:
-					throw new Exception();
+					throw new ArgumentOutOfRangeException();
 			}
 
 			return result;
@@ -228,7 +218,7 @@
 				JavaScriptPropertyId messagePropertyId = JavaScriptPropertyId.FromString("message");
 				JavaScriptValue messagePropertyValue = errorValue.GetProperty(messagePropertyId);
 				string scriptMessage = messagePropertyValue.ConvertToString().ToString();
-				if (!string.IsNullOrWhiteSpace(message))
+				if (!string.IsNullOrWhiteSpace(scriptMessage))
 				{
 					message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
 				}
