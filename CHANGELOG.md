@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## March 24, 2014 - v1.4.2
+ * Fixed [JavaScriptEngineSwitcher.Msie's bug #5](http://github.com/Taritsyn/JavaScriptEngineSwitcher/issues/5) "MSIE "Catastrophic failure" when disposing"
+
 ## March 22, 2014 - v1.4.1
  * Fixed minor bugs
 

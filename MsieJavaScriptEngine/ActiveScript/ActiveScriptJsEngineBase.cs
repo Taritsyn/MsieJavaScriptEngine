@@ -258,6 +258,11 @@
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{
+			_dispatcher.Invoke(DispatcherPriority.Input, (Action)InnerDispose);
+		}
+
+		private void InnerDispose()
+		{
 			if (!_disposed)
 			{
 				_disposed = true;

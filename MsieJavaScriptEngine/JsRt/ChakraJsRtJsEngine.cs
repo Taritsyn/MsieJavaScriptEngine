@@ -33,9 +33,9 @@
 		private readonly JavaScriptContext _jsContext;
 
 		/// <summary>
-		/// Synchronizer of code execution
+		/// Synchronizer
 		/// </summary>
-		private readonly object _executionSynchronizer = new object();
+		private readonly object _synchronizer = new object();
 
 		/// <summary>
 		/// Flag that object is destroyed
@@ -272,7 +272,7 @@
 
 		private void InvokeScript(Action action)
 		{
-			lock (_executionSynchronizer)
+			lock (_synchronizer)
 			using (new JavaScriptContext.Scope(_jsContext))
 			{
 				try
@@ -288,7 +288,7 @@
 
 		private T InvokeScript<T>(Func<T> func)
 		{
-			lock (_executionSynchronizer)
+			lock (_synchronizer)
 			using (new JavaScriptContext.Scope(_jsContext))
 			{
 				try
@@ -309,11 +309,14 @@
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{
-			if (!_disposed)
+			lock (_synchronizer)
 			{
-				_disposed = true;
+				if (!_disposed)
+				{
+					_disposed = true;
 
-				_jsRuntime.Dispose();
+					_jsRuntime.Dispose();
+				}
 			}
 		}
 
