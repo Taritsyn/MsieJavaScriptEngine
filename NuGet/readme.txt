@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.4.2
+           README file for MSIE JavaScript Engine for .NET 1.4.3
 
    ----------------------------------------------------------------------
 
@@ -21,8 +21,9 @@
    =============
    RELEASE NOTES
    =============
-   Fixed JavaScriptEngineSwitcher.Msie's bug #5 "MSIE "Catastrophic
-   failure" when disposing".
+   1. In solution was enabled NuGet package restore;
+   2. Fixed JavaScriptEngineSwitcher.Msie's bug #7
+      "MsieJavaScriptEngine.ActiveScript.ActiveScriptException not wrapped".
 
    ============
    PROJECT SITE

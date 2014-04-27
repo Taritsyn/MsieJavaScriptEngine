@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Globalization;
+	using System.Reflection;
 	using System.Runtime.InteropServices;
 	using System.Windows.Threading;
 
@@ -194,6 +195,16 @@
 			{
 				throw ConvertActiveScriptExceptionToJsRuntimeException(e);
 			}
+			catch (TargetInvocationException e)
+			{
+				var activeScriptException = e.InnerException as ActiveScriptException;
+				if (activeScriptException != null)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(activeScriptException);
+				}
+
+				throw;
+			}
 		}
 
 		private T InvokeScript<T>(Func<T> func)
@@ -205,6 +216,16 @@
 			catch (ActiveScriptException e)
 			{
 				throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+			}
+			catch (TargetInvocationException e)
+			{
+				var activeScriptException = e.InnerException as ActiveScriptException;
+				if (activeScriptException != null)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(activeScriptException);
+				}
+
+				throw;
 			}
 		}
 

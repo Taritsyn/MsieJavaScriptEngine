@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## April 27, 2014 - v1.4.3
+ * In solution was enabled NuGet package restore
+ * Fixed [JavaScriptEngineSwitcher.Msie's bug #7](https://github.com/Taritsyn/JavaScriptEngineSwitcher/issues/7) "MsieJavaScriptEngine.ActiveScript.ActiveScriptException not wrapped"
+
 ## March 24, 2014 - v1.4.2
  * Fixed [JavaScriptEngineSwitcher.Msie's bug #5](http://github.com/Taritsyn/JavaScriptEngineSwitcher/issues/5) "MSIE "Catastrophic failure" when disposing"
 
