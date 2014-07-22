@@ -1,6 +1,7 @@
 ﻿namespace MsieJavaScriptEngine.JsRt
 {
 	using System;
+	using System.Runtime.InteropServices;
 
 	/// <summary>
 	/// A property identifier.
@@ -45,9 +46,9 @@
 		{
 			get
 			{
-				string name;
-				Native.ThrowIfError(Native.JsGetPropertyNameFromId(this, out name));
-				return name;
+				IntPtr buffer;
+				Native.ThrowIfError(Native.JsGetPropertyNameFromId(this, out buffer));
+				return Marshal.PtrToStringAuto(buffer);
 			}
 		}
 

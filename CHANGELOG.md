@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## July 22, 2014 - v1.4.4
+ * Source code of the `ChakraJsRtJsEngine` was synchronized with the Chakra Sample Hosts version of July 22, 2014
+
 ## April 27, 2014 - v1.4.3
  * In solution was enabled NuGet package restore
  * Fixed [JavaScriptEngineSwitcher.Msie's bug #7](https://github.com/Taritsyn/JavaScriptEngineSwitcher/issues/7) "MsieJavaScriptEngine.ActiveScript.ActiveScriptException not wrapped"

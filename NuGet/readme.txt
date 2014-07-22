@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.4.3
+           README file for MSIE JavaScript Engine for .NET 1.4.4
 
    ----------------------------------------------------------------------
 
@@ -21,9 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   1. In solution was enabled NuGet package restore;
-   2. Fixed JavaScriptEngineSwitcher.Msie's bug #7
-      "MsieJavaScriptEngine.ActiveScript.ActiveScriptException not wrapped".
+   Source code of the `ChakraJsRtJsEngine` was synchronized with the 
+   Chakra Sample Hosts version of July 22, 2014.
 
    ============
    PROJECT SITE

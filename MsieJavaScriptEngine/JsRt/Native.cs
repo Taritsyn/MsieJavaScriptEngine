@@ -447,7 +447,7 @@
 		internal static extern JavaScriptErrorCode JsGetPropertyIdFromName(string name, out JavaScriptPropertyId propertyId);
 
 		[DllImport("jscript9.dll")]
-		internal static extern JavaScriptErrorCode JsGetPropertyNameFromId(JavaScriptPropertyId propertyId, out string name);
+		internal static extern JavaScriptErrorCode JsGetPropertyNameFromId(JavaScriptPropertyId propertyId, out IntPtr buffer);
 
 		[DllImport("jscript9.dll")]
 		internal static extern JavaScriptErrorCode JsGetUndefinedValue(out JavaScriptValue undefinedValue);
