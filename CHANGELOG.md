@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## October 12, 2014 - v1.5.0
+ * Removed dependency on `System.Web.Extensions`
+ * Assembly is now targeted on the .NET Framework 4 Client Profile
+
 ## July 22, 2014 - v1.4.4
  * Source code of the `ChakraJsRtJsEngine` was synchronized with the Chakra Sample Hosts version of July 22, 2014
 

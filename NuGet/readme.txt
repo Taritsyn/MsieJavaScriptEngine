@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.4.4
+           README file for MSIE JavaScript Engine for .NET 1.5.0
 
    ----------------------------------------------------------------------
 
@@ -21,8 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Source code of the `ChakraJsRtJsEngine` was synchronized with the 
-   Chakra Sample Hosts version of July 22, 2014.
+   1. Removed dependency on `System.Web.Extensions`;
+   2. Assembly is now targeted on the .NET Framework 4 Client Profile.
 
    ============
    PROJECT SITE

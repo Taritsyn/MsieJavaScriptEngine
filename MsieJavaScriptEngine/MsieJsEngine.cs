@@ -196,7 +196,7 @@
 
 			object result = _jsEngine.Evaluate(expression);
 
-			return JsTypeConverter.ConvertToType<T>(result);
+			return TypeConverter.ConvertToType<T>(result);
 		}
 
 		/// <summary>
@@ -419,7 +419,7 @@
 
 			object result = _jsEngine.CallFunction(functionName, args);
 
-			return JsTypeConverter.ConvertToType<T>(result);
+			return TypeConverter.ConvertToType<T>(result);
 		}
 
 		/// <summary>
@@ -518,7 +518,7 @@
 
 			object result = _jsEngine.GetVariableValue(variableName);
 
-			return JsTypeConverter.ConvertToType<T>(result);
+			return TypeConverter.ConvertToType<T>(result);
 		}
 
 		/// <summary>

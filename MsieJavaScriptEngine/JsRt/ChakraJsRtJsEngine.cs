@@ -6,6 +6,7 @@
 
 	using Constants;
 	using Resources;
+	using Utilities;
 
 	/// <summary>
 	/// JsRT version of Chakra JavaScript engine
@@ -352,7 +353,7 @@
 			if (argumentCount == 1)
 			{
 				object value = args[0];
-				serializedArguments = JsTypeConverter.Serialize(value);
+				serializedArguments = SimplisticJsSerializer.Serialize(value);
 			}
 			else if (argumentCount > 1)
 			{
@@ -361,7 +362,7 @@
 				for (int argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++)
 				{
 					object value = args[argumentIndex];
-					string serializedValue = JsTypeConverter.Serialize(value);
+					string serializedValue = SimplisticJsSerializer.Serialize(value);
 
 					if (argumentIndex > 0)
 					{

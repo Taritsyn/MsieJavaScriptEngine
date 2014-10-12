@@ -123,11 +123,20 @@
   <data name="Common_ArgumentIsNull" xml:space="preserve">
     <value>The parameter '{0}' must be a non-nullable.</value>
   </data>
+  <data name="Common_CannotConvertObjectToType" xml:space="preserve">
+    <value>Cannot convert object of type `{0}` to type `{1}`.</value>
+  </data>
+  <data name="Common_CannotSerializeType" xml:space="preserve">
+    <value>Serialization of type `{0}` is not supported.</value>
+  </data>
   <data name="Common_FileNotExist" xml:space="preserve">
     <value>File '{0}' not exist.</value>
   </data>
   <data name="Common_ValueIsNull" xml:space="preserve">
     <value>Value cannot be null.</value>
+  </data>
+  <data name="Common_ValueTypeCannotBeNull" xml:space="preserve">
+    <value>Cannot convert null to a value type.</value>
   </data>
   <data name="ErrorDetails_Category" xml:space="preserve">
     <value>Category</value>

@@ -11,7 +11,7 @@
     <AssemblyName>MsieJavaScriptEngine</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -66,6 +66,7 @@
     <Compile Include="Helpers\JsErrorHelpers.cs" />
     <Compile Include="Helpers\ValidationHelpers.cs" />
     <Compile Include="IInnerJsEngine.cs" />
+    <Compile Include="Utilities\SimplisticJsSerializer.cs" />
     <Compile Include="JsException.cs" />
     <Compile Include="JsRuntimeException.cs" />
     <Compile Include="JsEngineLoadException.cs" />
@@ -93,7 +94,6 @@
     <Compile Include="JsRt\JavaScriptValueType.cs" />
     <Compile Include="JsRt\ChakraJsRtJsEngine.cs" />
     <Compile Include="JsRt\Native.cs" />
-    <Compile Include="JsTypeConverter.cs" />
     <Compile Include="MsieJsEngine.cs" />
     <Compile Include="NotSupportedTypeException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,13 +107,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.ru-ru.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\TypeConverter.cs" />
     <Compile Include="Undefined.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

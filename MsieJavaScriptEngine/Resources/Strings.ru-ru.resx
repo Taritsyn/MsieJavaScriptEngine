@@ -123,11 +123,20 @@
   <data name="Common_ArgumentIsNull" xml:space="preserve">
     <value>Параметр с именем "{0}" не должен содержать значение равное null!</value>
   </data>
+  <data name="Common_CannotConvertObjectToType" xml:space="preserve">
+    <value>Невозможно преобразовать объект типа `{0}` в тип `{1}`!</value>
+  </data>
+  <data name="Common_CannotSerializeType" xml:space="preserve">
+    <value>Сериализация типа `{0}` не поддерживается!</value>
+  </data>
   <data name="Common_FileNotExist" xml:space="preserve">
     <value>Файл "{0}" не существует!</value>
   </data>
   <data name="Common_ValueIsNull" xml:space="preserve">
     <value>Значение не должно быть равно null!</value>
+  </data>
+  <data name="Common_ValueTypeCannotBeNull" xml:space="preserve">
+    <value>Невозможно преобразовать null в значимый тип!</value>
   </data>
   <data name="ErrorDetails_Category" xml:space="preserve">
     <value>Категория</value>
