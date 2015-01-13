@@ -1,11 +1,11 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.5.0
+           README file for MSIE JavaScript Engine for .NET 1.5.1
 
    ----------------------------------------------------------------------
 
-          Copyright 2014 Andrey Taritsyn - http://www.taritsyn.ru
+      Copyright (c) 2012-2015 Andrey Taritsyn - http://www.taritsyn.ru
 		  
 		  
    ===========
@@ -21,8 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   1. Removed dependency on `System.Web.Extensions`;
-   2. Assembly is now targeted on the .NET Framework 4 Client Profile.
+   In ECMAScript 5 Polyfill added polyfill for
+   the `String.prototype.split` method.
 
    ============
    PROJECT SITE

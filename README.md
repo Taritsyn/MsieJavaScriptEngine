@@ -88,9 +88,10 @@ See the [changelog](CHANGELOG.md).
 ## Credits
  * [SassAndCoffee.JavaScript](http://github.com/xpaulbettsx/SassAndCoffee) - [License: Microsoft Public License (Ms-PL)](http://github.com/paulcbetts/SassAndCoffee/blob/master/COPYING) Part of the code of this library served as the basis for the ActiveScript version of Chakra and Classic JavaScript Engine.
  * [Chakra Sample Hosts](http://github.com/panopticoncentral/chakra-host) - [License: Apache License 2.0 (Apache)](http://github.com/panopticoncentral/chakra-host/blob/master/LICENSE) C# example from this project served as the basis for the JsRT version of Chakra.
- * [ECMAScript 5 Polyfill](http://nuget.org/packages/ES5) - Adds support for many of the new functions in ECMAScript 5 to downlevel browsers using the samples provided by Douglas Crockford in his ["ECMAScript 5: The New Parts"](http://channel9.msdn.com/Events/MIX/MIX11/EXT13) talk.
+ * [ECMAScript 5 Polyfill](http://nuget.org/packages/ES5) and [MDN JavaScript Polyfills](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference) - Adds support for many of the new functions in ECMAScript 5 to downlevel browsers.
+ * [Cross-Browser Split](http://blog.stevenlevithan.com/archives/cross-browser-split) - Adds ECMAScript compliant and uniform cross-browser split method.
  * [JSON2 library](http://github.com/douglascrockford/JSON-js) - Adds support of the JSON object from ECMAScript 5 to downlevel browsers.
- * [WebGrease](http://webgrease.codeplex.com/) - [License: Apache License 2.0 (Apache)](http://webgrease.codeplex.com/license) JS-files, that used MSIE JS Engine, minificated by using WG.exe.
+ * [Microsoft Ajax Minifier](http://ajaxmin.codeplex.com/) - [License: Apache License 2.0 (Apache)](http://ajaxmin.codeplex.com/license) JS-files, that used MSIE JS Engine, minificated by using `AjaxMinifier.exe`.
 
 ## Who's Using MSIE JavaScript Engine
 If you use the MSIE JavaScript Engine in some project, please send me a message so I can include it in this list:

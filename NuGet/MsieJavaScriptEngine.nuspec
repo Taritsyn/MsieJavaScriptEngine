@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MsieJavaScriptEngine</id>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
 	<title>MSIE JavaScript Engine for .NET</title>
     <authors>Andrey Taritsyn</authors>
     <owners>Andrey Taritsyn</owners>
@@ -12,9 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This project is a .NET wrapper for working with the Internet Explorer's JavaScript engines (JsRT version of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). Project was based on the code of SassAndCoffee.JavaScript (http://github.com/paulcbetts/SassAndCoffee) and Chakra Sample Hosts (http://github.com/panopticoncentral/chakra-host).</description>
     <summary>This project is a .NET wrapper for working with the Internet Explorer's JavaScript engines (JsRT version of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine).</summary>
-	<releaseNotes>1. Removed dependency on `System.Web.Extensions`;
-2. Assembly is now targeted on the .NET Framework 4 Client Profile.</releaseNotes>
-	<copyright>Copyright 2014 Andrey Taritsyn - http://www.taritsyn.ru</copyright>
+	<releaseNotes>In ECMAScript 5 Polyfill added polyfill for the `String.prototype.split` method.</releaseNotes>
+	<copyright>Copyright (c) 2012-2015 Andrey Taritsyn - http://www.taritsyn.ru</copyright>
     <language>en-US</language>
     <tags>JavaScript ECMAScript MSIE IE Chakra</tags>
     <references>
@@ -27,6 +26,6 @@
 	<file src="readme.txt" />
 	<file src="..\Licenses\sass-and-coffee-license.txt" />
 	<file src="..\Licenses\chakra-host-license.txt" />
-	<file src="..\Licenses\webgrease-license.txt" />
+	<file src="..\Licenses\microsoft-ajax-minifier-license.txt" />
   </files>
 </package>

@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## January 13, 2015 - v1.5.1
+ * In ECMAScript 5 Polyfill added polyfill for the `String.prototype.split` method
+
 ## October 12, 2014 - v1.5.0
  * Removed dependency on `System.Web.Extensions`
  * Assembly is now targeted on the .NET Framework 4 Client Profile
@@ -22,7 +25,7 @@ Change log
  * Removed following methods: `HasProperty`, `GetPropertyValue`, `SetPropertyValue` and `RemoveProperty`
  * Fixed [bug #3](http://github.com/Taritsyn/MsieJavaScriptEngine/issues/3) "execute code from different threads"
  * Now in the `ChakraJsRt` mode is available a more detailed information about errors
- * In ECMAScript 5 Polyfill improved a performance of the `String.prototype.trim` function
+ * In ECMAScript 5 Polyfill improved a performance of the `String.prototype.trim` method
  * JSON2 library was updated to version of February 4, 2014
 
 ## January 16, 2014 - v1.3.0
