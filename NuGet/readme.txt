@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.5.1
+           README file for MSIE JavaScript Engine for .NET 1.5.2
 
    ----------------------------------------------------------------------
 
@@ -21,8 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   In ECMAScript 5 Polyfill added polyfill for
-   the `String.prototype.split` method.
+   JSON2 library was updated to version of February 25, 2015.
 
    ============
    PROJECT SITE

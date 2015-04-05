@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## April 5, 2015 - v1.5.2
+ * JSON2 library was updated to version of February 25, 2015
+
 ## January 13, 2015 - v1.5.1
  * In ECMAScript 5 Polyfill added polyfill for the `String.prototype.split` method
 
