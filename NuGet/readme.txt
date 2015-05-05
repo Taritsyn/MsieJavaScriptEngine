@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.5.2
+           README file for MSIE JavaScript Engine for .NET 1.5.3
 
    ----------------------------------------------------------------------
 
@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   JSON2 library was updated to version of February 25, 2015.
+   JSON2 library was updated to version of May 3, 2015.
 
    ============
    PROJECT SITE

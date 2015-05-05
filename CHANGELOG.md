@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## May 5, 2015 - v1.5.3
+ * JSON2 library was updated to version of May 3, 2015
+
 ## April 5, 2015 - v1.5.2
  * JSON2 library was updated to version of February 25, 2015
 
