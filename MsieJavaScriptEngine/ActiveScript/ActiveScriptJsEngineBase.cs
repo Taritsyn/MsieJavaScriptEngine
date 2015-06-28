@@ -28,7 +28,7 @@
 		/// <summary>
 		/// Pointer to an instance of native JavaScript engine
 		/// </summary>
-		private IntPtr _pActiveScript = IntPtr.Zero;
+		private IntPtr _pActiveScript;
 
 		/// <summary>
 		/// Instance of native JavaScript engine
@@ -44,11 +44,6 @@
 		/// Name of JavaScript engine mode
 		/// </summary>
 		private readonly string _engineModeName;
-
-		/// <summary>
-		/// Lowest supported version of Internet Explorer
-		/// </summary>
-		private readonly string _lowerIeVersion;
 
 		/// <summary>
 		/// <see cref="System.Windows.Threading.Dispatcher"/> for the thread currently executing
@@ -67,13 +62,14 @@
 		/// <param name="clsid">CLSID of JavaScript engine</param>
 		/// <param name="engineModeName">Name of JavaScript engine mode</param>
 		/// <param name="lowerIeVersion">Lowest supported version of Internet Explorer</param>
+		/// <param name="languageVersion">Version of script language</param>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
 		protected ActiveScriptJsEngineBase(string clsid, string engineModeName, string lowerIeVersion,
-			bool useEcmaScript5Polyfill, bool useJson2Library)
+			ScriptLanguageVersion languageVersion, bool useEcmaScript5Polyfill, bool useJson2Library)
 		{
 			_engineModeName = engineModeName;
-			_lowerIeVersion = lowerIeVersion;
+			_pActiveScript = IntPtr.Zero;
 
 			try
 			{
@@ -84,7 +80,20 @@
 			{
 				throw new JsEngineLoadException(
 					string.Format(Strings.Runtime_JsEngineNotLoaded,
-						_engineModeName, _lowerIeVersion, e.Message), _engineModeName);
+						_engineModeName, lowerIeVersion, e.Message), _engineModeName);
+			}
+
+			var activeScriptProperty = _activeScript as IActiveScriptProperty;
+			if (activeScriptProperty != null)
+			{
+				object scriptLanguageVersion = (int)languageVersion;
+				uint result = activeScriptProperty.SetProperty((uint)ScriptProperty.InvokeVersioning,
+					IntPtr.Zero, ref scriptLanguageVersion);
+				if (result != (uint)ScriptHResult.Ok)
+				{
+					throw new JsEngineLoadException(
+						string.Format(Strings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
+				}
 			}
 
 			_activeScriptSite = new ActiveScriptSiteWrapper(_pActiveScript, _activeScript);
@@ -275,7 +284,7 @@
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of 
+		/// <param name="disposing">Flag, allowing destruction of
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{

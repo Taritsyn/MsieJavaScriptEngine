@@ -92,7 +92,7 @@
 		/// <returns>Instance of JavaScript runtime with special settings</returns>
 		private static JavaScriptRuntime CreateJsRuntime()
 		{
-			var jsRuntime = JavaScriptRuntime.Create(JavaScriptRuntimeAttributes.AllowScriptInterrupt, 
+			var jsRuntime = JavaScriptRuntime.Create(JavaScriptRuntimeAttributes.AllowScriptInterrupt,
 				JavaScriptRuntimeVersion.VersionEdge, null);
 
 			return jsRuntime;
@@ -105,7 +105,7 @@
 		public static bool IsSupported()
 		{
 			bool isSupported;
-			
+
 			try
 			{
 				using (CreateJsRuntime())
@@ -306,7 +306,7 @@
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of 
+		/// <param name="disposing">Flag, allowing destruction of
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{

@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Contains named constant values that specify the state of a scripting engine
 	/// </summary>
-	internal enum ScriptState : uint 
+	internal enum ScriptState : uint
 	{
 		/// <summary>
 		/// Script has just been created, but has not yet been initialized using an IPersist*

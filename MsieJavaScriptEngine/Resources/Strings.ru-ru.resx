@@ -165,6 +165,9 @@
   <data name="Runtime_ActiveScriptDispatcherNotInitialized" xml:space="preserve">
     <value>ActiveScript-диспетчер не инициализирован!</value>
   </data>
+  <data name="Runtime_ActiveScriptLanguageVersionSelectionFailed" xml:space="preserve">
+    <value>Не удалось установить "{0}" версию языка сценариев для ActiveScript JavaScript-движка!</value>
+  </data>
   <data name="Runtime_FunctionNameIsForbidden" xml:space="preserve">
     <value>Имя функции "{0}" запрещено, т.к. входит в список зарезервированных слов JavaScript!</value>
   </data>

@@ -3,7 +3,7 @@
 	using System;
 
 	[Flags]
-	internal enum ScriptItemFlags : uint 
+	internal enum ScriptItemFlags : uint
 	{
 		/// <summary>
 		/// No flags

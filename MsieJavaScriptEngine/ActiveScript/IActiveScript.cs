@@ -12,7 +12,7 @@
 	[ComImport]
 	[Guid("bb1a2ae1-a4f9-11cf-8f20-00805f2cd064")]
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-	internal interface IActiveScript 
+	internal interface IActiveScript
 	{
 		/// <summary>
 		/// Informs the scripting engine of the IActiveScriptSite interface site provided by the host.

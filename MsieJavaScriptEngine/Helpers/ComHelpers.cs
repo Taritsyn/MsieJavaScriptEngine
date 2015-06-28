@@ -28,7 +28,7 @@
 		{
 			Guid clsid = ClsidFromProgId(progId);
 			IntPtr pInterface = CreateInstanceByClsid<T>(clsid);
-			
+
 			return pInterface;
 		}
 

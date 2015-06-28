@@ -10,7 +10,7 @@ MSIE JavaScript Engine requires a installation of Internet Explorer on the machi
 
  * `Auto`. Automatically selects the most modern JavaScript engine from available on the machine.
  * `Classic`. Classic MSIE JavaScript engine (supports ECMAScript 3 with possibility of using the ECMAScript 5 Polyfill and the JSON2 library). Requires Internet Explorer 6 or higher on the machine.
- * `ChakraActiveScript`. ActiveScript version of Chakra JavaScript engine (supports ECMAScript 3 with possibility of using the ECMAScript 5 Polyfill and the JSON2 library). Requires Internet Explorer 9 or higher on the machine.
+ * `ChakraActiveScript`. ActiveScript version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 9 or higher on the machine.
  * `ChakraJsRt`. JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 11 or higher on the machine. Detailed information about JsRT you can read in the [Paul Vick's blog](http://www.panopticoncentral.net/category/javascript/).
 
 The supported .NET types are as follows:

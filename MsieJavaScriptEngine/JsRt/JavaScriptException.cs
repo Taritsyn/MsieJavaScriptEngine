@@ -15,7 +15,7 @@ namespace MsieJavaScriptEngine.JsRt
 		private readonly JavaScriptErrorCode _code;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptException"/> class. 
+		/// Initializes a new instance of the <see cref="JavaScriptException"/> class.
 		/// </summary>
 		/// <param name="code">The error code returned.</param>
 		public JavaScriptException(JavaScriptErrorCode code) :
@@ -24,7 +24,7 @@ namespace MsieJavaScriptEngine.JsRt
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptException"/> class. 
+		/// Initializes a new instance of the <see cref="JavaScriptException"/> class.
 		/// </summary>
 		/// <param name="code">The error code returned.</param>
 		/// <param name="message">The error message.</param>
@@ -35,7 +35,7 @@ namespace MsieJavaScriptEngine.JsRt
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptException"/> class. 
+		/// Initializes a new instance of the <see cref="JavaScriptException"/> class.
 		/// </summary>
 		/// <param name="info">The serialization info.</param>
 		/// <param name="context">The streaming context.</param>

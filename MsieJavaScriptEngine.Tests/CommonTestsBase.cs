@@ -317,7 +317,7 @@
 		{
 			// Arrange
 			const string functionCode = @"function determineArgumentsTypes() {
-	var result = '', 
+	var result = '',
 		argumentIndex,
 		argumentCount = arguments.length
 		;
@@ -334,7 +334,7 @@
 
 			// Act
 			_jsEngine.Execute(functionCode);
-			var output = (string)_jsEngine.CallFunction("determineArgumentsTypes", Undefined.Value, null, 
+			var output = (string)_jsEngine.CallFunction("determineArgumentsTypes", Undefined.Value, null,
 				true, 12, 3.14, "test");
 
 			// Assert
@@ -346,7 +346,7 @@
 		{
 			// Arrange
 			const string functionCode = @"function and() {
-	var result = null, 
+	var result = null,
 		argumentIndex,
 		argumentCount = arguments.length,
 		argumentValue
@@ -354,7 +354,7 @@
 
 	for (argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++) {
 		argumentValue = arguments[argumentIndex];
-	
+
 		if (result !== null) {
 			result = result && argumentValue;
 		}
@@ -379,7 +379,7 @@
 		{
 			// Arrange
 			const string functionCode = @"function sum() {
-	var result = 0, 
+	var result = 0,
 		argumentIndex,
 		argumentCount = arguments.length
 		;
@@ -404,7 +404,7 @@
 		{
 			// Arrange
 			const string functionCode = @"function sum() {
-	var result = 0, 
+	var result = 0,
 		argumentIndex,
 		argumentCount = arguments.length
 		;
@@ -429,7 +429,7 @@
 		{
 			// Arrange
 			const string functionCode = @"function concatenate() {
-	var result = '', 
+	var result = '',
 		argumentIndex,
 		argumentCount = arguments.length
 		;
@@ -540,7 +540,7 @@
 
 			Assert.AreEqual(input2, output2);
 		}
-		
+
 		[Test]
 		public virtual void SettingAndGettingVariableWithDoubleValueIsCorrect()
 		{

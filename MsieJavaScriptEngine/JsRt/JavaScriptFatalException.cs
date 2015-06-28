@@ -10,7 +10,7 @@
 	internal sealed class JavaScriptFatalException : JavaScriptException
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptFatalException"/> class. 
+		/// Initializes a new instance of the <see cref="JavaScriptFatalException"/> class.
 		/// </summary>
 		/// <param name="code">The error code returned.</param>
 		public JavaScriptFatalException(JavaScriptErrorCode code) :
@@ -19,7 +19,7 @@
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptFatalException"/> class. 
+		/// Initializes a new instance of the <see cref="JavaScriptFatalException"/> class.
 		/// </summary>
 		/// <param name="code">The error code returned.</param>
 		/// <param name="message">The error message.</param>

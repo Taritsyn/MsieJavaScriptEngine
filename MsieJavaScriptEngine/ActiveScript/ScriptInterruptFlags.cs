@@ -6,7 +6,7 @@
 	/// Thread interruption options
 	/// </summary>
 	[Flags]
-	internal enum ScriptInterruptFlags : uint 
+	internal enum ScriptInterruptFlags : uint
 	{
 		/// <summary>
 		/// No flags

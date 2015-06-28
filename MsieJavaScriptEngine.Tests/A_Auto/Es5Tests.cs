@@ -10,7 +10,12 @@
 		[TestFixtureSetUp]
 		public override void SetUp()
 		{
-			_jsEngine = new MsieJsEngine(JsEngineMode.Auto, true, true);
+			_jsEngine = new MsieJsEngine(new JsEngineSettings
+			{
+				EngineMode = JsEngineMode.Auto,
+				UseEcmaScript5Polyfill = true,
+				UseJson2Library = true
+			});
 		}
 	}
 }

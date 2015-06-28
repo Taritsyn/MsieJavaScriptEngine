@@ -12,7 +12,7 @@
 	[ComImport]
 	[Guid("eae1ba61-a4ed-11cf-8f20-00805f2cd064")]
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-	internal interface IActiveScriptError 
+	internal interface IActiveScriptError
 	{
 		/// <summary>
 		/// Retrieves information about an error that occurred while the scripting engine was running

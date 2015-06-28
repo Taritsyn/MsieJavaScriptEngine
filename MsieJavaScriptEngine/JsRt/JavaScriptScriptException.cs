@@ -16,7 +16,7 @@ namespace MsieJavaScriptEngine.JsRt
 		private readonly JavaScriptValue _error;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptScriptException"/> class. 
+		/// Initializes a new instance of the <see cref="JavaScriptScriptException"/> class.
 		/// </summary>
 		/// <param name="code">The error code returned.</param>
 		/// <param name="error">The JavaScript error object.</param>
@@ -26,7 +26,7 @@ namespace MsieJavaScriptEngine.JsRt
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptScriptException"/> class. 
+		/// Initializes a new instance of the <see cref="JavaScriptScriptException"/> class.
 		/// </summary>
 		/// <param name="code">The error code returned.</param>
 		/// <param name="error">The JavaScript error object.</param>

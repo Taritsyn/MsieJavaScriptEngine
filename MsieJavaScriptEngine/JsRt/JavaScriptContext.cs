@@ -7,12 +7,12 @@
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Each script context contains its own global object, distinct from the global object in 
+	/// Each script context contains its own global object, distinct from the global object in
 	/// other script contexts.
 	/// </para>
 	/// <para>
-	/// Many Chakra hosting APIs require an "active" script context, which can be set using 
-	/// Current. Chakra hosting APIs that require a current context to be set will note 
+	/// Many Chakra hosting APIs require an "active" script context, which can be set using
+	/// Current. Chakra hosting APIs that require a current context to be set will note
 	/// that explicitly in their documentation.
 	/// </para>
 	/// </remarks>
@@ -24,7 +24,7 @@
 		private readonly IntPtr _reference;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptContext"/> struct. 
+		/// Initializes a new instance of the <see cref="JavaScriptContext"/> struct.
 		/// </summary>
 		/// <param name="reference">The reference.</param>
 		internal JavaScriptContext(IntPtr reference)
@@ -63,14 +63,14 @@
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// If a call into the runtime results in an exception (either as the result of running a 
-		/// script or due to something like a conversion failure), the runtime is placed into an 
-		/// "exception state." All calls into any context created by the runtime (except for the 
-		/// exception APIs) will fail with <c>InExceptionState</c> until the exception is 
+		/// If a call into the runtime results in an exception (either as the result of running a
+		/// script or due to something like a conversion failure), the runtime is placed into an
+		/// "exception state." All calls into any context created by the runtime (except for the
+		/// exception APIs) will fail with <c>InExceptionState</c> until the exception is
 		/// cleared.
 		/// </para>
 		/// <para>
-		/// If the runtime of the current context is in the exception state when a callback returns 
+		/// If the runtime of the current context is in the exception state when a callback returns
 		/// into the engine, the engine will automatically rethrow the exception.
 		/// </para>
 		/// <para>
@@ -129,8 +129,8 @@
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// If idle processing has been enabled for the current runtime, calling <c>Idle</c> will 
-		/// inform the current runtime that the host is idle and that the runtime can perform 
+		/// If idle processing has been enabled for the current runtime, calling <c>Idle</c> will
+		/// inform the current runtime that the host is idle and that the runtime can perform
 		/// memory cleanup tasks.
 		/// </para>
 		/// <para>
@@ -143,7 +143,7 @@
 		/// </para>
 		/// </remarks>
 		/// <returns>
-		/// The next system tick when there will be more idle work to do. Returns the 
+		/// The next system tick when there will be more idle work to do. Returns the
 		/// maximum number of ticks if there no upcoming idle work to do.
 		/// </returns>
 		public static uint Idle()
@@ -290,7 +290,7 @@
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// SerializeScript parses a script and then stores the parsed form of the script in a 
+		/// SerializeScript parses a script and then stores the parsed form of the script in a
 		/// runtime-independent format. The serialized script then can be deserialized in any
 		/// runtime without requiring the script to be re-parsed.
 		/// </para>
@@ -311,15 +311,15 @@
 		}
 
 		/// <summary>
-		/// Returns the exception that caused the runtime of the current context to be in the 
+		/// Returns the exception that caused the runtime of the current context to be in the
 		/// exception state and resets the exception state for that runtime.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// If the runtime of the current context is not in an exception state, this API will throw
 		/// <c>JsErrorInvalidArgument</c>. If the runtime is disabled, this will return an exception
-		/// indicating that the script was terminated, but it will not clear the exception (the 
-		/// exception will be cleared if the runtime is re-enabled using 
+		/// indicating that the script was terminated, but it will not clear the exception (the
+		/// exception will be cleared if the runtime is re-enabled using
 		/// <c>EnableRuntimeExecution</c>).
 		/// </para>
 		/// <para>
@@ -339,7 +339,7 @@
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// If the runtime of the current context is already in an exception state, this API will 
+		/// If the runtime of the current context is already in an exception state, this API will
 		/// throw <c>JsErrorInExceptionState</c>.
 		/// </para>
 		/// <para>
@@ -478,7 +478,7 @@
 			private bool _disposed;
 
 			/// <summary>
-			/// Initializes a new instance of the <see cref="Scope"/> struct. 
+			/// Initializes a new instance of the <see cref="Scope"/> struct.
 			/// </summary>
 			/// <param name="context">The context to create the scope for.</param>
 			public Scope(JavaScriptContext context)

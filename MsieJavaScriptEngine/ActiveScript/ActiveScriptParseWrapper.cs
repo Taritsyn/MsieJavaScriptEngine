@@ -43,7 +43,7 @@
 		/// Flag that object is destroyed
 		/// </summary>
 		private bool _disposed;
-		
+
 		/// <summary>
 		/// Gets a last COM exception
 		/// </summary>
@@ -92,7 +92,7 @@
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of 
+		/// <param name="disposing">Flag, allowing destruction of
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{

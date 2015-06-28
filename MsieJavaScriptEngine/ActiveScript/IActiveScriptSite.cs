@@ -16,7 +16,7 @@
 	[ComImport]
 	[Guid("db01a1e3-a42b-11cf-8f20-00805f2cd064")]
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-	internal interface IActiveScriptSite 
+	internal interface IActiveScriptSite
 	{
 		/// <summary>
 		/// Retrieves the locale identifier associated with the host's user interface. The scripting

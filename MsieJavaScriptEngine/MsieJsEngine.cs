@@ -11,7 +11,7 @@
 	using Utilities;
 
 	/// <summary>
-	/// .NET-wrapper for working with the Internet Explorer's JavaScript engines 
+	/// .NET-wrapper for working with the Internet Explorer's JavaScript engines
 	/// </summary>
 	public sealed class MsieJsEngine : IDisposable
 	{
@@ -39,8 +39,9 @@
 		/// </summary>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
 		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
+		[Obsolete]
 		public MsieJsEngine()
-			: this(JsEngineMode.Auto)
+			: this(new JsEngineSettings())
 		{ }
 
 		/// <summary>
@@ -49,8 +50,12 @@
 		/// <param name="engineMode">JavaScript engine mode</param>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
 		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
+		[Obsolete]
 		public MsieJsEngine(JsEngineMode engineMode)
-			: this(engineMode, false)
+			: this(new JsEngineSettings
+			{
+				EngineMode = engineMode
+			})
 		{ }
 
 		/// <summary>
@@ -60,8 +65,13 @@
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
 		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
+		[Obsolete]
 		public MsieJsEngine(JsEngineMode engineMode, bool useEcmaScript5Polyfill)
-			: this(engineMode, useEcmaScript5Polyfill, false)
+			: this(new JsEngineSettings
+			{
+				EngineMode = engineMode,
+				UseEcmaScript5Polyfill = useEcmaScript5Polyfill
+			})
 		{ }
 
 		/// <summary>
@@ -70,8 +80,12 @@
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
 		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
+		[Obsolete]
 		public MsieJsEngine(bool useEcmaScript5Polyfill)
-			: this(useEcmaScript5Polyfill, false)
+			: this(new JsEngineSettings
+			{
+				UseEcmaScript5Polyfill = useEcmaScript5Polyfill
+			})
 		{ }
 
 		/// <summary>
@@ -81,8 +95,13 @@
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
 		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
+		[Obsolete]
 		public MsieJsEngine(bool useEcmaScript5Polyfill, bool useJson2Library)
-			: this(JsEngineMode.Auto, useEcmaScript5Polyfill, useJson2Library)
+			: this(new JsEngineSettings
+			{
+				UseEcmaScript5Polyfill = useEcmaScript5Polyfill,
+				UseJson2Library = useJson2Library
+			})
 		{ }
 
 		/// <summary>
@@ -93,8 +112,25 @@
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
 		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
+		[Obsolete]
 		public MsieJsEngine(JsEngineMode engineMode, bool useEcmaScript5Polyfill, bool useJson2Library)
+			: this(new JsEngineSettings
+			{
+				EngineMode = engineMode,
+				UseEcmaScript5Polyfill = useEcmaScript5Polyfill,
+				UseJson2Library = useJson2Library
+			})
+		{ }
+
+		/// <summary>
+		/// Constructs instance of MSIE JavaScript engine
+		/// </summary>
+		/// <param name="settings">JavaScript engine settings</param>
+		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
+		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
+		public MsieJsEngine(JsEngineSettings settings)
 		{
+			JsEngineMode engineMode = settings.EngineMode;
 			JsEngineMode processedEngineMode = engineMode;
 
 			if (engineMode == JsEngineMode.Auto)
@@ -123,10 +159,11 @@
 					_jsEngine = new ChakraJsRtJsEngine();
 					break;
 				case JsEngineMode.ChakraActiveScript:
-					_jsEngine = new ChakraActiveScriptJsEngine(useEcmaScript5Polyfill, useJson2Library);
+					_jsEngine = new ChakraActiveScriptJsEngine();
 					break;
 				case JsEngineMode.Classic:
-					_jsEngine = new ClassicActiveScriptJsEngine(useEcmaScript5Polyfill, useJson2Library);
+					_jsEngine = new ClassicActiveScriptJsEngine(settings.UseEcmaScript5Polyfill,
+						settings.UseJson2Library);
 					break;
 				default:
 					throw new NotSupportedException(
@@ -490,7 +527,7 @@
 		/// JavaScript engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value 
+		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value
 		/// is not supported.</exception>
 		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public T GetVariableValue<T>(string variableName)

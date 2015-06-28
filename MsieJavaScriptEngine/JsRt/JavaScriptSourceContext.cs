@@ -136,7 +136,7 @@
 		}
 
 		/// <summary>
-		/// Creates a new source context. 
+		/// Creates a new source context.
 		/// </summary>
 		/// <param name="cookie">
 		/// The cookie for the source context.

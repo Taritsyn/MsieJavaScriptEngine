@@ -14,7 +14,7 @@
 		/// </summary>
 		private static readonly Type[] _supportedTypes =
 		{
-			typeof(Undefined), typeof(Boolean), typeof(Int32), typeof(Double), typeof(String)		 		
+			typeof(Undefined), typeof(Boolean), typeof(Int32), typeof(Double), typeof(String)
 		};
 
 		/// <summary>

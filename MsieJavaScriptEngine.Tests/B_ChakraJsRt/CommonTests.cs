@@ -10,7 +10,12 @@
 		[TestFixtureSetUp]
 		public override void SetUp()
 		{
-			_jsEngine = new MsieJsEngine(JsEngineMode.ChakraJsRt);
+			_jsEngine = new MsieJsEngine(new JsEngineSettings
+			{
+				EngineMode = JsEngineMode.ChakraJsRt,
+				UseEcmaScript5Polyfill = false,
+				UseJson2Library = false
+			});
 		}
 	}
 }

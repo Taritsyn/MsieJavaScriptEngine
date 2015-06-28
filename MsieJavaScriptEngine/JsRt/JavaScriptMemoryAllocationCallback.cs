@@ -9,7 +9,7 @@
 	/// <param name="allocationEvent">The type of type allocation event.</param>
 	/// <param name="allocationSize">The size of the allocation.</param>
 	/// <returns>
-	/// For the Allocate event, returning true allows the runtime to continue with 
+	/// For the Allocate event, returning true allows the runtime to continue with
 	/// allocation. Returning false indicates the allocation request is rejected. The return value
 	/// is ignored for other allocation events.
 	/// </returns>

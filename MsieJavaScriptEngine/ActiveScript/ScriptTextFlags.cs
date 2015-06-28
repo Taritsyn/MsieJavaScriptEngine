@@ -3,7 +3,7 @@
 	using System;
 
 	[Flags]
-	internal enum ScriptTextFlags : uint 
+	internal enum ScriptTextFlags : uint
 	{
 		DelayExecution = 0x00000001,
 

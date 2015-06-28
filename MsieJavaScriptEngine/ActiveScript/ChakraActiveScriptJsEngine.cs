@@ -13,11 +13,9 @@
 		/// <summary>
 		/// Constructs instance of the Chakra ActiveScript JavaScript engine
 		/// </summary>
-		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
-		public ChakraActiveScriptJsEngine(bool useEcmaScript5Polyfill, bool useJson2Library)
+		public ChakraActiveScriptJsEngine()
 			: base(CHAKRA_CLSID, JsEngineModeName.ChakraActiveScript, "9",
-				useEcmaScript5Polyfill, useJson2Library)
+				ScriptLanguageVersion.EcmaScript5, false, false)
 		{ }
 
 

@@ -10,7 +10,7 @@ namespace MsieJavaScriptEngine.JsRt
 	internal sealed class JavaScriptEngineException : JavaScriptException
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptEngineException"/> class. 
+		/// Initializes a new instance of the <see cref="JavaScriptEngineException"/> class.
 		/// </summary>
 		/// <param name="code">The error code returned.</param>
 		public JavaScriptEngineException(JavaScriptErrorCode code) :
@@ -19,7 +19,7 @@ namespace MsieJavaScriptEngine.JsRt
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptEngineException"/> class. 
+		/// Initializes a new instance of the <see cref="JavaScriptEngineException"/> class.
 		/// </summary>
 		/// <param name="code">The error code returned.</param>
 		/// <param name="message">The error message.</param>

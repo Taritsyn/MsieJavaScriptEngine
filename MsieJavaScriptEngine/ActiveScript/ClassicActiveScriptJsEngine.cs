@@ -1,7 +1,7 @@
 ﻿namespace MsieJavaScriptEngine.ActiveScript
 {
 	using Constants;
-	
+
 	/// <summary>
 	/// Classic MSIE JavaScript engine
 	/// </summary>
@@ -16,8 +16,8 @@
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
 		public ClassicActiveScriptJsEngine(bool useEcmaScript5Polyfill, bool useJson2Library)
-			: base(CLASSIC_CLSID, JsEngineModeName.Classic, "6", 
-				useEcmaScript5Polyfill, useJson2Library)
+			: base(CLASSIC_CLSID, JsEngineModeName.Classic, "6",
+				ScriptLanguageVersion.Default, useEcmaScript5Polyfill, useJson2Library)
 		{ }
 
 

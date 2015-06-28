@@ -24,13 +24,13 @@
 			get;
 			set;
 		}
-		
+
 		/// <summary>
 		/// Gets or sets a application specific source context
 		/// </summary>
 		public uint SourceContext
 		{
-			get; 
+			get;
 			set;
 		}
 
@@ -48,7 +48,7 @@
 		/// </summary>
 		public uint LineNumber
 		{
-			get; 
+			get;
 			set;
 		}
 
@@ -57,7 +57,7 @@
 		/// </summary>
 		public int ColumnNumber
 		{
-			get; 
+			get;
 			set;
 		}
 
@@ -74,7 +74,7 @@
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
 		/// </summary>
-		public ActiveScriptException() 
+		public ActiveScriptException()
 		{ }
 
 		/// <summary>
@@ -82,7 +82,7 @@
 		/// </summary>
 		/// <param name="message">The message</param>
 		public ActiveScriptException(string message)
-			: base(message) 
+			: base(message)
 		{ }
 
 		/// <summary>
@@ -90,7 +90,7 @@
 		/// </summary>
 		/// <param name="innerException">The inner exception</param>
 		public ActiveScriptException(Exception innerException)
-			: base(null, innerException) 
+			: base(null, innerException)
 		{ }
 
 		/// <summary>
@@ -105,9 +105,9 @@
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
 		/// </summary>
-		/// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> 
+		/// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/>
 		/// that holds the serialized object data about the exception being thrown</param>
-		/// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> 
+		/// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/>
 		/// that contains contextual information about the source or destination</param>
 		/// <exception cref="T:System.ArgumentNullException">
 		/// The <paramref name="info"/> parameter is null
@@ -116,7 +116,7 @@
 		/// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0)
 		/// </exception>
 		private ActiveScriptException(SerializationInfo info, StreamingContext context)
-			: base(info, context) 
+			: base(info, context)
 		{ }
 
 
@@ -132,27 +132,27 @@
 			int columnNumber = 0;
 			string sourceError = string.Empty;
 
-			try 
+			try
 			{
 				error.GetSourceLineText(out sourceError);
-			} 
+			}
 			catch
 			{
 				// Do nothing
 			}
 
-			try 
+			try
 			{
 				error.GetSourcePosition(out sourceContext, out lineNumber, out columnNumber);
 				++lineNumber;
 				++columnNumber;
-			} 
+			}
 			catch
 			{
 				// Do nothing
 			}
 
-			try 
+			try
 			{
 				EXCEPINFO excepInfo;
 				error.GetExceptionInfo(out excepInfo);
@@ -161,7 +161,7 @@
 				subcategory = excepInfo.bstrSource;
 				errorCode = excepInfo.scode;
 				errorWCode = excepInfo.wCode;
-				if (!string.IsNullOrWhiteSpace(excepInfo.bstrHelpFile) 
+				if (!string.IsNullOrWhiteSpace(excepInfo.bstrHelpFile)
 					&& excepInfo.dwHelpContext != 0)
 				{
 					helpLink = string.Format("{0}: {1}", excepInfo.bstrHelpFile, excepInfo.dwHelpContext);
@@ -170,7 +170,7 @@
 				{
 					helpLink = excepInfo.bstrHelpFile;
 				}
-			} 
+			}
 			catch
 			{
 				// Do nothing
@@ -187,7 +187,7 @@
 				SourceError = sourceError,
 				HelpLink = helpLink,
 			};
-			
+
 			return activeScriptException;
 		}
 	}

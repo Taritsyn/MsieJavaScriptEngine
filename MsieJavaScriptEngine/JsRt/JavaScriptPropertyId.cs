@@ -18,7 +18,7 @@
 		private readonly IntPtr _id;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JavaScriptPropertyId"/> struct. 
+		/// Initializes a new instance of the <see cref="JavaScriptPropertyId"/> struct.
 		/// </summary>
 		/// <param name="id">The ID.</param>
 		internal JavaScriptPropertyId(IntPtr id)
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		/// Gets the property ID associated with the name. 
+		/// Gets the property ID associated with the name.
 		/// </summary>
 		/// <remarks>
 		/// <para>

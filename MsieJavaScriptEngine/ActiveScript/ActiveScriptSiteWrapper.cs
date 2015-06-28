@@ -62,16 +62,16 @@
 		/// <param name="pActiveScript">Pointer to an instance of native JavaScript engine</param>
 		/// <param name="activeScript">Instance of native JavaScript engine</param>
 		public ActiveScriptSiteWrapper(IntPtr pActiveScript, IActiveScript activeScript)
-			: this(pActiveScript, activeScript, DateTime.UtcNow.ToString("o")) 
+			: this(pActiveScript, activeScript, DateTime.UtcNow.ToString("o"))
 		{ }
-		
+
 		/// <summary>
 		/// Constructs instance of <see cref="ActiveScriptSiteWrapper"/>
 		/// </summary>
 		/// <param name="pActiveScript">Pointer to an instance of native JavaScript engine</param>
 		/// <param name="activeScript">Instance of native JavaScript engine</param>
 		/// <param name="documentVersion">Host-defined document version string</param>
-		public ActiveScriptSiteWrapper(IntPtr pActiveScript, IActiveScript activeScript, 
+		public ActiveScriptSiteWrapper(IntPtr pActiveScript, IActiveScript activeScript,
 			string documentVersion)
 		{
 			_activeScript = activeScript;
@@ -86,7 +86,7 @@
 
 			DocumentVersion = documentVersion;
 		}
-		
+
 		/// <summary>
 		/// Destructs instance of <see cref="ActiveScriptSiteWrapper"/>
 		/// </summary>
@@ -321,7 +321,7 @@
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of 
+		/// <param name="disposing">Flag, allowing destruction of
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{

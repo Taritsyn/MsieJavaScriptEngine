@@ -7,16 +7,16 @@
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Each Chakra runtime has its own independent execution engine, JIT compiler, and garbage 
+	/// Each Chakra runtime has its own independent execution engine, JIT compiler, and garbage
 	/// collected heap. As such, each runtime is completely isolated from other runtimes.
 	/// </para>
 	/// <para>
-	/// Runtimes can be used on any thread, but only one thread can call into a runtime at any 
+	/// Runtimes can be used on any thread, but only one thread can call into a runtime at any
 	/// time.
 	/// </para>
 	/// <para>
-	/// NOTE: A JavaScriptRuntime, unlike other objects in the Chakra hosting API, is not 
-	/// garbage collected since it contains the garbage collected heap itself. A runtime will 
+	/// NOTE: A JavaScriptRuntime, unlike other objects in the Chakra hosting API, is not
+	/// garbage collected since it contains the garbage collected heap itself. A runtime will
 	/// continue to exist until Dispose is called.
 	/// </para>
 	/// </remarks>
@@ -56,7 +56,7 @@
 		/// Gets or sets the current memory limit for a runtime.
 		/// </summary>
 		/// <remarks>
-		/// The memory limit of a runtime can be always be retrieved, regardless of whether or not the 
+		/// The memory limit of a runtime can be always be retrieved, regardless of whether or not the
 		/// runtime is active on another thread.
 		/// </remarks>
 		public UIntPtr MemoryLimit
@@ -86,7 +86,7 @@
 				return isDisabled;
 			}
 
-			set 
+			set
 			{
 				Native.ThrowIfError(value
 										? Native.JsDisableRuntimeExecution(this)
@@ -133,7 +133,7 @@
 		/// </summary>
 		/// <remarks>
 		/// Once a runtime has been disposed, all resources owned by it are invalid and cannot be used.
-		/// If the runtime is active (i.e. it is set to be current on a particular thread), it cannot 
+		/// If the runtime is active (i.e. it is set to be current on a particular thread), it cannot
 		/// be disposed.
 		/// </remarks>
 		public void Dispose()
@@ -159,14 +159,14 @@
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Registering a memory allocation callback will cause the runtime to call back to the host 
+		/// Registering a memory allocation callback will cause the runtime to call back to the host
 		/// whenever it acquires memory from, or releases memory to, the OS. The callback routine is
 		/// called before the runtime memory manager allocates a block of memory. The allocation will
 		/// be rejected if the callback returns false. The runtime memory manager will also invoke the
-		/// callback routine after freeing a block of memory, as well as after allocation failures. 
+		/// callback routine after freeing a block of memory, as well as after allocation failures.
 		/// </para>
 		/// <para>
-		/// The callback is invoked on the current runtime execution thread, therefore execution is 
+		/// The callback is invoked on the current runtime execution thread, therefore execution is
 		/// blocked until the callback completes.
 		/// </para>
 		/// <para>
@@ -190,11 +190,11 @@
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// The callback is invoked on the current runtime execution thread, therefore execution is 
+		/// The callback is invoked on the current runtime execution thread, therefore execution is
 		/// blocked until the callback completes.
 		/// </para>
 		/// <para>
-		/// The callback can be used by hosts to prepare for garbage collection. For example, by 
+		/// The callback can be used by hosts to prepare for garbage collection. For example, by
 		/// releasing unnecessary references on Chakra objects.
 		/// </para>
 		/// </remarks>
@@ -211,7 +211,7 @@
 		/// Creates a debug script context for running scripts.
 		/// </summary>
 		/// <remarks>
-		/// Each script context has its own global object that is isolated from all other script 
+		/// Each script context has its own global object that is isolated from all other script
 		/// contexts.
 		/// </remarks>
 		/// <param name="debugApplication">The debug application to use.</param>
@@ -231,7 +231,7 @@
 		/// Creates a debug script context for running scripts.
 		/// </summary>
 		/// <remarks>
-		/// Each script context has its own global object that is isolated from all other script 
+		/// Each script context has its own global object that is isolated from all other script
 		/// contexts.
 		/// </remarks>
 		/// <param name="debugApplication">The debug application to use.</param>
@@ -251,7 +251,7 @@
 		/// Creates a script context for running scripts.
 		/// </summary>
 		/// <remarks>
-		/// Each script context has its own global object that is isolated from all other script 
+		/// Each script context has its own global object that is isolated from all other script
 		/// contexts.
 		/// </remarks>
 		/// <returns>The created script context.</returns>

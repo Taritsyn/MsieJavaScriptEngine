@@ -70,7 +70,7 @@
 			return result;
 		}
 
-		private static bool ConvertObjectToType(object obj, Type type, bool throwOnError, 
+		private static bool ConvertObjectToType(object obj, Type type, bool throwOnError,
 			out object convertedObject)
 		{
 			if (obj == null)

@@ -105,7 +105,7 @@
 		/// <param name="delimiter">The end-of-scriptlet delimiter. When pstrCode is parsed
 		/// from a stream of text, the host typically uses a delimiter, such as two single
 		/// quotation marks (''), to detect the end of the scriptlet. This parameter specifies
-		/// the delimiter that the host used, allowing the scripting engine to provide some 
+		/// the delimiter that the host used, allowing the scripting engine to provide some
 		/// conditional primitive preprocessing (for example, replacing a single quotation
 		/// mark ['] with two single quotation marks for use as a delimiter). Exactly how
 		/// (and if) the scripting engine makes use of this information depends on the

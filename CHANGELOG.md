@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## June 28, 2015 - v1.5.4
+ * In `ChakraActiveScript` mode added native support of ECMAScript 5 (without polyfills)
+ * Added `JsEngineSettings` class for any reason in the future to abandon redundant constructors
+
 ## May 5, 2015 - v1.5.3
  * JSON2 library was updated to version of May 3, 2015
 
