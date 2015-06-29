@@ -83,16 +83,19 @@
 						_engineModeName, lowerIeVersion, e.Message), _engineModeName);
 			}
 
-			var activeScriptProperty = _activeScript as IActiveScriptProperty;
-			if (activeScriptProperty != null)
+			if (languageVersion != ScriptLanguageVersion.None)
 			{
-				object scriptLanguageVersion = (int)languageVersion;
-				uint result = activeScriptProperty.SetProperty((uint)ScriptProperty.InvokeVersioning,
-					IntPtr.Zero, ref scriptLanguageVersion);
-				if (result != (uint)ScriptHResult.Ok)
+				var activeScriptProperty = _activeScript as IActiveScriptProperty;
+				if (activeScriptProperty != null)
 				{
-					throw new JsEngineLoadException(
-						string.Format(Strings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
+					object scriptLanguageVersion = (int) languageVersion;
+					uint result = activeScriptProperty.SetProperty((uint) ScriptProperty.InvokeVersioning,
+						IntPtr.Zero, ref scriptLanguageVersion);
+					if (result != (uint) ScriptHResult.Ok)
+					{
+						throw new JsEngineLoadException(
+							string.Format(Strings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
+					}
 				}
 			}
 

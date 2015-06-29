@@ -6,7 +6,12 @@
 	internal enum ScriptLanguageVersion
 	{
 		/// <summary>
-		/// The default version
+		/// Version not selected
+		/// </summary>
+		None = -1,
+
+		/// <summary>
+		/// Default version
 		/// </summary>
 		Default = 0,
 

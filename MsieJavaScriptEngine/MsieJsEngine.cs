@@ -39,7 +39,6 @@
 		/// </summary>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
 		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
-		[Obsolete]
 		public MsieJsEngine()
 			: this(new JsEngineSettings())
 		{ }

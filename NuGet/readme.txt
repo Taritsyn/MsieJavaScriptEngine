@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.5.4
+           README file for MSIE JavaScript Engine for .NET 1.5.5
 
    ----------------------------------------------------------------------
 
@@ -21,10 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   1. In `ChakraActiveScript` mode added native support of ECMAScript 5
-      (without polyfills);
-   2. Added `JsEngineSettings` class for any reason in the future to
-      abandon redundant constructors.
+   1. Fixed an error, that occurs on computers with IE 6;
+   2. Removed `Obsolete` attribute from parameterless constructor.
 
    ============
    PROJECT SITE

@@ -17,7 +17,7 @@
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
 		public ClassicActiveScriptJsEngine(bool useEcmaScript5Polyfill, bool useJson2Library)
 			: base(CLASSIC_CLSID, JsEngineModeName.Classic, "6",
-				ScriptLanguageVersion.Default, useEcmaScript5Polyfill, useJson2Library)
+				ScriptLanguageVersion.None, useEcmaScript5Polyfill, useJson2Library)
 		{ }
 
 
