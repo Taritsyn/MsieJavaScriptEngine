@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## June 29, 2015 - v1.5.5
+ * Fixed an error, that occurs on computers with IE 6
+ * Removed `Obsolete` attribute from parameterless constructor
+
 ## June 28, 2015 - v1.5.4
  * In `ChakraActiveScript` mode added native support of ECMAScript 5 (without polyfills)
  * Added `JsEngineSettings` class for any reason in the future to abandon redundant constructors
