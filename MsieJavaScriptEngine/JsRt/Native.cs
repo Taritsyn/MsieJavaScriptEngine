@@ -368,271 +368,271 @@
 			}
 		}
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateRuntime(JavaScriptRuntimeAttributes attributes, JavaScriptRuntimeVersion runtimeVersion, JavaScriptThreadServiceCallback threadService, out JavaScriptRuntime runtime);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCollectGarbage(JavaScriptRuntime handle);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsDisposeRuntime(JavaScriptRuntime handle);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetRuntimeMemoryUsage(JavaScriptRuntime runtime, out UIntPtr memoryUsage);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetRuntimeMemoryLimit(JavaScriptRuntime runtime, out UIntPtr memoryLimit);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSetRuntimeMemoryLimit(JavaScriptRuntime runtime, UIntPtr memoryLimit);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSetRuntimeMemoryAllocationCallback(JavaScriptRuntime runtime, IntPtr callbackState, JavaScriptMemoryAllocationCallback allocationCallback);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSetRuntimeBeforeCollectCallback(JavaScriptRuntime runtime, IntPtr callbackState, JavaScriptBeforeCollectCallback beforeCollectCallback);
 
-		[DllImport("jscript9.dll", EntryPoint = "JsAddRef")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode, EntryPoint = "JsAddRef")]
 		internal static extern JavaScriptErrorCode JsContextAddRef(JavaScriptContext reference, out uint count);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsAddRef(JavaScriptValue reference, out uint count);
 
-		[DllImport("jscript9.dll", EntryPoint = "JsRelease")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode, EntryPoint = "JsRelease")]
 		internal static extern JavaScriptErrorCode JsContextRelease(JavaScriptContext reference, out uint count);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsRelease(JavaScriptValue reference, out uint count);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateContext(JavaScriptRuntime runtime, IDebugApplication64 debugSite, out JavaScriptContext newContext);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateContext(JavaScriptRuntime runtime, IDebugApplication32 debugSite, out JavaScriptContext newContext);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetCurrentContext(out JavaScriptContext currentContext);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSetCurrentContext(JavaScriptContext context);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetRuntime(JavaScriptContext context, out JavaScriptRuntime runtime);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsStartDebugging(IDebugApplication64 debugApplication);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsStartDebugging(IDebugApplication32 debugApplication);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsIdle(out uint nextIdleTick);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsParseScript(string script, JavaScriptSourceContext sourceContext, string sourceUrl, out JavaScriptValue result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsRunScript(string script, JavaScriptSourceContext sourceContext, string sourceUrl, out JavaScriptValue result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSerializeScript(string script, byte[] buffer, ref ulong bufferSize);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsParseSerializedScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceUrl, out JavaScriptValue result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsRunSerializedScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceUrl, out JavaScriptValue result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetPropertyIdFromName(string name, out JavaScriptPropertyId propertyId);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetPropertyNameFromId(JavaScriptPropertyId propertyId, out IntPtr buffer);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetUndefinedValue(out JavaScriptValue undefinedValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetNullValue(out JavaScriptValue nullValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetTrueValue(out JavaScriptValue trueValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetFalseValue(out JavaScriptValue falseValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsBoolToBoolean(bool value, out JavaScriptValue booleanValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsBooleanToBool(JavaScriptValue booleanValue, out bool boolValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsConvertValueToBoolean(JavaScriptValue value, out JavaScriptValue booleanValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetValueType(JavaScriptValue value, out JavaScriptValueType type);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsDoubleToNumber(double doubleValue, out JavaScriptValue value);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsIntToNumber(int intValue, out JavaScriptValue value);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsNumberToDouble(JavaScriptValue value, out double doubleValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsConvertValueToNumber(JavaScriptValue value, out JavaScriptValue numberValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetStringLength(JavaScriptValue sringValue, out int length);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsPointerToString(string value, UIntPtr stringLength, out JavaScriptValue stringValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsStringToPointer(JavaScriptValue value, out IntPtr stringValue, out UIntPtr stringLength);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsConvertValueToString(JavaScriptValue value, out JavaScriptValue stringValue);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsVariantToValue([MarshalAs(UnmanagedType.Struct)] ref object var, out JavaScriptValue value);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsValueToVariant(JavaScriptValue obj, [MarshalAs(UnmanagedType.Struct)] out object var);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetGlobalObject(out JavaScriptValue globalObject);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateObject(out JavaScriptValue obj);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateExternalObject(IntPtr data, JavaScriptObjectFinalizeCallback finalizeCallback, out JavaScriptValue obj);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsConvertValueToObject(JavaScriptValue value, out JavaScriptValue obj);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetPrototype(JavaScriptValue obj, out JavaScriptValue prototypeObject);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSetPrototype(JavaScriptValue obj, JavaScriptValue prototypeObject);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetExtensionAllowed(JavaScriptValue obj, out bool value);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsPreventExtension(JavaScriptValue obj);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId, out JavaScriptValue value);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetOwnPropertyDescriptor(JavaScriptValue obj, JavaScriptPropertyId propertyId, out JavaScriptValue propertyDescriptor);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetOwnPropertyNames(JavaScriptValue obj, out JavaScriptValue propertyNames);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSetProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId, JavaScriptValue value, bool useStrictRules);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsHasProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId, out bool hasProperty);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsDeleteProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId, bool useStrictRules, out JavaScriptValue result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsDefineProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId, JavaScriptValue propertyDescriptor, out bool result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsHasIndexedProperty(JavaScriptValue obj, JavaScriptValue index, out bool result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetIndexedProperty(JavaScriptValue obj, JavaScriptValue index, out JavaScriptValue result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSetIndexedProperty(JavaScriptValue obj, JavaScriptValue index, JavaScriptValue value);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsDeleteIndexedProperty(JavaScriptValue obj, JavaScriptValue index);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsEquals(JavaScriptValue obj1, JavaScriptValue obj2, out bool result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsStrictEquals(JavaScriptValue obj1, JavaScriptValue obj2, out bool result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsHasExternalData(JavaScriptValue obj, out bool value);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetExternalData(JavaScriptValue obj, out IntPtr externalData);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSetExternalData(JavaScriptValue obj, IntPtr externalData);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateArray(uint length, out JavaScriptValue result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCallFunction(JavaScriptValue function, JavaScriptValue[] arguments, ushort argumentCount, out JavaScriptValue result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsConstructObject(JavaScriptValue function, JavaScriptValue[] arguments, ushort argumentCount, out JavaScriptValue result);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateFunction(JavaScriptNativeFunction nativeFunction, IntPtr externalData, out JavaScriptValue function);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateError(JavaScriptValue message, out JavaScriptValue error);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateRangeError(JavaScriptValue message, out JavaScriptValue error);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateReferenceError(JavaScriptValue message, out JavaScriptValue error);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateSyntaxError(JavaScriptValue message, out JavaScriptValue error);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateTypeError(JavaScriptValue message, out JavaScriptValue error);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsCreateURIError(JavaScriptValue message, out JavaScriptValue error);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsHasException(out bool hasException);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsGetAndClearException(out JavaScriptValue exception);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsSetException(JavaScriptValue exception);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsDisableRuntimeExecution(JavaScriptRuntime runtime);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsEnableRuntimeExecution(JavaScriptRuntime runtime);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsIsRuntimeExecutionDisabled(JavaScriptRuntime runtime, out bool isDisabled);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsStartProfiling(IActiveScriptProfilerCallback callback, ProfilerEventMask eventMask, int context);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsStopProfiling(int reason);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsEnumerateHeap(out IActiveScriptProfilerHeapEnum enumerator);
 
-		[DllImport("jscript9.dll")]
+		[DllImport("jscript9.dll", CharSet = CharSet.Unicode)]
 		internal static extern JavaScriptErrorCode JsIsEnumeratingHeap(out bool isEnumeratingHeap);
 
 		/// <summary>
@@ -640,7 +640,7 @@
 		/// </summary>
 		[ComImport]
 		[Guid("78A51822-51F4-11D0-8F20-00805F2CD064")]
-		public class ProcessDebugManager
+		internal class ProcessDebugManager
 		{
 		}
 	}

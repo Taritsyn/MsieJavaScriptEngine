@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET 1.5.5
+           README file for MSIE JavaScript Engine for .NET 1.5.6
 
    ----------------------------------------------------------------------
 
@@ -21,8 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   1. Fixed an error, that occurs on computers with IE 6;
-   2. Removed `Obsolete` attribute from parameterless constructor.
+   Source code of the `ChakraJsRtJsEngine` was synchronized with the
+   Chakra Sample Hosts version of July 11, 2015.
 
    ============
    PROJECT SITE
