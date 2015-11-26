@@ -168,6 +168,12 @@
   <data name="Runtime_ActiveScriptLanguageVersionSelectionFailed" xml:space="preserve">
     <value>Не удалось установить "{0}" версию языка сценариев для ActiveScript JavaScript-движка!</value>
   </data>
+  <data name="Runtime_EdgeJsEngineNotLoaded" xml:space="preserve">
+    <value>Не удалось загрузить Chakra Edge JsRT JavaScript-движок! Попробуйте установить  Windows 10 с веб-браузером Edge.
+Смотрите более подробную информацию об ошибке:
+
+{0}</value>
+  </data>
   <data name="Runtime_FunctionNameIsForbidden" xml:space="preserve">
     <value>Имя функции "{0}" запрещено, т.к. входит в список зарезервированных слов JavaScript!</value>
   </data>
@@ -176,6 +182,12 @@
   </data>
   <data name="Runtime_FunctionParameterTypeNotSupported" xml:space="preserve">
     <value>Один из параметров функции "{0}" имеет тип `{1}`, который не поддерживается!</value>
+  </data>
+  <data name="Runtime_IeJsEngineNotLoaded" xml:space="preserve">
+    <value>Не удалось загрузить {0} JavaScript-движок! Попробуйте установить  Internet Explorer {1} или выше.
+Смотрите более подробную информацию об ошибке:
+
+{2}</value>
   </data>
   <data name="Runtime_InvalidFunctionNameFormat" xml:space="preserve">
     <value>Имя функции "{0}" имеет некорректный формат!</value>
@@ -194,12 +206,6 @@
   </data>
   <data name="Runtime_JsEngineModeNotSupported" xml:space="preserve">
     <value>Выбранный вами режим JavaScript-движка "{0}" не поддерживается!</value>
-  </data>
-  <data name="Runtime_JsEngineNotLoaded" xml:space="preserve">
-    <value>Не удалось загрузить {0} JavaScript-движок! Попробуйте установить  Internet Explorer {1} или выше.
-Смотрите более подробную информацию об ошибке:
-
-{2}</value>
   </data>
   <data name="Runtime_JsEnginesChakraJsRtAndActiveScriptConflict" xml:space="preserve">
     <value>Запрещается использовать Chakra JsRT и Chakra ActiveScript на одном компьютере одновременно.</value>

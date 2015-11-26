@@ -6,7 +6,8 @@
 
 	using ActiveScript;
 	using Helpers;
-	using JsRt;
+	using JsRt.Edge;
+	using JsRt.Ie;
 	using Resources;
 	using Utilities;
 
@@ -46,84 +47,6 @@
 		/// <summary>
 		/// Constructs instance of MSIE JavaScript engine
 		/// </summary>
-		/// <param name="engineMode">JavaScript engine mode</param>
-		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
-		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
-		[Obsolete]
-		public MsieJsEngine(JsEngineMode engineMode)
-			: this(new JsEngineSettings
-			{
-				EngineMode = engineMode
-			})
-		{ }
-
-		/// <summary>
-		/// Constructs instance of MSIE JavaScript engine
-		/// </summary>
-		/// <param name="engineMode">JavaScript engine mode</param>
-		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
-		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
-		[Obsolete]
-		public MsieJsEngine(JsEngineMode engineMode, bool useEcmaScript5Polyfill)
-			: this(new JsEngineSettings
-			{
-				EngineMode = engineMode,
-				UseEcmaScript5Polyfill = useEcmaScript5Polyfill
-			})
-		{ }
-
-		/// <summary>
-		/// Constructs instance of MSIE JavaScript engine
-		/// </summary>
-		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
-		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
-		[Obsolete]
-		public MsieJsEngine(bool useEcmaScript5Polyfill)
-			: this(new JsEngineSettings
-			{
-				UseEcmaScript5Polyfill = useEcmaScript5Polyfill
-			})
-		{ }
-
-		/// <summary>
-		/// Constructs instance of MSIE JavaScript engine
-		/// </summary>
-		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
-		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
-		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
-		[Obsolete]
-		public MsieJsEngine(bool useEcmaScript5Polyfill, bool useJson2Library)
-			: this(new JsEngineSettings
-			{
-				UseEcmaScript5Polyfill = useEcmaScript5Polyfill,
-				UseJson2Library = useJson2Library
-			})
-		{ }
-
-		/// <summary>
-		/// Constructs instance of MSIE JavaScript engine
-		/// </summary>
-		/// <param name="engineMode">JavaScript engine mode</param>
-		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
-		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
-		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
-		[Obsolete]
-		public MsieJsEngine(JsEngineMode engineMode, bool useEcmaScript5Polyfill, bool useJson2Library)
-			: this(new JsEngineSettings
-			{
-				EngineMode = engineMode,
-				UseEcmaScript5Polyfill = useEcmaScript5Polyfill,
-				UseJson2Library = useJson2Library
-			})
-		{ }
-
-		/// <summary>
-		/// Constructs instance of MSIE JavaScript engine
-		/// </summary>
 		/// <param name="settings">JavaScript engine settings</param>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
 		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
@@ -134,9 +57,13 @@
 
 			if (engineMode == JsEngineMode.Auto)
 			{
-				if (ChakraJsRtJsEngine.IsSupported())
+				if (ChakraEdgeJsRtJsEngine.IsSupported())
 				{
-					processedEngineMode = JsEngineMode.ChakraJsRt;
+					processedEngineMode = JsEngineMode.ChakraEdgeJsRt;
+				}
+				else if (ChakraIeJsRtJsEngine.IsSupported())
+				{
+					processedEngineMode = JsEngineMode.ChakraIeJsRt;
 				}
 				else if (ChakraActiveScriptJsEngine.IsSupported())
 				{
@@ -154,8 +81,11 @@
 
 			switch (processedEngineMode)
 			{
-				case JsEngineMode.ChakraJsRt:
-					_jsEngine = new ChakraJsRtJsEngine();
+				case JsEngineMode.ChakraEdgeJsRt:
+					_jsEngine = new ChakraEdgeJsRtJsEngine();
+					break;
+				case JsEngineMode.ChakraIeJsRt:
+					_jsEngine = new ChakraIeJsRtJsEngine();
 					break;
 				case JsEngineMode.ChakraActiveScript:
 					_jsEngine = new ChakraActiveScriptJsEngine();

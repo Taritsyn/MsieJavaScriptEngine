@@ -39,18 +39,20 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="C_ChakraActiveScript\CommonTests.cs">
+    <Compile Include="B_ChakraEdgeJsRt\CommonTests.cs" />
+    <Compile Include="B_ChakraEdgeJsRt\Es5Tests.cs" />
+    <Compile Include="D_ChakraActiveScript\CommonTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="C_ChakraActiveScript\Es5Tests.cs">
+    <Compile Include="D_ChakraActiveScript\Es5Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="B_ChakraJsRt\CommonTests.cs" />
-    <Compile Include="B_ChakraJsRt\Es5Tests.cs" />
-    <Compile Include="D_Classic\CommonTests.cs">
+    <Compile Include="C_ChakraIeJsRt\CommonTests.cs" />
+    <Compile Include="C_ChakraIeJsRt\Es5Tests.cs" />
+    <Compile Include="E_Classic\CommonTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="D_Classic\Es5Tests.cs">
+    <Compile Include="E_Classic\Es5Tests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CommonTestsBase.cs" />

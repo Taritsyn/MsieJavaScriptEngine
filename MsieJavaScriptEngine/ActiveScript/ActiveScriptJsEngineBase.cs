@@ -79,7 +79,7 @@
 			catch (Exception e)
 			{
 				throw new JsEngineLoadException(
-					string.Format(Strings.Runtime_JsEngineNotLoaded,
+					string.Format(Strings.Runtime_IeJsEngineNotLoaded,
 						_engineModeName, lowerIeVersion, e.Message), _engineModeName);
 			}
 

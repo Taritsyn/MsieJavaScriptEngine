@@ -16,8 +16,13 @@
 		public const string ChakraActiveScript = "Chakra ActiveScript";
 
 		/// <summary>
-		/// Name of Chakra JsRT mode
+		/// Name of Chakra “Legacy” JsRT mode
 		/// </summary>
-		public const string ChakraJsRt = "Chakra JsRT";
+		public const string ChakraIeJsRt = "Chakra IE JsRT";
+
+		/// <summary>
+		/// Name of Chakra “Edge” JsRT mode
+		/// </summary>
+		public const string ChakraEdgeJsRt = "Chakra Edge JsRT";
 	}
 }

@@ -13,13 +13,13 @@
 		nativeStringSplit,
 		isExecNpcgSupported // NPCG: nonparticipating capturing group
 		;
-		
+
 	//#region Internal methods
-	
+
 	function isArray(arg) {
 		return objectToString(arg) === '[object Array]';
 	}
-	
+
 	function isNumber(arg) {
 		return typeof arg === 'number';
 	}
@@ -43,11 +43,11 @@
 	function objectToString(obj) {
 		return Object.prototype.toString.call(obj);
 	}
-	
+
 	//#endregion
 
 	//#region Array methods
-	
+
 	// Array.prototype.every
 	if (!Array.prototype.hasOwnProperty('every')) {
 		Array.prototype.every = function (callbackfn, thisArg) {
@@ -69,7 +69,7 @@
 			return true;
 		};
 	}
-	
+
 	// Array.prototype.filter
 	if (!Array.prototype.hasOwnProperty('filter')) {
 		Array.prototype.filter = function (callbackfn, thisArg) {
@@ -97,7 +97,7 @@
 			return result;
 		};
 	}
-	
+
 	// Array.prototype.forEach
 	if (!Array.prototype.hasOwnProperty('forEach')) {
 		Array.prototype.forEach = function (callbackfn, thisArg) {
@@ -117,7 +117,7 @@
 			}
 		};
 	}
-	
+
 	// Array.prototype.indexOf
 	if (!Array.prototype.hasOwnProperty('indexOf')) {
 		Array.prototype.indexOf = function (searchElement, fromIndex) {
@@ -151,12 +151,12 @@
 			return -1;
 		};
 	}
-	
+
 	// Array.isArray
 	if (!Array.hasOwnProperty('isArray')) {
 		Array.isArray = isArray;
 	}
-	
+
 	// Array.prototype.lastIndexOf
 	if (!Array.prototype.hasOwnProperty('lastIndexOf')) {
 		Array.prototype.lastIndexOf = function (searchElement, fromIndex) {
@@ -190,7 +190,7 @@
 			return -1;
 		};
 	}
-	
+
 	// Array.prototype.map
 	if (!Array.prototype.hasOwnProperty('map')) {
 		Array.prototype.map = function (callbackfn, thisArg) {
@@ -215,7 +215,7 @@
 			return result;
 		};
 	}
-	
+
 	// Array.prototype.reduce
 	if (!Array.prototype.hasOwnProperty('reduce')) {
 		Array.prototype.reduce = function (callbackfn, initialValue) {
@@ -255,7 +255,7 @@
 			return value;
 		};
 	}
-	
+
 	// Array.prototype.reduceRight
 	if (!Array.prototype.hasOwnProperty('reduceRight')) {
 		Array.prototype.reduceRight = function (callbackfn, initialValue) {
@@ -351,7 +351,7 @@
 	//#endregion
 
 	//#region Function methods
-	
+
 	// Function.prototype.bind
 	if (!Function.prototype.hasOwnProperty('bind')) {
 		Function.prototype.bind = function (thisArg) {
@@ -365,11 +365,11 @@
 			};
 		};
 	}
-	
+
 	//#endregion
 
 	//#region Object methods
-	
+
 	// Object.create
 	if (!Object.hasOwnProperty('create')) {
 		Object.create = function (obj) {
@@ -383,7 +383,7 @@
 			return new F();
 		};
 	}
-	
+
 	// Object.keys
 	if (!Object.hasOwnProperty('keys')) {
 		Object.keys = function (obj) {
@@ -404,19 +404,19 @@
 			return result;
 		};
 	}
-	
+
 	//#endregion
 
 	//#region String methods
-	
+
 	// String.prototype.split
 	if ('aa'.split(/a/).length === 0 ||
 		'|a|'.split(/\|/).length === 1 ||
 		'1, 2'.split(/\s*(,)/).length === 2) {
-		
+
 		nativeStringSplit = String.prototype.split;
 		isExecNpcgSupported = isUndefined(/()??/.exec('')[1]);
-		
+
 		String.prototype.split = function (separator, limit) {
 			var str = this,
 				result,
@@ -430,7 +430,7 @@
 				argIndex,
 				argCount
 				;
-		
+
 			// If `separator` is not a regex, use `nativeStringSplit`
 			if (!isRegExp(separator)) {
 				return nativeStringSplit.call(str, separator, limit);
@@ -443,7 +443,7 @@
 				(separator.sticky ? 'y' : '') // Firefox 3+
 				;
 			lastLastIndex = 0;
-			
+
 			// Make `global` and avoid `lastIndex` issues by working with a copy
 			separator1 = new RegExp(separator.source, flags + 'g');
 
@@ -451,7 +451,7 @@
 				// Doesn't need flags gy, but they don't hurt
 				separator2 = new RegExp('^' + separator1.source + '$(?!\\s)', flags);
 			}
-			
+
 			/* Values for `limit`, per the spec:
 			 * If undefined: 4294967295 // Math.pow(2, 32) - 1
 			 * If 0, Infinity, or NaN: 0
@@ -512,7 +512,7 @@
 			return (result.length > limit) ? result.slice(0, limit) : result;
 		};
 	}
-	
+
 	// String.prototype.trim
 	if (!String.prototype.hasOwnProperty('trim')) {
 		String.prototype.trim = (function (re) {
@@ -521,6 +521,6 @@
 			};
 		} (/^\s*([\s\S]*\S)?\s*$/));
 	}
-	
+
 	//#endregion
 }());
