@@ -39,7 +39,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\MsieJavaScriptEngine.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\MsieJavaScriptEngine.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ActiveScript\ActiveScriptException.cs" />
@@ -146,11 +146,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\MsieJavaScriptEngine.snk">
-      <Link>MsieJavaScriptEngine.snk</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Resources\ES5.js" />
     <EmbeddedResource Include="Resources\ES5.min.js" />
     <Content Include="Resources\json2.js" />
@@ -168,10 +163,14 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="..\..\MsieJavaScriptEngine.snk">
+      <Link>MsieJavaScriptEngine.snk</Link>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>cd "$(ProjectDir)..\Binaries\Microsoft Ajax Minifier\"
+    <PreBuildEvent>cd "$(ProjectDir)..\..\Binaries\Microsoft Ajax Minifier\"
 
 del "$(ProjectDir)Resources\ES5.min.js"
 AjaxMinifier.exe "$(ProjectDir)Resources\ES5.js" –out "$(ProjectDir)Resources\ES5.min.js"

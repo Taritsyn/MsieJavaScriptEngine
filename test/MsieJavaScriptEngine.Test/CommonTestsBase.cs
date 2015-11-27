@@ -1,4 +1,4 @@
-﻿namespace MsieJavaScriptEngine.Tests
+﻿namespace MsieJavaScriptEngine.Test
 {
 	using System;
 	using System.IO;

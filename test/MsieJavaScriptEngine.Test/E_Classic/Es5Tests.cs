@@ -1,4 +1,4 @@
-﻿namespace MsieJavaScriptEngine.Tests.E_Classic
+﻿namespace MsieJavaScriptEngine.Test.E_Classic
 {
 	using NUnit.Framework;
 

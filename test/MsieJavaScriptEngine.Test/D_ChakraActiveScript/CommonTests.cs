@@ -1,4 +1,4 @@
-﻿namespace MsieJavaScriptEngine.Tests.D_ChakraActiveScript
+﻿namespace MsieJavaScriptEngine.Test.D_ChakraActiveScript
 {
 	using NUnit.Framework;
 

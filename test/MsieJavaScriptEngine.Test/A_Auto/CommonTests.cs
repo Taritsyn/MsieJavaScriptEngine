@@ -1,10 +1,9 @@
-﻿namespace MsieJavaScriptEngine.Tests.B_ChakraEdgeJsRt
+﻿namespace MsieJavaScriptEngine.Test.A_Auto
 {
 	using NUnit.Framework;
 
 	using MsieJavaScriptEngine;
 
-	[TestFixture]
 	public class CommonTests : CommonTestsBase
 	{
 		[TestFixtureSetUp]
@@ -12,7 +11,7 @@
 		{
 			_jsEngine = new MsieJsEngine(new JsEngineSettings
 			{
-				EngineMode = JsEngineMode.ChakraEdgeJsRt,
+				EngineMode = JsEngineMode.Auto,
 				UseEcmaScript5Polyfill = false,
 				UseJson2Library = false
 			});

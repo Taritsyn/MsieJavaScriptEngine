@@ -1,16 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine", "MsieJavaScriptEngine\MsieJavaScriptEngine.csproj", "{D672BC49-C454-4975-BD25-A555B9BDD793}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Tests", "MsieJavaScriptEngine.Tests\MsieJavaScriptEngine.Tests.csproj", "{B9D71EDB-31DD-444A-8606-07D873CA6E42}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7179145C-46AE-47D9-AD3B-DC4A3035A4DF}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1ACC225D-6787-47AB-AF34-C6021002390C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine", "src\MsieJavaScriptEngine\MsieJavaScriptEngine.csproj", "{D672BC49-C454-4975-BD25-A555B9BDD793}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2A0DC227-73C5-4E3A-853A-83007AD56B85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test", "test\MsieJavaScriptEngine.Test\MsieJavaScriptEngine.Test.csproj", "{B9D71EDB-31DD-444A-8606-07D873CA6E42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,5 +33,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D672BC49-C454-4975-BD25-A555B9BDD793} = {1ACC225D-6787-47AB-AF34-C6021002390C}
+		{B9D71EDB-31DD-444A-8606-07D873CA6E42} = {2A0DC227-73C5-4E3A-853A-83007AD56B85}
 	EndGlobalSection
 EndGlobal

@@ -1,20 +1,20 @@
-﻿namespace MsieJavaScriptEngine.Tests.E_Classic
+﻿namespace MsieJavaScriptEngine.Test.A_Auto
 {
 	using NUnit.Framework;
 
 	using MsieJavaScriptEngine;
 
 	[TestFixture]
-	public class CommonTests : CommonTestsBase
+	public class Es5Tests : Es5TestsBase
 	{
 		[TestFixtureSetUp]
 		public override void SetUp()
 		{
 			_jsEngine = new MsieJsEngine(new JsEngineSettings
 			{
-				EngineMode = JsEngineMode.Classic,
-				UseEcmaScript5Polyfill = false,
-				UseJson2Library = false
+				EngineMode = JsEngineMode.Auto,
+				UseEcmaScript5Polyfill = true,
+				UseJson2Library = true
 			});
 		}
 	}

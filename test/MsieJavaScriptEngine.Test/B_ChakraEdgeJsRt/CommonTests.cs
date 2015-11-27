@@ -1,11 +1,11 @@
-﻿namespace MsieJavaScriptEngine.Tests.B_ChakraEdgeJsRt
+﻿namespace MsieJavaScriptEngine.Test.B_ChakraEdgeJsRt
 {
 	using NUnit.Framework;
 
 	using MsieJavaScriptEngine;
 
 	[TestFixture]
-	public class Es5Tests : Es5TestsBase
+	public class CommonTests : CommonTestsBase
 	{
 		[TestFixtureSetUp]
 		public override void SetUp()

@@ -7,8 +7,8 @@
     <ProjectGuid>{B9D71EDB-31DD-444A-8606-07D873CA6E42}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MsieJavaScriptEngine.Tests</RootNamespace>
-    <AssemblyName>MsieJavaScriptEngine.Tests</AssemblyName>
+    <RootNamespace>MsieJavaScriptEngine.Test</RootNamespace>
+    <AssemblyName>MsieJavaScriptEngine.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -66,7 +66,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MsieJavaScriptEngine\MsieJavaScriptEngine.csproj">
+    <ProjectReference Include="..\..\src\MsieJavaScriptEngine\MsieJavaScriptEngine.csproj">
       <Project>{d672bc49-c454-4975-bd25-a555b9bdd793}</Project>
       <Name>MsieJavaScriptEngine</Name>
     </ProjectReference>

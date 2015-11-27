@@ -1,4 +1,4 @@
-﻿namespace MsieJavaScriptEngine.Tests.C_ChakraIeJsRt
+﻿namespace MsieJavaScriptEngine.Test.D_ChakraActiveScript
 {
 	using NUnit.Framework;
 
@@ -12,7 +12,7 @@
 		{
 			_jsEngine = new MsieJsEngine(new JsEngineSettings
 			{
-				EngineMode = JsEngineMode.ChakraIeJsRt,
+				EngineMode = JsEngineMode.ChakraActiveScript,
 				UseEcmaScript5Polyfill = false,
 				UseJson2Library = false
 			});
