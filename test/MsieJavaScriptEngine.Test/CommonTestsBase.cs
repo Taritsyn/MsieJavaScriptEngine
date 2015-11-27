@@ -149,7 +149,7 @@
 		public virtual void ExecutionOfResourceByTypeIsCorrect()
 		{
 			// Arrange
-			const string resourceName = "MsieJavaScriptEngine.Tests.Resources.cube.js";
+			const string resourceName = "MsieJavaScriptEngine.Test.Resources.cube.js";
 			const string input = "cube(5);";
 			const int targetOutput = 125;
 
@@ -165,7 +165,7 @@
 		public virtual void ExecutionOfResourceByAssemblyIsCorrect()
 		{
 			// Arrange
-			const string resourceName = "MsieJavaScriptEngine.Tests.Resources.power.js";
+			const string resourceName = "MsieJavaScriptEngine.Test.Resources.power.js";
 			const string input = "power(4, 3);";
 			const int targetOutput = 64;
 
