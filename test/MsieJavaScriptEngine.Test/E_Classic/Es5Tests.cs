@@ -7,15 +7,16 @@
 	[TestFixture]
 	public class Es5Tests : Es5TestsBase
 	{
-		[TestFixtureSetUp]
-		public override void SetUp()
+		protected override MsieJsEngine CreateJsEngine()
 		{
-			_jsEngine = new MsieJsEngine(new JsEngineSettings
+			var jsEngine = new MsieJsEngine(new JsEngineSettings
 			{
 				EngineMode = JsEngineMode.Classic,
 				UseEcmaScript5Polyfill = true,
 				UseJson2Library = true
 			});
+
+			return jsEngine;
 		}
 
 		#region Object methods
@@ -41,12 +42,20 @@ myObj.foo = 1;
 			const string targetOutput4 = "foo";
 
 			// Act
-			var output1 = _jsEngine.Evaluate<string>(input1);
-			var output2 = _jsEngine.Evaluate<string>(input2);
-			var output3 = _jsEngine.Evaluate<string>(input3);
+			string output1;
+			string output2;
+			string output3;
+			string output4;
 
-			_jsEngine.Execute(initCode4);
-			var output4 = _jsEngine.Evaluate<string>(input4);
+			using (var jsEngine = CreateJsEngine())
+			{
+				output1 = jsEngine.Evaluate<string>(input1);
+				output2 = jsEngine.Evaluate<string>(input2);
+				output3 = jsEngine.Evaluate<string>(input3);
+
+				jsEngine.Execute(initCode4);
+				output4 = jsEngine.Evaluate<string>(input4);
+			}
 
 			// Assert
 			Assert.AreEqual(targetOutput1, output1);
