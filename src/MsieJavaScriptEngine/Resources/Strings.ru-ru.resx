@@ -207,8 +207,11 @@
   <data name="Runtime_JsEngineModeNotSupported" xml:space="preserve">
     <value>Выбранный вами режим JavaScript-движка "{0}" не поддерживается!</value>
   </data>
-  <data name="Runtime_JsEnginesChakraJsRtAndActiveScriptConflict" xml:space="preserve">
-    <value>Запрещается использовать Chakra JsRT и Chakra ActiveScript на одном компьютере одновременно.</value>
+  <data name="Runtime_JsEnginesConflictInProcess" xml:space="preserve">
+    <value>Нельзя использовать {0} и {1} движки в одном процессе.</value>
+  </data>
+  <data name="Runtime_JsEnginesConflictOnMachine" xml:space="preserve">
+    <value>Нельзя использовать Chakra JsRT и Chakra ActiveScript движки на одном компьютере одновременно.</value>
   </data>
   <data name="Runtime_JsEnginesNotFound" xml:space="preserve">
     <value>Не удалось найти ни один из JavaScript-движков! Возможно, на вашем компьютере не установлен браузер Internet Explorer.</value>

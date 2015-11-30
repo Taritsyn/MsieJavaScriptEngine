@@ -207,8 +207,11 @@ See more details:
   <data name="Runtime_JsEngineModeNotSupported" xml:space="preserve">
     <value>Selected '{0}' mode of JavaScript engine is not supported!</value>
   </data>
-  <data name="Runtime_JsEnginesChakraJsRtAndActiveScriptConflict" xml:space="preserve">
-    <value>It is prohibited to use the Chakra JsRT and the Chakra ActiveScript on one machine at a time.</value>
+  <data name="Runtime_JsEnginesConflictInProcess" xml:space="preserve">
+    <value>It is prohibited to use the {0} and {1} engines in one process.</value>
+  </data>
+  <data name="Runtime_JsEnginesConflictOnMachine" xml:space="preserve">
+    <value>It is prohibited to use the Chakra JsRT and Chakra ActiveScript engines on one machine at a time.</value>
   </data>
   <data name="Runtime_JsEnginesNotFound" xml:space="preserve">
     <value>Could not found none of the JavaScript engines. Perhaps you have not installed the Internet Explorer browser.</value>

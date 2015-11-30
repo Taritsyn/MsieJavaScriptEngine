@@ -319,11 +319,20 @@ namespace MsieJavaScriptEngine.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is prohibited to use the Chakra JsRT and the Chakra ActiveScript on one machine at a time..
+        ///   Looks up a localized string similar to It is prohibited to use the {0} and {1} engines in one process..
         /// </summary>
-        internal static string Runtime_JsEnginesChakraJsRtAndActiveScriptConflict {
+        internal static string Runtime_JsEnginesConflictInProcess {
             get {
-                return ResourceManager.GetString("Runtime_JsEnginesChakraJsRtAndActiveScriptConflict", resourceCulture);
+                return ResourceManager.GetString("Runtime_JsEnginesConflictInProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It is prohibited to use the Chakra JsRT and Chakra ActiveScript engines on one machine at a time..
+        /// </summary>
+        internal static string Runtime_JsEnginesConflictOnMachine {
+            get {
+                return ResourceManager.GetString("Runtime_JsEnginesConflictOnMachine", resourceCulture);
             }
         }
         

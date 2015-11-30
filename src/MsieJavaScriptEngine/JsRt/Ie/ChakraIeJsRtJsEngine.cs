@@ -59,7 +59,7 @@
 				string errorMessage;
 				if (e.ErrorCode == JsErrorCode.WrongThread)
 				{
-					errorMessage = Strings.Runtime_JsEnginesChakraJsRtAndActiveScriptConflict;
+					errorMessage = Strings.Runtime_JsEnginesConflictOnMachine;
 				}
 				else
 				{

@@ -1,19 +1,17 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("MsieJavaScriptEngine")]
+[assembly: AssemblyTitle("MsieJavaScriptEngine.Test.ChakraActiveScript")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MSIE JavaScript Engine")]
+[assembly: AssemblyProduct("MSIE JavaScript Engine: Tests for Chakra ActiveScript Mode")]
 [assembly: AssemblyCopyright("Copyright © 2012-2015 Andrey Taritsyn")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
-[assembly: Guid("ae6911c9-e2a9-4386-ab90-3722a9166564")]
+[assembly: Guid("34feac4f-a145-465e-aa36-0eceb5242dd4")]
 
-[assembly: AssemblyVersion("1.5.6.0")]
-[assembly: AssemblyFileVersion("1.5.6.0")]
-
-[module: DefaultCharSet(CharSet.Unicode)]
+[assembly: AssemblyVersion("1.5.4.0")]
+[assembly: AssemblyFileVersion("1.5.4.0")]

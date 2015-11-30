@@ -5,6 +5,7 @@
 	using System.Text;
 
 	using ActiveScript;
+	using Constants;
 	using Helpers;
 	using JsRt.Edge;
 	using JsRt.Ie;
@@ -20,6 +21,16 @@
 		/// JavaScript engine
 		/// </summary>
 		private IInnerJsEngine _jsEngine;
+
+		/// <summary>
+		/// Current JavaScript engine mode
+		/// </summary>
+		private static JsEngineMode _currentMode;
+
+		/// <summary>
+		/// Synchronizer of JavaScript engines creation
+		/// </summary>
+		private static readonly object _creationSynchronizer = new object();
 
 		/// <summary>
 		/// Flag that object is destroyed
@@ -79,24 +90,84 @@
 				}
 			}
 
-			switch (processedEngineMode)
+			lock (_creationSynchronizer)
 			{
-				case JsEngineMode.ChakraEdgeJsRt:
-					_jsEngine = new ChakraEdgeJsRtJsEngine();
-					break;
-				case JsEngineMode.ChakraIeJsRt:
-					_jsEngine = new ChakraIeJsRtJsEngine();
-					break;
-				case JsEngineMode.ChakraActiveScript:
-					_jsEngine = new ChakraActiveScriptJsEngine();
-					break;
-				case JsEngineMode.Classic:
-					_jsEngine = new ClassicActiveScriptJsEngine(settings.UseEcmaScript5Polyfill,
-						settings.UseJson2Library);
-					break;
-				default:
-					throw new NotSupportedException(
-						string.Format(Strings.Runtime_JsEngineModeNotSupported, processedEngineMode));
+				JsEngineMode previousMode = _currentMode;
+
+				switch (processedEngineMode)
+				{
+					case JsEngineMode.ChakraEdgeJsRt:
+						if (previousMode != JsEngineMode.ChakraIeJsRt
+							&& previousMode != JsEngineMode.ChakraActiveScript)
+						{
+							_jsEngine = new ChakraEdgeJsRtJsEngine();
+						}
+						else if (previousMode == JsEngineMode.ChakraIeJsRt)
+						{
+							throw new JsEngineLoadException(
+								string.Format(
+									Strings.Runtime_JsEnginesConflictInProcess,
+									JsEngineModeName.ChakraEdgeJsRt,
+									JsEngineModeName.ChakraIeJsRt
+								)
+							);
+						}
+						else if (previousMode == JsEngineMode.ChakraActiveScript)
+						{
+							throw new JsEngineLoadException(
+								string.Format(
+									Strings.Runtime_JsEnginesConflictInProcess,
+									JsEngineModeName.ChakraEdgeJsRt,
+									JsEngineModeName.ChakraActiveScript
+								)
+							);
+						}
+
+						break;
+					case JsEngineMode.ChakraIeJsRt:
+						if (previousMode != JsEngineMode.ChakraEdgeJsRt)
+						{
+							_jsEngine = new ChakraIeJsRtJsEngine();
+						}
+						else
+						{
+							throw new JsEngineLoadException(
+								string.Format(
+									Strings.Runtime_JsEnginesConflictInProcess,
+									JsEngineModeName.ChakraIeJsRt,
+									JsEngineModeName.ChakraEdgeJsRt
+								)
+							);
+						}
+
+						break;
+					case JsEngineMode.ChakraActiveScript:
+						if (previousMode != JsEngineMode.ChakraEdgeJsRt)
+						{
+							_jsEngine = new ChakraActiveScriptJsEngine();
+						}
+						else
+						{
+							throw new JsEngineLoadException(
+								string.Format(
+									Strings.Runtime_JsEnginesConflictInProcess,
+									JsEngineModeName.ChakraActiveScript,
+									JsEngineModeName.ChakraEdgeJsRt
+								)
+							);
+						}
+
+						break;
+					case JsEngineMode.Classic:
+						_jsEngine = new ClassicActiveScriptJsEngine(settings.UseEcmaScript5Polyfill,
+							settings.UseJson2Library);
+						break;
+					default:
+						throw new NotSupportedException(
+							string.Format(Strings.Runtime_JsEngineModeNotSupported, processedEngineMode));
+				}
+
+				_currentMode = processedEngineMode;
 			}
 		}
 

@@ -1,19 +1,17 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("MsieJavaScriptEngine")]
+[assembly: AssemblyTitle("MsieJavaScriptEngine.Test.Classic")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MSIE JavaScript Engine")]
+[assembly: AssemblyProduct("MSIE JavaScript Engine: Tests for Classic Mode")]
 [assembly: AssemblyCopyright("Copyright © 2012-2015 Andrey Taritsyn")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
-[assembly: Guid("ae6911c9-e2a9-4386-ab90-3722a9166564")]
+[assembly: Guid("d0f98404-f422-4cab-82a7-6edfce1514d2")]
 
-[assembly: AssemblyVersion("1.5.6.0")]
-[assembly: AssemblyFileVersion("1.5.6.0")]
-
-[module: DefaultCharSet(CharSet.Unicode)]
+[assembly: AssemblyVersion("1.5.4.0")]
+[assembly: AssemblyFileVersion("1.5.4.0")]
