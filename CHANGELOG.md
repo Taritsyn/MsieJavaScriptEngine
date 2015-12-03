@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## December 3, 2015 - v1.6.0
+ * Added support of “Edge” JsRT version of Chakra JavaScript engine
+ * `ChakraJsRt` mode was renamed to `ChakraIeJsRt`
+
 ## June 29, 2015 - v1.5.5
  * Fixed an error, that occurs on computers with IE 6
  * Removed `Obsolete` attribute from parameterless constructor

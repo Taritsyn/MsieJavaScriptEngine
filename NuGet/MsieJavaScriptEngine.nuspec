@@ -1,31 +1,32 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
-  <metadata>
-    <id>MsieJavaScriptEngine</id>
-    <version>1.5.6</version>
-	<title>MSIE JavaScript Engine for .NET</title>
-    <authors>Andrey Taritsyn</authors>
-    <owners>Andrey Taritsyn</owners>
-    <licenseUrl>http://github.com/Taritsyn/MsieJavaScriptEngine/blob/master/LICENSE.md</licenseUrl>
-    <projectUrl>http://github.com/Taritsyn/MsieJavaScriptEngine</projectUrl>
-    <iconUrl>http://i.imgur.com/cbiHK.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This project is a .NET wrapper for working with the Internet Explorer's JavaScript engines (JsRT version of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). Project was based on the code of SassAndCoffee.JavaScript (http://github.com/paulcbetts/SassAndCoffee) and Chakra Sample Hosts (http://github.com/panopticoncentral/chakra-host).</description>
-    <summary>This project is a .NET wrapper for working with the Internet Explorer's JavaScript engines (JsRT version of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine).</summary>
-	<releaseNotes>Source code of the `ChakraJsRtJsEngine` was synchronized with the Chakra Sample Hosts version of July 11, 2015.</releaseNotes>
-	<copyright>Copyright (c) 2012-2015 Andrey Taritsyn - http://www.taritsyn.ru</copyright>
-    <language>en-US</language>
-    <tags>JavaScript ECMAScript MSIE IE Chakra</tags>
-    <references>
-      <reference file="MsieJavaScriptEngine.dll" />
-    </references>
-  </metadata>
-  <files>
-    <file src="..\MsieJavaScriptEngine\bin\Release\MsieJavaScriptEngine.dll" target="lib\net40" />
-	<file src="..\MsieJavaScriptEngine\bin\Release\**\MsieJavaScriptEngine.resources.dll" target="lib\net40" />
-	<file src="readme.txt" />
-	<file src="..\Licenses\sass-and-coffee-license.txt" />
-	<file src="..\Licenses\chakra-host-license.txt" />
-	<file src="..\Licenses\microsoft-ajax-minifier-license.txt" />
-  </files>
+	<metadata>
+		<id>MsieJavaScriptEngine</id>
+		<version>1.6.0</version>
+		<title>MSIE JavaScript Engine for .NET</title>
+		<authors>Andrey Taritsyn</authors>
+		<owners>Andrey Taritsyn</owners>
+		<licenseUrl>http://github.com/Taritsyn/MsieJavaScriptEngine/blob/master/LICENSE.md</licenseUrl>
+		<projectUrl>http://github.com/Taritsyn/MsieJavaScriptEngine</projectUrl>
+		<iconUrl>http://i.imgur.com/cbiHK.png</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). Project was based on the code of SassAndCoffee.JavaScript (http://github.com/paulcbetts/SassAndCoffee) and Chakra Sample Hosts (http://github.com/panopticoncentral/chakra-host).</description>
+		<summary>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine).</summary>
+		<releaseNotes>1. Added support of “Edge” JsRT version of Chakra JavaScript engine;
+2. `ChakraJsRt` mode was renamed to `ChakraIeJsRt`.</releaseNotes>
+		<copyright>Copyright (c) 2012-2015 Andrey Taritsyn - http://www.taritsyn.ru</copyright>
+		<language>en-US</language>
+		<tags>JavaScript ECMAScript MSIE IE Edge Chakra</tags>
+		<references>
+			<reference file="MsieJavaScriptEngine.dll" />
+		</references>
+	</metadata>
+	<files>
+		<file src="..\src\MsieJavaScriptEngine\bin\Release\MsieJavaScriptEngine.dll" target="lib\net40" />
+		<file src="..\src\MsieJavaScriptEngine\bin\Release\**\MsieJavaScriptEngine.resources.dll" target="lib\net40" />
+		<file src="readme.txt" />
+		<file src="..\Licenses\sass-and-coffee-license.txt" />
+		<file src="..\Licenses\chakra-host-license.txt" />
+		<file src="..\Licenses\microsoft-ajax-minifier-license.txt" />
+	</files>
 </package>

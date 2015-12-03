@@ -3,15 +3,16 @@ MSIE JavaScript Engine for .NET
 
 ![MSIE JS Engine Logo](http://i.imgur.com/T3K5q.png)
 
-This project is a .NET wrapper for working with the Internet Explorer's JavaScript engines (JsRT version of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). 
+This project is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). 
 Project was based on the code of [SassAndCoffee.JavaScript](http://github.com/paulcbetts/SassAndCoffee) and [Chakra Sample Hosts](http://github.com/panopticoncentral/chakra-host).
 
-MSIE JavaScript Engine requires a installation of Internet Explorer on the machine and can work in 4 modes, that are defined in the `MsieJavaScriptEngine.JsEngineMode` enumeration:
+MSIE JavaScript Engine requires a installation of Internet Explorer or Edge on the machine and can work in 5 modes, that are defined in the `MsieJavaScriptEngine.JsEngineMode` enumeration:
 
  * `Auto`. Automatically selects the most modern JavaScript engine from available on the machine.
  * `Classic`. Classic MSIE JavaScript engine (supports ECMAScript 3 with possibility of using the ECMAScript 5 Polyfill and the JSON2 library). Requires Internet Explorer 6 or higher on the machine.
  * `ChakraActiveScript`. ActiveScript version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 9 or higher on the machine.
- * `ChakraJsRt`. JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 11 or higher on the machine. Detailed information about JsRT you can read in the [Paul Vick's blog](http://www.panopticoncentral.net/category/javascript/).
+ * `ChakraIeJsRt`. “Legacy” JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 11 or higher on the machine.
+ * `ChakraEdgeJsRt`. “Edge” JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Microsoft Edge on the machine.
 
 The supported .NET types are as follows:
 
@@ -40,8 +41,12 @@ Consider a simple example of usage of the MSIE JavaScript Engine:
 			{
 				try
 				{
-					using (var jsEngine = new MsieJsEngine(engineMode: JsEngineMode.Auto, 
-						useEcmaScript5Polyfill: false, useJson2Library: false))
+					using (var jsEngine = new MsieJsEngine(new JsEngineSettings
+					{
+						EngineMode = JsEngineMode.Auto,
+						UseEcmaScript5Polyfill = false,
+						UseJson2Library = false
+					}))
 					{
 						const string expression = "7 * 8 - 20";
 						var result = jsEngine.Evaluate<int>(expression);
