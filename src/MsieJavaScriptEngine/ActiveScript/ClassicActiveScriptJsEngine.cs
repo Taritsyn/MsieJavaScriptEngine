@@ -9,6 +9,16 @@
 	{
 		private const string CLASSIC_CLSID = "{f414c260-6ac0-11cf-b6d1-00aa00bbbb58}";
 
+		/// <summary>
+		/// Flag indicating whether this JavaScript engine is supported
+		/// </summary>
+		private static bool? _isSupported;
+
+		/// <summary>
+		/// Support synchronizer
+		/// </summary>
+		private static object _supportSynchronizer = new object();
+
 
 		/// <summary>
 		/// Constructs instance of the Classic MSIE JavaScript engine
@@ -27,7 +37,7 @@
 		/// <returns>Result of check (true - supports; false - does not support)</returns>
 		public static bool IsSupported()
 		{
-			bool isSupported = IsSupported(CLASSIC_CLSID);
+			bool isSupported = IsSupported(CLASSIC_CLSID, ref _isSupported, ref _supportSynchronizer);
 
 			return isSupported;
 		}

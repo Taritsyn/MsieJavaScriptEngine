@@ -34,9 +34,19 @@
 		private readonly IeJsContext _jsContext;
 
 		/// <summary>
-		/// Synchronizer
+		/// Flag indicating whether this JavaScript engine is supported
 		/// </summary>
-		private readonly object _synchronizer = new object();
+		private static bool? _isSupported;
+
+		/// <summary>
+		/// Support synchronizer
+		/// </summary>
+		private static readonly object _supportSynchronizer = new object();
+
+		/// <summary>
+		/// Run synchronizer
+		/// </summary>
+		private readonly object _runSynchronizer = new object();
 
 		/// <summary>
 		/// Flag that object is destroyed
@@ -104,21 +114,56 @@
 		/// <returns>Result of check (true - supports; false - does not support)</returns>
 		public static bool IsSupported()
 		{
-			bool isSupported;
-
-			try
+			if (_isSupported.HasValue)
 			{
-				using (CreateJsRuntime())
+				return _isSupported.Value;
+			}
+
+			lock (_supportSynchronizer)
+			{
+				if (_isSupported.HasValue)
 				{
-					isSupported = true;
+					return _isSupported.Value;
 				}
-			}
-			catch
-			{
-				isSupported = false;
-			}
 
-			return isSupported;
+				try
+				{
+					using (CreateJsRuntime())
+					{
+						_isSupported = true;
+					}
+				}
+				catch (DllNotFoundException e)
+				{
+					if (e.Message.IndexOf("'" + DllName.JScript9 + "'", StringComparison.OrdinalIgnoreCase) != -1)
+					{
+						_isSupported = false;
+					}
+					else
+					{
+						_isSupported = null;
+					}
+				}
+				catch (EntryPointNotFoundException e)
+				{
+					string message = e.Message;
+					if (message.IndexOf("'" + DllName.JScript9 + "'", StringComparison.OrdinalIgnoreCase) != -1
+						&& message.IndexOf("'JsCreateRuntime'", StringComparison.OrdinalIgnoreCase) != -1)
+					{
+						_isSupported = false;
+					}
+					else
+					{
+						_isSupported = null;
+					}
+				}
+				catch
+				{
+					_isSupported = null;
+				}
+
+				return _isSupported.HasValue && _isSupported.Value;
+			}
 		}
 
 		/// <summary>
@@ -272,7 +317,7 @@
 
 		private void InvokeScript(Action action)
 		{
-			lock (_synchronizer)
+			lock (_runSynchronizer)
 			using (new IeJsScope(_jsContext))
 			{
 				try
@@ -288,7 +333,7 @@
 
 		private T InvokeScript<T>(Func<T> func)
 		{
-			lock (_synchronizer)
+			lock (_runSynchronizer)
 			using (new IeJsScope(_jsContext))
 			{
 				try
@@ -309,7 +354,7 @@
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{
-			lock (_synchronizer)
+			lock (_runSynchronizer)
 			{
 				if (!_disposed)
 				{

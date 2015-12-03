@@ -9,13 +9,12 @@
 
 	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
+	using Constants;
 	using Helpers;
 	using Resources;
 
 	internal class ActiveScriptSiteWrapper : IActiveScriptSite, IDisposable
 	{
-		private const int TYPE_ERROR_ELEMENT_NOT_FOUND = unchecked((int)(0x8002802B));
-
 		/// <summary>
 		/// Instance of native JavaScript engine
 		/// </summary>
@@ -400,7 +399,7 @@
 				item = GetItem(name);
 				if (item == null)
 				{
-					throw new COMException(string.Format(Strings.Runtime_ItemNotFound, name), TYPE_ERROR_ELEMENT_NOT_FOUND);
+					throw new COMException(string.Format(Strings.Runtime_ItemNotFound, name), ComErrorCode.ElementNotFound);
 				}
 			}
 			else

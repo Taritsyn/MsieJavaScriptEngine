@@ -6,6 +6,7 @@
 	using System.Runtime.InteropServices;
 	using System.Windows.Threading;
 
+	using Constants;
 	using Helpers;
 	using Resources;
 	using Utilities;
@@ -117,27 +118,52 @@
 		/// Checks a support of the JavaScript engine on the machine
 		/// </summary>
 		/// <param name="clsid">CLSID of JavaScript engine</param>
+		/// <param name="isSupported">Flag indicating whether this JavaScript engine is supported</param>
+		/// <param name="supportSynchronizer">Support synchronizer</param>
 		/// <returns>Result of check (true - supports; false - does not support)</returns>
-		protected static bool IsSupported(string clsid)
+		protected static bool IsSupported(string clsid, ref bool? isSupported, ref object supportSynchronizer)
 		{
-			bool isSupported;
-			IntPtr pActiveScript = IntPtr.Zero;
-
-			try
+			if (isSupported.HasValue)
 			{
-				pActiveScript = ComHelpers.CreateInstanceByClsid<IActiveScript>(clsid);
-				isSupported = true;
-			}
-			catch
-			{
-				isSupported = false;
-			}
-			finally
-			{
-				ComHelpers.ReleaseAndEmpty(ref pActiveScript);
+				return isSupported.Value;
 			}
 
-			return isSupported;
+			lock (supportSynchronizer)
+			{
+				if (isSupported.HasValue)
+				{
+					return isSupported.Value;
+				}
+
+				IntPtr pActiveScript = IntPtr.Zero;
+
+				try
+				{
+					pActiveScript = ComHelpers.CreateInstanceByClsid<IActiveScript>(clsid);
+					isSupported = true;
+				}
+				catch (COMException e)
+				{
+					if (e.ErrorCode == ComErrorCode.ClassNotRegistered)
+					{
+						isSupported = false;
+					}
+					else
+					{
+						isSupported = null;
+					}
+				}
+				catch
+				{
+					isSupported = null;
+				}
+				finally
+				{
+					ComHelpers.ReleaseAndEmpty(ref pActiveScript);
+				}
+
+				return isSupported.HasValue && isSupported.Value;
+			}
 		}
 
 		/// <summary>

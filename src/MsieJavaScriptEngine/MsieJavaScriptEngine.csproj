@@ -65,6 +65,8 @@
     <Compile Include="ActiveScript\ScriptTextFlags.cs" />
     <Compile Include="ActiveScript\ScriptThreadState.cs" />
     <Compile Include="ActiveScript\ScriptTypeLibFlags.cs" />
+    <Compile Include="Constants\ComErrorCode.cs" />
+    <Compile Include="Constants\DllName.cs" />
     <Compile Include="Constants\JsEngineModeName.cs" />
     <Compile Include="Helpers\ComHelpers.cs" />
     <Compile Include="Helpers\JsErrorHelpers.cs" />
