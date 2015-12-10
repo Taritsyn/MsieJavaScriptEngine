@@ -16,7 +16,7 @@
 		public const string ChakraActiveScript = "Chakra ActiveScript";
 
 		/// <summary>
-		/// Name of Chakra “Legacy” JsRT mode
+		/// Name of Chakra “IE” JsRT mode
 		/// </summary>
 		public const string ChakraIeJsRt = "Chakra IE JsRT";
 
