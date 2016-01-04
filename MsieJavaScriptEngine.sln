@@ -14,6 +14,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2A0DC227-73C5-4E3A-853A-83007AD56B85}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedFiles", "SharedFiles", "{76F4C14E-54ED-42AC-84F7-2072B14ED59E}"
+	ProjectSection(SolutionItems) = preProject
+		test\SharedFiles\link.txt = test\SharedFiles\link.txt
+		test\SharedFiles\square.js = test\SharedFiles\square.js
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.Common", "test\MsieJavaScriptEngine.Test.Common\MsieJavaScriptEngine.Test.Common.csproj", "{A4085B9E-A5D3-4749-BD07-6D1EB7C23820}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.Auto", "test\MsieJavaScriptEngine.Test.Auto\MsieJavaScriptEngine.Test.Auto.csproj", "{A4874C43-2097-4FDB-882A-0D74E5508BBD}"
@@ -25,14 +31,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.ChakraActiveScript", "test\MsieJavaScriptEngine.Test.ChakraActiveScript\MsieJavaScriptEngine.Test.ChakraActiveScript.csproj", "{21EA96CC-71E2-4CDD-B95A-C75EBD4AF2FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.Classic", "test\MsieJavaScriptEngine.Test.Classic\MsieJavaScriptEngine.Test.Classic.csproj", "{50453B82-ACBF-4E25-9582-1113F274D53E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.ConsoleTests", "test\MsieJavaScriptEngine.ConsoleTests\MsieJavaScriptEngine.ConsoleTests.csproj", "{AFB5ABDF-4F9B-455B-BDA0-CC03D5597FE5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedFiles", "SharedFiles", "{76F4C14E-54ED-42AC-84F7-2072B14ED59E}"
-	ProjectSection(SolutionItems) = preProject
-		test\SharedFiles\link.txt = test\SharedFiles\link.txt
-		test\SharedFiles\square.js = test\SharedFiles\square.js
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,10 +66,6 @@ Global
 		{50453B82-ACBF-4E25-9582-1113F274D53E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50453B82-ACBF-4E25-9582-1113F274D53E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50453B82-ACBF-4E25-9582-1113F274D53E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFB5ABDF-4F9B-455B-BDA0-CC03D5597FE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFB5ABDF-4F9B-455B-BDA0-CC03D5597FE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFB5ABDF-4F9B-455B-BDA0-CC03D5597FE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFB5ABDF-4F9B-455B-BDA0-CC03D5597FE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,7 +78,6 @@ Global
 		{7064E0DB-0B73-4534-84D0-1C96DA7E5AD1} = {2A0DC227-73C5-4E3A-853A-83007AD56B85}
 		{21EA96CC-71E2-4CDD-B95A-C75EBD4AF2FA} = {2A0DC227-73C5-4E3A-853A-83007AD56B85}
 		{50453B82-ACBF-4E25-9582-1113F274D53E} = {2A0DC227-73C5-4E3A-853A-83007AD56B85}
-		{AFB5ABDF-4F9B-455B-BDA0-CC03D5597FE5} = {2A0DC227-73C5-4E3A-853A-83007AD56B85}
 		{76F4C14E-54ED-42AC-84F7-2072B14ED59E} = {2A0DC227-73C5-4E3A-853A-83007AD56B85}
 	EndGlobalSection
 EndGlobal
