@@ -2,21 +2,14 @@
 {
 	using System;
 	using System.IO;
-	using System.Text.RegularExpressions;
 
 	using NUnit.Framework;
 
 	using MsieJavaScriptEngine;
 
 	[TestFixture]
-	public abstract class CommonTestsBase
+	public abstract class CommonTestsBase : FileSystemTestsBase
 	{
-		/// <summary>
-		/// Regular expression for working with the `bin` directory path
-		/// </summary>
-		private readonly Regex _binDirRegex = new Regex(@"\\bin\\(?:Debug|Release)\\?$", RegexOptions.IgnoreCase);
-
-
 		protected abstract MsieJsEngine CreateJsEngine();
 
 		#region Evaluation of code
@@ -172,13 +165,7 @@
 		public virtual void ExecutionOfFileIsCorrect()
 		{
 			// Arrange
-			string relativeFilePath = "MsieJavaScriptEngine.Test.Common/Resources/square.js";
-			string appBaseDirPath = AppDomain.CurrentDomain.BaseDirectory;
-			if (_binDirRegex.IsMatch(appBaseDirPath))
-			{
-				relativeFilePath = Path.Combine("..\\..\\..\\", relativeFilePath);
-			}
-			string absoluteFilePath = Path.GetFullPath(Path.Combine(appBaseDirPath, relativeFilePath));
+			string filePath = Path.GetFullPath(Path.Combine(_baseDirectoryPath, "SharedFiles/square.js"));
 			const string input = "square(6);";
 			const int targetOutput = 36;
 
@@ -187,7 +174,7 @@
 
 			using (var jsEngine = CreateJsEngine())
 			{
-				jsEngine.ExecuteFile(absoluteFilePath);
+				jsEngine.ExecuteFile(filePath);
 				output = jsEngine.Evaluate<int>(input);
 			}
 
@@ -532,7 +519,7 @@
 			using (var jsEngine = CreateJsEngine())
 			{
 				jsEngine.Execute(functionCode);
-				output = Math.Round(jsEngine.CallFunction<double>("sum", 22000, 8.5, 0.05, 3), 2);
+				output = jsEngine.CallFunction<double>("sum", 22000, 8.5, 0.05, 3);
 			}
 
 			// Assert

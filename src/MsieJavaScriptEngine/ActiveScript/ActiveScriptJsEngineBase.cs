@@ -42,6 +42,11 @@
 		private ActiveScriptSiteWrapper _activeScriptSite;
 
 		/// <summary>
+		/// JavaScript engine mode
+		/// </summary>
+		private readonly JsEngineMode _engineMode;
+
+		/// <summary>
 		/// Name of JavaScript engine mode
 		/// </summary>
 		private readonly string _engineModeName;
@@ -61,15 +66,16 @@
 		/// Constructs instance of the ActiveScript JavaScript engine
 		/// </summary>
 		/// <param name="clsid">CLSID of JavaScript engine</param>
-		/// <param name="engineModeName">Name of JavaScript engine mode</param>
+		/// <param name="engineMode">JavaScript engine mode</param>
 		/// <param name="lowerIeVersion">Lowest supported version of Internet Explorer</param>
 		/// <param name="languageVersion">Version of script language</param>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
-		protected ActiveScriptJsEngineBase(string clsid, string engineModeName, string lowerIeVersion,
+		protected ActiveScriptJsEngineBase(string clsid, JsEngineMode engineMode, string lowerIeVersion,
 			ScriptLanguageVersion languageVersion, bool useEcmaScript5Polyfill, bool useJson2Library)
 		{
-			_engineModeName = engineModeName;
+			_engineMode = engineMode;
+			_engineModeName = JsEngineModeHelpers.GetModeName(engineMode);
 			_pActiveScript = IntPtr.Zero;
 
 			try
@@ -167,43 +173,43 @@
 		}
 
 		/// <summary>
-		/// Executes a mapping from the host type to a script type
+		/// Makes a mapping of value from the host type to a script type
 		/// </summary>
 		/// <param name="value">The source value</param>
 		/// <returns>The mapped value</returns>
-		private static object MapToScriptType(object value)
+		private object MapToScriptType(object value)
 		{
-			if (value == null)
-			{
-				return DBNull.Value;
-			}
-
-			if (value is Undefined)
-			{
-				return null;
-			}
-
-			return value;
+			return TypeMappingHelpers.MapToScriptType(value, _engineMode);
 		}
 
 		/// <summary>
-		/// Executes a mapping from the script type to a host type
+		/// Makes a mapping of array items from the host type to a script type
+		/// </summary>
+		/// <param name="args">The source array</param>
+		/// <returns>The mapped array</returns>
+		private object[] MapToScriptType(object[] args)
+		{
+			return TypeMappingHelpers.MapToScriptType(args, _engineMode);
+		}
+
+		/// <summary>
+		/// Makes a mapping of value from the script type to a host type
 		/// </summary>
 		/// <param name="value">The source value</param>
 		/// <returns>The mapped value</returns>
-		private static object MapToHostType(object value)
+		private object MapToHostType(object value)
 		{
-			if (value == null)
-			{
-				return Undefined.Value;
-			}
+			return TypeMappingHelpers.MapToHostType(value);
+		}
 
-			if (value is DBNull)
-			{
-				return null;
-			}
-
-			return value;
+		/// <summary>
+		/// Makes a mapping of array itemp from the script type to a host type
+		/// </summary>
+		/// <param name="args">The source array</param>
+		/// <returns>The mapped array</returns>
+		private object[] MapToHostType(object[] args)
+		{
+			return TypeMappingHelpers.MapToHostType(args);
 		}
 
 		private JsRuntimeException ConvertActiveScriptExceptionToJsRuntimeException(
@@ -367,16 +373,7 @@
 
 		public object CallFunction(string functionName, params object[] args)
 		{
-			int argumentCount = args.Length;
-			var processedArgs = new object[argumentCount];
-
-			if (argumentCount > 0)
-			{
-				for (int argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++)
-				{
-					processedArgs[argumentIndex] = MapToScriptType(args[argumentIndex]);
-				}
-			}
+			var processedArgs = MapToScriptType(args);
 
 			object result = InvokeScript(() =>
 			{
@@ -433,6 +430,34 @@
 		public void RemoveVariable(string variableName)
 		{
 			InvokeScript(() => _activeScriptSite.DeleteProperty(variableName));
+		}
+
+		public void EmbedHostObject(string itemName, object value)
+		{
+			InvokeScript(() =>
+			{
+				var processedValue = MapToScriptType(value);
+				object oldValue = _activeScriptSite.GetItem(itemName);
+				_activeScriptSite.SetItem(itemName, processedValue);
+
+				try
+				{
+					_activeScript.AddNamedItem(itemName, ScriptItemFlags.IsVisible | ScriptItemFlags.GlobalMembers);
+				}
+				catch (Exception)
+				{
+					if (oldValue != null)
+					{
+						_activeScriptSite.SetItem(itemName, oldValue);
+					}
+					else
+					{
+						_activeScriptSite.RemoveItem(itemName);
+					}
+
+					throw;
+				}
+			});
 		}
 
 		#endregion

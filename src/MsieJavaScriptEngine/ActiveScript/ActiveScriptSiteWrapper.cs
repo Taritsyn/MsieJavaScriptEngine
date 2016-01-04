@@ -36,6 +36,11 @@
 		private Dictionary<string, object> _siteItems = new Dictionary<string, object>();
 
 		/// <summary>
+		/// Synchronizer
+		/// </summary>
+		private readonly object _synchronizer = new object();
+
+		/// <summary>
 		/// Last ActiveScript exception
 		/// </summary>
 		private ActiveScriptException _lastException;
@@ -124,9 +129,9 @@
 		/// </summary>
 		/// <param name="name">The name associated with the item, as specified in the
 		/// IActiveScript.AddNamedItem method</param>
-		private object GetItem(string name)
+		public object GetItem(string name)
 		{
-			lock (_siteItems)
+			lock (_synchronizer)
 			{
 				object result;
 
@@ -134,22 +139,19 @@
 			}
 		}
 
-		/// <summary>
-		/// Allows the scripting engine to obtain information about an item added with the
-		/// IActiveScript.AddNamedItem method. Gets the COM ITypeInfo
-		/// </summary>
-		/// <param name="name">The name associated with the item, as specified in the
-		/// IActiveScript.AddNamedItem method</param>
-		private IntPtr GetTypeInfo(string name)
+		public void SetItem(string name, object value)
 		{
-			lock (_siteItems)
+			lock (_synchronizer)
 			{
-				if (!_siteItems.ContainsKey(name))
-				{
-					return IntPtr.Zero;
-				}
+				_siteItems[name] = value;
+			}
+		}
 
-				return Marshal.GetITypeInfoForType(_siteItems[name].GetType());
+		public void RemoveItem(string name)
+		{
+			lock (_synchronizer)
+			{
+				_siteItems.Remove(name);
 			}
 		}
 
@@ -330,10 +332,13 @@
 
 				_lastException = null;
 
-				if (_siteItems != null)
+				lock (_synchronizer)
 				{
-					_siteItems.Clear();
-					_siteItems = null;
+					if (_siteItems != null)
+					{
+						_siteItems.Clear();
+						_siteItems = null;
+					}
 				}
 
 				if (_dispatch != null)
@@ -372,19 +377,19 @@
 		/// </summary>
 		/// <param name="name">The name associated with the item, as specified in the
 		/// IActiveScript.AddNamedItem method</param>
-		/// <param name="returnMask">A bit mask specifying what information about the item should be
+		/// <param name="mask">A bit mask specifying what information about the item should be
 		/// returned. The scripting engine should request the minimum amount of information possible
 		/// because some of the return parameters (for example, ITypeInfo) can take considerable
 		/// time to load or generate</param>
-		/// <param name="item">A variable that receives a pointer to the IUnknown interface associated
+		/// <param name="pUnkItem">A variable that receives a pointer to the IUnknown interface associated
 		/// with the given item. The scripting engine can use the IUnknown.QueryInterface method to
-		/// obtain the IDispatch interface for the item. This parameter receives null if returnMask
+		/// obtain the IDispatch interface for the item. This parameter receives null if mask
 		/// does not include the ScriptInfo.IUnknown value. Also, it receives null if there is no
 		/// object associated with the item name; this mechanism is used to create a simple class when
 		/// the named item was added with the ScriptItem.CodeOnly flag set in the
 		/// IActiveScript.AddNamedItem method.</param>
 		/// <param name="pTypeInfo">A variable that receives a pointer to the ITypeInfo interface
-		/// associated with the item. This parameter receives null if returnMask does not include the
+		/// associated with the item. This parameter receives null if mask does not include the
 		/// ScriptInfo.ITypeInfo value, or if type information is not available for this item. If type
 		/// information is not available, the object cannot source events, and name binding must be
 		/// realized with the IDispatch.GetIDsOfNames method. Note that the ITypeInfo interface
@@ -392,28 +397,23 @@
 		/// multiple interfaces and event interfaces. If the item supports the IProvideMultipleTypeInfo
 		/// interface, the ITypeInfo interface retrieved is the same as the index zero ITypeInfo that
 		/// would be obtained using the IProvideMultipleTypeInfo.GetInfoOfIndex method.</param>
-		public void GetItemInfo(string name, ScriptInfoFlags returnMask, out object item, out IntPtr pTypeInfo)
+		public void GetItemInfo(string name, ScriptInfoFlags mask, ref IntPtr pUnkItem, ref IntPtr pTypeInfo)
 		{
-			if ((returnMask & ScriptInfoFlags.IUnknown) > 0)
+			object item = GetItem(name);
+			if (item == null)
 			{
-				item = GetItem(name);
-				if (item == null)
-				{
-					throw new COMException(string.Format(Strings.Runtime_ItemNotFound, name), ComErrorCode.ElementNotFound);
-				}
-			}
-			else
-			{
-				item = null;
+				throw new COMException(
+					string.Format(Strings.Runtime_ItemNotFound, name), ComErrorCode.ElementNotFound);
 			}
 
-			if ((returnMask & ScriptInfoFlags.ITypeInfo) > 0)
+			if (mask.HasFlag(ScriptInfoFlags.IUnknown))
 			{
-				pTypeInfo = GetTypeInfo(name);
+				pUnkItem = Marshal.GetIDispatchForObject(item);
 			}
-			else
+
+			if (mask.HasFlag(ScriptInfoFlags.ITypeInfo))
 			{
-				pTypeInfo = IntPtr.Zero;
+				pTypeInfo = Marshal.GetITypeInfoForType(item.GetType());
 			}
 		}
 

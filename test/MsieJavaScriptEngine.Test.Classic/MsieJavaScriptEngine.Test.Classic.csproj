@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="CommonTests.cs" />
     <Compile Include="Es5Tests.cs" />
+    <Compile Include="InteropTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

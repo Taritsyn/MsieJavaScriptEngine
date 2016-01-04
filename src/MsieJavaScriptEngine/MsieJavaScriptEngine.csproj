@@ -67,10 +67,12 @@
     <Compile Include="ActiveScript\ScriptTypeLibFlags.cs" />
     <Compile Include="Constants\ComErrorCode.cs" />
     <Compile Include="Constants\DllName.cs" />
-    <Compile Include="Constants\JsEngineModeName.cs" />
     <Compile Include="Helpers\ComHelpers.cs" />
+    <Compile Include="Helpers\JsEngineModeHelpers.cs" />
     <Compile Include="Helpers\JsErrorHelpers.cs" />
+    <Compile Include="Helpers\TypeMappingHelpers.cs" />
     <Compile Include="Helpers\ValidationHelpers.cs" />
+    <Compile Include="HostObject.cs" />
     <Compile Include="IInnerJsEngine.cs" />
     <Compile Include="JsEngineSettings.cs" />
     <Compile Include="JsRt\Edge\ChakraEdgeJsRtJsEngine.cs" />

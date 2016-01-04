@@ -2,9 +2,11 @@
 {
 	using System;
 	using System.Globalization;
+	using System.Linq;
 	using System.Text;
 
 	using Constants;
+	using Helpers;
 	using Resources;
 	using Utilities;
 
@@ -14,9 +16,14 @@
 	internal sealed class ChakraEdgeJsRtJsEngine : IInnerJsEngine
 	{
 		/// <summary>
+		/// JavaScript engine mode
+		/// </summary>
+		private readonly JsEngineMode _engineMode;
+
+		/// <summary>
 		/// Name of JavaScript engine mode
 		/// </summary>
-		const string ENGINE_MODE_NAME = JsEngineModeName.ChakraEdgeJsRt;
+		private readonly string _engineModeName;
 
 		/// <summary>
 		/// Instance of JavaScript runtime
@@ -54,6 +61,9 @@
 		/// </summary>
 		public ChakraEdgeJsRtJsEngine()
 		{
+			_engineMode = JsEngineMode.ChakraEdgeJsRt;
+			_engineModeName = JsEngineModeHelpers.GetModeName(_engineMode);
+
 			try
 			{
 				_jsRuntime = CreateJsRuntime();
@@ -71,12 +81,12 @@
 					errorMessage = string.Format(Strings.Runtime_EdgeJsEngineNotLoaded, e.Message);
 				}
 
-				throw new JsEngineLoadException(errorMessage, ENGINE_MODE_NAME);
+				throw new JsEngineLoadException(errorMessage, _engineModeName);
 			}
 			catch (Exception e)
 			{
 				throw new JsEngineLoadException(
-					string.Format(Strings.Runtime_EdgeJsEngineNotLoaded, e.Message), ENGINE_MODE_NAME);
+					string.Format(Strings.Runtime_EdgeJsEngineNotLoaded, e.Message), _engineModeName);
 			}
 		}
 
@@ -146,11 +156,11 @@
 		}
 
 		/// <summary>
-		/// Executes a mapping from the host type to a script type
+		/// Makes a mapping of value from the host type to a script type
 		/// </summary>
 		/// <param name="value">The source value</param>
 		/// <returns>The mapped value</returns>
-		private static EdgeJsValue MapToScriptType(object value)
+		private EdgeJsValue MapToScriptType(object value)
 		{
 			if (value == null)
 			{
@@ -175,16 +185,28 @@
 				case TypeCode.String:
 					return EdgeJsValue.FromString((string)value);
 				default:
-					return EdgeJsValue.FromObject(value);
+					object processedValue = !TypeConverter.IsPrimitiveType(typeCode) ?
+						new HostObject(value, _engineMode) : value;
+					return EdgeJsValue.FromObject(processedValue);
 			}
 		}
 
 		/// <summary>
-		/// Executes a mapping from the script type to a host type
+		/// Makes a mapping of array items from the host type to a script type
+		/// </summary>
+		/// <param name="args">The source array</param>
+		/// <returns>The mapped array</returns>
+		private EdgeJsValue[] MapToScriptType(object[] args)
+		{
+			return args.Select(MapToScriptType).ToArray();
+		}
+
+		/// <summary>
+		/// Makes a mapping of value from the script type to a host type
 		/// </summary>
 		/// <param name="value">The source value</param>
 		/// <returns>The mapped value</returns>
-		private static object MapToHostType(EdgeJsValue value)
+		private object MapToHostType(EdgeJsValue value)
 		{
 			JsValueType valueType = value.ValueType;
 			EdgeJsValue processedValue;
@@ -215,13 +237,33 @@
 				case JsValueType.Error:
 				case JsValueType.Array:
 					processedValue = value.ConvertToObject();
-					result = processedValue.ToObject();
+					object obj = processedValue.ToObject();
+
+					if (!TypeConverter.IsPrimitiveType(obj.GetType()))
+					{
+						var hostObj = obj as HostObject;
+						result = hostObj != null ? hostObj.Target : obj;
+					}
+					else
+					{
+						result = obj;
+					}
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 
 			return result;
+		}
+
+		/// <summary>
+		/// Makes a mapping of array items from the script type to a host type
+		/// </summary>
+		/// <param name="args">The source array</param>
+		/// <returns>The mapped array</returns>
+		private object[] MapToHostType(EdgeJsValue[] args)
+		{
+			return args.Select(MapToHostType).ToArray();
 		}
 
 		private JsRuntimeException ConvertJsExceptionToJsRuntimeException(
@@ -281,7 +323,7 @@
 				category = "Fatal error";
 			}
 
-			var jsEngineException = new JsRuntimeException(message, ENGINE_MODE_NAME)
+			var jsEngineException = new JsRuntimeException(message, _engineModeName)
 			{
 				ErrorCode = ((uint)jsException.ErrorCode).ToString(CultureInfo.InvariantCulture),
 				Category = category,
@@ -348,7 +390,7 @@
 
 		public string Mode
 		{
-			get { return ENGINE_MODE_NAME; }
+			get { return _engineModeName; }
 		}
 
 		public object Evaluate(string expression)
@@ -457,6 +499,17 @@
 				{
 					globalObj.SetProperty(variableId, EdgeJsValue.Undefined, true);
 				}
+			});
+		}
+
+		public void EmbedHostObject(string itemName, object value)
+		{
+			InvokeScript(() =>
+			{
+				EdgeJsValue processedValue = MapToScriptType(value);
+				EdgeJsPropertyId itemId = EdgeJsPropertyId.FromString(itemName);
+
+				EdgeJsValue.GlobalObject.SetProperty(itemId, processedValue, true);
 			});
 		}
 

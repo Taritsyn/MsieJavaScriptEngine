@@ -24,7 +24,7 @@
 		/// Constructs instance of the Chakra ActiveScript JavaScript engine
 		/// </summary>
 		public ChakraActiveScriptJsEngine()
-			: base(CHAKRA_CLSID, JsEngineModeName.ChakraActiveScript, "9",
+			: base(CHAKRA_CLSID, JsEngineMode.ChakraActiveScript, "9",
 				ScriptLanguageVersion.EcmaScript5, false, false)
 		{ }
 

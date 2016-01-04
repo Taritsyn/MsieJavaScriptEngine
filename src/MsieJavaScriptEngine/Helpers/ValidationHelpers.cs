@@ -4,6 +4,8 @@
 	using System.Linq;
 	using System.Text.RegularExpressions;
 
+	using Utilities;
+
 	/// <summary>
 	/// Validation helpers
 	/// </summary>
@@ -33,6 +35,16 @@
 			bool result = _supportedTypes.Contains(type);
 
 			return result;
+		}
+
+		/// <summary>
+		/// Checks whether .NET type is primitive
+		/// </summary>
+		/// <param name="type">.NET type</param>
+		/// <returns>Result of check (true - is primitive; false - is not primitive)</returns>
+		public static bool IsPrimitiveType(Type type)
+		{
+			return TypeConverter.IsPrimitiveType(type);
 		}
 
 		/// <summary>

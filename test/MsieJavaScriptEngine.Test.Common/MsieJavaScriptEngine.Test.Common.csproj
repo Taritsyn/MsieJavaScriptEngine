@@ -38,11 +38,19 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonTestsBase.cs" />
     <Compile Include="Es5TestsBase.cs" />
+    <Compile Include="InteropTestsBase.cs" />
+    <Compile Include="Interop\Date.cs" />
+    <Compile Include="Interop\FileManager.cs" />
+    <Compile Include="Interop\Person.cs" />
+    <Compile Include="Interop\Product.cs" />
+    <Compile Include="Interop\Temperature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FileSystemTestsBase.cs" />
     <Compile Include="ValidationTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +65,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\cube.js" />
     <EmbeddedResource Include="Resources\power.js" />
+    <Content Include="Resources\link.txt" />
     <Content Include="Resources\square.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

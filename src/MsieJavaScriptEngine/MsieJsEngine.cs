@@ -5,7 +5,6 @@
 	using System.Text;
 
 	using ActiveScript;
-	using Constants;
 	using Helpers;
 	using JsRt.Edge;
 	using JsRt.Ie;
@@ -107,8 +106,8 @@
 							throw new JsEngineLoadException(
 								string.Format(
 									Strings.Runtime_JsEnginesConflictInProcess,
-									JsEngineModeName.ChakraEdgeJsRt,
-									JsEngineModeName.ChakraIeJsRt
+									JsEngineModeHelpers.GetModeName(processedEngineMode),
+									JsEngineModeHelpers.GetModeName(previousMode)
 								)
 							);
 						}
@@ -117,8 +116,8 @@
 							throw new JsEngineLoadException(
 								string.Format(
 									Strings.Runtime_JsEnginesConflictInProcess,
-									JsEngineModeName.ChakraEdgeJsRt,
-									JsEngineModeName.ChakraActiveScript
+									JsEngineModeHelpers.GetModeName(processedEngineMode),
+									JsEngineModeHelpers.GetModeName(previousMode)
 								)
 							);
 						}
@@ -134,8 +133,8 @@
 							throw new JsEngineLoadException(
 								string.Format(
 									Strings.Runtime_JsEnginesConflictInProcess,
-									JsEngineModeName.ChakraIeJsRt,
-									JsEngineModeName.ChakraEdgeJsRt
+									JsEngineModeHelpers.GetModeName(processedEngineMode),
+									JsEngineModeHelpers.GetModeName(previousMode)
 								)
 							);
 						}
@@ -151,8 +150,8 @@
 							throw new JsEngineLoadException(
 								string.Format(
 									Strings.Runtime_JsEnginesConflictInProcess,
-									JsEngineModeName.ChakraActiveScript,
-									JsEngineModeName.ChakraEdgeJsRt
+									JsEngineModeHelpers.GetModeName(processedEngineMode),
+									JsEngineModeHelpers.GetModeName(previousMode)
 								)
 							);
 						}
@@ -627,6 +626,47 @@
 			}
 
 			_jsEngine.RemoveVariable(variableName);
+		}
+
+		/// <summary>
+		/// Embeds a host object to script code
+		/// </summary>
+		/// <param name="itemName">The name for the new global variable or function that will represent the object</param>
+		/// <param name="value">The object to expose</param>
+		/// <remarks>Allows to embed instances of simple classes (or structures) and delegates.</remarks>
+		public void EmbedHostObject(string itemName, object value)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(itemName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "itemName"), "itemName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(itemName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidScriptItemNameFormat, itemName));
+			}
+
+			if (value != null)
+			{
+				Type itemType = value.GetType();
+
+				if (ValidationHelpers.IsPrimitiveType(itemType)
+					|| itemType == typeof (Undefined))
+				{
+					throw new NotSupportedTypeException(
+						string.Format(Strings.Runtime_EmbeddedHostObjectTypeNotSupported, itemType.FullName));
+				}
+			}
+			else
+			{
+				throw new ArgumentNullException("value", string.Format(Strings.Common_ArgumentIsNull, "value"));
+			}
+
+			_jsEngine.EmbedHostObject(itemName, value);
 		}
 
 		#region IDisposable implementation

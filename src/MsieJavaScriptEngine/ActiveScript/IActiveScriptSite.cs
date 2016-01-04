@@ -34,19 +34,19 @@
 		/// </summary>
 		/// <param name="name">The name associated with the item, as specified in the
 		/// IActiveScript.AddNamedItem method</param>
-		/// <param name="returnMask">A bit mask specifying what information about the item should be
+		/// <param name="mask">A bit mask specifying what information about the item should be
 		/// returned. The scripting engine should request the minimum amount of information possible
 		/// because some of the return parameters (for example, ITypeInfo) can take considerable
 		/// time to load or generate.</param>
-		/// <param name="item">A variable that receives a pointer to the IUnknown interface associated
+		/// <param name="pUnkItem">A variable that receives a pointer to the IUnknown interface associated
 		/// with the given item. The scripting engine can use the IUnknown.QueryInterface method to
-		/// obtain the IDispatch interface for the item. This parameter receives null if returnMask
+		/// obtain the IDispatch interface for the item. This parameter receives null if mask
 		/// does not include the ScriptInfo.IUnknown value. Also, it receives null if there is no
 		/// object associated with the item name; this mechanism is used to create a simple class when
 		/// the named item was added with the ScriptItem.CodeOnly flag set in the
 		/// IActiveScript.AddNamedItem method.</param>
 		/// <param name="pTypeInfo">A variable that receives a pointer to the ITypeInfo interface
-		/// associated with the item. This parameter receives null if returnMask does not include the
+		/// associated with the item. This parameter receives null if mask does not include the
 		/// ScriptInfo.ITypeInfo value, or if type information is not available for this item. If type
 		/// information is not available, the object cannot source events, and name binding must be
 		/// realized with the IDispatch.GetIDsOfNames method. Note that the ITypeInfo interface
@@ -56,9 +56,9 @@
 		/// would be obtained using the IProvideMultipleTypeInfo.GetInfoOfIndex method.</param>
 		void GetItemInfo(
 			[In] [MarshalAs(UnmanagedType.LPWStr)] string name,
-			[In] ScriptInfoFlags returnMask,
-			[Out] [MarshalAs(UnmanagedType.IUnknown)] out object item,
-			[Out] out IntPtr pTypeInfo);
+			[In] ScriptInfoFlags mask,
+			[In] [Out] ref IntPtr pUnkItem,
+			[In] [Out] ref IntPtr pTypeInfo);
 
 		/// <summary>
 		/// Retrieves a host-defined string that uniquely identifies the current document version. If

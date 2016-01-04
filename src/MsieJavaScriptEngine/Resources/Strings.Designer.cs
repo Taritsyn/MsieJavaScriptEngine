@@ -226,6 +226,15 @@ namespace MsieJavaScriptEngine.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The embedded host object &apos;{0}&apos; has a type `{1}`, which is not supported..
+        /// </summary>
+        internal static string Runtime_EmbeddedHostObjectTypeNotSupported {
+            get {
+                return ResourceManager.GetString("Runtime_EmbeddedHostObjectTypeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The function name &apos;{0}&apos; is forbidden, as is contained in the list of reserved words of JavaScript language..
         /// </summary>
         internal static string Runtime_FunctionNameIsForbidden {
@@ -288,6 +297,15 @@ namespace MsieJavaScriptEngine.Resources {
         internal static string Runtime_InvalidPropertyNameFormat {
             get {
                 return ResourceManager.GetString("Runtime_InvalidPropertyNameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The script item name &apos;{0}&apos; has incorrect format..
+        /// </summary>
+        internal static string Runtime_InvalidScriptItemNameFormat {
+            get {
+                return ResourceManager.GetString("Runtime_InvalidScriptItemNameFormat", resourceCulture);
             }
         }
         

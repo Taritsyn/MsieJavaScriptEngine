@@ -3,6 +3,7 @@
 	using System;
 	using System.ComponentModel;
 	using System.Globalization;
+	using System.Linq;
 	using OriginalTypeConverter = System.ComponentModel.TypeConverter;
 
 	using Resources;
@@ -12,6 +13,18 @@
 	/// </summary>
 	public static class TypeConverter
 	{
+		/// <summary>
+		/// List of primitive type codes
+		/// </summary>
+		private static readonly TypeCode[] _primitiveTypeCodes = new[]
+		{
+			TypeCode.Boolean,
+			TypeCode.SByte, TypeCode.Byte,
+			TypeCode.Int16, TypeCode.UInt16, TypeCode.Int32, TypeCode.UInt32, TypeCode.Int64, TypeCode.UInt64,
+			TypeCode.Single, TypeCode.Double, TypeCode.Decimal,
+			TypeCode.Char, TypeCode.String
+		};
+
 		/// <summary>
 		/// Converts the specified value to the specified type
 		/// </summary>
@@ -66,6 +79,31 @@
 		public static bool TryConvertToType(object value, Type targetType, out object convertedValue)
 		{
 			bool result = ConvertObjectToType(value, targetType, false, out convertedValue);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Checks whether .NET type is primitive
+		/// </summary>
+		/// <param name="type">.NET type</param>
+		/// <returns>Result of check (true - is primitive; false - is not primitive)</returns>
+		internal static bool IsPrimitiveType(Type type)
+		{
+			TypeCode typeCode = Type.GetTypeCode(type);
+			bool result = IsPrimitiveType(typeCode);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Checks whether .NET type is primitive
+		/// </summary>
+		/// <param name="typeCode">.NET type code</param>
+		/// <returns>Result of check (true - is primitive; false - is not primitive)</returns>
+		internal static bool IsPrimitiveType(TypeCode typeCode)
+		{
+			bool result = _primitiveTypeCodes.Contains(typeCode);
 
 			return result;
 		}
