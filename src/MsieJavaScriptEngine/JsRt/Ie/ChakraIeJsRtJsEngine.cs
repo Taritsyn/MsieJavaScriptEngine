@@ -3,7 +3,6 @@
 	using System;
 	using System.Globalization;
 	using System.Linq;
-	using System.Text;
 
 	using Constants;
 	using Helpers;
@@ -433,34 +432,26 @@
 
 		public object CallFunction(string functionName, params object[] args)
 		{
-			string serializedArguments = string.Empty;
-			int argumentCount = args.Length;
-
-			if (argumentCount == 1)
+			object result = InvokeScript(() =>
 			{
-				object value = args[0];
-				serializedArguments = SimplisticJsSerializer.Serialize(value);
-			}
-			else if (argumentCount > 1)
-			{
-				var serializedArgumentsBuilder = new StringBuilder();
+				IeJsValue globalObj = IeJsValue.GlobalObject;
+				IeJsPropertyId functionId = IeJsPropertyId.FromString(functionName);
 
-				for (int argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++)
+				bool functionExist = globalObj.HasProperty(functionId);
+				if (!functionExist)
 				{
-					object value = args[argumentIndex];
-					string serializedValue = SimplisticJsSerializer.Serialize(value);
-
-					if (argumentIndex > 0)
-					{
-						serializedArgumentsBuilder.Append(", ");
-					}
-					serializedArgumentsBuilder.Append(serializedValue);
+					throw new JsRuntimeException(
+						string.Format(Strings.Runtime_FunctionNotExist, functionName));
 				}
 
-				serializedArguments = serializedArgumentsBuilder.ToString();
-			}
+				var processedArgs = MapToScriptType(args);
+				var allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
 
-			object result = Evaluate(string.Format("{0}({1});", functionName, serializedArguments));
+				IeJsValue functionValue = globalObj.GetProperty(functionId);
+				IeJsValue resultValue = functionValue.CallFunction(allProcessedArgs);
+
+				return MapToHostType(resultValue);
+			});
 
 			return result;
 		}

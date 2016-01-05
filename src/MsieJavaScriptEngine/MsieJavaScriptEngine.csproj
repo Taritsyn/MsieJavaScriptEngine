@@ -99,7 +99,6 @@
     <Compile Include="JsRt\Ie\ProcessDebugManager.cs" />
     <Compile Include="JsRt\ProfilerEventMask.cs" />
     <Compile Include="JsRt\ProfilerScriptType.cs" />
-    <Compile Include="Utilities\SimplisticJsSerializer.cs" />
     <Compile Include="JsException.cs" />
     <Compile Include="JsRuntimeException.cs" />
     <Compile Include="JsEngineLoadException.cs" />
