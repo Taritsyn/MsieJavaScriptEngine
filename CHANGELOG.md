@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## January 5, 2016 - v1.7.0 Alpha 1
+ * Added the `EmbedHostObject` method (embeds a instance of simple class, structure or delegate to script code)
+ * Improved implementation of the `CallFunction` method for Chakra JsRT modes
+
 ## December 3, 2015 - v1.6.0
  * Added support of “Edge” JsRT version of Chakra JavaScript engine
  * `ChakraJsRt` mode was renamed to `ChakraIeJsRt`

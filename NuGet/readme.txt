@@ -1,11 +1,11 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET v1.6.0
+       README file for MSIE JavaScript Engine for .NET v1.7.0 Alpha 1
 
    ----------------------------------------------------------------------
 
-      Copyright (c) 2012-2015 Andrey Taritsyn - http://www.taritsyn.ru
+      Copyright (c) 2012-2016 Andrey Taritsyn - http://www.taritsyn.ru
 
 
    ===========
@@ -21,8 +21,10 @@
    =============
    RELEASE NOTES
    =============
-   1. Added support of “Edge” JsRT version of Chakra JavaScript engine;
-   2. `ChakraJsRt` mode was renamed to `ChakraIeJsRt`.
+   1. Added the `EmbedHostObject` method (embeds a instance of simple
+      class, structure or delegate to script code);
+   2. Improved implementation of the `CallFunction` method for Chakra
+      JsRT modes.
 
    ============
    PROJECT SITE
