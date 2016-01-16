@@ -6,6 +6,16 @@
 	public sealed class JsEngineSettings
 	{
 		/// <summary>
+		/// Gets or sets a flag for whether to enable script debugging features
+		/// (only works in the <code>ChakraIeJsRt</code> and <code>ChakraEdgeJsRt</code> modes)
+		/// </summary>
+		public bool EnableDebugging
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets or sets a JavaScript engine mode
 		/// </summary>
 		public JsEngineMode EngineMode
@@ -38,6 +48,7 @@
 		/// </summary>
 		public JsEngineSettings()
 		{
+			EnableDebugging = false;
 			EngineMode = JsEngineMode.Auto;
 			UseEcmaScript5Polyfill = false;
 			UseJson2Library = false;

@@ -75,6 +75,7 @@
     <Compile Include="HostObject.cs" />
     <Compile Include="IInnerJsEngine.cs" />
     <Compile Include="JsEngineSettings.cs" />
+    <Compile Include="JsRt\ChakraJsRtJsEngineBase.cs" />
     <Compile Include="JsRt\Edge\ChakraEdgeJsRtJsEngine.cs" />
     <Compile Include="JsRt\Edge\EdgeJsContext.cs" />
     <Compile Include="JsRt\Edge\EdgeJsNativeFunction.cs" />

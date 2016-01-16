@@ -99,7 +99,7 @@
 						if (previousMode != JsEngineMode.ChakraIeJsRt
 							&& previousMode != JsEngineMode.ChakraActiveScript)
 						{
-							_jsEngine = new ChakraEdgeJsRtJsEngine();
+							_jsEngine = new ChakraEdgeJsRtJsEngine(settings.EnableDebugging);
 						}
 						else if (previousMode == JsEngineMode.ChakraIeJsRt)
 						{
@@ -126,7 +126,7 @@
 					case JsEngineMode.ChakraIeJsRt:
 						if (previousMode != JsEngineMode.ChakraEdgeJsRt)
 						{
-							_jsEngine = new ChakraIeJsRtJsEngine();
+							_jsEngine = new ChakraIeJsRtJsEngine(settings.EnableDebugging);
 						}
 						else
 						{

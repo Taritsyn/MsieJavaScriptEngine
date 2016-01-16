@@ -5,25 +5,14 @@
 	using System.Linq;
 
 	using Constants;
-	using Helpers;
 	using Resources;
 	using Utilities;
 
 	/// <summary>
 	/// “Edge” JsRT version of Chakra JavaScript engine
 	/// </summary>
-	internal sealed class ChakraEdgeJsRtJsEngine : IInnerJsEngine
+	internal sealed class ChakraEdgeJsRtJsEngine : ChakraJsRtJsEngineBase
 	{
-		/// <summary>
-		/// JavaScript engine mode
-		/// </summary>
-		private readonly JsEngineMode _engineMode;
-
-		/// <summary>
-		/// Name of JavaScript engine mode
-		/// </summary>
-		private readonly string _engineModeName;
-
 		/// <summary>
 		/// Instance of JavaScript runtime
 		/// </summary>
@@ -58,11 +47,10 @@
 		/// <summary>
 		/// Constructs instance of the Chakra “Edge” JsRT JavaScript engine
 		/// </summary>
-		public ChakraEdgeJsRtJsEngine()
+		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
+		public ChakraEdgeJsRtJsEngine(bool enableDebugging)
+			: base(JsEngineMode.ChakraEdgeJsRt, enableDebugging)
 		{
-			_engineMode = JsEngineMode.ChakraEdgeJsRt;
-			_engineModeName = JsEngineModeHelpers.GetModeName(_engineMode);
-
 			try
 			{
 				_jsRuntime = CreateJsRuntime();
@@ -335,11 +323,21 @@
 			return jsEngineException;
 		}
 
+		protected override void InnerStartDebugging()
+		{
+			EdgeJsContext.StartDebugging();
+		}
+
 		private void InvokeScript(Action action)
 		{
 			lock (_runSynchronizer)
 			using (new EdgeJsScope(_jsContext))
 			{
+				if (_enableDebugging)
+				{
+					StartDebugging();
+				}
+
 				try
 				{
 					action();
@@ -356,6 +354,11 @@
 			lock (_runSynchronizer)
 			using (new EdgeJsScope(_jsContext))
 			{
+				if (_enableDebugging)
+				{
+					StartDebugging();
+				}
+
 				try
 				{
 					return func();
@@ -387,12 +390,12 @@
 
 		#region IInnerJsEngine implementation
 
-		public string Mode
+		public override string Mode
 		{
 			get { return _engineModeName; }
 		}
 
-		public object Evaluate(string expression)
+		public override object Evaluate(string expression)
 		{
 			object result = InvokeScript(() =>
 			{
@@ -404,12 +407,12 @@
 			return result;
 		}
 
-		public void Execute(string code)
+		public override void Execute(string code)
 		{
 			InvokeScript(() => EdgeJsContext.RunScript(code));
 		}
 
-		public object CallFunction(string functionName, params object[] args)
+		public override object CallFunction(string functionName, params object[] args)
 		{
 			object result = InvokeScript(() =>
 			{
@@ -435,7 +438,7 @@
 			return result;
 		}
 
-		public bool HasVariable(string variableName)
+		public override bool HasVariable(string variableName)
 		{
 			bool result = InvokeScript(() =>
 			{
@@ -455,7 +458,7 @@
 			return result;
 		}
 
-		public object GetVariableValue(string variableName)
+		public override object GetVariableValue(string variableName)
 		{
 			object result = InvokeScript(() =>
 			{
@@ -468,7 +471,7 @@
 			return result;
 		}
 
-		public void SetVariableValue(string variableName, object value)
+		public override void SetVariableValue(string variableName, object value)
 		{
 			InvokeScript(() =>
 			{
@@ -479,7 +482,7 @@
 			});
 		}
 
-		public void RemoveVariable(string variableName)
+		public override void RemoveVariable(string variableName)
 		{
 			InvokeScript(() =>
 			{
@@ -493,7 +496,7 @@
 			});
 		}
 
-		public void EmbedHostObject(string itemName, object value)
+		public override void EmbedHostObject(string itemName, object value)
 		{
 			InvokeScript(() =>
 			{
@@ -511,7 +514,7 @@
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true /* disposing */);
 			GC.SuppressFinalize(this);
