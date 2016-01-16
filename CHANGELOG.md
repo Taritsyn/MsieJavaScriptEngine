@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## January 16, 2016 - v1.7.0 Alpha 2
+ * Added a possibility to debug in Visual Studio by adding the `debugger` statement to script code. This feature only works in the `ChakraIeJsRt` and `ChakraEdgeJsRt` modes.
+ * In JavaScript engine settings was added one new property - `EnableDebugging` (default `false`)
+
 ## January 5, 2016 - v1.7.0 Alpha 1
  * Added the `EmbedHostObject` method (embeds a instance of simple class, structure or delegate to script code)
  * Improved implementation of the `CallFunction` method for Chakra JsRT modes
