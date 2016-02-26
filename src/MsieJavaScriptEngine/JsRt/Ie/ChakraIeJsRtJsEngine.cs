@@ -543,6 +543,17 @@
 			});
 		}
 
+		public override void EmbedHostType(string itemName, Type type)
+		{
+			InvokeScript(() =>
+			{
+				IeJsValue typeValue = IeJsValue.FromObject(new HostType(type, _engineMode));
+				IeJsPropertyId itemId = IeJsPropertyId.FromString(itemName);
+
+				IeJsValue.GlobalObject.SetProperty(itemId, typeValue, true);
+			});
+		}
+
 		#endregion
 
 		#region IDisposable implementation

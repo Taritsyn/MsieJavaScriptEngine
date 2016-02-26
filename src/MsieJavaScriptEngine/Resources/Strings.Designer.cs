@@ -235,6 +235,15 @@ namespace MsieJavaScriptEngine.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The embedded host type `{0}` is not supported..
+        /// </summary>
+        internal static string Runtime_EmbeddedHostTypeNotSupported {
+            get {
+                return ResourceManager.GetString("Runtime_EmbeddedHostTypeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The function name &apos;{0}&apos; is forbidden, as is contained in the list of reserved words of JavaScript language..
         /// </summary>
         internal static string Runtime_FunctionNameIsForbidden {

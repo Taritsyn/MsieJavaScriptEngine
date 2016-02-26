@@ -44,11 +44,16 @@
     <Compile Include="CommonTestsBase.cs" />
     <Compile Include="Es5TestsBase.cs" />
     <Compile Include="InteropTestsBase.cs" />
+    <Compile Include="Interop\Base64Encoder.cs" />
+    <Compile Include="Interop\BundleTable.cs" />
     <Compile Include="Interop\Date.cs" />
     <Compile Include="Interop\FileManager.cs" />
     <Compile Include="Interop\Person.cs" />
+    <Compile Include="Interop\Point3D.cs" />
+    <Compile Include="Interop\PredefinedStrings.cs" />
     <Compile Include="Interop\Product.cs" />
     <Compile Include="Interop\Temperature.cs" />
+    <Compile Include="Interop\SimpleSingleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileSystemTestsBase.cs" />
     <Compile Include="ValidationTests.cs" />

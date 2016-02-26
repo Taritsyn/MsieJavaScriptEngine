@@ -658,7 +658,7 @@
 					|| itemType == typeof (Undefined))
 				{
 					throw new NotSupportedTypeException(
-						string.Format(Strings.Runtime_EmbeddedHostObjectTypeNotSupported, itemType.FullName));
+						string.Format(Strings.Runtime_EmbeddedHostObjectTypeNotSupported, itemName, itemType.FullName));
 				}
 			}
 			else
@@ -667,6 +667,48 @@
 			}
 
 			_jsEngine.EmbedHostObject(itemName, value);
+		}
+
+		/// <summary>
+		/// Embeds a host type to script code
+		/// </summary>
+		/// <param name="itemName">The name for the new global variable that will represent the type</param>
+		/// <param name="type">The type to expose</param>
+		/// <remarks>
+		/// Host types are exposed to script code in the form of objects whose properties and
+		/// methods are bound to the type's static members.
+		/// </remarks>
+		public void EmbedHostType(string itemName, Type type)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(itemName))
+			{
+				throw new ArgumentException(
+					string.Format(Strings.Common_ArgumentIsEmpty, "itemName"), "itemName");
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(itemName))
+			{
+				throw new FormatException(
+					string.Format(Strings.Runtime_InvalidScriptItemNameFormat, itemName));
+			}
+
+			if (type != null)
+			{
+				if (ValidationHelpers.IsPrimitiveType(type)
+					|| type == typeof(Undefined))
+				{
+					throw new NotSupportedTypeException(
+						string.Format(Strings.Runtime_EmbeddedHostTypeNotSupported, type.FullName));
+				}
+			}
+			else
+			{
+				throw new ArgumentNullException("type", string.Format(Strings.Common_ArgumentIsNull, "type"));
+			}
+
+			_jsEngine.EmbedHostType(itemName, type);
 		}
 
 		#region IDisposable implementation

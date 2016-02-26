@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="ActiveScript\ActiveScriptException.cs" />
     <Compile Include="ActiveScript\ActiveScriptParseWrapper.cs" />
-    <Compile Include="ActiveScript\ActiveScriptSiteWrapper.cs" />
     <Compile Include="ActiveScript\ChakraActiveScriptJsEngine.cs" />
     <Compile Include="ActiveScript\ClassicActiveScriptJsEngine.cs" />
     <Compile Include="ActiveScript\ScriptHResult.cs" />
@@ -67,12 +66,15 @@
     <Compile Include="ActiveScript\ScriptTypeLibFlags.cs" />
     <Compile Include="Constants\ComErrorCode.cs" />
     <Compile Include="Constants\DllName.cs" />
+    <Compile Include="Constants\SpecialMemberName.cs" />
     <Compile Include="Helpers\ComHelpers.cs" />
     <Compile Include="Helpers\JsEngineModeHelpers.cs" />
     <Compile Include="Helpers\JsErrorHelpers.cs" />
     <Compile Include="Helpers\TypeMappingHelpers.cs" />
     <Compile Include="Helpers\ValidationHelpers.cs" />
+    <Compile Include="HostItemBase.cs" />
     <Compile Include="HostObject.cs" />
+    <Compile Include="HostType.cs" />
     <Compile Include="IInnerJsEngine.cs" />
     <Compile Include="JsEngineSettings.cs" />
     <Compile Include="JsRt\ChakraJsRtJsEngineBase.cs" />

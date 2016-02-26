@@ -1,5 +1,7 @@
 ﻿namespace MsieJavaScriptEngine.JsRt
 {
+	using System;
+
 	using Helpers;
 
 	/// <summary>
@@ -75,6 +77,8 @@
 		public abstract void RemoveVariable(string variableName);
 
 		public abstract void EmbedHostObject(string itemName, object value);
+
+		public abstract void EmbedHostType(string itemName, Type type);
 
 		#endregion
 

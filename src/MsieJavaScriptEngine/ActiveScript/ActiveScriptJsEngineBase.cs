@@ -1,10 +1,14 @@
 ﻿namespace MsieJavaScriptEngine.ActiveScript
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Reflection;
 	using System.Runtime.InteropServices;
+	using System.Runtime.InteropServices.Expando;
 	using System.Windows.Threading;
+
+	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
 	using Constants;
 	using Helpers;
@@ -14,7 +18,7 @@
 	/// <summary>
 	/// Base class of the ActiveScript JavaScript engine
 	/// </summary>
-	internal abstract class ActiveScriptJsEngineBase : IInnerJsEngine
+	internal abstract class ActiveScriptJsEngineBase : IInnerJsEngine, IActiveScriptSite
 	{
 		/// <summary>
 		/// Name of resource, which contains a ECMAScript 5 Polyfill
@@ -37,9 +41,29 @@
 		private IActiveScript _activeScript;
 
 		/// <summary>
-		/// Instance of site for the ActiveScript engine
+		/// Instance of ActiveScriptParseWrapper
 		/// </summary>
-		private ActiveScriptSiteWrapper _activeScriptSite;
+		private IActiveScriptParseWrapper _activeScriptParse;
+
+		/// <summary>
+		/// Instance of script dispatch
+		/// </summary>
+		private IExpando _dispatch;
+
+		/// <summary>
+		/// List of host items
+		/// </summary>
+		private Dictionary<string, object> _hostItems = new Dictionary<string, object>();
+
+		/// <summary>
+		/// Host-defined document version string
+		/// </summary>
+		private readonly string _documentVersion;
+
+		/// <summary>
+		/// Last ActiveScript exception
+		/// </summary>
+		private ActiveScriptException _lastException;
 
 		/// <summary>
 		/// JavaScript engine mode
@@ -63,7 +87,7 @@
 
 
 		/// <summary>
-		/// Constructs instance of the ActiveScript JavaScript engine
+		/// Constructs an instance of the ActiveScript JavaScript engine
 		/// </summary>
 		/// <param name="clsid">CLSID of JavaScript engine</param>
 		/// <param name="engineMode">JavaScript engine mode</param>
@@ -95,10 +119,10 @@
 				var activeScriptProperty = _activeScript as IActiveScriptProperty;
 				if (activeScriptProperty != null)
 				{
-					object scriptLanguageVersion = (int) languageVersion;
-					uint result = activeScriptProperty.SetProperty((uint) ScriptProperty.InvokeVersioning,
+					object scriptLanguageVersion = (int)languageVersion;
+					uint result = activeScriptProperty.SetProperty((uint)ScriptProperty.InvokeVersioning,
 						IntPtr.Zero, ref scriptLanguageVersion);
-					if (result != (uint) ScriptHResult.Ok)
+					if (result != (uint)ScriptHResult.Ok)
 					{
 						throw new JsEngineLoadException(
 							string.Format(Strings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
@@ -106,7 +130,14 @@
 				}
 			}
 
-			_activeScriptSite = new ActiveScriptSiteWrapper(_pActiveScript, _activeScript);
+			_activeScriptParse = new ActiveScriptParseWrapper(_pActiveScript, _activeScript);
+			_activeScriptParse.InitNew();
+
+			_activeScript.SetScriptSite(this);
+			_activeScript.SetScriptState(ScriptState.Started);
+
+			InitScriptDispatch();
+			_documentVersion = DateTime.UtcNow.ToString("o");
 
 			LoadResources(useEcmaScript5Polyfill, useJson2Library);
 		}
@@ -203,7 +234,7 @@
 		}
 
 		/// <summary>
-		/// Makes a mapping of array itemp from the script type to a host type
+		/// Makes a mapping of array items from the script type to a host type
 		/// </summary>
 		/// <param name="args">The source array</param>
 		/// <returns>The mapped array</returns>
@@ -227,6 +258,49 @@
 			};
 
 			return jsEngineException;
+		}
+
+		/// <summary>
+		/// Initializes a script dispatch
+		/// </summary>
+		private void InitScriptDispatch()
+		{
+			IExpando dispatch = null;
+			object obj;
+
+			_activeScript.GetScriptDispatch(null, out obj);
+
+			if (obj != null && obj.GetType().IsCOMObject)
+			{
+				dispatch = obj as IExpando;
+			}
+
+			if (dispatch == null)
+			{
+				throw new InvalidOperationException(Strings.Runtime_ActiveScriptDispatcherNotInitialized);
+			}
+
+			_dispatch = dispatch;
+		}
+
+		/// <summary>
+		/// Gets and resets a last exception. Returns null for none.
+		/// </summary>
+		private ActiveScriptException GetAndResetLastException()
+		{
+			ActiveScriptException temp = _lastException;
+			_lastException = null;
+
+			return temp;
+		}
+
+		private void ThrowError()
+		{
+			ActiveScriptException last = GetAndResetLastException();
+			if (last != null)
+			{
+				throw last;
+			}
 		}
 
 		private void InvokeScript(Action action)
@@ -271,6 +345,139 @@
 
 				throw;
 			}
+		}
+
+		/// <summary>
+		/// Executes a script text
+		/// </summary>
+		/// <param name="code">Script text</param>
+		/// <param name="isExpression">Flag that script text needs to run as an expression</param>
+		/// <returns>Result of the execution</returns>
+		private object InnerExecute(string code, bool isExpression)
+		{
+			object result;
+
+			try
+			{
+				result = _activeScriptParse.ParseScriptText(code, null, null, null, IntPtr.Zero,
+					0, isExpression ? ScriptTextFlags.IsExpression : ScriptTextFlags.IsVisible);
+			}
+			catch
+			{
+				ThrowError();
+				throw;
+			}
+
+			// Check for parse error
+			ThrowError();
+
+			return result;
+		}
+
+		/// <summary>
+		/// Calls a function
+		/// </summary>
+		/// <param name="functionName">Function name</param>
+		/// <param name="args">Function arguments</param>
+		/// <returns>Result of the function execution</returns>
+		private object InnerCallFunction(string functionName, params object[] args)
+		{
+			object result;
+
+			try
+			{
+				result = _dispatch.InvokeMember(functionName, BindingFlags.InvokeMethod,
+					null, _dispatch, args, null, CultureInfo.InvariantCulture, null);
+			}
+			catch
+			{
+				ThrowError();
+				throw;
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Gets a value of variable
+		/// </summary>
+		/// <param name="variableName">Name of variable</param>
+		/// <returns>Value of variable</returns>
+		private object InnerGetVariableValue(string variableName)
+		{
+			object variableValue;
+
+			try
+			{
+				variableValue = _dispatch.InvokeMember(variableName, BindingFlags.GetProperty,
+					null, _dispatch, new object[0], null,
+					CultureInfo.InvariantCulture, null);
+			}
+			catch
+			{
+				ThrowError();
+				throw;
+			}
+
+			return variableValue;
+		}
+
+		/// <summary>
+		/// Sets a value to variable
+		/// </summary>
+		/// <param name="variableName">Name of variable</param>
+		/// <param name="value">Value of variable</param>
+		private void InnerSetVariableValue(string variableName, object value)
+		{
+			object[] args = { value };
+
+			try
+			{
+				_dispatch.InvokeMember(variableName, BindingFlags.SetProperty, null, _dispatch,
+					args, null, CultureInfo.InvariantCulture, null);
+			}
+			catch (MissingMemberException)
+			{
+				_dispatch.AddProperty(variableName);
+				_dispatch.InvokeMember(variableName, BindingFlags.SetProperty, null, _dispatch,
+					args, null, CultureInfo.InvariantCulture, null);
+			}
+			catch
+			{
+				ThrowError();
+				throw;
+			}
+		}
+
+		private void EmbedHostItem(string itemName, object value)
+		{
+			InvokeScript(() =>
+			{
+				object oldValue = null;
+				if (_hostItems.ContainsKey(itemName))
+				{
+					oldValue = _hostItems[itemName];
+				}
+				_hostItems[itemName] = value;
+
+				try
+				{
+					_activeScript.AddNamedItem(itemName, ScriptItemFlags.IsVisible | ScriptItemFlags.GlobalMembers);
+				}
+				catch (Exception)
+				{
+					if (oldValue != null)
+					{
+						_hostItems[itemName] = oldValue;
+					}
+					else
+					{
+						_hostItems.Remove(itemName);
+					}
+
+					throw;
+				}
+			});
 		}
 
 		/// <summary>
@@ -323,30 +530,155 @@
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{
-			_dispatcher.Invoke(DispatcherPriority.Input, (Action)InnerDispose);
+			_dispatcher.Invoke(DispatcherPriority.Input, (Action)(() =>
+			{
+				if (!_disposed)
+				{
+					_disposed = true;
+
+					if (_dispatch != null)
+					{
+						ComHelpers.ReleaseComObject(ref _dispatch, !disposing);
+						_dispatch = null;
+					}
+
+					if (_activeScriptParse != null)
+					{
+						_activeScriptParse.Dispose();
+						_activeScriptParse = null;
+					}
+
+					if (_activeScript != null)
+					{
+						_activeScript.Close();
+						_activeScript = null;
+					}
+
+					ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
+
+					if (_hostItems != null)
+					{
+						_hostItems.Clear();
+						_hostItems = null;
+					}
+
+					_lastException = null;
+				}
+			}));
 		}
 
-		private void InnerDispose()
+		#region IActiveScriptSite implementation
+
+		/// <summary>
+		/// Retrieves the locale identifier associated with the host's user interface. The scripting
+		/// engine uses the identifier to ensure that error strings and other user-interface elements
+		/// generated by the engine appear in the appropriate language.
+		/// </summary>
+		/// <param name="lcid">A variable that receives the locale identifier for user-interface
+		/// elements displayed by the scripting engine</param>
+		void IActiveScriptSite.GetLcid(out int lcid)
 		{
-			if (!_disposed)
+			lcid = CultureInfo.CurrentCulture.LCID;
+		}
+
+		/// <summary>
+		/// Allows the scripting engine to obtain information about an item added with the
+		/// IActiveScript.AddNamedItem method
+		/// </summary>
+		/// <param name="name">The name associated with the item, as specified in the
+		/// IActiveScript.AddNamedItem method</param>
+		/// <param name="mask">A bit mask specifying what information about the item should be
+		/// returned. The scripting engine should request the minimum amount of information possible
+		/// because some of the return parameters (for example, ITypeInfo) can take considerable
+		/// time to load or generate</param>
+		/// <param name="pUnkItem">A variable that receives a pointer to the IUnknown interface associated
+		/// with the given item. The scripting engine can use the IUnknown.QueryInterface method to
+		/// obtain the IDispatch interface for the item. This parameter receives null if mask
+		/// does not include the ScriptInfo.IUnknown value. Also, it receives null if there is no
+		/// object associated with the item name; this mechanism is used to create a simple class when
+		/// the named item was added with the ScriptItem.CodeOnly flag set in the
+		/// IActiveScript.AddNamedItem method.</param>
+		/// <param name="pTypeInfo">A variable that receives a pointer to the ITypeInfo interface
+		/// associated with the item. This parameter receives null if mask does not include the
+		/// ScriptInfo.ITypeInfo value, or if type information is not available for this item. If type
+		/// information is not available, the object cannot source events, and name binding must be
+		/// realized with the IDispatch.GetIDsOfNames method. Note that the ITypeInfo interface
+		/// retrieved describes the item's coclass (TKIND_COCLASS) because the object may support
+		/// multiple interfaces and event interfaces. If the item supports the IProvideMultipleTypeInfo
+		/// interface, the ITypeInfo interface retrieved is the same as the index zero ITypeInfo that
+		/// would be obtained using the IProvideMultipleTypeInfo.GetInfoOfIndex method.</param>
+		void IActiveScriptSite.GetItemInfo(string name, ScriptInfoFlags mask, ref IntPtr pUnkItem, ref IntPtr pTypeInfo)
+		{
+			object item = _hostItems[name];
+			if (item == null)
 			{
-				_disposed = true;
+				throw new COMException(
+					string.Format(Strings.Runtime_ItemNotFound, name), ComErrorCode.ElementNotFound);
+			}
 
-				if (_activeScriptSite != null)
-				{
-					_activeScriptSite.Dispose();
-					_activeScriptSite = null;
-				}
+			if (mask.HasFlag(ScriptInfoFlags.IUnknown))
+			{
+				pUnkItem = Marshal.GetIDispatchForObject(item);
+			}
 
-				if (_activeScript != null)
-				{
-					_activeScript.Close();
-					_activeScript = null;
-				}
-
-				ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
+			if (mask.HasFlag(ScriptInfoFlags.ITypeInfo))
+			{
+				pTypeInfo = Marshal.GetITypeInfoForType(item.GetType());
 			}
 		}
+
+		/// <summary>
+		/// Retrieves a host-defined string that uniquely identifies the current document version. If
+		/// the related document has changed outside the scope of Windows Script (as in the case of an
+		/// HTML page being edited with Notepad), the scripting engine can save this along with its
+		/// persisted state, forcing a recompile the next time the script is loaded.
+		/// </summary>
+		/// <param name="version">The host-defined document version string</param>
+		void IActiveScriptSite.GetDocVersionString(out string version)
+		{
+			version = _documentVersion;
+		}
+
+		/// <summary>
+		/// Informs the host that the script has completed execution
+		/// </summary>
+		/// <param name="result">A variable that contains the script result, or null if the script
+		/// produced no result</param>
+		/// <param name="exceptionInfo">Contains exception information generated when the script
+		/// terminated, or null if no exception was generated</param>
+		void IActiveScriptSite.OnScriptTerminate(object result, EXCEPINFO exceptionInfo)
+		{ }
+
+		/// <summary>
+		/// Informs the host that the scripting engine has changed states
+		/// </summary>
+		/// <param name="scriptState">Indicates the new script state</param>
+		void IActiveScriptSite.OnStateChange(ScriptState scriptState)
+		{ }
+
+		/// <summary>
+		/// Informs the host that an execution error occurred while the engine was running the script.
+		/// </summary>
+		/// <param name="scriptError">A host can use this interface to obtain information about the
+		/// execution error</param>
+		void IActiveScriptSite.OnScriptError(IActiveScriptError scriptError)
+		{
+			_lastException = ActiveScriptException.Create(scriptError);
+		}
+
+		/// <summary>
+		/// Informs the host that the scripting engine has begun executing the script code
+		/// </summary>
+		void IActiveScriptSite.OnEnterScript()
+		{ }
+
+		/// <summary>
+		/// Informs the host that the scripting engine has returned from executing script code
+		/// </summary>
+		void IActiveScriptSite.OnLeaveScript()
+		{ }
+
+		#endregion
 
 		#region IInnerJsEngine implementation
 
@@ -357,7 +689,7 @@
 
 		public object Evaluate(string expression)
 		{
-			object result = InvokeScript(() => _activeScriptSite.ExecuteScriptText(expression, true));
+			object result = InvokeScript(() => InnerExecute(expression, true));
 			result = MapToHostType(result);
 
 			return result;
@@ -367,19 +699,19 @@
 		{
 			InvokeScript(() =>
 			{
-				_activeScriptSite.ExecuteScriptText(code, false);
+				InnerExecute(code, false);
 			});
 		}
 
 		public object CallFunction(string functionName, params object[] args)
 		{
-			var processedArgs = MapToScriptType(args);
+			object[] processedArgs = MapToScriptType(args);
 
 			object result = InvokeScript(() =>
 			{
 				try
 				{
-					return _activeScriptSite.CallFunction(functionName, processedArgs);
+					return InnerCallFunction(functionName, processedArgs);
 				}
 				catch (MissingMemberException)
 				{
@@ -395,18 +727,33 @@
 
 		public bool HasVariable(string variableName)
 		{
-			var variableExist = InvokeScript(() => _activeScriptSite.HasProperty(variableName));
+			bool result = InvokeScript(() =>
+			{
+				bool variableExist;
 
-			return variableExist;
+				try
+				{
+					object variableValue = InnerGetVariableValue(variableName);
+					variableExist = variableValue != null;
+				}
+				catch (MissingMemberException)
+				{
+					variableExist = false;
+				}
+
+				return variableExist;
+			});
+
+			return result;
 		}
 
 		public object GetVariableValue(string variableName)
 		{
-			object variableValue = InvokeScript(() =>
+			object result = InvokeScript(() =>
 			{
 				try
 				{
-					return _activeScriptSite.GetProperty(variableName);
+					return InnerGetVariableValue(variableName);
 				}
 				catch (MissingMemberException)
 				{
@@ -415,7 +762,7 @@
 				}
 			});
 
-			object result = MapToHostType(variableValue);
+			result = MapToHostType(result);
 
 			return result;
 		}
@@ -423,41 +770,32 @@
 		public void SetVariableValue(string variableName, object value)
 		{
 			object processedValue = MapToScriptType(value);
-
-			InvokeScript(() => _activeScriptSite.SetProperty(variableName, processedValue));
+			InvokeScript(() => InnerSetVariableValue(variableName, processedValue));
 		}
 
 		public void RemoveVariable(string variableName)
 		{
-			InvokeScript(() => _activeScriptSite.DeleteProperty(variableName));
+			InvokeScript(() =>
+			{
+				InnerSetVariableValue(variableName, null);
+
+				if (_hostItems.ContainsKey(variableName))
+				{
+					_hostItems.Remove(variableName);
+				}
+			});
 		}
 
 		public void EmbedHostObject(string itemName, object value)
 		{
-			InvokeScript(() =>
-			{
-				var processedValue = MapToScriptType(value);
-				object oldValue = _activeScriptSite.GetItem(itemName);
-				_activeScriptSite.SetItem(itemName, processedValue);
+			object processedValue = MapToScriptType(value);
+			EmbedHostItem(itemName, processedValue);
+		}
 
-				try
-				{
-					_activeScript.AddNamedItem(itemName, ScriptItemFlags.IsVisible | ScriptItemFlags.GlobalMembers);
-				}
-				catch (Exception)
-				{
-					if (oldValue != null)
-					{
-						_activeScriptSite.SetItem(itemName, oldValue);
-					}
-					else
-					{
-						_activeScriptSite.RemoveItem(itemName);
-					}
-
-					throw;
-				}
-			});
+		public void EmbedHostType(string itemName, Type type)
+		{
+			var typeValue = new HostType(type, _engineMode);
+			EmbedHostItem(itemName, typeValue);
 		}
 
 		#endregion

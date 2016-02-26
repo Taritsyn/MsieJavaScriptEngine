@@ -507,6 +507,17 @@
 			});
 		}
 
+		public override void EmbedHostType(string itemName, Type type)
+		{
+			InvokeScript(() =>
+			{
+				EdgeJsValue typeValue = EdgeJsValue.FromObject(new HostType(type, _engineMode));
+				EdgeJsPropertyId itemId = EdgeJsPropertyId.FromString(itemName);
+
+				EdgeJsValue.GlobalObject.SetProperty(itemId, typeValue, true);
+			});
+		}
+
 		#endregion
 
 		#region IDisposable implementation
