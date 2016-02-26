@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## February 26, 2016 - v1.7.0 Beta 1
+ * Added the `EmbedHostType` method (embeds a host type to script code)
+
 ## January 16, 2016 - v1.7.0 Alpha 2
  * Added a possibility to debug in Visual Studio by adding the `debugger` statement to script code. This feature only works in the `ChakraIeJsRt` and `ChakraEdgeJsRt` modes.
  * In JavaScript engine settings was added one new property - `EnableDebugging` (default `false`)
