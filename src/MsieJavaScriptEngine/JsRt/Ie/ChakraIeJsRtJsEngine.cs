@@ -46,7 +46,7 @@
 		/// <summary>
 		/// Flag that object is destroyed
 		/// </summary>
-		private bool _disposed;
+		private StatedFlag _disposedFlag = new StatedFlag();
 
 
 		/// <summary>
@@ -415,10 +415,8 @@
 		{
 			lock (_runSynchronizer)
 			{
-				if (!_disposed)
+				if (_disposedFlag.Set())
 				{
-					_disposed = true;
-
 					_jsRuntime.Dispose();
 				}
 			}

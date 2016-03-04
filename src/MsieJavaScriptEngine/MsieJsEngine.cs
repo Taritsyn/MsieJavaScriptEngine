@@ -34,7 +34,7 @@
 		/// <summary>
 		/// Flag that object is destroyed
 		/// </summary>
-		private bool _disposed;
+		private InterlockedStatedFlag _disposedFlag = new InterlockedStatedFlag();
 
 		/// <summary>
 		/// Gets a name of JavaScript engine mode
@@ -173,7 +173,7 @@
 
 		private void VerifyNotDisposed()
 		{
-			if (_disposed)
+			if (_disposedFlag.IsSet())
 			{
 				throw new ObjectDisposedException(ToString());
 			}
@@ -718,10 +718,8 @@
 		/// </summary>
 		public void Dispose()
 		{
-			if (!_disposed)
+			if (_disposedFlag.Set())
 			{
-				_disposed = true;
-
 				if (_jsEngine != null)
 				{
 					_jsEngine.Dispose();

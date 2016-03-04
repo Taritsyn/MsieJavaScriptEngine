@@ -76,6 +76,7 @@
     <Compile Include="HostObject.cs" />
     <Compile Include="HostType.cs" />
     <Compile Include="IInnerJsEngine.cs" />
+    <Compile Include="InterlockedStatedFlag.cs" />
     <Compile Include="JsEngineSettings.cs" />
     <Compile Include="JsRt\ChakraJsRtJsEngineBase.cs" />
     <Compile Include="JsRt\Edge\ChakraEdgeJsRtJsEngine.cs" />
@@ -142,6 +143,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.ru-ru.resx</DependentUpon>
     </Compile>
+    <Compile Include="StatedFlag.cs" />
     <Compile Include="Utilities\TypeConverter.cs" />
     <Compile Include="Undefined.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />

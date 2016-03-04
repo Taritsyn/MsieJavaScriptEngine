@@ -16,7 +16,7 @@
 		/// <summary>
 		/// Whether the structure has been disposed
 		/// </summary>
-		private bool _disposed;
+		private StatedFlag _disposedFlag;
 
 
 		/// <summary>
@@ -25,7 +25,7 @@
 		/// <param name="context">The context to create the scope for</param>
 		public IeJsScope(IeJsContext context)
 		{
-			_disposed = false;
+			_disposedFlag = new StatedFlag();
 			_previousContext = IeJsContext.Current;
 			IeJsContext.Current = context;
 		}
@@ -37,13 +37,10 @@
 		/// </summary>
 		public void Dispose()
 		{
-			if (_disposed)
+			if (_disposedFlag.Set())
 			{
-				return;
+				IeJsContext.Current = _previousContext;
 			}
-
-			IeJsContext.Current = _previousContext;
-			_disposed = true;
 		}
 
 		#endregion

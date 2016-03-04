@@ -27,7 +27,7 @@
 		/// <summary>
 		/// Flag indicating whether debugging started
 		/// </summary>
-		private bool _debuggingStarted;
+		private StatedFlag _debuggingStartedFlag;
 
 
 		/// <summary>
@@ -48,10 +48,9 @@
 		/// </summary>
 		protected void StartDebugging()
 		{
-			if (!_debuggingStarted)
+			if (_debuggingStartedFlag.Set())
 			{
 				InnerStartDebugging();
-				_debuggingStarted = true;
 			}
 		}
 

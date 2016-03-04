@@ -42,7 +42,7 @@
 		/// <summary>
 		/// Flag that object is destroyed
 		/// </summary>
-		private bool _disposed;
+		private StatedFlag _disposedFlag = new StatedFlag();
 
 		/// <summary>
 		/// Gets a last COM exception
@@ -81,7 +81,7 @@
 		}
 
 		/// <summary>
-		/// Destructs instance of <see cref="ActiveScriptSiteWrapper"/>
+		/// Destructs instance of <see cref="ActiveScriptParseWrapper"/>
 		/// </summary>
 		~ActiveScriptParseWrapper()
 		{
@@ -96,10 +96,8 @@
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{
-			if (!_disposed)
+			if (_disposedFlag.Set())
 			{
-				_disposed = true;
-
 				if (_is64Bit)
 				{
 					_activeScriptParse64 = null;

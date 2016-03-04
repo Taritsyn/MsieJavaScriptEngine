@@ -83,7 +83,7 @@
 		/// <summary>
 		/// Flag that object is destroyed
 		/// </summary>
-		private bool _disposed;
+		private StatedFlag _disposedFlag = new StatedFlag();
 
 
 		/// <summary>
@@ -532,10 +532,8 @@
 		{
 			_dispatcher.Invoke(DispatcherPriority.Input, (Action)(() =>
 			{
-				if (!_disposed)
+				if (_disposedFlag.Set())
 				{
-					_disposed = true;
-
 					if (_dispatch != null)
 					{
 						ComHelpers.ReleaseComObject(ref _dispatch, !disposing);
