@@ -1,6 +1,13 @@
 Change log
 ==========
 
+## March 4, 2016 - v1.7.0
+ * Added the `EmbedHostObject` method (embeds a instance of simple class, structure or delegate to script code)
+ * Added the `EmbedHostType` method (embeds a host type to script code)
+ * Added a possibility to debug in Visual Studio by adding the `debugger` statement to script code. This feature only works in the `ChakraIeJsRt` and `ChakraEdgeJsRt` modes.
+ * In JavaScript engine settings was added one new property - `EnableDebugging` (default `false`)
+ * Improved implementation of the `CallFunction` method for Chakra JsRT modes
+
 ## February 26, 2016 - v1.7.0 Beta 1
  * Added the `EmbedHostType` method (embeds a host type to script code)
 

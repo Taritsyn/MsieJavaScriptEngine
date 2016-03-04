@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-        README file for MSIE JavaScript Engine for .NET v1.7.0 Beta 1
+           README file for MSIE JavaScript Engine for .NET v1.7.0
 
    ----------------------------------------------------------------------
 
@@ -21,7 +21,17 @@
    =============
    RELEASE NOTES
    =============
-   Added the `EmbedHostType` method (embeds a host type to script code).
+   1. Added the `EmbedHostObject` method (embeds a instance of simple
+      class, structure or delegate to script code);
+   2. Added the `EmbedHostType` method (embeds a host type to script
+      code);
+   3. Added a possibility to debug in Visual Studio by adding the
+      `debugger` statement to script code. This feature only works in the
+      `ChakraIeJsRt` and `ChakraEdgeJsRt` modes.
+   4. In JavaScript engine settings was added one new property -
+      `EnableDebugging` (default `false`);
+   5. Improved implementation of the `CallFunction` method for Chakra
+      JsRT modes.
 
    ============
    PROJECT SITE
