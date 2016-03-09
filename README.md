@@ -87,6 +87,12 @@ Consider in detail properties of the <code title="MsieJavaScriptEngine.JsEngineS
 	</thead>
 	<tbody>
 		<tr valign="top">
+			<td><code>EnableDebugging</code></td>
+			<td><code title="System.Boolean">Boolean</code></td>
+			<td><code>false</code></td>
+			<td>Flag for whether to allow debugging in Visual Studio by adding the `debugger` statement to script code (only works in the `ChakraIeJsRt` and `ChakraEdgeJsRt` modes).</td>
+		</tr>
+		<tr valign="top">
 			<td><code>EngineMode</code></td>
 			<td><code title="MsieJavaScriptEngine.JsEngineMode">JsEngineMode</code> enumeration</td>
 			<td><code>Auto</code></td>
