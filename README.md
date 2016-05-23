@@ -133,5 +133,7 @@ If you use the MSIE JavaScript Engine in some project, please send me a message 
 
  * [Chevron](http://github.com/SimonCropp/Chevron) by Simon Cropp
  * [JavaScript Engine Switcher](http://github.com/Taritsyn/JavaScriptEngineSwitcher) by Andrey Taritsyn
+ * [PowerShell.JS](http://github.com/klumsy/powershellJS) by Karl Prosser
+ * [Serenity Application Platform](http://github.com/volkanceylan/Serenity) by Volkan Ceylan
  * [SquishIt](http://github.com/jetheredge/SquishIt) by Justin Etheredge and Alex Cuse
  * [Strike](http://github.com/SimonCropp/Strike) by Simon Cropp
