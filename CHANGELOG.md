@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## May 24, 2016 - v1.7.1
+ * JSON2 library was updated to version of May 10, 2016
+
 ## March 4, 2016 - v1.7.0
  * Added the `EmbedHostObject` method (embeds a instance of simple class, structure or delegate to script code)
  * Added the `EmbedHostType` method (embeds a host type to script code)
