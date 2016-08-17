@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## August 17, 2016 - v1.7.2
+ * An attempt was made to prevent occurrence of the access violation exception in the `CallFunction` method
+
 ## May 24, 2016 - v1.7.1
  * JSON2 library was updated to version of May 10, 2016
 

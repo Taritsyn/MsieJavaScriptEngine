@@ -1,7 +1,7 @@
 
 
    ----------------------------------------------------------------------
-           README file for MSIE JavaScript Engine for .NET v1.7.1
+           README file for MSIE JavaScript Engine for .NET v1.7.2
 
    ----------------------------------------------------------------------
 
