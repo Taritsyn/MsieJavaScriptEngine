@@ -460,11 +460,15 @@
 						string.Format(Strings.Runtime_FunctionNotExist, functionName));
 				}
 
-				var processedArgs = MapToScriptType(args);
-				var allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
-
+				IeJsValue[] processedArgs = MapToScriptType(args);
 				IeJsValue functionValue = globalObj.GetProperty(functionId);
+
+				globalObj.AddRef();
+
+				IeJsValue[] allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
 				IeJsValue resultValue = functionValue.CallFunction(allProcessedArgs);
+
+				globalObj.Release();
 
 				return MapToHostType(resultValue);
 			});

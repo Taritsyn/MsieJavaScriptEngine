@@ -424,11 +424,15 @@
 						string.Format(Strings.Runtime_FunctionNotExist, functionName));
 				}
 
-				var processedArgs = MapToScriptType(args);
-				var allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
-
+				EdgeJsValue[] processedArgs = MapToScriptType(args);
 				EdgeJsValue functionValue = globalObj.GetProperty(functionId);
+
+				globalObj.AddRef();
+
+				EdgeJsValue[] allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
 				EdgeJsValue resultValue = functionValue.CallFunction(allProcessedArgs);
+
+				globalObj.Release();
 
 				return MapToHostType(resultValue);
 			});

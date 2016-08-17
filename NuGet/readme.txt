@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   JSON2 library was updated to version of May 10, 2016.
+   An attempt was made to prevent occurrence of the access violation
+   exception in the `CallFunction` method.
 
    ============
    PROJECT SITE
