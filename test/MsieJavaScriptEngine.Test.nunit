@@ -1,6 +1,6 @@
 ﻿<NUnitProject>
   <Settings processModel="Multiple" domainUsage="Single" />
-  <Config name="Release" runtimeFramework="v4.0.21006" binpathtype="None">
+  <Config name="Release" runtimeFramework="v4.0" binpathtype="None">
     <assembly path="MsieJavaScriptEngine.Test.Common/bin/Release\MsieJavaScriptEngine.Test.Common.dll" />
     <assembly path="MsieJavaScriptEngine.Test.Auto/bin/Release/MsieJavaScriptEngine.Test.Auto.dll" />
     <assembly path="MsieJavaScriptEngine.Test.ChakraEdgeJsRt/bin/Release/MsieJavaScriptEngine.Test.ChakraEdgeJsRt.dll" />
@@ -8,7 +8,7 @@
     <assembly path="MsieJavaScriptEngine.Test.ChakraActiveScript/bin/Release/MsieJavaScriptEngine.Test.ChakraActiveScript.dll" />
     <assembly path="MsieJavaScriptEngine.Test.Classic/bin/Release/MsieJavaScriptEngine.Test.Classic.dll" />
   </Config>
-  <Config name="Debug" runtimeFramework="v4.0.21006" binpathtype="None">
+  <Config name="Debug" runtimeFramework="v4.0" binpathtype="None">
     <assembly path="MsieJavaScriptEngine.Test.Common/bin/Debug\MsieJavaScriptEngine.Test.Common.dll" />
     <assembly path="MsieJavaScriptEngine.Test.Auto/bin/Debug/MsieJavaScriptEngine.Test.Auto.dll" />
     <assembly path="MsieJavaScriptEngine.Test.ChakraEdgeJsRt/bin/Debug/MsieJavaScriptEngine.Test.ChakraEdgeJsRt.dll" />

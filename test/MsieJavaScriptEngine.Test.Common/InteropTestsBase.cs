@@ -384,7 +384,7 @@
 			}
 
 			// Assert
-			Assert.IsNotNullOrEmpty(output);
+			Assert.That(output, Is.Not.Null.Or.Empty);
 			Assert.IsTrue(output.Length == targetOutputLength);
 		}
 
