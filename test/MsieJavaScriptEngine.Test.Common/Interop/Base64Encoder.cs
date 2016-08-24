@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.Test.Common.Interop
-{
-	using System;
-	using System.Text;
+﻿using System;
+using System.Text;
 
+namespace MsieJavaScriptEngine.Test.Common.Interop
+{
 	public static class Base64Encoder
 	{
 		public const int DATA_URI_MAX = 32768;

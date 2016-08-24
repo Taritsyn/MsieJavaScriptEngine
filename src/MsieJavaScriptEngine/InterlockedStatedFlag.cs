@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine
-{
-	using System.Threading;
+﻿using System.Threading;
 
+namespace MsieJavaScriptEngine
+{
 	internal struct InterlockedStatedFlag
 	{
 		private int _counter;

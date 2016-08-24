@@ -1,10 +1,9 @@
-﻿namespace MsieJavaScriptEngine.Test.Classic
+﻿using NUnit.Framework;
+
+using MsieJavaScriptEngine.Test.Common;
+
+namespace MsieJavaScriptEngine.Test.Classic
 {
-	using NUnit.Framework;
-
-	using MsieJavaScriptEngine;
-	using Common;
-
 	[TestFixture]
 	public class InteropTests : InteropTestsBase
 	{

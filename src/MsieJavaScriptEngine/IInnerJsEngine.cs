@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine
+{
 	/// <summary>
 	/// Interface for the inner JavaScript engine
 	/// </summary>

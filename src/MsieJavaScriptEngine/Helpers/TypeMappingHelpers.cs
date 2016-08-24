@@ -1,10 +1,10 @@
-﻿namespace MsieJavaScriptEngine.Helpers
+﻿using System;
+using System.Linq;
+
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.Helpers
 {
-	using System;
-	using System.Linq;
-
-	using Utilities;
-
 	/// <summary>
 	/// Type mapping helpers
 	/// </summary>

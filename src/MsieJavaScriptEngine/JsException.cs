@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine
+{
 	/// <summary>
 	/// The exception that is thrown during the work of JavaScript engine
 	/// </summary>

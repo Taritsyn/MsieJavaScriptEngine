@@ -1,13 +1,13 @@
-﻿namespace MsieJavaScriptEngine.Utilities
+﻿using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using OriginalTypeConverter = System.ComponentModel.TypeConverter;
+
+using MsieJavaScriptEngine.Resources;
+
+namespace MsieJavaScriptEngine.Utilities
 {
-	using System;
-	using System.ComponentModel;
-	using System.Globalization;
-	using System.Linq;
-	using OriginalTypeConverter = System.ComponentModel.TypeConverter;
-
-	using Resources;
-
 	/// <summary>
 	/// Type converter
 	/// </summary>

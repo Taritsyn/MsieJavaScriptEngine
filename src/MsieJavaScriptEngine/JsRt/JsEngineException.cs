@@ -1,8 +1,8 @@
+using System;
+using System.Runtime.Serialization;
+
 namespace MsieJavaScriptEngine.JsRt
 {
-	using System;
-	using System.Runtime.Serialization;
-
 	/// <summary>
 	/// The exception that occurred in the workings of the JavaScript engine itself
 	/// </summary>

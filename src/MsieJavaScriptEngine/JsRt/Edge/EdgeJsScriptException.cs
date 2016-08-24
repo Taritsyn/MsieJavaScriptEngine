@@ -1,10 +1,8 @@
+using System;
+using System.Runtime.Serialization;
+
 namespace MsieJavaScriptEngine.JsRt.Edge
 {
-	using System;
-	using System.Runtime.Serialization;
-
-	using JsRt;
-
 	/// <summary>
 	/// “Edge” script exception
 	/// </summary>

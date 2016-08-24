@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Ie
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine.JsRt.Ie
+{
 	/// <summary>
 	/// “IE” Chakra runtime
 	/// </summary>

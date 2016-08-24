@@ -1,12 +1,12 @@
-﻿namespace MsieJavaScriptEngine.Helpers
+﻿using System;
+using System.Globalization;
+using System.Text;
+
+using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.Helpers
 {
-	using System;
-	using System.Globalization;
-	using System.Text;
-
-	using Resources;
-	using Utilities;
-
 	/// <summary>
 	/// JavaScript engine error helpers
 	/// </summary>

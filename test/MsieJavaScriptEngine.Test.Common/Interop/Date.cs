@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.Test.Common.Interop
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine.Test.Common.Interop
+{
 	public struct Date
 	{
 		private static readonly int[] _cumulativeDays = { 0, 31, 59, 90, 120, 151, 181,

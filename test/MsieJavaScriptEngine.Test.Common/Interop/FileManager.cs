@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.Test.Common.Interop
-{
-	using System;
-	using System.IO;
+﻿using System;
+using System.IO;
 
+namespace MsieJavaScriptEngine.Test.Common.Interop
+{
 	public sealed class FileManager
 	{
 		public string ReadFile(string path)

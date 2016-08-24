@@ -39,7 +39,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\MsieJavaScriptEngine.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\tools\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ActiveScript\ActiveScriptException.cs" />
@@ -172,8 +172,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\MsieJavaScriptEngine.snk">
-      <Link>MsieJavaScriptEngine.snk</Link>
+    <None Include="..\..\tools\Key.snk">
+      <Link>Key.snk</Link>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

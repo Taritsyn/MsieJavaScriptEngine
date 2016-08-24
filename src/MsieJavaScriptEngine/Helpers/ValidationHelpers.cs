@@ -1,11 +1,11 @@
-﻿namespace MsieJavaScriptEngine.Helpers
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.Helpers
 {
-	using System;
-	using System.Linq;
-	using System.Text.RegularExpressions;
-
-	using Utilities;
-
 	/// <summary>
 	/// Validation helpers
 	/// </summary>

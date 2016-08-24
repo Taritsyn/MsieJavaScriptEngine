@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Edge
-{
-	using System;
-	using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.JsRt.Edge
+{
 	/// <summary>
 	/// “Edge” property identifier
 	/// </summary>

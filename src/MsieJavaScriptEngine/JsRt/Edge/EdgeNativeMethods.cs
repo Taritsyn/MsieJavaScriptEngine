@@ -1,11 +1,10 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Edge
+﻿using System;
+using System.Runtime.InteropServices;
+
+using MsieJavaScriptEngine.Constants;
+
+namespace MsieJavaScriptEngine.JsRt.Edge
 {
-	using System;
-	using System.Runtime.InteropServices;
-
-	using Constants;
-	using JsRt;
-
 	/// <summary>
 	/// “Edge” native methods
 	/// </summary>

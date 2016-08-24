@@ -1,20 +1,20 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Expando;
+using System.Windows.Threading;
+
+using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
+using MsieJavaScriptEngine.Constants;
+using MsieJavaScriptEngine.Helpers;
+using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.ActiveScript
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.Reflection;
-	using System.Runtime.InteropServices;
-	using System.Runtime.InteropServices.Expando;
-	using System.Windows.Threading;
-
-	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
-
-	using Constants;
-	using Helpers;
-	using Resources;
-	using Utilities;
-
 	/// <summary>
 	/// Base class of the ActiveScript JavaScript engine
 	/// </summary>

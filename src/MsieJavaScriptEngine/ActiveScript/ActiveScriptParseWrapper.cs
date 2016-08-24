@@ -1,12 +1,12 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿using System;
+
+using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
+using MsieJavaScriptEngine.Helpers;
+using MsieJavaScriptEngine.Resources;
+
+namespace MsieJavaScriptEngine.ActiveScript
 {
-	using System;
-
-	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
-
-	using Helpers;
-	using Resources;
-
 	internal sealed class ActiveScriptParseWrapper : IActiveScriptParseWrapper
 	{
 		/// <summary>

@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.Helpers
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine.Helpers
+{
 	internal static class JsEngineModeHelpers
 	{
 		public static string GetModeName(JsEngineMode mode)

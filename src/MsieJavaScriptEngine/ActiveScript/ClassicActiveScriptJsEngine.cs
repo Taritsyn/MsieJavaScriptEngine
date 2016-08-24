@@ -1,7 +1,5 @@
 ﻿namespace MsieJavaScriptEngine.ActiveScript
 {
-	using Constants;
-
 	/// <summary>
 	/// Classic MSIE JavaScript engine
 	/// </summary>

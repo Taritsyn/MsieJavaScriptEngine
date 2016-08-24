@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	[Flags]
 	internal enum ScriptInfoFlags : uint
 	{

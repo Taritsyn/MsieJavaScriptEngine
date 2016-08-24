@@ -1,16 +1,15 @@
-﻿namespace MsieJavaScriptEngine.Test.Common
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+
+using NUnit.Framework;
+
+using MsieJavaScriptEngine.Test.Common.Interop;
+
+namespace MsieJavaScriptEngine.Test.Common
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Drawing;
-	using System.IO;
-	using System.Linq;
-
-	using NUnit.Framework;
-
-	using MsieJavaScriptEngine;
-	using Interop;
-
 	[TestFixture]
 	public abstract class InteropTestsBase : FileSystemTestsBase
 	{

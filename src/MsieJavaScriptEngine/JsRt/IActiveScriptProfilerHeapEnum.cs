@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.JsRt
-{
-	using System.Diagnostics.CodeAnalysis;
-	using System.Runtime.InteropServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.JsRt
+{
 	/// <summary>
 	/// IActiveScriptProfilerHeapEnum COM interface
 	/// </summary>

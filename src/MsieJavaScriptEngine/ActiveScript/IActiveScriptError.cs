@@ -1,9 +1,9 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿using System.Runtime.InteropServices;
+
+using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
+namespace MsieJavaScriptEngine.ActiveScript
 {
-	using System.Runtime.InteropServices;
-
-	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
-
 	/// <summary>
 	/// An object implementing this interface is passed to the IActiveScriptSite.OnScriptError method
 	/// whenever the scripting engine encounters an unhandled error. The host then calls methods on

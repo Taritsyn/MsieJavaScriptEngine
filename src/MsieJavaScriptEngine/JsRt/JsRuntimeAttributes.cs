@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.JsRt
-{
-	using System;
-	using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
+namespace MsieJavaScriptEngine.JsRt
+{
 	/// <summary>
 	/// Attributes of a runtime
 	/// </summary>

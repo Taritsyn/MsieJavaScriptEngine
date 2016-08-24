@@ -1,8 +1,8 @@
+using System;
+using System.Runtime.Serialization;
+
 namespace MsieJavaScriptEngine.JsRt
 {
-	using System;
-	using System.Runtime.Serialization;
-
 	/// <summary>
 	/// The exception returned from the Chakra engine
 	/// </summary>

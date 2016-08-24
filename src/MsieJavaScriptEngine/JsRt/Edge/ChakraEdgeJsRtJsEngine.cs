@@ -1,13 +1,13 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Edge
+﻿using System;
+using System.Globalization;
+using System.Linq;
+
+using MsieJavaScriptEngine.Constants;
+using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.JsRt.Edge
 {
-	using System;
-	using System.Globalization;
-	using System.Linq;
-
-	using Constants;
-	using Resources;
-	using Utilities;
-
 	/// <summary>
 	/// “Edge” JsRT version of Chakra JavaScript engine
 	/// </summary>

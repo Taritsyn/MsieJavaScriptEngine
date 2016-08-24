@@ -1,8 +1,8 @@
+using System;
+using System.Runtime.Serialization;
+
 namespace MsieJavaScriptEngine.JsRt.Ie
 {
-	using System;
-	using System.Runtime.Serialization;
-
 	/// <summary>
 	/// “IE” script exception
 	/// </summary>

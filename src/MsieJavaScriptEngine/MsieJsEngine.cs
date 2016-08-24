@@ -1,16 +1,16 @@
-﻿namespace MsieJavaScriptEngine
+﻿using System;
+using System.Reflection;
+using System.Text;
+
+using MsieJavaScriptEngine.ActiveScript;
+using MsieJavaScriptEngine.Helpers;
+using MsieJavaScriptEngine.JsRt.Edge;
+using MsieJavaScriptEngine.JsRt.Ie;
+using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine
 {
-	using System;
-	using System.Reflection;
-	using System.Text;
-
-	using ActiveScript;
-	using Helpers;
-	using JsRt.Edge;
-	using JsRt.Ie;
-	using Resources;
-	using Utilities;
-
 	/// <summary>
 	/// .NET-wrapper for working with the Internet Explorer's JavaScript engines
 	/// </summary>

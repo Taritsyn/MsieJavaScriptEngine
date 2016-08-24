@@ -1,11 +1,10 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Ie
+﻿using System;
+using System.Runtime.InteropServices;
+
+using MsieJavaScriptEngine.Constants;
+
+namespace MsieJavaScriptEngine.JsRt.Ie
 {
-	using System;
-	using System.Runtime.InteropServices;
-
-	using Constants;
-	using JsRt;
-
 	/// <summary>
 	/// “IE” native methods
 	/// </summary>

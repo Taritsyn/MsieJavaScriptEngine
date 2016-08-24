@@ -1,12 +1,10 @@
-﻿namespace MsieJavaScriptEngine.Test.Common
+﻿using System;
+using System.IO;
+
+using NUnit.Framework;
+
+namespace MsieJavaScriptEngine.Test.Common
 {
-	using System;
-	using System.IO;
-
-	using NUnit.Framework;
-
-	using MsieJavaScriptEngine;
-
 	[TestFixture]
 	public abstract class CommonTestsBase : FileSystemTestsBase
 	{

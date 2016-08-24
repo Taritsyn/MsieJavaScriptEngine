@@ -1,12 +1,12 @@
-﻿namespace MsieJavaScriptEngine.Utilities
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+
+using MsieJavaScriptEngine.Resources;
+
+namespace MsieJavaScriptEngine.Utilities
 {
-	using System;
-	using System.IO;
-	using System.Reflection;
-	using System.Text;
-
-	using Resources;
-
 	internal static class Utils
 	{
 		/// <summary>

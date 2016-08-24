@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.Helpers
-{
-	using System;
-	using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.Helpers
+{
 	/// <summary>
 	/// COM helpers
 	/// </summary>

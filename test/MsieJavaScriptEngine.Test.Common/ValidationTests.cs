@@ -1,9 +1,9 @@
-﻿namespace MsieJavaScriptEngine.Test.Common
+﻿using NUnit.Framework;
+
+using MsieJavaScriptEngine.Helpers;
+
+namespace MsieJavaScriptEngine.Test.Common
 {
-	using NUnit.Framework;
-
-	using Helpers;
-
 	[TestFixture]
 	public class ValidationTests
 	{

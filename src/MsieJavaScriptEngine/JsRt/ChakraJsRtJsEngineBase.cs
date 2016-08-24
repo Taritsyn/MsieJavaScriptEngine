@@ -1,9 +1,9 @@
-﻿namespace MsieJavaScriptEngine.JsRt
+﻿using System;
+
+using MsieJavaScriptEngine.Helpers;
+
+namespace MsieJavaScriptEngine.JsRt
 {
-	using System;
-
-	using Helpers;
-
 	/// <summary>
 	/// Base class of the Chakra JsRT JavaScript engine
 	/// </summary>

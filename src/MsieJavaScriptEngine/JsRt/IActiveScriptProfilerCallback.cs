@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.JsRt
-{
-	using System;
-	using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.JsRt
+{
 	/// <summary>
 	/// IActiveScriptProfilerCallback COM interface
 	/// </summary>

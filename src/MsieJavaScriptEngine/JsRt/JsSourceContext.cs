@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.JsRt
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine.JsRt
+{
 	/// <summary>
 	/// The cookie that identifies a script for debugging purposes
 	/// </summary>

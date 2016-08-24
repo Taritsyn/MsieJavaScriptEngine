@@ -1,10 +1,8 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Edge
+﻿using System;
+using System.Runtime.InteropServices;
+
+namespace MsieJavaScriptEngine.JsRt.Edge
 {
-	using System;
-	using System.Runtime.InteropServices;
-
-	using JsRt;
-
 	/// <summary>
 	/// “Edge” JavaScript value
 	/// </summary>

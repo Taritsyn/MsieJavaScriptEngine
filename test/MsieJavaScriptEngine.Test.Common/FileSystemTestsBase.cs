@@ -1,9 +1,9 @@
-﻿namespace MsieJavaScriptEngine.Test.Common
-{
-	using System;
-	using System.IO;
-	using System.Text.RegularExpressions;
+﻿using System;
+using System.IO;
+using System.Text.RegularExpressions;
 
+namespace MsieJavaScriptEngine.Test.Common
+{
 	public abstract class FileSystemTestsBase
 	{
 		/// <summary>

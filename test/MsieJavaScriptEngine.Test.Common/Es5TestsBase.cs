@@ -1,11 +1,9 @@
-﻿namespace MsieJavaScriptEngine.Test.Common
+﻿using System;
+
+using NUnit.Framework;
+
+namespace MsieJavaScriptEngine.Test.Common
 {
-	using System;
-
-	using NUnit.Framework;
-
-	using MsieJavaScriptEngine;
-
 	[TestFixture]
 	public abstract class Es5TestsBase
 	{

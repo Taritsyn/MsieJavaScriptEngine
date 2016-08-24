@@ -1,10 +1,10 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿using System;
+using System.Runtime.InteropServices;
+
+using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
+namespace MsieJavaScriptEngine.ActiveScript
 {
-	using System;
-	using System.Runtime.InteropServices;
-
-	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
-
 	/// <summary>
 	/// Provides the methods necessary to initialize the scripting engine. The scripting engine must
 	/// implement the IActiveScript interface

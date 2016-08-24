@@ -1,9 +1,9 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
-	using System.Runtime.Serialization;
-	using System.Runtime.InteropServices.ComTypes;
+﻿using System;
+using System.Runtime.Serialization;
+using System.Runtime.InteropServices.ComTypes;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	[Serializable]
 	internal sealed class ActiveScriptException : Exception
 	{
