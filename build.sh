@@ -6,6 +6,13 @@ KOREBUILD_DOTNET_VERSION=1.0.0-preview2-003121
 repoFolder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $repoFolder
 
+localNugetPackageManager=.nuget/NuGet.exe
+packageDir=packages
+
+if test ! -d $packageDir/NUnit.Runners; then
+  mono $localNugetPackageManager install NUnit.Runners -Version 3.4.1 -O $packageDir% -ExcludeVersion -NoCache
+fi
+
 koreBuildZip="https://github.com/aspnet/KoreBuild/archive/1.0.0.zip"
 if [ ! -z $KOREBUILD_ZIP ]; then
     koreBuildZip=$KOREBUILD_ZIP

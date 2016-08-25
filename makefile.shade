@@ -44,5 +44,22 @@ use-standard-lifecycle
 		Log.Info('');
 	}
 
+#run-net4-tests description='Runs a unit tests for .NET 4.0 version'
+	@{
+		string nunitConsolePath = "packages/NUnit.ConsoleRunner/tools/nunit3-console.exe";
+		string testDirPath = Path.Combine(BASE_DIR, "test");
+
+		Log.Info('Run unit tests for .NET 4.0 version:');
+		Log.Info('');
+		Exec(nunitConsolePath, 'MsieJavaScriptEngine.Test.nunit --verbose', testDirPath);
+		Log.Info('');
+	}
+
 macro name="GenerateResx" resxFile='string'
 	generate-resx
+
+macro name='Exec' program='string' commandline='string'
+	exec
+
+macro name='Exec' program='string' commandline='string' workingdir='string'
+	exec
