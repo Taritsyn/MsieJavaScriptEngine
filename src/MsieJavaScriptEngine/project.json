@@ -1,0 +1,31 @@
+﻿{
+	"version": "2.0.0-alpha1",
+
+	"dependencies": {},
+
+	"tools": {
+		"BundlerMinifier.Core": "2.0.238"
+	},
+
+	"buildOptions": {
+		"warningsAsErrors": true,
+		"keyFile": "../../tools/Key.snk",
+		"nowarn": [
+			"CS1591"
+		],
+		"xmlDoc": true,
+		"embed": [ "Resources/ES5.min.js", "Resources/json2.min.js" ]
+	},
+
+	"frameworks": {
+		"net451": {
+			"frameworkAssemblies": {
+				"WindowsBase": "4.0.0.0"
+			}
+		}
+	},
+
+	"scripts": {
+		"precompile": [ "dotnet bundle", "../../build resx" ]
+	}
+}

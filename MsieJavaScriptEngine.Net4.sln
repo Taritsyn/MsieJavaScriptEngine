@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{717914
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1ACC225D-6787-47AB-AF34-C6021002390C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine", "src\MsieJavaScriptEngine\MsieJavaScriptEngine.csproj", "{D672BC49-C454-4975-BD25-A555B9BDD793}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2A0DC227-73C5-4E3A-853A-83007AD56B85}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedFiles", "SharedFiles", "{76F4C14E-54ED-42AC-84F7-2072B14ED59E}"
@@ -20,17 +18,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedFiles", "SharedFiles"
 		test\SharedFiles\square.js = test\SharedFiles\square.js
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.Common", "test\MsieJavaScriptEngine.Test.Common\MsieJavaScriptEngine.Test.Common.csproj", "{A4085B9E-A5D3-4749-BD07-6D1EB7C23820}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Net40", "src\MsieJavaScriptEngine\MsieJavaScriptEngine.Net40.csproj", "{D672BC49-C454-4975-BD25-A555B9BDD793}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.Auto", "test\MsieJavaScriptEngine.Test.Auto\MsieJavaScriptEngine.Test.Auto.csproj", "{A4874C43-2097-4FDB-882A-0D74E5508BBD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.Common.Net40", "test\MsieJavaScriptEngine.Test.Common\MsieJavaScriptEngine.Test.Common.Net40.csproj", "{A4085B9E-A5D3-4749-BD07-6D1EB7C23820}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.ChakraEdgeJsRt", "test\MsieJavaScriptEngine.Test.ChakraEdgeJsRt\MsieJavaScriptEngine.Test.ChakraEdgeJsRt.csproj", "{16DBAC89-4FFB-40AC-B437-FE5C8D6B6731}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.Auto.Net40", "test\MsieJavaScriptEngine.Test.Auto\MsieJavaScriptEngine.Test.Auto.Net40.csproj", "{A4874C43-2097-4FDB-882A-0D74E5508BBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.ChakraIeJsRt", "test\MsieJavaScriptEngine.Test.ChakraIeJsRt\MsieJavaScriptEngine.Test.ChakraIeJsRt.csproj", "{7064E0DB-0B73-4534-84D0-1C96DA7E5AD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.ChakraEdgeJsRt.Net40", "test\MsieJavaScriptEngine.Test.ChakraEdgeJsRt\MsieJavaScriptEngine.Test.ChakraEdgeJsRt.Net40.csproj", "{16DBAC89-4FFB-40AC-B437-FE5C8D6B6731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.ChakraActiveScript", "test\MsieJavaScriptEngine.Test.ChakraActiveScript\MsieJavaScriptEngine.Test.ChakraActiveScript.csproj", "{21EA96CC-71E2-4CDD-B95A-C75EBD4AF2FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.ChakraIeJsRt.Net40", "test\MsieJavaScriptEngine.Test.ChakraIeJsRt\MsieJavaScriptEngine.Test.ChakraIeJsRt.Net40.csproj", "{7064E0DB-0B73-4534-84D0-1C96DA7E5AD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.Classic", "test\MsieJavaScriptEngine.Test.Classic\MsieJavaScriptEngine.Test.Classic.csproj", "{50453B82-ACBF-4E25-9582-1113F274D53E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.ChakraActiveScript.Net40", "test\MsieJavaScriptEngine.Test.ChakraActiveScript\MsieJavaScriptEngine.Test.ChakraActiveScript.Net40.csproj", "{21EA96CC-71E2-4CDD-B95A-C75EBD4AF2FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Test.Classic.Net40", "test\MsieJavaScriptEngine.Test.Classic\MsieJavaScriptEngine.Test.Classic.Net40.csproj", "{50453B82-ACBF-4E25-9582-1113F274D53E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

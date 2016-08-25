@@ -1,0 +1,83 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4BC3AE92-2685-4223-AA35-097A54C5FBEA}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{262F5A48-E8AC-41F1-9FC6-4DA3785CCD93}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1F9B41F3-53ED-4254-98B7-F4309EA0D53E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedFiles", "SharedFiles", "{E3F8640B-91D8-4BBE-B807-D69D1DE0D818}"
+	ProjectSection(SolutionItems) = preProject
+		test\SharedFiles\link.txt = test\SharedFiles\link.txt
+		test\SharedFiles\square.js = test\SharedFiles\square.js
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MsieJavaScriptEngine", "src\MsieJavaScriptEngine\MsieJavaScriptEngine.xproj", "{3C9CD486-50AD-476E-9515-3F85EBAFCC38}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MsieJavaScriptEngine.Test.Common", "test\MsieJavaScriptEngine.Test.Common\MsieJavaScriptEngine.Test.Common.xproj", "{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MsieJavaScriptEngine.Test.Auto", "test\MsieJavaScriptEngine.Test.Auto\MsieJavaScriptEngine.Test.Auto.xproj", "{3DD423C5-DC32-42D4-9924-B5D8C2F23195}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MsieJavaScriptEngine.Test.ChakraEdgeJsRt", "test\MsieJavaScriptEngine.Test.ChakraEdgeJsRt\MsieJavaScriptEngine.Test.ChakraEdgeJsRt.xproj", "{56218CBF-F251-4A3A-A50F-7C3FCC9258F6}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MsieJavaScriptEngine.Test.ChakraIeJsRt", "test\MsieJavaScriptEngine.Test.ChakraIeJsRt\MsieJavaScriptEngine.Test.ChakraIeJsRt.xproj", "{5864D57D-2EB8-4684-9908-26111127E75B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MsieJavaScriptEngine.Test.ChakraActiveScript", "test\MsieJavaScriptEngine.Test.ChakraActiveScript\MsieJavaScriptEngine.Test.ChakraActiveScript.xproj", "{EF54F02A-7ECD-4D3E-9163-33BCA969FD1B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MsieJavaScriptEngine.Test.Classic", "test\MsieJavaScriptEngine.Test.Classic\MsieJavaScriptEngine.Test.Classic.xproj", "{72233C70-DF61-449F-8D53-D456284CDA5D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C9CD486-50AD-476E-9515-3F85EBAFCC38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C9CD486-50AD-476E-9515-3F85EBAFCC38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C9CD486-50AD-476E-9515-3F85EBAFCC38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C9CD486-50AD-476E-9515-3F85EBAFCC38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DD423C5-DC32-42D4-9924-B5D8C2F23195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD423C5-DC32-42D4-9924-B5D8C2F23195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD423C5-DC32-42D4-9924-B5D8C2F23195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD423C5-DC32-42D4-9924-B5D8C2F23195}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF54F02A-7ECD-4D3E-9163-33BCA969FD1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF54F02A-7ECD-4D3E-9163-33BCA969FD1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF54F02A-7ECD-4D3E-9163-33BCA969FD1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF54F02A-7ECD-4D3E-9163-33BCA969FD1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56218CBF-F251-4A3A-A50F-7C3FCC9258F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56218CBF-F251-4A3A-A50F-7C3FCC9258F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56218CBF-F251-4A3A-A50F-7C3FCC9258F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56218CBF-F251-4A3A-A50F-7C3FCC9258F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5864D57D-2EB8-4684-9908-26111127E75B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5864D57D-2EB8-4684-9908-26111127E75B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5864D57D-2EB8-4684-9908-26111127E75B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5864D57D-2EB8-4684-9908-26111127E75B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72233C70-DF61-449F-8D53-D456284CDA5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72233C70-DF61-449F-8D53-D456284CDA5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72233C70-DF61-449F-8D53-D456284CDA5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72233C70-DF61-449F-8D53-D456284CDA5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3C9CD486-50AD-476E-9515-3F85EBAFCC38} = {262F5A48-E8AC-41F1-9FC6-4DA3785CCD93}
+		{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
+		{3DD423C5-DC32-42D4-9924-B5D8C2F23195} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
+		{EF54F02A-7ECD-4D3E-9163-33BCA969FD1B} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
+		{56218CBF-F251-4A3A-A50F-7C3FCC9258F6} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
+		{5864D57D-2EB8-4684-9908-26111127E75B} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
+		{72233C70-DF61-449F-8D53-D456284CDA5D} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
+		{E3F8640B-91D8-4BBE-B807-D69D1DE0D818} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
+	EndGlobalSection
+EndGlobal

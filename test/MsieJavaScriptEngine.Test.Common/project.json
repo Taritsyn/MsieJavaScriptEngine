@@ -1,0 +1,25 @@
+﻿{
+	"version": "2.0.0-alpha1",
+
+	"dependencies": {
+		"Microsoft.Extensions.PlatformAbstractions": "1.0.0",
+		"NUnit": "3.4.1",
+		"MsieJavaScriptEngine": "2.0.0-alpha1"
+	},
+
+	"buildOptions": {
+		"warningsAsErrors": true,
+		"emitEntryPoint": false,
+		"embed": {
+			"includeFiles": [ "Resources/cube.js", "Resources/power.js" ]
+		}
+	},
+
+	"frameworks": {
+		"net451": {
+			"frameworkAssemblies": {
+				"System.Drawing": "4.0.0.0"
+			}
+		}
+	}
+}
