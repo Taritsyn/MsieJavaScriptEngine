@@ -126,7 +126,7 @@ See the [changelog](CHANGELOG.md).
  * [ECMAScript 5 Polyfill](http://nuget.org/packages/ES5) and [MDN JavaScript Polyfills](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference) - Adds support for many of the new functions in ECMAScript 5 to downlevel browsers.
  * [Cross-Browser Split](http://blog.stevenlevithan.com/archives/cross-browser-split) - Adds ECMAScript compliant and uniform cross-browser split method.
  * [JSON2 library](http://github.com/douglascrockford/JSON-js) - Adds support of the JSON object from ECMAScript 5 to downlevel browsers.
- * [Microsoft Ajax Minifier](http://ajaxmin.codeplex.com/) - [License: Apache License 2.0 (Apache)](http://ajaxmin.codeplex.com/license) JS-files, that used MSIE JS Engine, minificated by using `AjaxMinifier.exe`.
+ * [Bundler and Minifier](http://github.com/madskristensen/BundlerMinifier) - [License: Apache License 2.0 (Apache)](http://github.com/madskristensen/BundlerMinifier/blob/master/LICENSE) JS-files, that used MSIE JS Engine, minificated by using this tool.
 
 ## Who's Using MSIE JavaScript Engine
 If you use the MSIE JavaScript Engine in some project, please send me a message so I can include it in this list:

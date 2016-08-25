@@ -12,6 +12,9 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>0353c21e</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -163,22 +166,25 @@
     <None Include="..\..\tools\Key.snk">
       <Link>Key.snk</Link>
     </None>
+    <None Include="bundleconfig.json" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>cd "$(ProjectDir)..\..\Binaries\Microsoft Ajax Minifier\"
-
-del "$(ProjectDir)Resources\ES5.min.js"
-AjaxMinifier.exe "$(ProjectDir)Resources\ES5.js" –out "$(ProjectDir)Resources\ES5.min.js"
-
-del "$(ProjectDir)Resources\json2.min.js"
-AjaxMinifier.exe "$(ProjectDir)Resources\json2.js" –out "$(ProjectDir)Resources\json2.min.js"
-
-SET VS_PROJECT_DIR=$(ProjectDir)
+    <PreBuildEvent>SET VS_PROJECT_DIR=$(ProjectDir)
 
 cd "$(ProjectDir)..\..\"
 build resx</PreBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.2.2.281\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.2.2.281\build\BuildBundlerMinifier.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\BuildBundlerMinifier.2.2.281\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.2.2.281\build\BuildBundlerMinifier.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
