@@ -44,6 +44,29 @@ use-standard-lifecycle
 		Log.Info('');
 	}
 
+#run-dotnet-tests description='Runs a unit tests for DotNet version'
+	@{
+		string testDirPath = Path.Combine(BASE_DIR, "test");
+		string[] testProjectDirPaths = {
+			'MsieJavaScriptEngine.Test.Common',
+			'MsieJavaScriptEngine.Test.Auto',
+			'MsieJavaScriptEngine.Test.ChakraEdgeJsRt',
+			'MsieJavaScriptEngine.Test.ChakraIeJsRt',
+			'MsieJavaScriptEngine.Test.ChakraActiveScript',
+			'MsieJavaScriptEngine.Test.Classic'
+		};
+
+		Log.Info('Run unit tests for DotNet version:');
+		Log.Info('');
+
+		foreach (string testProjectDirPath in testProjectDirPaths)
+		{
+			Exec('dotnet', string.Format('test {0}', testProjectDirPath), testDirPath);
+		}
+
+		Log.Info('');
+	}
+
 #run-net4-tests description='Runs a unit tests for .NET 4.0 version'
 	@{
 		string nunitConsolePath = "packages/NUnit.ConsoleRunner/tools/nunit3-console.exe";
