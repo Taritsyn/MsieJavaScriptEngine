@@ -304,6 +304,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			return reference;
 		}
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Creates a JavaScript value that is a projection of the passed in object
@@ -320,6 +321,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			return reference;
 		}
+#endif
 
 		/// <summary>
 		/// Creates a new <c>Object</c>
@@ -586,8 +588,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsStringToPointer(this, out buffer, out length));
 
-			return Marshal.PtrToStringAuto(buffer, (int)length);
+			return Marshal.PtrToStringUni(buffer, (int)length);
 		}
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Retrieves a object representation of an <c>Object</c> value
@@ -603,6 +606,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			return value;
 		}
+#endif
 
 		/// <summary>
 		/// Converts a value to <c>Boolean</c> using regular JavaScript semantics

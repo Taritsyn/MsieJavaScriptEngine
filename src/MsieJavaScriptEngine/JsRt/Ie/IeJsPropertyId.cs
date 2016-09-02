@@ -40,7 +40,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				IntPtr buffer;
 				IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsGetPropertyNameFromId(this, out buffer));
 
-				return Marshal.PtrToStringAuto(buffer);
+				return Marshal.PtrToStringUni(buffer);
 			}
 		}
 

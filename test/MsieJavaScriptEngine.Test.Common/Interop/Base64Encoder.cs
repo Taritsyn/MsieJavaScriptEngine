@@ -10,7 +10,7 @@ namespace MsieJavaScriptEngine.Test.Common.Interop
 
 		public static string Encode(string value)
 		{
-			return Convert.ToBase64String(Encoding.Default.GetBytes(value));
+			return Convert.ToBase64String(Encoding.GetEncoding(0).GetBytes(value));
 		}
 	}
 }

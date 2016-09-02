@@ -10,6 +10,21 @@ namespace MsieJavaScriptEngine.Utilities
 	internal static class Utils
 	{
 		/// <summary>
+		/// Determines whether the current process is a 64-bit process
+		/// </summary>
+		/// <returns>true if the process is 64-bit; otherwise, false</returns>
+		public static bool Is64BitProcess()
+		{
+#if NETSTANDARD1_3
+			bool is64Bit = IntPtr.Size == 8;
+#else
+			bool is64Bit = Environment.Is64BitProcess;
+#endif
+
+			return is64Bit;
+		}
+
+		/// <summary>
 		/// Gets a content of the embedded resource as string
 		/// </summary>
 		/// <param name="resourceName">Resource name</param>
@@ -17,7 +32,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <returns>Сontent of the embedded resource as string</returns>
 		public static string GetResourceAsString(string resourceName, Type type)
 		{
-			Assembly assembly = type.Assembly;
+			Assembly assembly = type.GetTypeInfo().Assembly;
 
 			return GetResourceAsString(resourceName, assembly);
 		}
@@ -46,7 +61,7 @@ namespace MsieJavaScriptEngine.Utilities
 		}
 
 		/// <summary>
-		/// Gets text content of the specified file
+		/// Gets a text content of the specified file
 		/// </summary>
 		/// <param name="path">File path</param>
 		/// <param name="encoding">Content encoding</param>
@@ -61,9 +76,10 @@ namespace MsieJavaScriptEngine.Utilities
 
 			string content;
 
-			using (var file = new StreamReader(path, encoding ?? Encoding.UTF8))
+			using (var stream = File.OpenRead(path))
+			using (var reader = new StreamReader(stream, encoding ?? Encoding.UTF8))
 			{
-				content = file.ReadToEnd();
+				content = reader.ReadToEnd();
 			}
 
 			return content;

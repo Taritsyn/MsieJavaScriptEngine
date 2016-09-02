@@ -4,6 +4,7 @@ using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -61,7 +62,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Must implement IActiveScriptParse32 or IActiveScriptParse64.</param>
 		public ActiveScriptParseWrapper(IntPtr pActiveScript, IActiveScript activeScript)
 		{
-			_is64Bit = Environment.Is64BitProcess;
+			_is64Bit = Utils.Is64BitProcess();
 
 			if (_is64Bit)
 			{

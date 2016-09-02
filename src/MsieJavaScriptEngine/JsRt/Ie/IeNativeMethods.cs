@@ -138,12 +138,14 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsConvertValueToString(IeJsValue value, out IeJsValue stringValue);
+#if !NETSTANDARD1_3
 
 		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsVariantToValue([MarshalAs(UnmanagedType.Struct)] ref object var, out IeJsValue value);
 
 		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsValueToVariant(IeJsValue obj, [MarshalAs(UnmanagedType.Struct)] out object var);
+#endif
 
 		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsGetGlobalObject(out IeJsValue globalObject);

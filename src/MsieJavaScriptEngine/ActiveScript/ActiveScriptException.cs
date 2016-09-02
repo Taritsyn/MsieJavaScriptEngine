@@ -1,10 +1,14 @@
 ﻿using System;
+#if !NETSTANDARD1_3
 using System.Runtime.Serialization;
+#endif
 using System.Runtime.InteropServices.ComTypes;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
+#if !NETSTANDARD1_3
 	[Serializable]
+#endif
 	internal sealed class ActiveScriptException : Exception
 	{
 		/// <summary>
@@ -101,6 +105,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public ActiveScriptException(string message, Exception innerException)
 			: base(message, innerException)
 		{ }
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
@@ -118,6 +123,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private ActiveScriptException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{ }
+#endif
 
 
 		internal static ActiveScriptException Create(IActiveScriptError error)

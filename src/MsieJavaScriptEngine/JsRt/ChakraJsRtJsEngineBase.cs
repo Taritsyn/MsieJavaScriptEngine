@@ -1,4 +1,8 @@
 ﻿using System;
+#if NETSTANDARD1_3
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+#endif
 
 using MsieJavaScriptEngine.Helpers;
 
@@ -29,6 +33,23 @@ namespace MsieJavaScriptEngine.JsRt
 		/// </summary>
 		private StatedFlag _debuggingStartedFlag;
 
+		/// <summary>
+		/// Synchronizer of code execution
+		/// </summary>
+		protected readonly object _executionSynchronizer = new object();
+#if NETSTANDARD1_3
+
+		/// <summary>
+		/// List of external objects
+		/// </summary>
+		protected ISet<object> _externalObjects = new HashSet<object>();
+
+		/// <summary>
+		/// Callback for finalization of external object
+		/// </summary>
+		protected JsObjectFinalizeCallback _externalObjectFinalizeCallback;
+#endif
+
 
 		/// <summary>
 		/// Constructs instance of the Chakra JsRT JavaScript engine
@@ -40,6 +61,9 @@ namespace MsieJavaScriptEngine.JsRt
 			_engineMode = engineMode;
 			_engineModeName = JsEngineModeHelpers.GetModeName(engineMode);
 			_enableDebugging = enableDebugging;
+#if NETSTANDARD1_3
+			_externalObjectFinalizeCallback = ExternalObjectFinalizeCallback;
+#endif
 		}
 
 
@@ -55,6 +79,29 @@ namespace MsieJavaScriptEngine.JsRt
 		}
 
 		protected abstract void InnerStartDebugging();
+#if NETSTANDARD1_3
+
+		private void ExternalObjectFinalizeCallback(IntPtr data)
+		{
+			if (data == IntPtr.Zero)
+			{
+				return;
+			}
+
+			GCHandle handle = GCHandle.FromIntPtr(data);
+			object obj = handle.Target;
+
+			if (obj == null)
+			{
+				return;
+			}
+
+			lock (_executionSynchronizer)
+			{
+				_externalObjects.Remove(obj);
+			}
+		}
+#endif
 
 		#region IInnerJsEngine implementation
 
@@ -83,7 +130,18 @@ namespace MsieJavaScriptEngine.JsRt
 
 		#region IDisposable implementation
 
-		public abstract void Dispose();
+		public virtual void Dispose()
+		{
+#if NETSTANDARD1_3
+			if (_externalObjects != null)
+			{
+				_externalObjects.Clear();
+				_externalObjects = null;
+			}
+
+			_externalObjectFinalizeCallback = null;
+#endif
+		}
 
 		#endregion
 	}

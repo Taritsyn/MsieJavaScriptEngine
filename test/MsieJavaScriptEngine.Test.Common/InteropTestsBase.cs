@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NETCOREAPP1_0
 using System.Drawing;
+#endif
 using System.IO;
 using System.Linq;
 
 using NUnit.Framework;
 
 using MsieJavaScriptEngine.Test.Common.Interop;
+#if NETCOREAPP1_0
+using MsieJavaScriptEngine.Test.Common.Interop.Drawing;
+#endif
 
 namespace MsieJavaScriptEngine.Test.Common
 {
@@ -249,13 +254,13 @@ namespace MsieJavaScriptEngine.Test.Common
 			var color = Color.FromArgb(84, 139, 212);
 
 			const string input1 = "color.GetHue()";
-			const double targetOutput1 = 214.21875d;
+			const double targetOutput1 = 214.21875;
 
 			const string input2 = "color.GetSaturation()";
-			const double targetOutput2 = 0.59813079999999996d;
+			const double targetOutput2 = 0.59813;
 
 			const string input3 = "color.GetBrightness()";
-			const double targetOutput3 = 0.58039220000000002d;
+			const double targetOutput3 = 0.58039;
 
 			// Act
 			double output1;
@@ -266,9 +271,9 @@ namespace MsieJavaScriptEngine.Test.Common
 			{
 				jsEngine.EmbedHostObject("color", color);
 
-				output1 = Math.Round(jsEngine.Evaluate<double>(input1), 7);
-				output2 = Math.Round(jsEngine.Evaluate<double>(input2), 7);
-				output3 = Math.Round(jsEngine.Evaluate<double>(input3), 7);
+				output1 = Math.Round(jsEngine.Evaluate<double>(input1), 5);
+				output2 = Math.Round(jsEngine.Evaluate<double>(input2), 5);
+				output3 = Math.Round(jsEngine.Evaluate<double>(input3), 5);
 			}
 
 			// Assert

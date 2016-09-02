@@ -40,7 +40,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				IntPtr buffer;
 				EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsGetPropertyNameFromId(this, out buffer));
 
-				return Marshal.PtrToStringAuto(buffer);
+				return Marshal.PtrToStringUni(buffer);
 			}
 		}
 

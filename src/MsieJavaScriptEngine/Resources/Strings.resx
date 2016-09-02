@@ -126,14 +126,8 @@
   <data name="Common_CannotConvertObjectToType" xml:space="preserve">
     <value>Cannot convert object of type `{0}` to type `{1}`.</value>
   </data>
-  <data name="Common_CannotSerializeType" xml:space="preserve">
-    <value>Serialization of type `{0}` is not supported.</value>
-  </data>
   <data name="Common_FileNotExist" xml:space="preserve">
     <value>File '{0}' not exist.</value>
-  </data>
-  <data name="Common_ValueIsNull" xml:space="preserve">
-    <value>Value cannot be null.</value>
   </data>
   <data name="Common_ValueTypeCannotBeNull" xml:space="preserve">
     <value>Cannot convert null to a value type.</value>
@@ -180,14 +174,50 @@ See more details:
   <data name="Runtime_EmbeddedHostTypeNotSupported" xml:space="preserve">
     <value>The embedded host type `{0}` is not supported.</value>
   </data>
-  <data name="Runtime_FunctionNameIsForbidden" xml:space="preserve">
-    <value>The function name '{0}' is forbidden, as is contained in the list of reserved words of JavaScript language.</value>
-  </data>
   <data name="Runtime_FunctionNotExist" xml:space="preserve">
     <value>The function with the name '{0}' does not exist.</value>
   </data>
   <data name="Runtime_FunctionParameterTypeNotSupported" xml:space="preserve">
     <value>One of the function parameters '{0}' has a type `{1}`, which is not supported.</value>
+  </data>
+  <data name="Runtime_HostDelegateInvocationFailed" xml:space="preserve">
+    <value>During invocation of the host delegate an error has occurred - “{0}”.</value>
+  </data>
+  <data name="Runtime_HostObjectFieldGettingFailed" xml:space="preserve">
+    <value>During getting value of '{0}' field of the host object an error has occurred - “{1}”.</value>
+  </data>
+  <data name="Runtime_HostObjectFieldSettingFailed" xml:space="preserve">
+    <value>During setting value of '{0}' field of the host object an error has occurred - “{1}”.</value>
+  </data>
+  <data name="Runtime_HostObjectMethodInvocationFailed" xml:space="preserve">
+    <value>During invocation of '{0}' method of the host object an error has occurred - “{1}”.</value>
+  </data>
+  <data name="Runtime_HostObjectPropertyGettingFailed" xml:space="preserve">
+    <value>During getting value of '{0}' property of the host object an error has occurred - “{1}”.</value>
+  </data>
+  <data name="Runtime_HostObjectPropertySettingFailed" xml:space="preserve">
+    <value>During setting value of '{0}' property of the host object an error has occurred - “{1}”.</value>
+  </data>
+  <data name="Runtime_HostTypeConstructorInvocationFailed" xml:space="preserve">
+    <value>During invocation of constructor of the `{0}` host type an error has occurred - “{1}”.</value>
+  </data>
+  <data name="Runtime_HostTypeConstructorNotFound" xml:space="preserve">
+    <value>Could not create instance of the `{0}` host type, because it does not have any public constructor.</value>
+  </data>
+  <data name="Runtime_HostTypeFieldGettingFailed" xml:space="preserve">
+    <value>During getting value of '{0}' field of the `{1}` host type an error has occurred - “{2}”.</value>
+  </data>
+  <data name="Runtime_HostTypeFieldSettingFailed" xml:space="preserve">
+    <value>During setting value of '{0}' field of the `{1}` host type an error has occurred - “{2}”.</value>
+  </data>
+  <data name="Runtime_HostTypeMethodInvocationFailed" xml:space="preserve">
+    <value>During invocation of '{0}' method of the `{1}` host type an error has occurred - “{2}”.</value>
+  </data>
+  <data name="Runtime_HostTypePropertyGettingFailed" xml:space="preserve">
+    <value>During getting value of '{0}' property of the `{1}` host type an error has occurred - “{2}”.</value>
+  </data>
+  <data name="Runtime_HostTypePropertySettingFailed" xml:space="preserve">
+    <value>During setting value of '{0}' property of the host type `{1}` an error has occurred - “{2}”.</value>
   </data>
   <data name="Runtime_IeJsEngineNotLoaded" xml:space="preserve">
     <value>Failed to load a {0} JavaScript engine. Try to install the Internet Explorer {1} or higher.
@@ -201,11 +231,17 @@ See more details:
   <data name="Runtime_InvalidParserImplementationError" xml:space="preserve">
     <value>The parser you passed implements neither `IActiveScriptParse32` nor `IActiveScriptParse64`.</value>
   </data>
-  <data name="Runtime_InvalidPropertyNameFormat" xml:space="preserve">
-    <value>Property name '{0}' has incorrect format.</value>
-  </data>
   <data name="Runtime_InvalidScriptItemNameFormat" xml:space="preserve">
     <value>The script item name '{0}' has incorrect format.</value>
+  </data>
+  <data name="Runtime_InvalidThisContextForHostObjectField" xml:space="preserve">
+    <value>Could not retrieve field '{0}' of the host object, because there was an invalid `this` context.</value>
+  </data>
+  <data name="Runtime_InvalidThisContextForHostObjectMethod" xml:space="preserve">
+    <value>Could not call method '{0}' of the host object, because there was an invalid `this` context.</value>
+  </data>
+  <data name="Runtime_InvalidThisContextForHostObjectProperty" xml:space="preserve">
+    <value>Could not retrieve property '{0}' of the host object, because there was an invalid `this` context.</value>
   </data>
   <data name="Runtime_InvalidVariableNameFormat" xml:space="preserve">
     <value>The variable name '{0}' has incorrect format.</value>
@@ -213,8 +249,11 @@ See more details:
   <data name="Runtime_ItemNotFound" xml:space="preserve">
     <value>Item with name '{0}' not found.</value>
   </data>
+  <data name="Runtime_JsEngineModeNotCompatibleWithNetCore" xml:space="preserve">
+    <value>The '{0}' mode of JavaScript engine is not compatible with .NET Core.</value>
+  </data>
   <data name="Runtime_JsEngineModeNotSupported" xml:space="preserve">
-    <value>Selected '{0}' mode of JavaScript engine is not supported!</value>
+    <value>Selected '{0}' mode of JavaScript engine is not supported.</value>
   </data>
   <data name="Runtime_JsEnginesConflictInProcess" xml:space="preserve">
     <value>It is prohibited to use the {0} and {1} engines in one process.</value>
@@ -222,26 +261,20 @@ See more details:
   <data name="Runtime_JsEnginesConflictOnMachine" xml:space="preserve">
     <value>It is prohibited to use the Chakra JsRT and Chakra ActiveScript engines on one machine at a time.</value>
   </data>
+  <data name="Runtime_JsEnginesForNetCoreNotFound" xml:space="preserve">
+    <value>Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps you have not installed the Microsoft Edge or Internet Explorer 11 browser.</value>
+  </data>
   <data name="Runtime_JsEnginesNotFound" xml:space="preserve">
     <value>Could not found none of the JavaScript engines. Perhaps you have not installed the Internet Explorer browser.</value>
-  </data>
-  <data name="Runtime_PropertyNameIsForbidden" xml:space="preserve">
-    <value>Property name '{0}' is forbidden, as one of its parts matches with the reserved word of JavaScript language.</value>
-  </data>
-  <data name="Runtime_PropertyNotExist" xml:space="preserve">
-    <value>The property '{1}' of variable '{0}' does not exist.</value>
-  </data>
-  <data name="Runtime_PropertyTypeNotSupported" xml:space="preserve">
-    <value>The property '{1}' of variable '{0}' has a type `{2}`, which is not supported.</value>
   </data>
   <data name="Runtime_ReturnValueTypeNotSupported" xml:space="preserve">
     <value>The type of return value `{0}` is not supported.</value>
   </data>
-  <data name="Runtime_TypeUnsupported" xml:space="preserve">
-    <value>Cannot convert to `{0}`. The type is unsupported.</value>
+  <data name="Runtime_SuitableConstructorOfHostTypeNotFound" xml:space="preserve">
+    <value>Could not find suitable constructor or not enough arguments to invoke of constructor of the `{0}` host type.</value>
   </data>
-  <data name="Runtime_VariableNameIsForbidden" xml:space="preserve">
-    <value>The variable name '{0}' is forbidden, as is contained in the list of reserved words of JavaScript language.</value>
+  <data name="Runtime_SuitableMethodOfHostObjectNotFound" xml:space="preserve">
+    <value>Could not find suitable method or not enough arguments to invoke of '{0}' method of the host object.</value>
   </data>
   <data name="Runtime_VariableNotExist" xml:space="preserve">
     <value>The variable with the name '{0}' does not exist.</value>

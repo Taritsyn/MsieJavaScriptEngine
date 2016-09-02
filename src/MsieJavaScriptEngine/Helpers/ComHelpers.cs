@@ -1,5 +1,12 @@
 ﻿using System;
+#if NETSTANDARD1_3 || NET451
+using System.Reflection;
+#endif
 using System.Runtime.InteropServices;
+
+#if NET40
+using MsieJavaScriptEngine.Utilities;
+#endif
 
 namespace MsieJavaScriptEngine.Helpers
 {
@@ -18,7 +25,7 @@ namespace MsieJavaScriptEngine.Helpers
 		public static IntPtr CreateInstanceByClsid<T>(Guid clsid)
 		{
 			IntPtr pInterface;
-			Guid iid = typeof(T).GUID;
+			Guid iid = typeof(T).GetTypeInfo().GUID;
 			HResult.Check(NativeMethods.CoCreateInstance(ref clsid, IntPtr.Zero, 1, ref iid, out pInterface));
 
 			return pInterface;
@@ -47,7 +54,7 @@ namespace MsieJavaScriptEngine.Helpers
 		public static IntPtr QueryInterface<T>(IntPtr pUnknown)
 		{
 			IntPtr pInterface;
-			Guid iid = typeof(T).GUID;
+			Guid iid = typeof(T).GetTypeInfo().GUID;
 
 			HResult.Check(Marshal.QueryInterface(pUnknown, ref iid, out pInterface));
 

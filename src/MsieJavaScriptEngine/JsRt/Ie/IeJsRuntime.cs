@@ -1,5 +1,7 @@
 ﻿using System;
 
+using MsieJavaScriptEngine.Utilities;
+
 namespace MsieJavaScriptEngine.JsRt.Ie
 {
 	/// <summary>
@@ -204,7 +206,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		public IeJsContext CreateContext(IDebugApplication64 debugApplication)
 		{
 			IeJsContext reference;
-			if (!Environment.Is64BitProcess)
+			if (!Utils.Is64BitProcess())
 			{
 				throw new InvalidOperationException();
 			}
@@ -225,7 +227,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		public IeJsContext CreateContext(IDebugApplication32 debugApplication)
 		{
 			IeJsContext reference;
-			if (Environment.Is64BitProcess)
+			if (Utils.Is64BitProcess())
 			{
 				throw new InvalidOperationException();
 			}
@@ -245,7 +247,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		public IeJsContext CreateContext()
 		{
 			IeJsContext reference;
-			IeJsErrorHelpers.ThrowIfError(Environment.Is64BitProcess ?
+			IeJsErrorHelpers.ThrowIfError(Utils.Is64BitProcess() ?
 				IeNativeMethods.JsCreateContext(this, (IDebugApplication64)null, out reference)
 				:
 				IeNativeMethods.JsCreateContext(this, (IDebugApplication32)null, out reference)

@@ -2,6 +2,9 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+#if NETSTANDARD1_3 || NET451
+using System.Reflection;
+#endif
 using OriginalTypeConverter = System.ComponentModel.TypeConverter;
 
 using MsieJavaScriptEngine.Resources;
@@ -16,7 +19,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <summary>
 		/// List of primitive type codes
 		/// </summary>
-		private static readonly TypeCode[] _primitiveTypeCodes = new[]
+		private static readonly TypeCode[] _primitiveTypeCodes =
 		{
 			TypeCode.Boolean,
 			TypeCode.SByte, TypeCode.Byte,
@@ -90,7 +93,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <returns>Result of check (true - is primitive; false - is not primitive)</returns>
 		internal static bool IsPrimitiveType(Type type)
 		{
-			TypeCode typeCode = Type.GetTypeCode(type);
+			TypeCode typeCode = type.GetTypeCode();
 			bool result = IsPrimitiveType(typeCode);
 
 			return result;
@@ -140,9 +143,10 @@ namespace MsieJavaScriptEngine.Utilities
 		private static bool InnerConvertObjectToType(object obj, Type type, bool throwOnError,
 			out object convertedObject)
 		{
+			Type originalType = obj.GetType();
 			OriginalTypeConverter converter = TypeDescriptor.GetConverter(type);
 
-			if (converter.CanConvertFrom(obj.GetType()))
+			if (converter.CanConvertFrom(originalType))
 			{
 				try
 				{
@@ -165,7 +169,7 @@ namespace MsieJavaScriptEngine.Utilities
 			{
 				try
 				{
-					string text = TypeDescriptor.GetConverter(obj).ConvertToInvariantString(obj);
+					string text = TypeDescriptor.GetConverter(originalType).ConvertToInvariantString(obj);
 
 					convertedObject = converter.ConvertFromInvariantString(text);
 					return true;
@@ -182,7 +186,7 @@ namespace MsieJavaScriptEngine.Utilities
 				}
 			}
 
-			if (type.IsInstanceOfType(obj))
+			if (type.GetTypeInfo().IsInstanceOfType(obj))
 			{
 				convertedObject = obj;
 				return true;
@@ -191,7 +195,7 @@ namespace MsieJavaScriptEngine.Utilities
 			if (throwOnError)
 			{
 				throw new InvalidOperationException(
-					string.Format(Strings.Common_CannotConvertObjectToType, obj.GetType(), type)
+					string.Format(Strings.Common_CannotConvertObjectToType, originalType, type)
 				);
 			}
 
@@ -201,14 +205,20 @@ namespace MsieJavaScriptEngine.Utilities
 
 		private static bool IsNonNullableValueType(Type type)
 		{
-			if (type == null || !type.IsValueType)
+			if (type == null)
 			{
 				return false;
 			}
 
-			if (type.IsGenericType)
+			TypeInfo typeInfo = type.GetTypeInfo();
+			if (!typeInfo.IsValueType)
 			{
-				return (type.GetGenericTypeDefinition() != typeof(Nullable<>));
+				return false;
+			}
+
+			if (typeInfo.IsGenericType)
+			{
+				return type.GetGenericTypeDefinition() != typeof(Nullable<>);
 			}
 
 			return true;

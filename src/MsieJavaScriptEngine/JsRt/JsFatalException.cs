@@ -1,12 +1,16 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 using System.Runtime.Serialization;
+#endif
 
 namespace MsieJavaScriptEngine.JsRt
 {
 	/// <summary>
 	/// The fatal exception
 	/// </summary>
+#if !NETSTANDARD1_3
 	[Serializable]
+#endif
 	internal sealed class JsFatalException : JsException
 	{
 		/// <summary>
@@ -25,6 +29,7 @@ namespace MsieJavaScriptEngine.JsRt
 		public JsFatalException(JsErrorCode code, string message)
 			: base(code, message)
 		{ }
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JsFatalException"/> class
@@ -34,5 +39,6 @@ namespace MsieJavaScriptEngine.JsRt
 		private JsFatalException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{ }
+#endif
 	}
 }

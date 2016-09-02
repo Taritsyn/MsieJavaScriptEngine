@@ -112,5 +112,118 @@
 				}
 			}
 		}
+
+
+		/// <summary>
+		/// Creates a new JavaScript error object
+		/// </summary>
+		/// <remarks>
+		/// Requires an active script context.
+		/// </remarks>
+		/// <param name="message">The message that describes the error</param>
+		/// <returns>The new error object</returns>
+		public static EdgeJsValue CreateError(string message)
+		{
+			EdgeJsValue messageValue = EdgeJsValue.FromString(message);
+			EdgeJsValue errorValue = EdgeJsValue.CreateError(messageValue);
+
+			return errorValue;
+		}
+
+		/// <summary>
+		/// Creates a new JavaScript RangeError error object
+		/// </summary>
+		/// <remarks>
+		/// Requires an active script context.
+		/// </remarks>
+		/// <param name="message">The message that describes the error</param>
+		/// <returns>The new error object</returns>
+		public static EdgeJsValue CreateRangeError(string message)
+		{
+			EdgeJsValue messageValue = EdgeJsValue.FromString(message);
+			EdgeJsValue errorValue = EdgeJsValue.CreateRangeError(messageValue);
+
+			return errorValue;
+		}
+
+		/// <summary>
+		/// Creates a new JavaScript ReferenceError error object
+		/// </summary>
+		/// <remarks>
+		/// Requires an active script context.
+		/// </remarks>
+		/// <param name="message">The message that describes the error</param>
+		/// <returns>The new error object</returns>
+		public static EdgeJsValue CreateReferenceError(string message)
+		{
+			EdgeJsValue messageValue = EdgeJsValue.FromString(message);
+			EdgeJsValue errorValue = EdgeJsValue.CreateReferenceError(messageValue);
+
+			return errorValue;
+		}
+
+		/// <summary>
+		/// Creates a new JavaScript SyntaxError error object
+		/// </summary>
+		/// <remarks>
+		/// Requires an active script context.
+		/// </remarks>
+		/// <param name="message">The message that describes the error</param>
+		/// <returns>The new error object</returns>
+		public static EdgeJsValue CreateSyntaxError(string message)
+		{
+			EdgeJsValue messageValue = EdgeJsValue.FromString(message);
+			EdgeJsValue errorValue = EdgeJsValue.CreateSyntaxError(messageValue);
+
+			return errorValue;
+		}
+
+		/// <summary>
+		/// Creates a new JavaScript TypeError error object
+		/// </summary>
+		/// <remarks>
+		/// Requires an active script context.
+		/// </remarks>
+		/// <param name="message">The message that describes the error</param>
+		/// <returns>The new error object</returns>
+		public static EdgeJsValue CreateTypeError(string message)
+		{
+			EdgeJsValue messageValue = EdgeJsValue.FromString(message);
+			EdgeJsValue errorValue = EdgeJsValue.CreateTypeError(messageValue);
+
+			return errorValue;
+		}
+
+		/// <summary>
+		/// Creates a new JavaScript URIError error object
+		/// </summary>
+		/// <remarks>
+		/// Requires an active script context.
+		/// </remarks>
+		/// <param name="message">The message that describes the error</param>
+		/// <returns>The new error object</returns>
+		public static EdgeJsValue CreateUriError(string message)
+		{
+			EdgeJsValue messageValue = EdgeJsValue.FromString(message);
+			EdgeJsValue errorValue = EdgeJsValue.CreateUriError(messageValue);
+
+			return errorValue;
+		}
+
+		/// <summary>
+		/// Sets a exception
+		/// </summary>
+		/// <remarks>
+		/// Requires an active script context.
+		/// </remarks>
+		/// <param name="exception">The error object</param>
+		public static void SetException(EdgeJsValue exception)
+		{
+			JsErrorCode innerError = EdgeNativeMethods.JsSetException(exception);
+			if (innerError != JsErrorCode.NoError)
+			{
+				throw new JsFatalException(innerError);
+			}
+		}
 	}
 }

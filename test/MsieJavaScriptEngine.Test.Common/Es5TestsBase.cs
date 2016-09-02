@@ -365,7 +365,7 @@ engines.forEach(function(value, index, array) {{
 			}
 
 			// Assert
-			Assert.IsTrue(Math.Abs((targetOutput - output).TotalMilliseconds) < 100);
+			Assert.IsTrue(Math.Abs((targetOutput - output).TotalMilliseconds) < 1000);
 		}
 
 		[Test]

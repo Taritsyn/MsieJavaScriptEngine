@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
 using NUnit.Framework;
 
@@ -214,7 +215,7 @@ namespace MsieJavaScriptEngine.Test.Common
 
 			using (var jsEngine = CreateJsEngine())
 			{
-				jsEngine.ExecuteResource(resourceName, typeof(CommonTestsBase).Assembly);
+				jsEngine.ExecuteResource(resourceName, typeof(CommonTestsBase).GetTypeInfo().Assembly);
 				output = jsEngine.Evaluate<int>(input);
 			}
 

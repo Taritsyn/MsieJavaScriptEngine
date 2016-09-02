@@ -1,18 +1,24 @@
+#if !NETSTANDARD1_3
 using System;
 using System.Runtime.Serialization;
+#endif
 
 namespace MsieJavaScriptEngine.JsRt.Ie
 {
 	/// <summary>
 	/// “IE” script exception
 	/// </summary>
+#if !NETSTANDARD1_3
 	[Serializable]
+#endif
 	internal sealed class IeJsScriptException : JsException
 	{
 		/// <summary>
 		/// The error
 		/// </summary>
+#if !NETSTANDARD1_3
 		[NonSerialized]
+#endif
 		private readonly IeJsValue _error;
 
 		/// <summary>
@@ -44,6 +50,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			_error = error;
 		}
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="IeJsScriptException"/> class
@@ -53,5 +60,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		private IeJsScriptException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{ }
+#endif
 	}
 }

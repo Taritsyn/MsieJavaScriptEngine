@@ -73,6 +73,7 @@
     <Compile Include="Helpers\ComHelpers.cs" />
     <Compile Include="Helpers\JsEngineModeHelpers.cs" />
     <Compile Include="Helpers\JsErrorHelpers.cs" />
+    <Compile Include="Helpers\NumericHelpers.cs" />
     <Compile Include="Helpers\TypeMappingHelpers.cs" />
     <Compile Include="Helpers\ValidationHelpers.cs" />
     <Compile Include="HostItemBase.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="JsRt\Edge\EdgeJsRuntime.cs" />
     <Compile Include="JsRt\Edge\EdgeJsScriptException.cs" />
     <Compile Include="JsRt\Edge\EdgeJsValue.cs" />
+    <Compile Include="JsRt\Edge\EdgeJsValueExtensions.cs" />
     <Compile Include="JsRt\Edge\EdgeNativeMethods.cs" />
     <Compile Include="JsRt\Edge\EdgeJsErrorHelpers.cs" />
     <Compile Include="JsRt\Edge\EdgeJsScope.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="JsRt\Ie\IDebugDocumentHelper32.cs" />
     <Compile Include="JsRt\Ie\IDebugDocumentHelper64.cs" />
     <Compile Include="JsRt\Ie\IeJsScope.cs" />
+    <Compile Include="JsRt\Ie\IeJsValueExtensions.cs" />
     <Compile Include="JsRt\Ie\IProcessDebugManager32.cs" />
     <Compile Include="JsRt\Ie\IProcessDebugManager64.cs" />
     <Compile Include="JsRt\Ie\ProcessDebugManager.cs" />
@@ -139,9 +142,12 @@
     <Compile Include="Resources\Strings.Designer.cs" />
     <Compile Include="Resources\Strings.ru-ru.Designer.cs" />
     <Compile Include="StatedFlag.cs" />
+    <Compile Include="Utilities\DelegateExtensions.cs" />
     <Compile Include="Utilities\TypeConverter.cs" />
     <Compile Include="Undefined.cs" />
     <Compile Include="Utilities\StringBuilderExtensions.cs" />
+    <Compile Include="Utilities\TypeExtensions.cs" />
+    <Compile Include="Utilities\TypeInfo.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,8 +5,8 @@
 	/// </summary>
 	internal static class ComErrorCode
 	{
-		public const int ElementNotFound = unchecked((int)(0x8002802B));
+		public const int ElementNotFound = unchecked((int)0x8002802B);
 
-		public const int ClassNotRegistered = unchecked((int)(0x80040154));
+		public const int ClassNotRegistered = unchecked((int)0x80040154);
 	}
 }
