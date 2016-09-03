@@ -4,13 +4,13 @@ MSIE JavaScript Engine for .NET
 ![MSIE JS Engine Logo](http://i.imgur.com/T3K5q.png)
 
 This project is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). 
-Project was based on the code of [SassAndCoffee.JavaScript](http://github.com/paulcbetts/SassAndCoffee) and [Chakra Sample Hosts](http://github.com/panopticoncentral/chakra-host).
+Project was based on the code of [SassAndCoffee.JavaScript](http://github.com/paulcbetts/SassAndCoffee), [Chakra Sample Hosts](http://github.com/panopticoncentral/chakra-host) and [jsrt-dotnet](http://github.com/robpaveza/jsrt-dotnet).
 
 MSIE JavaScript Engine requires a installation of Internet Explorer or Edge on the machine and can work in 5 modes, that are defined in the <code title="MsieJavaScriptEngine.JsEngineMode">JsEngineMode</code> enumeration:
 
  * `Auto`. Automatically selects the most modern JavaScript engine from available on the machine.
- * `Classic`. Classic MSIE JavaScript engine (supports ECMAScript 3 with possibility of using the ECMAScript 5 Polyfill and the JSON2 library). Requires Internet Explorer 6 or higher on the machine.
- * `ChakraActiveScript`. ActiveScript version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 9 or higher on the machine.
+ * `Classic`. Classic MSIE JavaScript engine (supports ECMAScript 3 with possibility of using the ECMAScript 5 Polyfill and the JSON2 library). Requires Internet Explorer 6 or higher on the machine. **Not supported in version for .NET Core.**
+ * `ChakraActiveScript`. ActiveScript version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 9 or higher on the machine. **Not supported in version for .NET Core.**
  * `ChakraIeJsRt`. “IE” JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 11 or Microsoft Edge on the machine.
  * `ChakraEdgeJsRt`. “Edge” JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Microsoft Edge on the machine.
 
@@ -123,6 +123,7 @@ See the [changelog](CHANGELOG.md).
 ## Credits
  * [SassAndCoffee.JavaScript](http://github.com/xpaulbettsx/SassAndCoffee) - [License: Microsoft Public License (Ms-PL)](http://github.com/paulcbetts/SassAndCoffee/blob/master/COPYING) Part of the code of this library served as the basis for the ActiveScript version of Chakra and Classic JavaScript Engine.
  * [Chakra Sample Hosts](http://github.com/panopticoncentral/chakra-host) - [License: Apache License 2.0 (Apache)](http://github.com/panopticoncentral/chakra-host/blob/master/LICENSE) C# example from this project served as the basis for the JsRT versions of Chakra.
+ * [jsrt-dotnet](http://github.com/robpaveza/jsrt-dotnet) - [License: The MIT License (MIT)](http://github.com/robpaveza/jsrt-dotnet/blob/master/LICENSE) Part of the code of this library is used in the JsRT versions of Chakra.
  * [ECMAScript 5 Polyfill](http://nuget.org/packages/ES5) and [MDN JavaScript Polyfills](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference) - Adds support for many of the new functions in ECMAScript 5 to downlevel browsers.
  * [Cross-Browser Split](http://blog.stevenlevithan.com/archives/cross-browser-split) - Adds ECMAScript compliant and uniform cross-browser split method.
  * [JSON2 library](http://github.com/douglascrockford/JSON-js) - Adds support of the JSON object from ECMAScript 5 to downlevel browsers.
