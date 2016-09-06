@@ -1,4 +1,5 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿#if !NETSTANDARD1_3
+namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
 	/// ActiveScript version of Chakra JavaScript engine
@@ -39,3 +40,4 @@
 		}
 	}
 }
+#endif

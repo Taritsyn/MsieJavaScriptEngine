@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿#if !NETSTANDARD1_3
+using System.Runtime.InteropServices;
 
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
@@ -44,3 +45,4 @@ namespace MsieJavaScriptEngine.ActiveScript
 			[Out] [MarshalAs(UnmanagedType.BStr)] out string sourceLine);
 	}
 }
+#endif

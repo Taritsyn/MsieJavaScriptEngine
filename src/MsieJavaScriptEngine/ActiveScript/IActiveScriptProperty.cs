@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 using System.Runtime.InteropServices;
 
 namespace MsieJavaScriptEngine.ActiveScript
@@ -21,3 +22,4 @@ namespace MsieJavaScriptEngine.ActiveScript
 			[In] [Out] ref object pvarValue);
 	}
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 using System.Runtime.InteropServices;
 
 namespace MsieJavaScriptEngine.ActiveScript
@@ -120,3 +121,4 @@ namespace MsieJavaScriptEngine.ActiveScript
 			ScriptTextFlags flags);
 	}
 }
+#endif

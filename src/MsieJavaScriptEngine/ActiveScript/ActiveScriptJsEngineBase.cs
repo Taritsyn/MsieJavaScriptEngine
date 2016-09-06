@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
@@ -53,7 +54,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// List of host items
 		/// </summary>
-		private Dictionary<string, object> _hostItems = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> _hostItems = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Host-defined document version string
@@ -110,7 +111,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			catch (Exception e)
 			{
 				throw new JsEngineLoadException(
-					string.Format(Strings.Runtime_IeJsEngineNotLoaded,
+					string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
 						_engineModeName, lowerIeVersion, e.Message), _engineModeName);
 			}
 
@@ -125,7 +126,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 					if (result != (uint)ScriptHResult.Ok)
 					{
 						throw new JsEngineLoadException(
-							string.Format(Strings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
+							string.Format(NetFrameworkStrings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
 					}
 				}
 			}
@@ -277,7 +278,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			if (dispatch == null)
 			{
-				throw new InvalidOperationException(Strings.Runtime_ActiveScriptDispatcherNotInitialized);
+				throw new InvalidOperationException(NetFrameworkStrings.Runtime_ActiveScriptDispatcherNotInitialized);
 			}
 
 			_dispatch = dispatch;
@@ -510,13 +511,13 @@ namespace MsieJavaScriptEngine.ActiveScript
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
 			}
 
 			if (type == null)
 			{
 				throw new ArgumentNullException(
-					"type", string.Format(Strings.Common_ArgumentIsNull, "type"));
+					"type", string.Format(CommonStrings.Common_ArgumentIsNull, "type"));
 			}
 
 			string code = Utils.GetResourceAsString(resourceName, type);
@@ -557,7 +558,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 					if (_hostItems != null)
 					{
 						_hostItems.Clear();
-						_hostItems = null;
 					}
 
 					_lastException = null;
@@ -611,7 +611,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			if (item == null)
 			{
 				throw new COMException(
-					string.Format(Strings.Runtime_ItemNotFound, name), ComErrorCode.ElementNotFound);
+					string.Format(NetFrameworkStrings.Runtime_ItemNotFound, name), ComErrorCode.ElementNotFound);
 			}
 
 			if (mask.HasFlag(ScriptInfoFlags.IUnknown))
@@ -714,7 +714,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				catch (MissingMemberException)
 				{
 					throw new JsRuntimeException(
-						string.Format(Strings.Runtime_FunctionNotExist, functionName));
+						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
 				}
 			});
 
@@ -756,7 +756,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				catch (MissingMemberException)
 				{
 					throw new JsRuntimeException(
-						string.Format(Strings.Runtime_VariableNotExist, variableName));
+						string.Format(NetFrameworkStrings.Runtime_VariableNotExist, variableName));
 				}
 			});
 
@@ -812,3 +812,4 @@ namespace MsieJavaScriptEngine.ActiveScript
 		#endregion
 	}
 }
+#endif

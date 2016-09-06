@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
@@ -77,7 +78,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			if (_activeScriptParse64 == null && _activeScriptParse32 == null)
 			{
-				throw new NotSupportedException(Strings.Runtime_InvalidParserImplementationError);
+				throw new NotSupportedException(NetFrameworkStrings.Runtime_InvalidParserImplementationError);
 			}
 		}
 
@@ -307,3 +308,4 @@ namespace MsieJavaScriptEngine.ActiveScript
 		#endregion
 	}
 }
+#endif

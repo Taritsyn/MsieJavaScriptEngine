@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -182,3 +183,4 @@ namespace MsieJavaScriptEngine
 		#endregion
 	}
 }
+#endif

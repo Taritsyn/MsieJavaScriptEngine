@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 using System.Runtime.InteropServices;
 
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
@@ -132,3 +133,4 @@ namespace MsieJavaScriptEngine.ActiveScript
 			[Out] out EXCEPINFO exceptionInfo);
 	}
 }
+#endif

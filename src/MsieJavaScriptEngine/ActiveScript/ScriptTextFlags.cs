@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -33,3 +34,4 @@ namespace MsieJavaScriptEngine.ActiveScript
 		IsCrossDomain = 0x00000100,
 	}
 }
+#endif

@@ -1,4 +1,5 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿#if !NETSTANDARD1_3
+namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
 	/// Common HRESULT Values
@@ -22,3 +23,4 @@
 		Unexpected = 0x8000FFFF
 	}
 }
+#endif

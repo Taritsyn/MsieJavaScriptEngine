@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 using MsieJavaScriptEngine.Resources;
@@ -13,6 +14,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// Determines whether the current process is a 64-bit process
 		/// </summary>
 		/// <returns>true if the process is 64-bit; otherwise, false</returns>
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
 		public static bool Is64BitProcess()
 		{
 #if NETSTANDARD1_3
@@ -50,7 +52,7 @@ namespace MsieJavaScriptEngine.Utilities
 				if (stream == null)
 				{
 					throw new NullReferenceException(
-						string.Format(Strings.Resources_ResourceIsNull, resourceName));
+						string.Format(CommonStrings.Resources_ResourceIsNull, resourceName));
 				}
 
 				using (var reader = new StreamReader(stream))
@@ -71,7 +73,7 @@ namespace MsieJavaScriptEngine.Utilities
 			if (!File.Exists(path))
 			{
 				throw new FileNotFoundException(
-					string.Format(Strings.Common_FileNotExist, path), path);
+					string.Format(CommonStrings.Common_FileNotExist, path), path);
 			}
 
 			string content;

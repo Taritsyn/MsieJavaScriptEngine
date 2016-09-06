@@ -120,7 +120,7 @@ namespace MsieJavaScriptEngine.Utilities
 				{
 					if (throwOnError)
 					{
-						throw new InvalidOperationException(Strings.Common_ValueTypeCannotBeNull);
+						throw new InvalidOperationException(CommonStrings.Common_ValueTypeCannotBeNull);
 					}
 
 					convertedObject = null;
@@ -195,7 +195,7 @@ namespace MsieJavaScriptEngine.Utilities
 			if (throwOnError)
 			{
 				throw new InvalidOperationException(
-					string.Format(Strings.Common_CannotConvertObjectToType, originalType, type)
+					string.Format(CommonStrings.Common_CannotConvertObjectToType, originalType, type)
 				);
 			}
 

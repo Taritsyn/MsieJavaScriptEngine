@@ -156,12 +156,6 @@
   <data name="Resources_ResourceIsNull" xml:space="preserve">
     <value>Ресурс с именем "{0}" содержит значение равное null!</value>
   </data>
-  <data name="Runtime_ActiveScriptDispatcherNotInitialized" xml:space="preserve">
-    <value>ActiveScript-диспетчер не инициализирован!</value>
-  </data>
-  <data name="Runtime_ActiveScriptLanguageVersionSelectionFailed" xml:space="preserve">
-    <value>Не удалось установить "{0}" версию языка сценариев для ActiveScript JavaScript-движка!</value>
-  </data>
   <data name="Runtime_EdgeJsEngineNotLoaded" xml:space="preserve">
     <value>Не удалось загрузить Chakra Edge JsRT JavaScript-движок! Попробуйте установить  Windows 10 с веб-браузером Edge.
 Смотрите более подробную информацию об ошибке:
@@ -180,45 +174,6 @@
   <data name="Runtime_FunctionParameterTypeNotSupported" xml:space="preserve">
     <value>Один из параметров функции "{0}" имеет тип `{1}`, который не поддерживается!</value>
   </data>
-  <data name="Runtime_HostDelegateInvocationFailed" xml:space="preserve">
-    <value>Во время вызова делегата хоста произошла ошибка - «{0}»!</value>
-  </data>
-  <data name="Runtime_HostObjectFieldGettingFailed" xml:space="preserve">
-    <value>Во время получения значения поля "{0}" объекта хоста произошла ошибка - «{1}»!</value>
-  </data>
-  <data name="Runtime_HostObjectFieldSettingFailed" xml:space="preserve">
-    <value>Во время присваивания значения полю "{0}" объекта хоста произошла ошибка - «{1}»!</value>
-  </data>
-  <data name="Runtime_HostObjectMethodInvocationFailed" xml:space="preserve">
-    <value>Во время вызова метода "{0}" объекта хоста произошла ошибка - «{1}»!</value>
-  </data>
-  <data name="Runtime_HostObjectPropertyGettingFailed" xml:space="preserve">
-    <value>Во время получения значения свойства "{0}" объекта хоста произошла ошибка - «{1}»!</value>
-  </data>
-  <data name="Runtime_HostObjectPropertySettingFailed" xml:space="preserve">
-    <value>Во время присваивания значения свойству "{0}" объекта хоста произошла ошибка - «{1}»!</value>
-  </data>
-  <data name="Runtime_HostTypeConstructorInvocationFailed" xml:space="preserve">
-    <value>Во время вызова конструктора типа хоста `{0}` произошла ошибка - «{1}»!</value>
-  </data>
-  <data name="Runtime_HostTypeConstructorNotFound" xml:space="preserve">
-    <value>Не удается создать экземпляр типа хоста `{0}`, потому что он не имеет ни одного публичного конструктора!</value>
-  </data>
-  <data name="Runtime_HostTypeFieldGettingFailed" xml:space="preserve">
-    <value>Во время получения значения поля "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
-  </data>
-  <data name="Runtime_HostTypeFieldSettingFailed" xml:space="preserve">
-    <value>Во время присваивания значения полю "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
-  </data>
-  <data name="Runtime_HostTypeMethodInvocationFailed" xml:space="preserve">
-    <value>Во время вызова метода "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
-  </data>
-  <data name="Runtime_HostTypePropertyGettingFailed" xml:space="preserve">
-    <value>Во время получения значения свойства "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
-  </data>
-  <data name="Runtime_HostTypePropertySettingFailed" xml:space="preserve">
-    <value>Во время присваивания значения свойству "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
-  </data>
   <data name="Runtime_IeJsEngineNotLoaded" xml:space="preserve">
     <value>Не удалось загрузить {0} JavaScript-движок! Попробуйте установить  Internet Explorer {1} или выше.
 Смотрите более подробную информацию об ошибке:
@@ -228,29 +183,11 @@
   <data name="Runtime_InvalidFunctionNameFormat" xml:space="preserve">
     <value>Имя функции "{0}" имеет некорректный формат!</value>
   </data>
-  <data name="Runtime_InvalidParserImplementationError" xml:space="preserve">
-    <value>Парсер, переданный вами, не реализует интерфейсы `IActiveScriptParse32` и `IActiveScriptParse64`!</value>
-  </data>
   <data name="Runtime_InvalidScriptItemNameFormat" xml:space="preserve">
     <value>Имя скриптового элемента "{0}" имеет некорректный формат!</value>
   </data>
-  <data name="Runtime_InvalidThisContextForHostObjectField" xml:space="preserve">
-    <value>Не удалось получить поле "{0}" объекта хоста, потому что контекст `this` недействителен!</value>
-  </data>
-  <data name="Runtime_InvalidThisContextForHostObjectMethod" xml:space="preserve">
-    <value>Не удалось вызвать метод "{0}" объекта хоста, потому что контекст `this` недействителен!</value>
-  </data>
-  <data name="Runtime_InvalidThisContextForHostObjectProperty" xml:space="preserve">
-    <value>Не удалось получить свойство "{0}" объекта хоста, потому что контекст `this` недействителен!</value>
-  </data>
   <data name="Runtime_InvalidVariableNameFormat" xml:space="preserve">
     <value>Имя переменной "{0}" имеет некорректный формат!</value>
-  </data>
-  <data name="Runtime_ItemNotFound" xml:space="preserve">
-    <value>Элемент с именем "{0}" не найден!</value>
-  </data>
-  <data name="Runtime_JsEngineModeNotCompatibleWithNetCore" xml:space="preserve">
-    <value>Режим JavaScript-движка "{0}" не совместим с .NET Core!</value>
   </data>
   <data name="Runtime_JsEngineModeNotSupported" xml:space="preserve">
     <value>Выбранный вами режим JavaScript-движка "{0}" не поддерживается!</value>
@@ -261,23 +198,8 @@
   <data name="Runtime_JsEnginesConflictOnMachine" xml:space="preserve">
     <value>Нельзя использовать Chakra JsRT и Chakra ActiveScript движки на одном компьютере одновременно.</value>
   </data>
-  <data name="Runtime_JsEnginesForNetCoreNotFound" xml:space="preserve">
-    <value>Не удалось найти ни один из JavaScript-движков, который был бы совместим с .NET Core! Возможно, на вашем компьютере не установлен браузер Microsoft Edge или Internet Explorer 11.</value>
-  </data>
-  <data name="Runtime_JsEnginesNotFound" xml:space="preserve">
-    <value>Не удалось найти ни один из JavaScript-движков! Возможно, на вашем компьютере не установлен браузер Internet Explorer.</value>
-  </data>
   <data name="Runtime_ReturnValueTypeNotSupported" xml:space="preserve">
     <value>Тип возвращаемого значения `{0}` не поддерживается!</value>
-  </data>
-  <data name="Runtime_SuitableConstructorOfHostTypeNotFound" xml:space="preserve">
-    <value>Не получается найти подходящий конструктор или не хватает аргументов для вызова конструктора `{0}` типа хоста!</value>
-  </data>
-  <data name="Runtime_SuitableMethodOfHostObjectNotFound" xml:space="preserve">
-    <value>Не получается найти подходящий метод или не хватает аргументов для вызова метода "{0}" объекта хоста!</value>
-  </data>
-  <data name="Runtime_VariableNotExist" xml:space="preserve">
-    <value>Переменная с именем "{0}" не существует!</value>
   </data>
   <data name="Runtime_VariableTypeNotSupported" xml:space="preserve">
     <value>Переменная "{0}" имеет тип `{1}`, который не поддерживается!</value>

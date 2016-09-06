@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -26,3 +27,4 @@ namespace MsieJavaScriptEngine.ActiveScript
 		RaiseException = 2,
 	}
 }
+#endif

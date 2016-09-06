@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 using System.Linq;
 
 using MsieJavaScriptEngine.Utilities;
@@ -88,3 +89,4 @@ namespace MsieJavaScriptEngine.Helpers
 		}
 	}
 }
+#endif

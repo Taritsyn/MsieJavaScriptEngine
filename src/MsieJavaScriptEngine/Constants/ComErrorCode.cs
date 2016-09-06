@@ -1,4 +1,5 @@
-﻿namespace MsieJavaScriptEngine.Constants
+﻿#if !NETSTANDARD1_3
+namespace MsieJavaScriptEngine.Constants
 {
 	/// <summary>
 	/// COM error codes
@@ -10,3 +11,4 @@
 		public const int ClassNotRegistered = unchecked((int)0x80040154);
 	}
 }
+#endif

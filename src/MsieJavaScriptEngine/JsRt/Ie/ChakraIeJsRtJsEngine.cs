@@ -50,7 +50,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <summary>
 		/// List of native function callbacks
 		/// </summary>
-		private ISet<IeJsNativeFunction> _nativeFunctions = new HashSet<IeJsNativeFunction>();
+		private readonly HashSet<IeJsNativeFunction> _nativeFunctions = new HashSet<IeJsNativeFunction>();
 #endif
 
 		/// <summary>
@@ -76,11 +76,11 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				string errorMessage;
 				if (e.ErrorCode == JsErrorCode.WrongThread)
 				{
-					errorMessage = Strings.Runtime_JsEnginesConflictOnMachine;
+					errorMessage = CommonStrings.Runtime_JsEnginesConflictOnMachine;
 				}
 				else
 				{
-					errorMessage = string.Format(Strings.Runtime_IeJsEngineNotLoaded,
+					errorMessage = string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
 						_engineModeName, LOWER_IE_VERSION, e.Message);
 				}
 
@@ -89,7 +89,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			catch (Exception e)
 			{
 				throw new JsEngineLoadException(
-					string.Format(Strings.Runtime_IeJsEngineNotLoaded,
+					string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
 						_engineModeName, LOWER_IE_VERSION, e.Message), _engineModeName);
 			}
 		}
@@ -383,7 +383,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				catch (Exception e)
 				{
 					IeJsValue errorValue = IeJsErrorHelpers.CreateError(
-						string.Format(Strings.Runtime_HostDelegateInvocationFailed, e.Message));
+						string.Format(NetCoreStrings.Runtime_HostDelegateInvocationFailed, e.Message));
 					IeJsErrorHelpers.SetException(errorValue);
 
 					return undefinedValue;
@@ -426,7 +426,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				if (constructors.Length == 0)
 				{
 					IeJsValue errorValue = IeJsErrorHelpers.CreateError(
-						string.Format(Strings.Runtime_HostTypeConstructorNotFound, typeName));
+						string.Format(NetCoreStrings.Runtime_HostTypeConstructorNotFound, typeName));
 					IeJsErrorHelpers.SetException(errorValue);
 
 					return undefinedValue;
@@ -437,7 +437,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				if (bestFitConstructor == null)
 				{
 					IeJsValue errorValue = IeJsErrorHelpers.CreateReferenceError(
-						string.Format(Strings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
+						string.Format(NetCoreStrings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
 					IeJsErrorHelpers.SetException(errorValue);
 
 					return undefinedValue;
@@ -452,7 +452,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				catch (Exception e)
 				{
 					IeJsValue errorValue = IeJsErrorHelpers.CreateError(
-						string.Format(Strings.Runtime_HostTypeConstructorInvocationFailed, typeName, e.Message));
+						string.Format(NetCoreStrings.Runtime_HostTypeConstructorInvocationFailed, typeName, e.Message));
 					IeJsErrorHelpers.SetException(errorValue);
 
 					return undefinedValue;
@@ -494,7 +494,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						if (!thisValue.HasExternalData)
 						{
 							IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-								string.Format(Strings.Runtime_InvalidThisContextForHostObjectField, fieldName));
+								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
 							IeJsErrorHelpers.SetException(errorValue);
 
 							return undefinedValue;
@@ -512,9 +512,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					catch (Exception e)
 					{
 						string errorMessage = instance ?
-							string.Format(Strings.Runtime_HostObjectFieldGettingFailed, fieldName, e.Message)
+							string.Format(NetCoreStrings.Runtime_HostObjectFieldGettingFailed, fieldName, e.Message)
 							:
-							string.Format(Strings.Runtime_HostTypeFieldGettingFailed, fieldName, typeName, e.Message)
+							string.Format(NetCoreStrings.Runtime_HostTypeFieldGettingFailed, fieldName, typeName, e.Message)
 							;
 
 						IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
@@ -544,7 +544,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						if (!thisValue.HasExternalData)
 						{
 							IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-								string.Format(Strings.Runtime_InvalidThisContextForHostObjectField, fieldName));
+								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
 							IeJsErrorHelpers.SetException(errorValue);
 
 							return undefinedValue;
@@ -563,9 +563,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					catch (Exception e)
 					{
 						string errorMessage = instance ?
-							string.Format(Strings.Runtime_HostObjectFieldSettingFailed, fieldName, e.Message)
+							string.Format(NetCoreStrings.Runtime_HostObjectFieldSettingFailed, fieldName, e.Message)
 							:
-							string.Format(Strings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName, e.Message)
+							string.Format(NetCoreStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName, e.Message)
 							;
 
 						IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
@@ -612,7 +612,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 							if (!thisValue.HasExternalData)
 							{
 								IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-									string.Format(Strings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
+									string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
 								IeJsErrorHelpers.SetException(errorValue);
 
 								return undefinedValue;
@@ -631,10 +631,10 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						{
 							string errorMessage = instance ?
 								string.Format(
-									Strings.Runtime_HostObjectPropertyGettingFailed, propertyName, e.Message)
+									NetCoreStrings.Runtime_HostObjectPropertyGettingFailed, propertyName, e.Message)
 								:
 								string.Format(
-									Strings.Runtime_HostTypePropertyGettingFailed, propertyName, typeName, e.Message)
+									NetCoreStrings.Runtime_HostTypePropertyGettingFailed, propertyName, typeName, e.Message)
 								;
 
 							IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
@@ -667,7 +667,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 							if (!thisValue.HasExternalData)
 							{
 								IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-									string.Format(Strings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
+									string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
 								IeJsErrorHelpers.SetException(errorValue);
 
 								return undefinedValue;
@@ -687,10 +687,10 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						{
 							string errorMessage = instance ?
 								string.Format(
-									Strings.Runtime_HostObjectPropertySettingFailed, propertyName, e.Message)
+									NetCoreStrings.Runtime_HostObjectPropertySettingFailed, propertyName, e.Message)
 								:
 								string.Format(
-									Strings.Runtime_HostTypePropertySettingFailed, propertyName, typeName, e.Message)
+									NetCoreStrings.Runtime_HostTypePropertySettingFailed, propertyName, typeName, e.Message)
 								;
 
 							IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
@@ -735,7 +735,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						if (!thisValue.HasExternalData)
 						{
 							IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-								string.Format(Strings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
+								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
 							IeJsErrorHelpers.SetException(errorValue);
 
 							return undefinedValue;
@@ -751,7 +751,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					if (bestFitMethod == null)
 					{
 						IeJsValue errorValue = IeJsErrorHelpers.CreateReferenceError(
-							string.Format(Strings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
+							string.Format(NetCoreStrings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
 						IeJsErrorHelpers.SetException(errorValue);
 
 						return undefinedValue;
@@ -769,10 +769,10 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					{
 						string errorMessage = instance ?
 							string.Format(
-								Strings.Runtime_HostObjectMethodInvocationFailed, methodName, e.Message)
+								NetCoreStrings.Runtime_HostObjectMethodInvocationFailed, methodName, e.Message)
 							:
 							string.Format(
-								Strings.Runtime_HostTypeMethodInvocationFailed, methodName, typeName, e.Message)
+								NetCoreStrings.Runtime_HostTypeMethodInvocationFailed, methodName, typeName, e.Message)
 							;
 
 						IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
@@ -943,7 +943,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					if (_nativeFunctions != null)
 					{
 						_nativeFunctions.Clear();
-						_nativeFunctions = null;
 					}
 #endif
 				}
@@ -985,7 +984,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				if (!functionExist)
 				{
 					throw new JsRuntimeException(
-						string.Format(Strings.Runtime_FunctionNotExist, functionName));
+						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
 				}
 
 				var processedArgs = MapToScriptType(args);

@@ -42,7 +42,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// List of external objects
 		/// </summary>
-		protected ISet<object> _externalObjects = new HashSet<object>();
+		protected readonly HashSet<object> _externalObjects = new HashSet<object>();
 
 		/// <summary>
 		/// Callback for finalization of external object
@@ -98,7 +98,10 @@ namespace MsieJavaScriptEngine.JsRt
 
 			lock (_executionSynchronizer)
 			{
-				_externalObjects.Remove(obj);
+				if (_externalObjects != null)
+				{
+					_externalObjects.Remove(obj);
+				}
 			}
 		}
 #endif
@@ -136,7 +139,6 @@ namespace MsieJavaScriptEngine.JsRt
 			if (_externalObjects != null)
 			{
 				_externalObjects.Clear();
-				_externalObjects = null;
 			}
 
 			_externalObjectFinalizeCallback = null;

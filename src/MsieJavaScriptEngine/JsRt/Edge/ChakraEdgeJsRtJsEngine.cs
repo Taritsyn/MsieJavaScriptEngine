@@ -45,7 +45,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <summary>
 		/// List of native function callbacks
 		/// </summary>
-		private ISet<EdgeJsNativeFunction> _nativeFunctions = new HashSet<EdgeJsNativeFunction>();
+		private readonly HashSet<EdgeJsNativeFunction> _nativeFunctions = new HashSet<EdgeJsNativeFunction>();
 #endif
 
 		/// <summary>
@@ -71,11 +71,11 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				string errorMessage;
 				if (e.ErrorCode == JsErrorCode.WrongThread)
 				{
-					errorMessage = Strings.Runtime_JsEnginesConflictOnMachine;
+					errorMessage = CommonStrings.Runtime_JsEnginesConflictOnMachine;
 				}
 				else
 				{
-					errorMessage = string.Format(Strings.Runtime_EdgeJsEngineNotLoaded, e.Message);
+					errorMessage = string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message);
 				}
 
 				throw new JsEngineLoadException(errorMessage, _engineModeName);
@@ -83,7 +83,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			catch (Exception e)
 			{
 				throw new JsEngineLoadException(
-					string.Format(Strings.Runtime_EdgeJsEngineNotLoaded, e.Message), _engineModeName);
+					string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message), _engineModeName);
 			}
 		}
 
@@ -359,7 +359,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				catch (Exception e)
 				{
 					EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(
-						string.Format(Strings.Runtime_HostDelegateInvocationFailed, e.Message));
+						string.Format(NetCoreStrings.Runtime_HostDelegateInvocationFailed, e.Message));
 					EdgeJsErrorHelpers.SetException(errorValue);
 
 					return undefinedValue;
@@ -402,7 +402,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				if (constructors.Length == 0)
 				{
 					EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(
-						string.Format(Strings.Runtime_HostTypeConstructorNotFound, typeName));
+						string.Format(NetCoreStrings.Runtime_HostTypeConstructorNotFound, typeName));
 					EdgeJsErrorHelpers.SetException(errorValue);
 
 					return undefinedValue;
@@ -413,7 +413,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				if (bestFitConstructor == null)
 				{
 					EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateReferenceError(
-						string.Format(Strings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
+						string.Format(NetCoreStrings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
 					EdgeJsErrorHelpers.SetException(errorValue);
 
 					return undefinedValue;
@@ -428,7 +428,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				catch (Exception e)
 				{
 					EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(
-						string.Format(Strings.Runtime_HostTypeConstructorInvocationFailed, typeName, e.Message));
+						string.Format(NetCoreStrings.Runtime_HostTypeConstructorInvocationFailed, typeName, e.Message));
 					EdgeJsErrorHelpers.SetException(errorValue);
 
 					return undefinedValue;
@@ -470,7 +470,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						if (!thisValue.HasExternalData)
 						{
 							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-								string.Format(Strings.Runtime_InvalidThisContextForHostObjectField, fieldName));
+								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
 							EdgeJsErrorHelpers.SetException(errorValue);
 
 							return undefinedValue;
@@ -488,9 +488,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					catch (Exception e)
 					{
 						string errorMessage = instance ?
-							string.Format(Strings.Runtime_HostObjectFieldGettingFailed, fieldName, e.Message)
+							string.Format(NetCoreStrings.Runtime_HostObjectFieldGettingFailed, fieldName, e.Message)
 							:
-							string.Format(Strings.Runtime_HostTypeFieldGettingFailed, fieldName, typeName, e.Message)
+							string.Format(NetCoreStrings.Runtime_HostTypeFieldGettingFailed, fieldName, typeName, e.Message)
 							;
 
 						EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
@@ -520,7 +520,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						if (!thisValue.HasExternalData)
 						{
 							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-								string.Format(Strings.Runtime_InvalidThisContextForHostObjectField, fieldName));
+								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
 							EdgeJsErrorHelpers.SetException(errorValue);
 
 							return undefinedValue;
@@ -539,9 +539,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					catch (Exception e)
 					{
 						string errorMessage = instance ?
-							string.Format(Strings.Runtime_HostObjectFieldSettingFailed, fieldName, e.Message)
+							string.Format(NetCoreStrings.Runtime_HostObjectFieldSettingFailed, fieldName, e.Message)
 							:
-							string.Format(Strings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName, e.Message)
+							string.Format(NetCoreStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName, e.Message)
 							;
 
 						EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
@@ -588,7 +588,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							if (!thisValue.HasExternalData)
 							{
 								EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-									string.Format(Strings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
+									string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
 								EdgeJsErrorHelpers.SetException(errorValue);
 
 								return undefinedValue;
@@ -607,10 +607,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						{
 							string errorMessage = instance ?
 								string.Format(
-									Strings.Runtime_HostObjectPropertyGettingFailed, propertyName, e.Message)
+									NetCoreStrings.Runtime_HostObjectPropertyGettingFailed, propertyName, e.Message)
 								:
 								string.Format(
-									Strings.Runtime_HostTypePropertyGettingFailed, propertyName, typeName, e.Message)
+									NetCoreStrings.Runtime_HostTypePropertyGettingFailed, propertyName, typeName, e.Message)
 								;
 
 							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
@@ -643,7 +643,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							if (!thisValue.HasExternalData)
 							{
 								EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-									string.Format(Strings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
+									string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
 								EdgeJsErrorHelpers.SetException(errorValue);
 
 								return undefinedValue;
@@ -663,10 +663,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						{
 							string errorMessage = instance ?
 								string.Format(
-									Strings.Runtime_HostObjectPropertySettingFailed, propertyName, e.Message)
+									NetCoreStrings.Runtime_HostObjectPropertySettingFailed, propertyName, e.Message)
 								:
 								string.Format(
-									Strings.Runtime_HostTypePropertySettingFailed, propertyName, typeName, e.Message)
+									NetCoreStrings.Runtime_HostTypePropertySettingFailed, propertyName, typeName, e.Message)
 								;
 
 							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
@@ -711,7 +711,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						if (!thisValue.HasExternalData)
 						{
 							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-								string.Format(Strings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
+								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
 							EdgeJsErrorHelpers.SetException(errorValue);
 
 							return undefinedValue;
@@ -727,7 +727,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					if (bestFitMethod == null)
 					{
 						EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateReferenceError(
-							string.Format(Strings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
+							string.Format(NetCoreStrings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
 						EdgeJsErrorHelpers.SetException(errorValue);
 
 						return undefinedValue;
@@ -745,10 +745,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					{
 						string errorMessage = instance ?
 							string.Format(
-								Strings.Runtime_HostObjectMethodInvocationFailed, methodName, e.Message)
+								NetCoreStrings.Runtime_HostObjectMethodInvocationFailed, methodName, e.Message)
 							:
 							string.Format(
-								Strings.Runtime_HostTypeMethodInvocationFailed, methodName, typeName, e.Message)
+								NetCoreStrings.Runtime_HostTypeMethodInvocationFailed, methodName, typeName, e.Message)
 							;
 
 						EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
@@ -904,7 +904,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					if (_nativeFunctions != null)
 					{
 						_nativeFunctions.Clear();
-						_nativeFunctions = null;
 					}
 #endif
 				}
@@ -946,7 +945,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				if (!functionExist)
 				{
 					throw new JsRuntimeException(
-						string.Format(Strings.Runtime_FunctionNotExist, functionName));
+						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
 				}
 
 				var processedArgs = MapToScriptType(args);

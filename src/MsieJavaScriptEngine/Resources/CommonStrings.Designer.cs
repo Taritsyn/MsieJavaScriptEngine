@@ -16,15 +16,15 @@ namespace MsieJavaScriptEngine.Resources
 	/// <summary>
 	/// A strongly-typed resource class, for looking up localized strings, etc.
 	/// </summary>
-	public class Strings
+	public class CommonStrings
 	{
 		private static Lazy<ResourceManager> _resourceManager =
 			new Lazy<ResourceManager>(() => new ResourceManager(
-				"MsieJavaScriptEngine.Resources.Strings",
+				"MsieJavaScriptEngine.Resources.CommonStrings",
 #if NETSTANDARD1_0 || NETSTANDARD1_1 || NETSTANDARD1_2 || NETSTANDARD1_3 || NETSTANDARD1_4 || NETSTANDARD1_5 || NETSTANDARD1_6 || NETCOREAPP1_0 || NET451 || NET452 || NET46 || NET461 || NET462 || NET463
-				typeof(Strings).GetTypeInfo().Assembly
+				typeof(CommonStrings).GetTypeInfo().Assembly
 #elif NET40
-				typeof(Strings).Assembly
+				typeof(CommonStrings).Assembly
 #else
 #error No implementation for this target
 #endif
@@ -164,22 +164,6 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "ActiveScript dispatcher is not initialized."
-		/// </summary>
-		public static string Runtime_ActiveScriptDispatcherNotInitialized
-		{
-			get { return GetString("Runtime_ActiveScriptDispatcherNotInitialized"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Failed to set '{0}' version of script language for the ActiveScript JavaScript engine."
-		/// </summary>
-		public static string Runtime_ActiveScriptLanguageVersionSelectionFailed
-		{
-			get { return GetString("Runtime_ActiveScriptLanguageVersionSelectionFailed"); }
-		}
-
-		/// <summary>
 		/// Looks up a localized string similar to "Failed to load a Chakra Edge JsRT JavaScript engine. Try to install the Windows 10 with Edge..."
 		/// </summary>
 		public static string Runtime_EdgeJsEngineNotLoaded
@@ -220,110 +204,6 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "During invocation of the host delegate an error has occurred - “{0}”."
-		/// </summary>
-		public static string Runtime_HostDelegateInvocationFailed
-		{
-			get { return GetString("Runtime_HostDelegateInvocationFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During getting value of '{0}' field of the host object an error has occurred - “{1}”."
-		/// </summary>
-		public static string Runtime_HostObjectFieldGettingFailed
-		{
-			get { return GetString("Runtime_HostObjectFieldGettingFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During setting value of '{0}' field of the host object an error has occurred - “{1}”."
-		/// </summary>
-		public static string Runtime_HostObjectFieldSettingFailed
-		{
-			get { return GetString("Runtime_HostObjectFieldSettingFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During invocation of '{0}' method of the host object an error has occurred - “{1}”."
-		/// </summary>
-		public static string Runtime_HostObjectMethodInvocationFailed
-		{
-			get { return GetString("Runtime_HostObjectMethodInvocationFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During getting value of '{0}' property of the host object an error has occurred - “{1}”."
-		/// </summary>
-		public static string Runtime_HostObjectPropertyGettingFailed
-		{
-			get { return GetString("Runtime_HostObjectPropertyGettingFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During setting value of '{0}' property of the host object an error has occurred - “{1}”."
-		/// </summary>
-		public static string Runtime_HostObjectPropertySettingFailed
-		{
-			get { return GetString("Runtime_HostObjectPropertySettingFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During invocation of constructor of the `{0}` host type an error has occurred - “{1}”."
-		/// </summary>
-		public static string Runtime_HostTypeConstructorInvocationFailed
-		{
-			get { return GetString("Runtime_HostTypeConstructorInvocationFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Could not create instance of the `{0}` host type, because it does not have any public constructor."
-		/// </summary>
-		public static string Runtime_HostTypeConstructorNotFound
-		{
-			get { return GetString("Runtime_HostTypeConstructorNotFound"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During getting value of '{0}' field of the `{1}` host type an error has occurred - “{2}”."
-		/// </summary>
-		public static string Runtime_HostTypeFieldGettingFailed
-		{
-			get { return GetString("Runtime_HostTypeFieldGettingFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During setting value of '{0}' field of the `{1}` host type an error has occurred - “{2}”."
-		/// </summary>
-		public static string Runtime_HostTypeFieldSettingFailed
-		{
-			get { return GetString("Runtime_HostTypeFieldSettingFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During invocation of '{0}' method of the `{1}` host type an error has occurred - “{2}”."
-		/// </summary>
-		public static string Runtime_HostTypeMethodInvocationFailed
-		{
-			get { return GetString("Runtime_HostTypeMethodInvocationFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During getting value of '{0}' property of the `{1}` host type an error has occurred - “{2}”."
-		/// </summary>
-		public static string Runtime_HostTypePropertyGettingFailed
-		{
-			get { return GetString("Runtime_HostTypePropertyGettingFailed"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "During setting value of '{0}' property of the host type `{1}` an error has occurred - “{2}”."
-		/// </summary>
-		public static string Runtime_HostTypePropertySettingFailed
-		{
-			get { return GetString("Runtime_HostTypePropertySettingFailed"); }
-		}
-
-		/// <summary>
 		/// Looks up a localized string similar to "Failed to load a {0} JavaScript engine. Try to install the Internet Explorer {1} or higher. See more..."
 		/// </summary>
 		public static string Runtime_IeJsEngineNotLoaded
@@ -340,14 +220,6 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "The parser you passed implements neither `IActiveScriptParse32` nor `IActiveScriptParse64`."
-		/// </summary>
-		public static string Runtime_InvalidParserImplementationError
-		{
-			get { return GetString("Runtime_InvalidParserImplementationError"); }
-		}
-
-		/// <summary>
 		/// Looks up a localized string similar to "The script item name '{0}' has incorrect format."
 		/// </summary>
 		public static string Runtime_InvalidScriptItemNameFormat
@@ -356,51 +228,11 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Could not retrieve field '{0}' of the host object, because there was an invalid `this` context."
-		/// </summary>
-		public static string Runtime_InvalidThisContextForHostObjectField
-		{
-			get { return GetString("Runtime_InvalidThisContextForHostObjectField"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Could not call method '{0}' of the host object, because there was an invalid `this` context."
-		/// </summary>
-		public static string Runtime_InvalidThisContextForHostObjectMethod
-		{
-			get { return GetString("Runtime_InvalidThisContextForHostObjectMethod"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Could not retrieve property '{0}' of the host object, because there was an invalid `this` context."
-		/// </summary>
-		public static string Runtime_InvalidThisContextForHostObjectProperty
-		{
-			get { return GetString("Runtime_InvalidThisContextForHostObjectProperty"); }
-		}
-
-		/// <summary>
 		/// Looks up a localized string similar to "The variable name '{0}' has incorrect format."
 		/// </summary>
 		public static string Runtime_InvalidVariableNameFormat
 		{
 			get { return GetString("Runtime_InvalidVariableNameFormat"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Item with name '{0}' not found."
-		/// </summary>
-		public static string Runtime_ItemNotFound
-		{
-			get { return GetString("Runtime_ItemNotFound"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "The '{0}' mode of JavaScript engine is not compatible with .NET Core."
-		/// </summary>
-		public static string Runtime_JsEngineModeNotCompatibleWithNetCore
-		{
-			get { return GetString("Runtime_JsEngineModeNotCompatibleWithNetCore"); }
 		}
 
 		/// <summary>
@@ -428,51 +260,11 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps..."
-		/// </summary>
-		public static string Runtime_JsEnginesForNetCoreNotFound
-		{
-			get { return GetString("Runtime_JsEnginesForNetCoreNotFound"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Could not found none of the JavaScript engines. Perhaps you have not installed the Internet Explorer..."
-		/// </summary>
-		public static string Runtime_JsEnginesNotFound
-		{
-			get { return GetString("Runtime_JsEnginesNotFound"); }
-		}
-
-		/// <summary>
 		/// Looks up a localized string similar to "The type of return value `{0}` is not supported."
 		/// </summary>
 		public static string Runtime_ReturnValueTypeNotSupported
 		{
 			get { return GetString("Runtime_ReturnValueTypeNotSupported"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Could not find suitable constructor or not enough arguments to invoke of constructor of the `{0}`..."
-		/// </summary>
-		public static string Runtime_SuitableConstructorOfHostTypeNotFound
-		{
-			get { return GetString("Runtime_SuitableConstructorOfHostTypeNotFound"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Could not find suitable method or not enough arguments to invoke of '{0}' method of the host object."
-		/// </summary>
-		public static string Runtime_SuitableMethodOfHostObjectNotFound
-		{
-			get { return GetString("Runtime_SuitableMethodOfHostObjectNotFound"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "The variable with the name '{0}' does not exist."
-		/// </summary>
-		public static string Runtime_VariableNotExist
-		{
-			get { return GetString("Runtime_VariableNotExist"); }
 		}
 
 		/// <summary>

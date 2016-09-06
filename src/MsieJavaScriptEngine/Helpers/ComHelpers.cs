@@ -1,5 +1,6 @@
-﻿using System;
-#if NETSTANDARD1_3 || NET451
+﻿#if !NETSTANDARD1_3
+using System;
+#if NET451
 using System.Reflection;
 #endif
 using System.Runtime.InteropServices;
@@ -176,3 +177,4 @@ namespace MsieJavaScriptEngine.Helpers
 		#endregion
 	}
 }
+#endif

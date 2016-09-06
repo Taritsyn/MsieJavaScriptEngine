@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -63,3 +64,4 @@ namespace MsieJavaScriptEngine.ActiveScript
 		NoCode = 0x00000400,
 	}
 }
+#endif
