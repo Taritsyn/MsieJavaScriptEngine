@@ -79,5 +79,10 @@ namespace MsieJavaScriptEngine
 		/// methods are bound to the type's static members.
 		/// </remarks>
 		void EmbedHostType(string itemName, Type type);
+
+		/// <summary>
+		/// Performs a full garbage collection
+		/// </summary>
+		void CollectGarbage();
 	}
 }

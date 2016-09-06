@@ -62,6 +62,15 @@ namespace MsieJavaScriptEngine.Helpers
 			return pInterface;
 		}
 
+		public static IntPtr QueryInterfaceNoThrow<T>(IntPtr pUnknown)
+		{
+			IntPtr pInterface;
+			Guid iid = typeof(T).GetTypeInfo().GUID;
+			int result = Marshal.QueryInterface(pUnknown, ref iid, out pInterface);
+
+			return result == HResult.S_OK ? pInterface : IntPtr.Zero;
+		}
+
 		public static void ReleaseAndEmpty(ref IntPtr pUnk)
 		{
 			if (pUnk != IntPtr.Zero)
@@ -126,6 +135,9 @@ namespace MsieJavaScriptEngine.Helpers
 			// ReSharper disable InconsistentNaming
 			public const int SEVERITY_SUCCESS = 0;
 			public const int SEVERITY_ERROR = 1;
+
+			public const int S_OK = 0;
+			public const int S_FALSE = 1;
 			// ReSharper restore InconsistentNaming
 
 			public static void Check(uint result)

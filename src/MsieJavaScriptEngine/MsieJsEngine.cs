@@ -733,6 +733,16 @@ namespace MsieJavaScriptEngine
 			_jsEngine.EmbedHostType(itemName, type);
 		}
 
+		/// <summary>
+		/// Performs a full garbage collection
+		/// </summary>
+		public void CollectGarbage()
+		{
+			VerifyNotDisposed();
+
+			_jsEngine.CollectGarbage();
+		}
+
 		#region IDisposable implementation
 
 		/// <summary>

@@ -766,5 +766,23 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		#endregion
+
+		#region Garbage collection
+
+		[Test]
+		public virtual void GarbageCollectionIsCorrect()
+		{
+			// Arrange
+			const string input = @"arr = []; for (i = 0; i < 1000000; i++) { arr.push(arr); }";
+
+			// Act
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.Execute(input);
+				jsEngine.CollectGarbage();
+			}
+		}
+
+		#endregion
 	}
 }

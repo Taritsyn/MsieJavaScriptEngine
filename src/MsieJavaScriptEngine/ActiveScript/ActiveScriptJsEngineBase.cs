@@ -37,14 +37,24 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private IntPtr _pActiveScript;
 
 		/// <summary>
+		/// Pointer to an instance of garbage collector
+		/// </summary>
+		private IntPtr _pActiveScriptGarbageCollector;
+
+		/// <summary>
 		/// Instance of native JavaScript engine
 		/// </summary>
 		private IActiveScript _activeScript;
 
 		/// <summary>
-		/// Instance of ActiveScriptParseWrapper
+		/// Instance of <see cref="IActiveScriptParseWrapper"/>
 		/// </summary>
 		private IActiveScriptParseWrapper _activeScriptParse;
+
+		/// <summary>
+		/// Instance of <see cref="IActiveScriptGarbageCollector"/>
+		/// </summary>
+		private IActiveScriptGarbageCollector _activeScriptGarbageCollector;
 
 		/// <summary>
 		/// Instance of script dispatch
@@ -133,6 +143,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			_activeScriptParse = new ActiveScriptParseWrapper(_pActiveScript, _activeScript);
 			_activeScriptParse.InitNew();
+
+			_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(_pActiveScript);
+			_activeScriptGarbageCollector = _activeScript as IActiveScriptGarbageCollector;
 
 			_activeScript.SetScriptSite(this);
 			_activeScript.SetScriptState(ScriptState.Started);
@@ -482,6 +495,18 @@ namespace MsieJavaScriptEngine.ActiveScript
 		}
 
 		/// <summary>
+		/// Starts a garbage collection
+		/// </summary>
+		/// <param name="type">The type of garbage collection</param>
+		private void InnerCollectGarbage(ScriptGCType type)
+		{
+			if (_activeScriptGarbageCollector != null)
+			{
+				_activeScriptGarbageCollector.CollectGarbage(type);
+			}
+		}
+
+		/// <summary>
 		/// Loads a resources
 		/// </summary>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
@@ -541,6 +566,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 						_dispatch = null;
 					}
 
+					_activeScriptGarbageCollector = null;
+					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptGarbageCollector);
+
 					if (_activeScriptParse != null)
 					{
 						_activeScriptParse.Dispose();
@@ -550,6 +578,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 					if (_activeScript != null)
 					{
 						_activeScript.Close();
+						Marshal.FinalReleaseComObject(_activeScript);
 						_activeScript = null;
 					}
 
@@ -794,6 +823,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			var typeValue = new HostType(type, _engineMode);
 			EmbedHostItem(itemName, typeValue);
+		}
+
+		public void CollectGarbage()
+		{
+			InvokeScript(() => InnerCollectGarbage(ScriptGCType.Exhaustive));
 		}
 
 		#endregion

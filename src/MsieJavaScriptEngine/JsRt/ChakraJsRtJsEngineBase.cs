@@ -129,6 +129,8 @@ namespace MsieJavaScriptEngine.JsRt
 
 		public abstract void EmbedHostType(string itemName, Type type);
 
+		public abstract void CollectGarbage();
+
 		#endregion
 
 		#region IDisposable implementation

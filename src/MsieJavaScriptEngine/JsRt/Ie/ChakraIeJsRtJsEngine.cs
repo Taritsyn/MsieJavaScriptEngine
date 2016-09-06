@@ -1076,6 +1076,14 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			});
 		}
 
+		public override void CollectGarbage()
+		{
+			lock (_executionSynchronizer)
+			{
+				_jsRuntime.CollectGarbage();
+			}
+		}
+
 		#endregion
 
 		#region IDisposable implementation
