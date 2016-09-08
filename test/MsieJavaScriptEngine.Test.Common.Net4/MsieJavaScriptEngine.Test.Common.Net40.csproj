@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{50453B82-ACBF-4E25-9582-1113F274D53E}</ProjectGuid>
+    <ProjectGuid>{A4085B9E-A5D3-4749-BD07-6D1EB7C23820}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MsieJavaScriptEngine.Test.Classic</RootNamespace>
-    <AssemblyName>MsieJavaScriptEngine.Test.Classic</AssemblyName>
+    <RootNamespace>MsieJavaScriptEngine.Test.Common</RootNamespace>
+    <AssemblyName>MsieJavaScriptEngine.Test.Common</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
@@ -40,25 +40,77 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CommonTests.cs" />
-    <Compile Include="Es5Tests.cs" />
-    <Compile Include="InteropTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MsieJavaScriptEngine\MsieJavaScriptEngine.Net40.csproj">
+    <ProjectReference Include="..\..\src\MsieJavaScriptEngine.Net4\MsieJavaScriptEngine.Net40.csproj">
       <Project>{d672bc49-c454-4975-bd25-a555b9bdd793}</Project>
       <Name>MsieJavaScriptEngine.Net40</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MsieJavaScriptEngine.Test.Common\MsieJavaScriptEngine.Test.Common.Net40.csproj">
-      <Project>{a4085b9e-a5d3-4749-bd07-6d1eb7c23820}</Project>
-      <Name>MsieJavaScriptEngine.Test.Common.Net40</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\CommonTestsBase.cs">
+      <Link>CommonTestsBase.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Es5TestsBase.cs">
+      <Link>Es5TestsBase.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\FileSystemTestsBase.cs">
+      <Link>FileSystemTestsBase.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\InteropTestsBase.cs">
+      <Link>InteropTestsBase.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\Base64Encoder.cs">
+      <Link>Interop\Base64Encoder.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\BundleTable.cs">
+      <Link>Interop\BundleTable.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\Date.cs">
+      <Link>Interop\Date.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\FileManager.cs">
+      <Link>Interop\FileManager.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\Person.cs">
+      <Link>Interop\Person.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\Point3D.cs">
+      <Link>Interop\Point3D.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\PredefinedStrings.cs">
+      <Link>Interop\PredefinedStrings.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\Product.cs">
+      <Link>Interop\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\SimpleSingleton.cs">
+      <Link>Interop\SimpleSingleton.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Interop\Temperature.cs">
+      <Link>Interop\Temperature.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\Properties\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine.Test.Common\ValidationTests.cs">
+      <Link>ValidationTests.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\MsieJavaScriptEngine.Test.Common\Resources\cube.js">
+      <Link>Resources\cube.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MsieJavaScriptEngine.Test.Common\Resources\power.js">
+      <Link>Resources\power.js</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

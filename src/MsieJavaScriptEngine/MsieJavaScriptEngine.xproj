@@ -15,12 +15,5 @@
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <DnxInvisibleContent Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <DnxInvisibleCompile Include="Utilities\DelegateExtensions.cs" />
-    <DnxInvisibleCompile Include="Utilities\TypeInfo.cs" />
-  </ItemGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>

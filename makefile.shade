@@ -74,7 +74,7 @@ use-standard-lifecycle
 
 		Log.Info('Run unit tests for .NET 4.0 version:');
 		Log.Info('');
-		Exec(nunitConsolePath, 'MsieJavaScriptEngine.Test.nunit --verbose', testDirPath);
+		Exec(nunitConsolePath, 'MsieJavaScriptEngine.Test.Net4.nunit --verbose', testDirPath);
 		Log.Info('');
 	}
 

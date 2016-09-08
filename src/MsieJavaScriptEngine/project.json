@@ -45,8 +45,6 @@
 						"Helpers/ComHelpers.cs",
 						"Helpers/TypeMappingHelpers.cs",
 						"Resources/NetFrameworkStrings.*",
-						"Utilities/DelegateExtensions.cs",
-						"Utilities/TypeInfo.cs",
 						"HostItemBase.cs",
 						"HostObject.cs",
 						"HostType.cs"
@@ -64,8 +62,6 @@
 					"exclude": [
 						"Helpers/ReflectionHelpers.cs",
 						"Resources/NetCoreStrings.*",
-						"Utilities/DelegateExtensions.cs",
-						"Utilities/TypeInfo.cs",
 						"Utilities/TypeInfoExtensions.cs"
 					]
 				}

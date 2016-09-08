@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D672BC49-C454-4975-BD25-A555B9BDD793}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MsieJavaScriptEngine</RootNamespace>
+    <AssemblyName>MsieJavaScriptEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>673c479a</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET40</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\tools\Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptException.cs">
+      <Link>ActiveScript\ActiveScriptException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptJsEngineBase.cs">
+      <Link>ActiveScript\ActiveScriptJsEngineBase.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptParseWrapper.cs">
+      <Link>ActiveScript\ActiveScriptParseWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ChakraActiveScriptJsEngine.cs">
+      <Link>ActiveScript\ChakraActiveScriptJsEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ClassicActiveScriptJsEngine.cs">
+      <Link>ActiveScript\ClassicActiveScriptJsEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScript.cs">
+      <Link>ActiveScript\IActiveScript.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptError.cs">
+      <Link>ActiveScript\IActiveScriptError.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptGarbageCollector.cs">
+      <Link>ActiveScript\IActiveScriptGarbageCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptParse32.cs">
+      <Link>ActiveScript\IActiveScriptParse32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptParse64.cs">
+      <Link>ActiveScript\IActiveScriptParse64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptParseWrapper.cs">
+      <Link>ActiveScript\IActiveScriptParseWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptProperty.cs">
+      <Link>ActiveScript\IActiveScriptProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptSite.cs">
+      <Link>ActiveScript\IActiveScriptSite.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptGCType.cs">
+      <Link>ActiveScript\ScriptGCType.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptHResult.cs">
+      <Link>ActiveScript\ScriptHResult.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptInfoFlags.cs">
+      <Link>ActiveScript\ScriptInfoFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptInterruptFlags.cs">
+      <Link>ActiveScript\ScriptInterruptFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptItemFlags.cs">
+      <Link>ActiveScript\ScriptItemFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptLanguageVersion.cs">
+      <Link>ActiveScript\ScriptLanguageVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptProperty.cs">
+      <Link>ActiveScript\ScriptProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptState.cs">
+      <Link>ActiveScript\ScriptState.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptTextFlags.cs">
+      <Link>ActiveScript\ScriptTextFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptThreadState.cs">
+      <Link>ActiveScript\ScriptThreadState.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptTypeLibFlags.cs">
+      <Link>ActiveScript\ScriptTypeLibFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Constants\ComErrorCode.cs">
+      <Link>Constants\ComErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Constants\DllName.cs">
+      <Link>Constants\DllName.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Constants\SpecialMemberName.cs">
+      <Link>Constants\SpecialMemberName.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Helpers\ComHelpers.cs">
+      <Link>Helpers\ComHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Helpers\JsEngineModeHelpers.cs">
+      <Link>Helpers\JsEngineModeHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Helpers\JsErrorHelpers.cs">
+      <Link>Helpers\JsErrorHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Helpers\NumericHelpers.cs">
+      <Link>Helpers\NumericHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Helpers\TypeMappingHelpers.cs">
+      <Link>Helpers\TypeMappingHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Helpers\ValidationHelpers.cs">
+      <Link>Helpers\ValidationHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\HostItemBase.cs">
+      <Link>HostItemBase.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\HostObject.cs">
+      <Link>HostObject.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\HostType.cs">
+      <Link>HostType.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\IInnerJsEngine.cs">
+      <Link>IInnerJsEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\InterlockedStatedFlag.cs">
+      <Link>InterlockedStatedFlag.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsEngineLoadException.cs">
+      <Link>JsEngineLoadException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsEngineMode.cs">
+      <Link>JsEngineMode.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsEngineSettings.cs">
+      <Link>JsEngineSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsException.cs">
+      <Link>JsException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\ChakraJsRtJsEngineBase.cs">
+      <Link>JsRt\ChakraJsRtJsEngineBase.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\ChakraEdgeJsRtJsEngine.cs">
+      <Link>JsRt\Edge\ChakraEdgeJsRtJsEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeJsContext.cs">
+      <Link>JsRt\Edge\EdgeJsContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeJsErrorHelpers.cs">
+      <Link>JsRt\Edge\EdgeJsErrorHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeJsNativeFunction.cs">
+      <Link>JsRt\Edge\EdgeJsNativeFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeJsPropertyId.cs">
+      <Link>JsRt\Edge\EdgeJsPropertyId.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeJsRuntime.cs">
+      <Link>JsRt\Edge\EdgeJsRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeJsScope.cs">
+      <Link>JsRt\Edge\EdgeJsScope.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeJsScriptException.cs">
+      <Link>JsRt\Edge\EdgeJsScriptException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeJsValue.cs">
+      <Link>JsRt\Edge\EdgeJsValue.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeJsValueExtensions.cs">
+      <Link>JsRt\Edge\EdgeJsValueExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeNativeMethods.cs">
+      <Link>JsRt\Edge\EdgeNativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\IActiveScriptProfilerCallback.cs">
+      <Link>JsRt\IActiveScriptProfilerCallback.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\IActiveScriptProfilerCallback2.cs">
+      <Link>JsRt\IActiveScriptProfilerCallback2.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\IActiveScriptProfilerHeapEnum.cs">
+      <Link>JsRt\IActiveScriptProfilerHeapEnum.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\ChakraIeJsRtJsEngine.cs">
+      <Link>JsRt\Ie\ChakraIeJsRtJsEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IDebugApplication32.cs">
+      <Link>JsRt\Ie\IDebugApplication32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IDebugApplication64.cs">
+      <Link>JsRt\Ie\IDebugApplication64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IDebugDocumentHelper32.cs">
+      <Link>JsRt\Ie\IDebugDocumentHelper32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IDebugDocumentHelper64.cs">
+      <Link>JsRt\Ie\IDebugDocumentHelper64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsContext.cs">
+      <Link>JsRt\Ie\IeJsContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsErrorHelpers.cs">
+      <Link>JsRt\Ie\IeJsErrorHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsNativeFunction.cs">
+      <Link>JsRt\Ie\IeJsNativeFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsPropertyId.cs">
+      <Link>JsRt\Ie\IeJsPropertyId.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsRuntime.cs">
+      <Link>JsRt\Ie\IeJsRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsScope.cs">
+      <Link>JsRt\Ie\IeJsScope.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsScriptException.cs">
+      <Link>JsRt\Ie\IeJsScriptException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsValue.cs">
+      <Link>JsRt\Ie\IeJsValue.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsValueExtensions.cs">
+      <Link>JsRt\Ie\IeJsValueExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeNativeMethods.cs">
+      <Link>JsRt\Ie\IeNativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IProcessDebugManager32.cs">
+      <Link>JsRt\Ie\IProcessDebugManager32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IProcessDebugManager64.cs">
+      <Link>JsRt\Ie\IProcessDebugManager64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\ProcessDebugManager.cs">
+      <Link>JsRt\Ie\ProcessDebugManager.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsBackgroundWorkItemCallback.cs">
+      <Link>JsRt\JsBackgroundWorkItemCallback.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsBeforeCollectCallback.cs">
+      <Link>JsRt\JsBeforeCollectCallback.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsEngineException.cs">
+      <Link>JsRt\JsEngineException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsErrorCode.cs">
+      <Link>JsRt\JsErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsException.cs">
+      <Link>JsRt\JsException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsFatalException.cs">
+      <Link>JsRt\JsFatalException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsMemoryAllocationCallback.cs">
+      <Link>JsRt\JsMemoryAllocationCallback.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsMemoryEventType.cs">
+      <Link>JsRt\JsMemoryEventType.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsObjectFinalizeCallback.cs">
+      <Link>JsRt\JsObjectFinalizeCallback.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsRuntimeAttributes.cs">
+      <Link>JsRt\JsRuntimeAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsRuntimeVersion.cs">
+      <Link>JsRt\JsRuntimeVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsSourceContext.cs">
+      <Link>JsRt\JsSourceContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsThreadServiceCallback.cs">
+      <Link>JsRt\JsThreadServiceCallback.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsUsageException.cs">
+      <Link>JsRt\JsUsageException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\JsValueType.cs">
+      <Link>JsRt\JsValueType.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\ProfilerEventMask.cs">
+      <Link>JsRt\ProfilerEventMask.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRt\ProfilerScriptType.cs">
+      <Link>JsRt\ProfilerScriptType.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsRuntimeException.cs">
+      <Link>JsRuntimeException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\MsieJsEngine.cs">
+      <Link>MsieJsEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\NotSupportedTypeException.cs">
+      <Link>NotSupportedTypeException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Properties\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Resources\CommonStrings.Designer.cs">
+      <Link>Resources\CommonStrings.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Resources\CommonStrings.ru-ru.Designer.cs">
+      <Link>Resources\CommonStrings.ru-ru.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Resources\NetFrameworkStrings.Designer.cs">
+      <Link>Resources\NetFrameworkStrings.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Resources\NetFrameworkStrings.ru-ru.Designer.cs">
+      <Link>Resources\NetFrameworkStrings.ru-ru.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\StatedFlag.cs">
+      <Link>StatedFlag.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Undefined.cs">
+      <Link>Undefined.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Utilities\StringBuilderExtensions.cs">
+      <Link>Utilities\StringBuilderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Utilities\TypeConverter.cs">
+      <Link>Utilities\TypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Utilities\TypeExtensions.cs">
+      <Link>Utilities\TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Utilities\Utils.cs">
+      <Link>Utilities\Utils.cs</Link>
+    </Compile>
+    <Compile Include="Utilities\DelegateExtensions.cs" />
+    <Compile Include="Utilities\TypeInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\tools\Key.snk">
+      <Link>Key.snk</Link>
+    </None>
+    <None Include="bundleconfig.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\MsieJavaScriptEngine\Resources\CommonStrings.resx">
+      <Link>Resources\CommonStrings.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MsieJavaScriptEngine\Resources\CommonStrings.ru-ru.resx">
+      <Link>Resources\CommonStrings.ru-ru.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MsieJavaScriptEngine\Resources\NetFrameworkStrings.resx">
+      <Link>Resources\NetFrameworkStrings.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MsieJavaScriptEngine\Resources\NetFrameworkStrings.ru-ru.resx">
+      <Link>Resources\NetFrameworkStrings.ru-ru.resx</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\MsieJavaScriptEngine\Resources\ES5.js">
+      <Link>Resources\ES5.js</Link>
+    </Content>
+    <EmbeddedResource Include="..\MsieJavaScriptEngine\Resources\ES5.min.js">
+      <Link>Resources\ES5.min.js</Link>
+    </EmbeddedResource>
+    <Content Include="..\MsieJavaScriptEngine\Resources\json2.js">
+      <Link>Resources\json2.js</Link>
+    </Content>
+    <EmbeddedResource Include="..\MsieJavaScriptEngine\Resources\json2.min.js">
+      <Link>Resources\json2.min.js</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>SET VS_PROJECT_DIR=$(ProjectDir)..\MsieJavaScriptEngine
+
+cd "$(ProjectDir)..\..\"
+build resx</PreBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.2.2.281\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.2.2.281\build\BuildBundlerMinifier.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\BuildBundlerMinifier.2.2.281\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.2.2.281\build\BuildBundlerMinifier.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
