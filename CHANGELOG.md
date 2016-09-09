@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## September 9, 2016 - v2.0.0 Beta 1
+ * Added the `CollectGarbage` method
+
 ## September 3, 2016 - v2.0.0 Alpha 1
  * Added support of .NET Core 1.0 (only supported `ChakraIeJsRt` and `ChakraEdgeJsRt` modes) and .NET Framework 4.5.1
 
