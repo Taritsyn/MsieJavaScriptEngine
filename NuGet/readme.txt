@@ -1,7 +1,7 @@
 
 
    --------------------------------------------------------------------------------
-            README file for MSIE JavaScript Engine for .NET v2.0.0 Beta 1
+            README file for MSIE JavaScript Engine for .NET v2.0.0 Beta 2
 
    --------------------------------------------------------------------------------
 
@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Added the `CollectGarbage` method.
+   Added support of .NET Core 1.0.1.
 
    ============
    PROJECT SITE

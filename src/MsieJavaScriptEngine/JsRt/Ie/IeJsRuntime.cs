@@ -103,16 +103,10 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <summary>
 		/// Creates a new runtime
 		/// </summary>
-		/// <param name="attributes">The attributes of the runtime to be created</param>
-		/// <param name="version">The version of the runtime to be created</param>
-		/// <param name="threadServiceCallback">The thread service for the runtime. Can be null.</param>
 		/// <returns>The runtime created</returns>
-		public static IeJsRuntime Create(JsRuntimeAttributes attributes, JsRuntimeVersion version, JsThreadServiceCallback threadServiceCallback)
+		public static IeJsRuntime Create()
 		{
-			IeJsRuntime handle;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsCreateRuntime(attributes, version, threadServiceCallback, out handle));
-
-			return handle;
+			return Create(JsRuntimeAttributes.None, JsRuntimeVersion.Version11, null);
 		}
 
 		/// <summary>
@@ -129,10 +123,16 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <summary>
 		/// Creates a new runtime
 		/// </summary>
+		/// <param name="attributes">The attributes of the runtime to be created</param>
+		/// <param name="version">The version of the runtime to be created</param>
+		/// <param name="threadServiceCallback">The thread service for the runtime. Can be null.</param>
 		/// <returns>The runtime created</returns>
-		public static IeJsRuntime Create()
+		public static IeJsRuntime Create(JsRuntimeAttributes attributes, JsRuntimeVersion version, JsThreadServiceCallback threadServiceCallback)
 		{
-			return Create(JsRuntimeAttributes.None, JsRuntimeVersion.Version11, null);
+			IeJsRuntime handle;
+			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsCreateRuntime(attributes, version, threadServiceCallback, out handle));
+
+			return handle;
 		}
 
 		/// <summary>

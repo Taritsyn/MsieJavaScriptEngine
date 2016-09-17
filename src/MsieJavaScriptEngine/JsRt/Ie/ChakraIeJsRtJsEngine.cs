@@ -109,10 +109,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <returns>Instance of JavaScript runtime with special settings</returns>
 		private static IeJsRuntime CreateJsRuntime()
 		{
-			var jsRuntime = IeJsRuntime.Create(JsRuntimeAttributes.AllowScriptInterrupt,
-				JsRuntimeVersion.VersionEdge, null);
-
-			return jsRuntime;
+			return IeJsRuntime.Create(JsRuntimeAttributes.None, JsRuntimeVersion.VersionEdge, null);
 		}
 
 		/// <summary>

@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## September 17, 2016 - v2.0.0 Beta 2
+ * Added support of .NET Core 1.0.1
+
 ## September 9, 2016 - v2.0.0 Beta 1
  * Added the `CollectGarbage` method
 

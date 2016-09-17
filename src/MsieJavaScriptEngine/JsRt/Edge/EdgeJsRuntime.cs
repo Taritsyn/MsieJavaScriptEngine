@@ -101,15 +101,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <summary>
 		/// Creates a new runtime
 		/// </summary>
-		/// <param name="attributes">The attributes of the runtime to be created</param>
-		/// <param name="threadServiceCallback">The thread service for the runtime. Can be null</param>
 		/// <returns>The runtime created</returns>
-		public static EdgeJsRuntime Create(JsRuntimeAttributes attributes, JsThreadServiceCallback threadServiceCallback)
+		public static EdgeJsRuntime Create()
 		{
-			EdgeJsRuntime handle;
-			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsCreateRuntime(attributes, threadServiceCallback, out handle));
-
-			return handle;
+			return Create(JsRuntimeAttributes.None, null);
 		}
 
 		/// <summary>
@@ -125,10 +120,15 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <summary>
 		/// Creates a new runtime
 		/// </summary>
+		/// <param name="attributes">The attributes of the runtime to be created</param>
+		/// <param name="threadServiceCallback">The thread service for the runtime. Can be null</param>
 		/// <returns>The runtime created</returns>
-		public static EdgeJsRuntime Create()
+		public static EdgeJsRuntime Create(JsRuntimeAttributes attributes, JsThreadServiceCallback threadServiceCallback)
 		{
-			return Create(JsRuntimeAttributes.None, null);
+			EdgeJsRuntime handle;
+			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsCreateRuntime(attributes, threadServiceCallback, out handle));
+
+			return handle;
 		}
 
 		/// <summary>

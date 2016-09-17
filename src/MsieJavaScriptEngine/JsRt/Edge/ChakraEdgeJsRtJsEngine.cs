@@ -102,9 +102,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <returns>Instance of JavaScript runtime with special settings</returns>
 		private static EdgeJsRuntime CreateJsRuntime()
 		{
-			var jsRuntime = EdgeJsRuntime.Create(JsRuntimeAttributes.AllowScriptInterrupt, null);
-
-			return jsRuntime;
+			return EdgeJsRuntime.Create(JsRuntimeAttributes.None, null);
 		}
 
 		/// <summary>
