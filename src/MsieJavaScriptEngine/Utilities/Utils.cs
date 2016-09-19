@@ -1,14 +1,31 @@
-﻿namespace MsieJavaScriptEngine.Utilities
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+
+using MsieJavaScriptEngine.Resources;
+
+namespace MsieJavaScriptEngine.Utilities
 {
-	using System;
-	using System.IO;
-	using System.Reflection;
-	using System.Text;
-
-	using Resources;
-
 	internal static class Utils
 	{
+		/// <summary>
+		/// Determines whether the current process is a 64-bit process
+		/// </summary>
+		/// <returns>true if the process is 64-bit; otherwise, false</returns>
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
+		public static bool Is64BitProcess()
+		{
+#if NETSTANDARD1_3
+			bool is64Bit = IntPtr.Size == 8;
+#else
+			bool is64Bit = Environment.Is64BitProcess;
+#endif
+
+			return is64Bit;
+		}
+
 		/// <summary>
 		/// Gets a content of the embedded resource as string
 		/// </summary>
@@ -17,7 +34,7 @@
 		/// <returns>Сontent of the embedded resource as string</returns>
 		public static string GetResourceAsString(string resourceName, Type type)
 		{
-			Assembly assembly = type.Assembly;
+			Assembly assembly = type.GetTypeInfo().Assembly;
 
 			return GetResourceAsString(resourceName, assembly);
 		}
@@ -35,7 +52,7 @@
 				if (stream == null)
 				{
 					throw new NullReferenceException(
-						string.Format(Strings.Resources_ResourceIsNull, resourceName));
+						string.Format(CommonStrings.Resources_ResourceIsNull, resourceName));
 				}
 
 				using (var reader = new StreamReader(stream))
@@ -46,7 +63,7 @@
 		}
 
 		/// <summary>
-		/// Gets text content of the specified file
+		/// Gets a text content of the specified file
 		/// </summary>
 		/// <param name="path">File path</param>
 		/// <param name="encoding">Content encoding</param>
@@ -56,14 +73,15 @@
 			if (!File.Exists(path))
 			{
 				throw new FileNotFoundException(
-					string.Format(Strings.Common_FileNotExist, path), path);
+					string.Format(CommonStrings.Common_FileNotExist, path), path);
 			}
 
 			string content;
 
-			using (var file = new StreamReader(path, encoding ?? Encoding.UTF8))
+			using (var stream = File.OpenRead(path))
+			using (var reader = new StreamReader(stream, encoding ?? Encoding.UTF8))
 			{
-				content = file.ReadToEnd();
+				content = reader.ReadToEnd();
 			}
 
 			return content;

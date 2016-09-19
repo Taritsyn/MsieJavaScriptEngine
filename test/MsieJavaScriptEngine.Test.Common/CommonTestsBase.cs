@@ -1,12 +1,11 @@
-﻿namespace MsieJavaScriptEngine.Test.Common
+﻿using System;
+using System.IO;
+using System.Reflection;
+
+using NUnit.Framework;
+
+namespace MsieJavaScriptEngine.Test.Common
 {
-	using System;
-	using System.IO;
-
-	using NUnit.Framework;
-
-	using MsieJavaScriptEngine;
-
 	[TestFixture]
 	public abstract class CommonTestsBase : FileSystemTestsBase
 	{
@@ -216,7 +215,7 @@
 
 			using (var jsEngine = CreateJsEngine())
 			{
-				jsEngine.ExecuteResource(resourceName, typeof(CommonTestsBase).Assembly);
+				jsEngine.ExecuteResource(resourceName, typeof(CommonTestsBase).GetTypeInfo().Assembly);
 				output = jsEngine.Evaluate<int>(input);
 			}
 
@@ -764,6 +763,24 @@
 			// Assert
 			Assert.IsTrue(variableBeforeRemovingExists);
 			Assert.IsFalse(variableAfterRemovingExists);
+		}
+
+		#endregion
+
+		#region Garbage collection
+
+		[Test]
+		public virtual void GarbageCollectionIsCorrect()
+		{
+			// Arrange
+			const string input = @"arr = []; for (i = 0; i < 1000000; i++) { arr.push(arr); }";
+
+			// Act
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.Execute(input);
+				jsEngine.CollectGarbage();
+			}
 		}
 
 		#endregion

@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Ie
-{
-	using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.JsRt.Ie
+{
 	/// <summary>
 	/// ProcessDebugManager COM interface
 	/// </summary>

@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Ie
-{
-	using System;
-	using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.JsRt.Ie
+{
 	/// <summary>
 	/// “IE” function callback
 	/// </summary>

@@ -1,4 +1,5 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿#if !NETSTANDARD1_3
+namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
 	/// Script property (see https://msdn.microsoft.com/en-us/subscriptions/downloads/cc512774(v=vs.94).aspx)
@@ -30,3 +31,4 @@
 		InvokeVersioning = 0x00004000
 	}
 }
+#endif

@@ -1,7 +1,9 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Ie
-{
-	using System;
+﻿using System;
 
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.JsRt.Ie
+{
 	/// <summary>
 	/// “IE” Chakra runtime
 	/// </summary>
@@ -101,16 +103,10 @@
 		/// <summary>
 		/// Creates a new runtime
 		/// </summary>
-		/// <param name="attributes">The attributes of the runtime to be created</param>
-		/// <param name="version">The version of the runtime to be created</param>
-		/// <param name="threadServiceCallback">The thread service for the runtime. Can be null.</param>
 		/// <returns>The runtime created</returns>
-		public static IeJsRuntime Create(JsRuntimeAttributes attributes, JsRuntimeVersion version, JsThreadServiceCallback threadServiceCallback)
+		public static IeJsRuntime Create()
 		{
-			IeJsRuntime handle;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsCreateRuntime(attributes, version, threadServiceCallback, out handle));
-
-			return handle;
+			return Create(JsRuntimeAttributes.None, JsRuntimeVersion.Version11, null);
 		}
 
 		/// <summary>
@@ -127,10 +123,16 @@
 		/// <summary>
 		/// Creates a new runtime
 		/// </summary>
+		/// <param name="attributes">The attributes of the runtime to be created</param>
+		/// <param name="version">The version of the runtime to be created</param>
+		/// <param name="threadServiceCallback">The thread service for the runtime. Can be null.</param>
 		/// <returns>The runtime created</returns>
-		public static IeJsRuntime Create()
+		public static IeJsRuntime Create(JsRuntimeAttributes attributes, JsRuntimeVersion version, JsThreadServiceCallback threadServiceCallback)
 		{
-			return Create(JsRuntimeAttributes.None, JsRuntimeVersion.Version11, null);
+			IeJsRuntime handle;
+			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsCreateRuntime(attributes, version, threadServiceCallback, out handle));
+
+			return handle;
 		}
 
 		/// <summary>
@@ -204,7 +206,7 @@
 		public IeJsContext CreateContext(IDebugApplication64 debugApplication)
 		{
 			IeJsContext reference;
-			if (!Environment.Is64BitProcess)
+			if (!Utils.Is64BitProcess())
 			{
 				throw new InvalidOperationException();
 			}
@@ -225,7 +227,7 @@
 		public IeJsContext CreateContext(IDebugApplication32 debugApplication)
 		{
 			IeJsContext reference;
-			if (Environment.Is64BitProcess)
+			if (Utils.Is64BitProcess())
 			{
 				throw new InvalidOperationException();
 			}
@@ -245,7 +247,7 @@
 		public IeJsContext CreateContext()
 		{
 			IeJsContext reference;
-			IeJsErrorHelpers.ThrowIfError(Environment.Is64BitProcess ?
+			IeJsErrorHelpers.ThrowIfError(Utils.Is64BitProcess() ?
 				IeNativeMethods.JsCreateContext(this, (IDebugApplication64)null, out reference)
 				:
 				IeNativeMethods.JsCreateContext(this, (IDebugApplication32)null, out reference)

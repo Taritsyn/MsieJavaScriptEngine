@@ -1,0 +1,43 @@
+﻿{
+	"version": "2.0.0",
+
+	"dependencies": {
+		"dotnet-test-nunit": "3.4.0-beta-2",
+		"Microsoft.Extensions.PlatformAbstractions": "1.0.0",
+		"NUnit": "3.4.1",
+		"MsieJavaScriptEngine": "2.0.0"
+	},
+
+	"buildOptions": {
+		"warningsAsErrors": true,
+		"emitEntryPoint": false,
+		"embed": {
+			"includeFiles": [ "Resources/cube.js", "Resources/power.js" ]
+		},
+		"debugType": "portable"
+	},
+
+	"testRunner": "nunit",
+
+	"frameworks": {
+		"netcoreapp1.0": {
+			"imports": [ "portable-net451+win8" ],
+			"dependencies": {
+				"Microsoft.NETCore.App": {
+					"version": "1.0.1",
+					"type": "platform"
+				}
+			}
+		},
+		"net451": {
+			"frameworkAssemblies": {
+				"System.Drawing": "4.0.0.0"
+			},
+			"buildOptions": {
+				"compile": {
+					"exclude": [ "Interop/Drawing/**/*.*" ]
+				}
+			}
+		}
+	}
+}

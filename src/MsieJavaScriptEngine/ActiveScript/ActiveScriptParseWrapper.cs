@@ -1,12 +1,14 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿#if !NETSTANDARD1_3
+using System;
+
+using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
+using MsieJavaScriptEngine.Helpers;
+using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.ActiveScript
 {
-	using System;
-
-	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
-
-	using Helpers;
-	using Resources;
-
 	internal sealed class ActiveScriptParseWrapper : IActiveScriptParseWrapper
 	{
 		/// <summary>
@@ -61,7 +63,7 @@
 		/// Must implement IActiveScriptParse32 or IActiveScriptParse64.</param>
 		public ActiveScriptParseWrapper(IntPtr pActiveScript, IActiveScript activeScript)
 		{
-			_is64Bit = Environment.Is64BitProcess;
+			_is64Bit = Utils.Is64BitProcess();
 
 			if (_is64Bit)
 			{
@@ -76,7 +78,7 @@
 
 			if (_activeScriptParse64 == null && _activeScriptParse32 == null)
 			{
-				throw new NotSupportedException(Strings.Runtime_InvalidParserImplementationError);
+				throw new NotSupportedException(NetFrameworkStrings.Runtime_InvalidParserImplementationError);
 			}
 		}
 
@@ -306,3 +308,4 @@
 		#endregion
 	}
 }
+#endif

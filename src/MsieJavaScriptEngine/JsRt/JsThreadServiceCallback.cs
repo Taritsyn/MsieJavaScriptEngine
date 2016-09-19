@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.JsRt
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine.JsRt
+{
 	/// <summary>
 	/// The thread service callback
 	/// </summary>

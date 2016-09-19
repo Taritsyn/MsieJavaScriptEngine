@@ -1,0 +1,28 @@
+﻿{
+	"version": "2.0.0",
+
+	"dependencies": {
+		"MsieJavaScriptEngine.Test.Common": "2.0.0"
+	},
+
+	"buildOptions": {
+		"warningsAsErrors": true,
+		"emitEntryPoint": false,
+		"debugType": "portable"
+	},
+
+	"testRunner": "nunit",
+
+	"frameworks": {
+		"netcoreapp1.0": {
+			"imports": [ "portable-net451+win8" ],
+			"dependencies": {
+				"Microsoft.NETCore.App": {
+					"version": "1.0.1",
+					"type": "platform"
+				}
+			}
+		},
+		"net451": {}
+	}
+}

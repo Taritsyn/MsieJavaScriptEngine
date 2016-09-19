@@ -1,10 +1,9 @@
-﻿namespace MsieJavaScriptEngine.Test.ChakraActiveScript
+﻿using NUnit.Framework;
+
+using MsieJavaScriptEngine.Test.Common;
+
+namespace MsieJavaScriptEngine.Test.ChakraActiveScript
 {
-	using NUnit.Framework;
-
-	using MsieJavaScriptEngine;
-	using Common;
-
 	[TestFixture]
 	public class CommonTests : CommonTestsBase
 	{

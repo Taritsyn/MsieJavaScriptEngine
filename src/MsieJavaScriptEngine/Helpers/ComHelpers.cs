@@ -1,8 +1,16 @@
-﻿namespace MsieJavaScriptEngine.Helpers
-{
-	using System;
-	using System.Runtime.InteropServices;
+﻿#if !NETSTANDARD1_3
+using System;
+#if NET451
+using System.Reflection;
+#endif
+using System.Runtime.InteropServices;
 
+#if NET40
+using MsieJavaScriptEngine.Utilities;
+#endif
+
+namespace MsieJavaScriptEngine.Helpers
+{
 	/// <summary>
 	/// COM helpers
 	/// </summary>
@@ -18,7 +26,7 @@
 		public static IntPtr CreateInstanceByClsid<T>(Guid clsid)
 		{
 			IntPtr pInterface;
-			Guid iid = typeof(T).GUID;
+			Guid iid = typeof(T).GetTypeInfo().GUID;
 			HResult.Check(NativeMethods.CoCreateInstance(ref clsid, IntPtr.Zero, 1, ref iid, out pInterface));
 
 			return pInterface;
@@ -47,11 +55,20 @@
 		public static IntPtr QueryInterface<T>(IntPtr pUnknown)
 		{
 			IntPtr pInterface;
-			Guid iid = typeof(T).GUID;
+			Guid iid = typeof(T).GetTypeInfo().GUID;
 
 			HResult.Check(Marshal.QueryInterface(pUnknown, ref iid, out pInterface));
 
 			return pInterface;
+		}
+
+		public static IntPtr QueryInterfaceNoThrow<T>(IntPtr pUnknown)
+		{
+			IntPtr pInterface;
+			Guid iid = typeof(T).GetTypeInfo().GUID;
+			int result = Marshal.QueryInterface(pUnknown, ref iid, out pInterface);
+
+			return result == HResult.S_OK ? pInterface : IntPtr.Zero;
 		}
 
 		public static void ReleaseAndEmpty(ref IntPtr pUnk)
@@ -118,6 +135,9 @@
 			// ReSharper disable InconsistentNaming
 			public const int SEVERITY_SUCCESS = 0;
 			public const int SEVERITY_ERROR = 1;
+
+			public const int S_OK = 0;
+			public const int S_FALSE = 1;
 			// ReSharper restore InconsistentNaming
 
 			public static void Check(uint result)
@@ -169,3 +189,4 @@
 		#endregion
 	}
 }
+#endif

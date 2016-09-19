@@ -1,8 +1,9 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
-	using System.Runtime.InteropServices;
+﻿#if !NETSTANDARD1_3
+using System;
+using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	/// <summary>
 	/// If the Windows Script engine allows raw text code scriptlets to be added to the script
 	/// or allows expression text to be evaluated at run time, it implements the
@@ -120,3 +121,4 @@
 			ScriptTextFlags flags);
 	}
 }
+#endif

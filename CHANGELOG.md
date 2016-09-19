@@ -1,6 +1,19 @@
 Change log
 ==========
 
+## September 19, 2016 - v2.0.0
+ * Added support of .NET Core 1.0.1 (only supported `ChakraIeJsRt` and `ChakraEdgeJsRt` modes) and .NET Framework 4.5.1
+ * Added the `CollectGarbage` method
+
+## September 17, 2016 - v2.0.0 Beta 2
+ * Added support of .NET Core 1.0.1
+
+## September 9, 2016 - v2.0.0 Beta 1
+ * Added the `CollectGarbage` method
+
+## September 3, 2016 - v2.0.0 Alpha 1
+ * Added support of .NET Core 1.0 (only supported `ChakraIeJsRt` and `ChakraEdgeJsRt` modes) and .NET Framework 4.5.1
+
 ## August 17, 2016 - v1.7.2
  * An attempt was made to prevent occurrence of the access violation exception in the `CallFunction` method
 

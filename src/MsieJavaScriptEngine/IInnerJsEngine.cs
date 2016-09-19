@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine
+{
 	/// <summary>
 	/// Interface for the inner JavaScript engine
 	/// </summary>
@@ -79,5 +79,10 @@
 		/// methods are bound to the type's static members.
 		/// </remarks>
 		void EmbedHostType(string itemName, Type type);
+
+		/// <summary>
+		/// Performs a full garbage collection
+		/// </summary>
+		void CollectGarbage();
 	}
 }

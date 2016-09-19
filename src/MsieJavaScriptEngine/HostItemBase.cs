@@ -1,10 +1,11 @@
-﻿namespace MsieJavaScriptEngine
-{
-	using System;
-	using System.Globalization;
-	using System.Linq;
-	using System.Reflection;
+﻿#if !NETSTANDARD1_3
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
+namespace MsieJavaScriptEngine
+{
 	/// <summary>
 	/// Base class of item, that implements <see cref="IReflect"/> interface
 	/// </summary>
@@ -182,3 +183,4 @@
 		#endregion
 	}
 }
+#endif

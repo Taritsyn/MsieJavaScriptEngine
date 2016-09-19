@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Ie
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine.JsRt.Ie
+{
 	/// <summary>
 	/// “IE” scope automatically sets a context to current and resets the original context
 	/// when disposed

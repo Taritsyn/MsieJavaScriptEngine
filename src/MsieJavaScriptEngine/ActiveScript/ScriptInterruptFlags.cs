@@ -1,7 +1,8 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
+﻿#if !NETSTANDARD1_3
+using System;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	/// <summary>
 	/// Thread interruption options
 	/// </summary>
@@ -26,3 +27,4 @@
 		RaiseException = 2,
 	}
 }
+#endif

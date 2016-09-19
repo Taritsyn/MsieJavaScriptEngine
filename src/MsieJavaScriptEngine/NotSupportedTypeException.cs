@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine
+{
 	/// <summary>
 	/// The exception that is thrown when a .NET type is not supported by JavaScipt engine
 	/// </summary>

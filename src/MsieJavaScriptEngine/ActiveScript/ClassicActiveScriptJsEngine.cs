@@ -1,7 +1,6 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿#if !NETSTANDARD1_3
+namespace MsieJavaScriptEngine.ActiveScript
 {
-	using Constants;
-
 	/// <summary>
 	/// Classic MSIE JavaScript engine
 	/// </summary>
@@ -43,3 +42,4 @@
 		}
 	}
 }
+#endif

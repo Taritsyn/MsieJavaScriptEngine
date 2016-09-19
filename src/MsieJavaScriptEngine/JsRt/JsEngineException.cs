@@ -1,12 +1,16 @@
+#if !NETSTANDARD1_3
+using System;
+using System.Runtime.Serialization;
+#endif
+
 namespace MsieJavaScriptEngine.JsRt
 {
-	using System;
-	using System.Runtime.Serialization;
-
 	/// <summary>
 	/// The exception that occurred in the workings of the JavaScript engine itself
 	/// </summary>
+#if !NETSTANDARD1_3
 	[Serializable]
+#endif
 	internal sealed class JsEngineException : JsException
 	{
 		/// <summary>
@@ -25,6 +29,7 @@ namespace MsieJavaScriptEngine.JsRt
 		public JsEngineException(JsErrorCode code, string message)
 			: base(code, message)
 		{ }
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JsEngineException"/> class
@@ -34,5 +39,6 @@ namespace MsieJavaScriptEngine.JsRt
 		private JsEngineException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{ }
+#endif
 	}
 }

@@ -1,10 +1,8 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Edge
+﻿using System;
+using System.Runtime.InteropServices;
+
+namespace MsieJavaScriptEngine.JsRt.Edge
 {
-	using System;
-	using System.Runtime.InteropServices;
-
-	using JsRt;
-
 	/// <summary>
 	/// “Edge” JavaScript value
 	/// </summary>
@@ -306,6 +304,7 @@
 
 			return reference;
 		}
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Creates a JavaScript value that is a projection of the passed in object
@@ -322,6 +321,7 @@
 
 			return reference;
 		}
+#endif
 
 		/// <summary>
 		/// Creates a new <c>Object</c>
@@ -588,8 +588,9 @@
 
 			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsStringToPointer(this, out buffer, out length));
 
-			return Marshal.PtrToStringAuto(buffer, (int)length);
+			return Marshal.PtrToStringUni(buffer, (int)length);
 		}
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Retrieves a object representation of an <c>Object</c> value
@@ -605,6 +606,7 @@
 
 			return value;
 		}
+#endif
 
 		/// <summary>
 		/// Converts a value to <c>Boolean</c> using regular JavaScript semantics

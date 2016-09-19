@@ -1,0 +1,14 @@
+[
+	{
+		"outputFileName": "../MsieJavaScriptEngine/Resources/ES5.min.js",
+		"inputFiles": [
+			"../MsieJavaScriptEngine/Resources/ES5.js"
+		]
+	},
+	{
+		"outputFileName": "../MsieJavaScriptEngine/Resources/json2.min.js",
+		"inputFiles": [
+			"../MsieJavaScriptEngine/Resources/json2.js"
+		]
+	}
+]

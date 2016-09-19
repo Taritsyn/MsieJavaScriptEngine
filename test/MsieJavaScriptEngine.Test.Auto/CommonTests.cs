@@ -1,8 +1,7 @@
-﻿namespace MsieJavaScriptEngine.Test.Auto
-{
-	using MsieJavaScriptEngine;
-	using Common;
+﻿using MsieJavaScriptEngine.Test.Common;
 
+namespace MsieJavaScriptEngine.Test.Auto
+{
 	public class CommonTests : CommonTestsBase
 	{
 		protected override MsieJsEngine CreateJsEngine()

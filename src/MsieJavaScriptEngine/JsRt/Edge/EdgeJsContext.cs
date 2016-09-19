@@ -1,9 +1,7 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Edge
+﻿using System;
+
+namespace MsieJavaScriptEngine.JsRt.Edge
 {
-	using System;
-
-	using JsRt;
-
 	/// <summary>
 	/// “Edge” script context
 	/// </summary>

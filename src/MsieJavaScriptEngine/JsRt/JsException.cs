@@ -1,12 +1,16 @@
+using System;
+#if !NETSTANDARD1_3
+using System.Runtime.Serialization;
+#endif
+
 namespace MsieJavaScriptEngine.JsRt
 {
-	using System;
-	using System.Runtime.Serialization;
-
 	/// <summary>
 	/// The exception returned from the Chakra engine
 	/// </summary>
+#if !NETSTANDARD1_3
 	[Serializable]
+#endif
 	internal class JsException : Exception
 	{
 		/// <summary>
@@ -41,6 +45,7 @@ namespace MsieJavaScriptEngine.JsRt
 		{
 			_code = code;
 		}
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JsException"/> class
@@ -67,5 +72,6 @@ namespace MsieJavaScriptEngine.JsRt
 			base.GetObjectData(info, context);
 			info.AddValue("code", (uint)_code);
 		}
+#endif
 	}
 }

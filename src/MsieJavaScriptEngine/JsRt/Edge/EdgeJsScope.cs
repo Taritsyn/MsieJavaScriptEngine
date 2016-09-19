@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Edge
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine.JsRt.Edge
+{
 	/// <summary>
 	/// “Edge” scope automatically sets a context to current and resets the original context
 	/// when disposed

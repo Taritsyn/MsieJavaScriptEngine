@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>MsieJavaScriptEngine</id>
-		<version>1.7.2</version>
+		<version>2.0.0</version>
 		<title>MSIE JavaScript Engine for .NET</title>
 		<authors>Andrey Taritsyn</authors>
 		<owners>Andrey Taritsyn</owners>
@@ -10,22 +10,43 @@
 		<projectUrl>http://github.com/Taritsyn/MsieJavaScriptEngine</projectUrl>
 		<iconUrl>http://i.imgur.com/cbiHK.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). Project was based on the code of SassAndCoffee.JavaScript (http://github.com/paulcbetts/SassAndCoffee) and Chakra Sample Hosts (http://github.com/panopticoncentral/chakra-host).</description>
+		<description>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). Project was based on the code of SassAndCoffee.JavaScript (http://github.com/paulcbetts/SassAndCoffee), Chakra Sample Hosts (http://github.com/panopticoncentral/chakra-host) and jsrt-dotnet (http://github.com/robpaveza/jsrt-dotnet).</description>
 		<summary>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine).</summary>
-		<releaseNotes>An attempt was made to prevent occurrence of the access violation exception in the `CallFunction` method.</releaseNotes>
+		<releaseNotes>1. Added support of .NET Core 1.0.1 (only supported `ChakraIeJsRt` and `ChakraEdgeJsRt` modes) and .NET Framework 4.5.1;
+2. Added the `CollectGarbage` method.</releaseNotes>
 		<copyright>Copyright (c) 2012-2016 Andrey Taritsyn - http://www.taritsyn.ru</copyright>
 		<language>en-US</language>
 		<tags>JavaScript ECMAScript MSIE IE Edge Chakra</tags>
+		<dependencies>
+			<group targetFramework=".NETFramework4.0-Client" />
+			<group targetFramework=".NETFramework4.5.1" />
+			<group targetFramework=".NETStandard1.3">
+				<dependency id="System.Collections" version="4.0.11" />
+				<dependency id="System.ComponentModel.TypeConverter" version="4.1.0" />
+				<dependency id="System.Diagnostics.Tools" version="4.0.1" />
+				<dependency id="System.Globalization" version="4.0.11" />
+				<dependency id="System.IO" version="4.1.0" />
+				<dependency id="System.IO.FileSystem" version="4.0.1" />
+				<dependency id="System.Linq" version="4.1.0" />
+				<dependency id="System.Reflection" version="4.1.0" />
+				<dependency id="System.Reflection.Extensions" version="4.0.1" />
+				<dependency id="System.Reflection.TypeExtensions" version="4.1.0" />
+				<dependency id="System.Resources.ResourceManager" version="4.0.1" />
+				<dependency id="System.Runtime.Extensions" version="4.1.0" />
+				<dependency id="System.Runtime.InteropServices" version="4.1.0" />
+				<dependency id="System.Text.Encoding" version="4.0.11" />
+				<dependency id="System.Text.RegularExpressions" version="4.1.0" />
+				<dependency id="System.Threading" version="4.0.11" />
+			</group>
+		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework4.5.1" />
+		</frameworkAssemblies>
 		<references>
 			<reference file="MsieJavaScriptEngine.dll" />
 		</references>
 	</metadata>
 	<files>
-		<file src="..\src\MsieJavaScriptEngine\bin\Release\MsieJavaScriptEngine.dll" target="lib\net40-client" />
-		<file src="..\src\MsieJavaScriptEngine\bin\Release\**\MsieJavaScriptEngine.resources.dll" target="lib\net40-client" />
-		<file src="readme.txt" />
-		<file src="..\Licenses\sass-and-coffee-license.txt" />
-		<file src="..\Licenses\chakra-host-license.txt" />
-		<file src="..\Licenses\microsoft-ajax-minifier-license.txt" />
+		<file src="**\*.*" exclude="build-package.cmd" />
 	</files>
 </package>

@@ -1,8 +1,9 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
-	using System.Runtime.InteropServices;
+﻿#if !NETSTANDARD1_3
+using System;
+using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	[ComImport]
 	[Guid("4954e0d0-fbc7-11d1-8410-006008c3fbfc")]
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -21,3 +22,4 @@
 			[In] [Out] ref object pvarValue);
 	}
 }
+#endif

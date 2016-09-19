@@ -1,13 +1,14 @@
-﻿namespace MsieJavaScriptEngine
+﻿#if !NETSTANDARD1_3
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+
+using MsieJavaScriptEngine.Constants;
+using MsieJavaScriptEngine.Helpers;
+
+namespace MsieJavaScriptEngine
 {
-	using System;
-	using System.Globalization;
-	using System.Linq;
-	using System.Reflection;
-
-	using Constants;
-	using Helpers;
-
 	/// <summary>
 	/// Wrapper for type, that implements <see cref="IReflect"/> interface
 	/// </summary>
@@ -52,3 +53,4 @@
 		#endregion
 	}
 }
+#endif

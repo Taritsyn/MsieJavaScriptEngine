@@ -1,10 +1,11 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿#if !NETSTANDARD1_3
+using System;
+using System.Runtime.InteropServices;
+
+using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
+namespace MsieJavaScriptEngine.ActiveScript
 {
-	using System;
-	using System.Runtime.InteropServices;
-
-	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
-
 	/// <summary>
 	/// Implemented by the host to create a site for the Windows Script engine. Usually, this site
 	/// will be associated with the container of all the objects that are visible to the script
@@ -107,3 +108,4 @@
 		void OnLeaveScript();
 	}
 }
+#endif

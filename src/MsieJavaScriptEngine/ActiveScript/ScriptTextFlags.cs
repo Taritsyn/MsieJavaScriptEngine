@@ -1,7 +1,8 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
+﻿#if !NETSTANDARD1_3
+using System;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	[Flags]
 	internal enum ScriptTextFlags : uint
 	{
@@ -33,3 +34,4 @@
 		IsCrossDomain = 0x00000100,
 	}
 }
+#endif

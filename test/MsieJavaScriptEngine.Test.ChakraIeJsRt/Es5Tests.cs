@@ -1,10 +1,9 @@
-﻿namespace MsieJavaScriptEngine.Test.ChakraIeJsRt
+﻿using NUnit.Framework;
+
+using MsieJavaScriptEngine.Test.Common;
+
+namespace MsieJavaScriptEngine.Test.ChakraIeJsRt
 {
-	using NUnit.Framework;
-
-	using MsieJavaScriptEngine;
-	using Common;
-
 	[TestFixture]
 	public class Es5Tests : Es5TestsBase
 	{

@@ -1,7 +1,8 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
+﻿#if !NETSTANDARD1_3
+using System;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	[Flags]
 	internal enum ScriptInfoFlags : uint
 	{
@@ -21,3 +22,4 @@
 		ITypeInfo = 2
 	}
 }
+#endif

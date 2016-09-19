@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Edge
-{
-	using System;
-	using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.JsRt.Edge
+{
 	/// <summary>
 	/// “Edge” property identifier
 	/// </summary>
@@ -40,7 +40,7 @@
 				IntPtr buffer;
 				EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsGetPropertyNameFromId(this, out buffer));
 
-				return Marshal.PtrToStringAuto(buffer);
+				return Marshal.PtrToStringUni(buffer);
 			}
 		}
 

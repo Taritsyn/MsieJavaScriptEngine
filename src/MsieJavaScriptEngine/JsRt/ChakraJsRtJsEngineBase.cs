@@ -1,9 +1,13 @@
-﻿namespace MsieJavaScriptEngine.JsRt
+﻿using System;
+#if NETSTANDARD1_3
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+#endif
+
+using MsieJavaScriptEngine.Helpers;
+
+namespace MsieJavaScriptEngine.JsRt
 {
-	using System;
-
-	using Helpers;
-
 	/// <summary>
 	/// Base class of the Chakra JsRT JavaScript engine
 	/// </summary>
@@ -29,6 +33,23 @@
 		/// </summary>
 		private StatedFlag _debuggingStartedFlag;
 
+		/// <summary>
+		/// Synchronizer of code execution
+		/// </summary>
+		protected readonly object _executionSynchronizer = new object();
+#if NETSTANDARD1_3
+
+		/// <summary>
+		/// List of external objects
+		/// </summary>
+		protected readonly HashSet<object> _externalObjects = new HashSet<object>();
+
+		/// <summary>
+		/// Callback for finalization of external object
+		/// </summary>
+		protected JsObjectFinalizeCallback _externalObjectFinalizeCallback;
+#endif
+
 
 		/// <summary>
 		/// Constructs instance of the Chakra JsRT JavaScript engine
@@ -40,6 +61,9 @@
 			_engineMode = engineMode;
 			_engineModeName = JsEngineModeHelpers.GetModeName(engineMode);
 			_enableDebugging = enableDebugging;
+#if NETSTANDARD1_3
+			_externalObjectFinalizeCallback = ExternalObjectFinalizeCallback;
+#endif
 		}
 
 
@@ -55,6 +79,32 @@
 		}
 
 		protected abstract void InnerStartDebugging();
+#if NETSTANDARD1_3
+
+		private void ExternalObjectFinalizeCallback(IntPtr data)
+		{
+			if (data == IntPtr.Zero)
+			{
+				return;
+			}
+
+			GCHandle handle = GCHandle.FromIntPtr(data);
+			object obj = handle.Target;
+
+			if (obj == null)
+			{
+				return;
+			}
+
+			lock (_executionSynchronizer)
+			{
+				if (_externalObjects != null)
+				{
+					_externalObjects.Remove(obj);
+				}
+			}
+		}
+#endif
 
 		#region IInnerJsEngine implementation
 
@@ -79,11 +129,23 @@
 
 		public abstract void EmbedHostType(string itemName, Type type);
 
+		public abstract void CollectGarbage();
+
 		#endregion
 
 		#region IDisposable implementation
 
-		public abstract void Dispose();
+		public virtual void Dispose()
+		{
+#if NETSTANDARD1_3
+			if (_externalObjects != null)
+			{
+				_externalObjects.Clear();
+			}
+
+			_externalObjectFinalizeCallback = null;
+#endif
+		}
 
 		#endregion
 	}

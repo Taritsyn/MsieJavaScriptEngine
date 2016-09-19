@@ -1,12 +1,12 @@
-﻿namespace MsieJavaScriptEngine.Helpers
+﻿using System;
+using System.Globalization;
+using System.Text;
+
+using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.Helpers
 {
-	using System;
-	using System.Globalization;
-	using System.Text;
-
-	using Resources;
-	using Utilities;
-
 	/// <summary>
 	/// JavaScript engine error helpers
 	/// </summary>
@@ -20,11 +20,11 @@
 		public static string Format(JsEngineLoadException jsEngineLoadException)
 		{
 			var errorMessage = new StringBuilder();
-			errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_Message,
+			errorMessage.AppendFormatLine("{0}: {1}", CommonStrings.ErrorDetails_Message,
 				jsEngineLoadException.Message);
 			if (!string.IsNullOrWhiteSpace(jsEngineLoadException.EngineMode))
 			{
-				errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_EngineMode,
+				errorMessage.AppendFormatLine("{0}: {1}", CommonStrings.ErrorDetails_EngineMode,
 					jsEngineLoadException.EngineMode);
 			}
 
@@ -39,37 +39,37 @@
 		public static string Format(JsRuntimeException jsRuntimeException)
 		{
 			var errorMessage = new StringBuilder();
-			errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_Message,
+			errorMessage.AppendFormatLine("{0}: {1}", CommonStrings.ErrorDetails_Message,
 				jsRuntimeException.Message);
 			if (!string.IsNullOrWhiteSpace(jsRuntimeException.EngineMode))
 			{
-				errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_EngineMode,
+				errorMessage.AppendFormatLine("{0}: {1}", CommonStrings.ErrorDetails_EngineMode,
 					jsRuntimeException.EngineMode);
 			}
 			if (!string.IsNullOrWhiteSpace(jsRuntimeException.ErrorCode))
 			{
-				errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_ErrorCode,
+				errorMessage.AppendFormatLine("{0}: {1}", CommonStrings.ErrorDetails_ErrorCode,
 					jsRuntimeException.ErrorCode);
 			}
 			if (!string.IsNullOrWhiteSpace(jsRuntimeException.Category))
 			{
-				errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_Category,
+				errorMessage.AppendFormatLine("{0}: {1}", CommonStrings.ErrorDetails_Category,
 					jsRuntimeException.Category);
 			}
 			if (jsRuntimeException.LineNumber > 0)
 			{
-				errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_LineNumber,
+				errorMessage.AppendFormatLine("{0}: {1}", CommonStrings.ErrorDetails_LineNumber,
 					jsRuntimeException.LineNumber.ToString(CultureInfo.InvariantCulture));
 			}
 			if (jsRuntimeException.ColumnNumber > 0)
 			{
-				errorMessage.AppendFormatLine("{0}: {1}", Strings.ErrorDetails_ColumnNumber,
+				errorMessage.AppendFormatLine("{0}: {1}", CommonStrings.ErrorDetails_ColumnNumber,
 					jsRuntimeException.ColumnNumber.ToString(CultureInfo.InvariantCulture));
 			}
 			if (!string.IsNullOrWhiteSpace(jsRuntimeException.SourceFragment))
 			{
 				errorMessage.AppendFormatLine("{1}:{0}{0}{2}", Environment.NewLine,
-					Strings.ErrorDetails_SourceFragment,
+					CommonStrings.ErrorDetails_SourceFragment,
 					jsRuntimeException.SourceFragment);
 			}
 

@@ -1,4 +1,5 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿#if !NETSTANDARD1_3
+namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
 	/// Contains named constant values that specify the state of a scripting engine
@@ -42,3 +43,4 @@
 		Initialized = 5
 	}
 }
+#endif

@@ -1,4 +1,5 @@
-﻿namespace MsieJavaScriptEngine.Constants
+﻿#if !NETSTANDARD1_3
+namespace MsieJavaScriptEngine.Constants
 {
 	/// <summary>
 	/// Special member names
@@ -8,3 +9,4 @@
 		public const string Default = "[DISPID=0]";
 	}
 }
+#endif

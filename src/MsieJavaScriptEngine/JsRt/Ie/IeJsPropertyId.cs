@@ -1,8 +1,8 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Ie
-{
-	using System;
-	using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
+namespace MsieJavaScriptEngine.JsRt.Ie
+{
 	/// <summary>
 	/// “IE” property identifier
 	/// </summary>
@@ -40,7 +40,7 @@
 				IntPtr buffer;
 				IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsGetPropertyNameFromId(this, out buffer));
 
-				return Marshal.PtrToStringAuto(buffer);
+				return Marshal.PtrToStringUni(buffer);
 			}
 		}
 

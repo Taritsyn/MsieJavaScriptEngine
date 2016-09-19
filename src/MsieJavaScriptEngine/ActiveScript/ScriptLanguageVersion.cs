@@ -1,4 +1,5 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿#if !NETSTANDARD1_3
+namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
 	/// Version of script language (see https://msdn.microsoft.com/en-gb/library/hh769820(v=vs.94).aspx)
@@ -31,3 +32,4 @@
 		EcmaScript5 = 3,
 	}
 }
+#endif

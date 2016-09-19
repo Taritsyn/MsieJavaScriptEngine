@@ -1,7 +1,8 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
+﻿#if !NETSTANDARD1_3
+using System;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	[Flags]
 	internal enum ScriptTypeLibFlags : uint
 	{
@@ -21,3 +22,4 @@
 		IsPersistent = 0x00000040,
 	}
 }
+#endif

@@ -1,7 +1,9 @@
-﻿namespace MsieJavaScriptEngine.JsRt.Ie
-{
-	using System;
+﻿using System;
 
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.JsRt.Ie
+{
 	/// <summary>
 	/// “IE” script context
 	/// </summary>
@@ -360,7 +362,7 @@
 		/// <param name="debugApplication">The debug application to use for debugging</param>
 		public static void StartDebugging(IDebugApplication64 debugApplication)
 		{
-			if (!Environment.Is64BitProcess)
+			if (!Utils.Is64BitProcess())
 			{
 				throw new InvalidOperationException();
 			}
@@ -374,7 +376,7 @@
 		/// <param name="debugApplication">The debug application to use for debugging</param>
 		public static void StartDebugging(IDebugApplication32 debugApplication)
 		{
-			if (Environment.Is64BitProcess)
+			if (Utils.Is64BitProcess())
 			{
 				throw new InvalidOperationException();
 			}

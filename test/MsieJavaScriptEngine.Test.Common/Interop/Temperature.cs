@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.Test.Common.Interop
-{
-	using System;
+﻿using System;
 
+namespace MsieJavaScriptEngine.Test.Common.Interop
+{
 	public struct Temperature
 	{
 		double _celsius;

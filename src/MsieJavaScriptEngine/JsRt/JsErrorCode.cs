@@ -1,7 +1,7 @@
-﻿namespace MsieJavaScriptEngine.JsRt
-{
-	using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace MsieJavaScriptEngine.JsRt
+{
 	/// <summary>
 	/// The error code returned from a Chakra hosting API
 	/// </summary>

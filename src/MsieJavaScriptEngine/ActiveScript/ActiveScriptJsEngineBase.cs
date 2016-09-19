@@ -1,20 +1,21 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
+﻿#if !NETSTANDARD1_3
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Expando;
+using System.Windows.Threading;
+
+using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
+using MsieJavaScriptEngine.Constants;
+using MsieJavaScriptEngine.Helpers;
+using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine.ActiveScript
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.Reflection;
-	using System.Runtime.InteropServices;
-	using System.Runtime.InteropServices.Expando;
-	using System.Windows.Threading;
-
-	using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
-
-	using Constants;
-	using Helpers;
-	using Resources;
-	using Utilities;
-
 	/// <summary>
 	/// Base class of the ActiveScript JavaScript engine
 	/// </summary>
@@ -36,14 +37,24 @@
 		private IntPtr _pActiveScript;
 
 		/// <summary>
+		/// Pointer to an instance of garbage collector
+		/// </summary>
+		private IntPtr _pActiveScriptGarbageCollector;
+
+		/// <summary>
 		/// Instance of native JavaScript engine
 		/// </summary>
 		private IActiveScript _activeScript;
 
 		/// <summary>
-		/// Instance of ActiveScriptParseWrapper
+		/// Instance of <see cref="IActiveScriptParseWrapper"/>
 		/// </summary>
 		private IActiveScriptParseWrapper _activeScriptParse;
+
+		/// <summary>
+		/// Instance of <see cref="IActiveScriptGarbageCollector"/>
+		/// </summary>
+		private IActiveScriptGarbageCollector _activeScriptGarbageCollector;
 
 		/// <summary>
 		/// Instance of script dispatch
@@ -53,7 +64,7 @@
 		/// <summary>
 		/// List of host items
 		/// </summary>
-		private Dictionary<string, object> _hostItems = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> _hostItems = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Host-defined document version string
@@ -110,7 +121,7 @@
 			catch (Exception e)
 			{
 				throw new JsEngineLoadException(
-					string.Format(Strings.Runtime_IeJsEngineNotLoaded,
+					string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
 						_engineModeName, lowerIeVersion, e.Message), _engineModeName);
 			}
 
@@ -125,13 +136,16 @@
 					if (result != (uint)ScriptHResult.Ok)
 					{
 						throw new JsEngineLoadException(
-							string.Format(Strings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
+							string.Format(NetFrameworkStrings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
 					}
 				}
 			}
 
 			_activeScriptParse = new ActiveScriptParseWrapper(_pActiveScript, _activeScript);
 			_activeScriptParse.InitNew();
+
+			_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(_pActiveScript);
+			_activeScriptGarbageCollector = _activeScript as IActiveScriptGarbageCollector;
 
 			_activeScript.SetScriptSite(this);
 			_activeScript.SetScriptState(ScriptState.Started);
@@ -277,7 +291,7 @@
 
 			if (dispatch == null)
 			{
-				throw new InvalidOperationException(Strings.Runtime_ActiveScriptDispatcherNotInitialized);
+				throw new InvalidOperationException(NetFrameworkStrings.Runtime_ActiveScriptDispatcherNotInitialized);
 			}
 
 			_dispatch = dispatch;
@@ -481,6 +495,18 @@
 		}
 
 		/// <summary>
+		/// Starts a garbage collection
+		/// </summary>
+		/// <param name="type">The type of garbage collection</param>
+		private void InnerCollectGarbage(ScriptGCType type)
+		{
+			if (_activeScriptGarbageCollector != null)
+			{
+				_activeScriptGarbageCollector.CollectGarbage(type);
+			}
+		}
+
+		/// <summary>
 		/// Loads a resources
 		/// </summary>
 		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
@@ -510,13 +536,13 @@
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
-					string.Format(Strings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
 			}
 
 			if (type == null)
 			{
 				throw new ArgumentNullException(
-					"type", string.Format(Strings.Common_ArgumentIsNull, "type"));
+					"type", string.Format(CommonStrings.Common_ArgumentIsNull, "type"));
 			}
 
 			string code = Utils.GetResourceAsString(resourceName, type);
@@ -540,6 +566,9 @@
 						_dispatch = null;
 					}
 
+					_activeScriptGarbageCollector = null;
+					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptGarbageCollector);
+
 					if (_activeScriptParse != null)
 					{
 						_activeScriptParse.Dispose();
@@ -549,6 +578,7 @@
 					if (_activeScript != null)
 					{
 						_activeScript.Close();
+						Marshal.FinalReleaseComObject(_activeScript);
 						_activeScript = null;
 					}
 
@@ -557,7 +587,6 @@
 					if (_hostItems != null)
 					{
 						_hostItems.Clear();
-						_hostItems = null;
 					}
 
 					_lastException = null;
@@ -611,7 +640,7 @@
 			if (item == null)
 			{
 				throw new COMException(
-					string.Format(Strings.Runtime_ItemNotFound, name), ComErrorCode.ElementNotFound);
+					string.Format(NetFrameworkStrings.Runtime_ItemNotFound, name), ComErrorCode.ElementNotFound);
 			}
 
 			if (mask.HasFlag(ScriptInfoFlags.IUnknown))
@@ -714,7 +743,7 @@
 				catch (MissingMemberException)
 				{
 					throw new JsRuntimeException(
-						string.Format(Strings.Runtime_FunctionNotExist, functionName));
+						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
 				}
 			});
 
@@ -756,7 +785,7 @@
 				catch (MissingMemberException)
 				{
 					throw new JsRuntimeException(
-						string.Format(Strings.Runtime_VariableNotExist, variableName));
+						string.Format(NetFrameworkStrings.Runtime_VariableNotExist, variableName));
 				}
 			});
 
@@ -796,6 +825,11 @@
 			EmbedHostItem(itemName, typeValue);
 		}
 
+		public void CollectGarbage()
+		{
+			InvokeScript(() => InnerCollectGarbage(ScriptGCType.Exhaustive));
+		}
+
 		#endregion
 
 		#region IDisposable implementation
@@ -812,3 +846,4 @@
 		#endregion
 	}
 }
+#endif

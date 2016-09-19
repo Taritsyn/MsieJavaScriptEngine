@@ -1,7 +1,8 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
+﻿#if !NETSTANDARD1_3
+using System;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	[Flags]
 	internal enum ScriptItemFlags : uint
 	{
@@ -63,3 +64,4 @@
 		NoCode = 0x00000400,
 	}
 }
+#endif

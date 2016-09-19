@@ -1,9 +1,10 @@
-﻿namespace MsieJavaScriptEngine.ActiveScript
-{
-	using System;
-	using System.Runtime.Serialization;
-	using System.Runtime.InteropServices.ComTypes;
+﻿#if !NETSTANDARD1_3
+using System;
+using System.Runtime.Serialization;
+using System.Runtime.InteropServices.ComTypes;
 
+namespace MsieJavaScriptEngine.ActiveScript
+{
 	[Serializable]
 	internal sealed class ActiveScriptException : Exception
 	{
@@ -192,3 +193,4 @@
 		}
 	}
 }
+#endif

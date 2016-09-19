@@ -1,20 +1,24 @@
+#if !NETSTANDARD1_3
+using System;
+using System.Runtime.Serialization;
+#endif
+
 namespace MsieJavaScriptEngine.JsRt.Edge
 {
-	using System;
-	using System.Runtime.Serialization;
-
-	using JsRt;
-
 	/// <summary>
 	/// “Edge” script exception
 	/// </summary>
+#if !NETSTANDARD1_3
 	[Serializable]
+#endif
 	internal sealed class EdgeJsScriptException : JsException
 	{
 		/// <summary>
 		/// The error
 		/// </summary>
+#if !NETSTANDARD1_3
 		[NonSerialized]
+#endif
 		private readonly EdgeJsValue _error;
 
 		/// <summary>
@@ -46,6 +50,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			_error = error;
 		}
+#if !NETSTANDARD1_3
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EdgeJsScriptException"/> class
@@ -55,5 +60,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		private EdgeJsScriptException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{ }
+#endif
 	}
 }
