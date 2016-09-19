@@ -1,7 +1,7 @@
 
 
    --------------------------------------------------------------------------------
-            README file for MSIE JavaScript Engine for .NET v2.0.0 Beta 2
+                README file for MSIE JavaScript Engine for .NET v2.0.0
 
    --------------------------------------------------------------------------------
 
@@ -21,7 +21,9 @@
    =============
    RELEASE NOTES
    =============
-   Added support of .NET Core 1.0.1.
+   1. Added support of .NET Core 1.0.1 (only supported `ChakraIeJsRt` and
+      `ChakraEdgeJsRt` modes) and .NET Framework 4.5.1;
+   2. Added the `CollectGarbage` method.
 
    ============
    PROJECT SITE
