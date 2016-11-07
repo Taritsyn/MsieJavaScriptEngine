@@ -133,6 +133,25 @@ namespace MsieJavaScriptEngine.Test.Common
 			Assert.AreEqual(targetOutput, output);
 		}
 
+		[Test]
+		public virtual void EvaluationOfExpressionWithUnicodeStringResultIsCorrect()
+		{
+			// Arrange
+			const string input = "'Привет, ' + \"Вася\" + '?';";
+			const string targetOutput = "Привет, Вася?";
+
+			// Act
+			string output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				output = jsEngine.Evaluate<string>(input);
+			}
+
+			// Assert
+			Assert.AreEqual(targetOutput, output);
+		}
+
 		#endregion
 
 		#region Execution of code
@@ -242,7 +261,7 @@ namespace MsieJavaScriptEngine.Test.Common
 			using (var jsEngine = CreateJsEngine())
 			{
 				jsEngine.Execute(functionCode);
-				output = (string) jsEngine.CallFunction("hooray");
+				output = (string)jsEngine.CallFunction("hooray");
 			}
 
 			// Assert
@@ -394,6 +413,29 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
+		public virtual void CallingOfFunctionWithUnicodeStringResultIsCorrect()
+		{
+			// Arrange
+			const string functionCode = @"function privet(name) {
+	return 'Привет, ' + name + '!';
+}";
+			const string input = "Вован";
+			const string targetOutput = "Привет, Вован!";
+
+			// Act
+			string output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.Execute(functionCode);
+				output = jsEngine.CallFunction<string>("privet", input);
+			}
+
+			// Assert
+			Assert.AreEqual(targetOutput, output);
+		}
+
+		[Test]
 		public virtual void CallingOfFunctionWithManyParametersIsCorrect()
 		{
 			// Arrange
@@ -419,7 +461,7 @@ namespace MsieJavaScriptEngine.Test.Common
 			using (var jsEngine = CreateJsEngine())
 			{
 				jsEngine.Execute(functionCode);
-				output = (string) jsEngine.CallFunction("determineArgumentsTypes", Undefined.Value, null,
+				output = (string)jsEngine.CallFunction("determineArgumentsTypes", Undefined.Value, null,
 					true, 12, 3.14, "test");
 			}
 
@@ -553,6 +595,36 @@ namespace MsieJavaScriptEngine.Test.Common
 
 			// Assert
 			Assert.AreEqual("Hello, Petya!", output);
+		}
+
+		[Test]
+		public virtual void CallingOfFunctionWithManyParametersAndUnicodeStringResultIsCorrect()
+		{
+			// Arrange
+			const string functionCode = @"function obedinit() {
+	var result = '',
+		argumentIndex,
+		argumentCount = arguments.length
+		;
+
+	for (argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++) {
+		result += arguments[argumentIndex];
+	}
+
+	return result;
+}";
+
+			// Act
+			string output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.Execute(functionCode);
+				output = jsEngine.CallFunction<string>("obedinit", "Привет", ",", " ", "Петя", "!");
+			}
+
+			// Assert
+			Assert.AreEqual("Привет, Петя!", output);
 		}
 
 		#endregion
@@ -742,6 +814,40 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
+		public virtual void SettingAndGettingVariableWithUnicodeStringValueIsCorrect()
+		{
+			// Arrange
+			const string variableName = "slovo";
+
+			const string input1 = "Ура";
+			const string targetOutput1 = "Ура!";
+
+			const string input2 = "Урааа";
+
+			// Act
+			bool variableExists;
+			string output1;
+			string output2;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.SetVariableValue(variableName, input1);
+				variableExists = jsEngine.HasVariable(variableName);
+				jsEngine.Execute(string.Format("{0} += '!';", variableName));
+				output1 = jsEngine.GetVariableValue<string>(variableName);
+
+				jsEngine.SetVariableValue(variableName, input2);
+				output2 = jsEngine.GetVariableValue<string>(variableName);
+			}
+
+			// Assert
+			Assert.True(variableExists);
+			Assert.AreEqual(targetOutput1, output1);
+
+			Assert.AreEqual(input2, output2);
+		}
+
+		[Test]
 		public virtual void RemovingVariableIsCorrect()
 		{
 			// Arrange
@@ -781,6 +887,80 @@ namespace MsieJavaScriptEngine.Test.Common
 				jsEngine.Execute(input);
 				jsEngine.CollectGarbage();
 			}
+		}
+
+		#endregion
+
+		#region Mapping errors
+
+		[Test]
+		public virtual void MappingRuntimeErrorDuringEvaluationOfExpressionIsCorrect()
+		{
+			// Arrange
+			const string input = @"var $variable1 = 611;
+var _variable2 = 711;
+var @variable3 = 678;
+
+$variable1 + _variable2 - variable3;";
+
+			JsRuntimeException exception = null;
+
+			// Act
+			using (var jsEngine = CreateJsEngine())
+			{
+				try
+				{
+					int result = jsEngine.Evaluate<int>(input);
+				}
+				catch (JsRuntimeException e)
+				{
+					exception = e;
+				}
+			}
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.IsNotEmpty(exception.Message);
+			Assert.AreEqual(3, exception.LineNumber);
+			Assert.AreEqual(5, exception.ColumnNumber);
+		}
+
+		[Test]
+		public virtual void MappingRuntimeErrorDuringExecutionOfCodeIsCorrect()
+		{
+			// Arrange
+			const string input = @"function factorial(value) {
+	if (value <= 0) {
+		throw new Error(""The value must be greater than or equal to zero."");
+	}
+
+	return value !== 1 ? value * factorial(value - 1) : 1;
+}
+
+factorial(5);
+factorial(@);
+factorial(0);";
+
+			JsRuntimeException exception = null;
+
+			// Act
+			using (var jsEngine = CreateJsEngine())
+			{
+				try
+				{
+					jsEngine.Execute(input);
+				}
+				catch (JsRuntimeException e)
+				{
+					exception = e;
+				}
+			}
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.IsNotEmpty(exception.Message);
+			Assert.AreEqual(10, exception.LineNumber);
+			Assert.AreEqual(11, exception.ColumnNumber);
 		}
 
 		#endregion
