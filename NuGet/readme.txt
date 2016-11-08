@@ -21,9 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   1. Added support of .NET Core 1.0.1 (only supported `ChakraIeJsRt` and
-      `ChakraEdgeJsRt` modes) and .NET Framework 4.5.1;
-   2. Added the `CollectGarbage` method.
+   All exceptions made serializable.
 
    ============
    PROJECT SITE

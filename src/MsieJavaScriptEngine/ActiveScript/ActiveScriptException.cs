@@ -1,7 +1,8 @@
 ﻿#if !NETSTANDARD1_3
 using System;
-using System.Runtime.Serialization;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -9,12 +10,47 @@ namespace MsieJavaScriptEngine.ActiveScript
 	internal sealed class ActiveScriptException : Exception
 	{
 		/// <summary>
+		/// Error code
+		/// </summary>
+		private int _errorCode;
+
+		/// <summary>
+		/// WCode
+		/// </summary>
+		private short _errorWCode;
+
+		/// <summary>
+		/// Application specific source context
+		/// </summary>
+		private uint _sourceContext;
+
+		/// <summary>
+		/// Subcategory of error
+		/// </summary>
+		private string _subcategory = string.Empty;
+
+		/// <summary>
+		/// Line number on which the error occurred
+		/// </summary>
+		private uint _lineNumber;
+
+		/// <summary>
+		/// Column number on which the error occurred
+		/// </summary>
+		private int _columnNumber;
+
+		/// <summary>
+		/// Content of the line on which the error occurred
+		/// </summary>
+		private string _sourceError = string.Empty;
+
+		/// <summary>
 		/// Gets or sets a error code
 		/// </summary>
 		public int ErrorCode
 		{
-			get;
-			set;
+			get { return _errorCode; }
+			set { _errorCode = value; }
 		}
 
 		/// <summary>
@@ -22,8 +58,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		public short ErrorWCode
 		{
-			get;
-			set;
+			get { return _errorWCode; }
+			set { _errorWCode = value; }
 		}
 
 		/// <summary>
@@ -31,8 +67,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		public uint SourceContext
 		{
-			get;
-			set;
+			get { return _sourceContext; }
+			set { _sourceContext = value; }
 		}
 
 		/// <summary>
@@ -40,8 +76,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		public string Subcategory
 		{
-			get;
-			set;
+			get { return _subcategory; }
+			set { _subcategory = value; }
 		}
 
 		/// <summary>
@@ -49,8 +85,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		public uint LineNumber
 		{
-			get;
-			set;
+			get { return _lineNumber; }
+			set { _lineNumber = value; }
 		}
 
 		/// <summary>
@@ -58,8 +94,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		public int ColumnNumber
 		{
-			get;
-			set;
+			get { return _columnNumber; }
+			set { _columnNumber = value; }
 		}
 
 		/// <summary>
@@ -67,19 +103,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		public string SourceError
 		{
-			get;
-			set;
+			get { return _sourceError; }
+			set { _sourceError = value; }
 		}
 
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
-		/// </summary>
-		public ActiveScriptException()
-		{ }
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
+		/// with a specified error message
 		/// </summary>
 		/// <param name="message">The message</param>
 		public ActiveScriptException(string message)
@@ -88,14 +119,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
-		/// </summary>
-		/// <param name="innerException">The inner exception</param>
-		public ActiveScriptException(Exception innerException)
-			: base(null, innerException)
-		{ }
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
+		/// with a specified error message and a reference to the inner exception
+		/// that is the cause of this exception
 		/// </summary>
 		/// <param name="message">The message</param>
 		/// <param name="innerException">The inner exception</param>
@@ -104,21 +129,24 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{ }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
+		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class with serialized data
 		/// </summary>
-		/// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/>
-		/// that holds the serialized object data about the exception being thrown</param>
-		/// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/>
-		/// that contains contextual information about the source or destination</param>
-		/// <exception cref="T:System.ArgumentNullException">
-		/// The <paramref name="info"/> parameter is null
-		/// </exception>
-		/// <exception cref="T:System.Runtime.Serialization.SerializationException">
-		/// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0)
-		/// </exception>
+		/// <param name="info">The object that holds the serialized data</param>
+		/// <param name="context">The contextual information about the source or destination</param>
 		private ActiveScriptException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
-		{ }
+		{
+			if (info != null)
+			{
+				_errorCode = info.GetInt32("ErrorCode");
+				_errorWCode = info.GetInt16("ErrorWCode");
+				_sourceContext = info.GetUInt32("SourceContext");
+				_subcategory = info.GetString("Subcategory");
+				_lineNumber = info.GetUInt32("LineNumber");
+				_columnNumber = info.GetInt32("ColumnNumber");
+				_sourceError = info.GetString("SourceError");
+			}
+		}
 
 
 		internal static ActiveScriptException Create(IActiveScriptError error)
@@ -191,6 +219,33 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			return activeScriptException;
 		}
+
+		#region Exception overrides
+
+		/// <summary>
+		/// Populates a <see cref="SerializationInfo"/> with the data needed to serialize the target object
+		/// </summary>
+		/// <param name="info">The <see cref="SerializationInfo"/> to populate with data</param>
+		/// <param name="context">The destination (see <see cref="StreamingContext"/>) for this serialization</param>
+		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			if (info == null)
+			{
+				throw new ArgumentNullException("info");
+			}
+
+			base.GetObjectData(info, context);
+			info.AddValue("ErrorCode", _errorCode);
+			info.AddValue("ErrorWCode", _errorWCode);
+			info.AddValue("SourceContext", _sourceContext);
+			info.AddValue("Subcategory", _subcategory);
+			info.AddValue("LineNumber", _lineNumber);
+			info.AddValue("ColumnNumber", _columnNumber);
+			info.AddValue("SourceError", _sourceError);
+		}
+
+		#endregion
 	}
 }
 #endif

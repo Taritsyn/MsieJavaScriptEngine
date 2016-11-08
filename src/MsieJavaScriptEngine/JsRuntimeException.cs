@@ -1,19 +1,51 @@
 ﻿using System;
+#if !NETSTANDARD1_3
+using System.Runtime.Serialization;
+using System.Security.Permissions;
+#endif
 
 namespace MsieJavaScriptEngine
 {
 	/// <summary>
-	/// The exception that is thrown during a execution of code by JavaScript engine
+	/// The exception that is thrown during a execution of code by JS engine
 	/// </summary>
+#if !NETSTANDARD1_3
+	[Serializable]
+#endif
 	public sealed class JsRuntimeException : JsException
 	{
+		/// <summary>
+		/// Error code
+		/// </summary>
+		private string _errorCode = string.Empty;
+
+		/// <summary>
+		/// Error category
+		/// </summary>
+		private string _category = string.Empty;
+
+		/// <summary>
+		/// Line number
+		/// </summary>
+		private int _lineNumber;
+
+		/// <summary>
+		/// Column number
+		/// </summary>
+		private int _columnNumber;
+
+		/// <summary>
+		/// Source fragment
+		/// </summary>
+		private string _sourceFragment = string.Empty;
+
 		/// <summary>
 		/// Gets or sets a error code
 		/// </summary>
 		public string ErrorCode
 		{
-			get;
-			set;
+			get { return _errorCode; }
+			set { _errorCode = value; }
 		}
 
 		/// <summary>
@@ -21,8 +53,8 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		public string Category
 		{
-			get;
-			set;
+			get { return _category; }
+			set { _category = value; }
 		}
 
 		/// <summary>
@@ -30,8 +62,8 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		public int LineNumber
 		{
-			get;
-			set;
+			get { return _lineNumber; }
+			set { _lineNumber = value; }
 		}
 
 		/// <summary>
@@ -39,8 +71,8 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		public int ColumnNumber
 		{
-			get;
-			set;
+			get { return _columnNumber; }
+			set { _columnNumber = value; }
 		}
 
 		/// <summary>
@@ -48,8 +80,8 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		public string SourceFragment
 		{
-			get;
-			set;
+			get { return _sourceFragment; }
+			set { _sourceFragment = value; }
 		}
 
 
@@ -59,44 +91,83 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="message">The message that describes the error</param>
 		public JsRuntimeException(string message)
-			: this(message, string.Empty)
+			: base(message)
 		{ }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JsRuntimeException"/> class
-		/// with a specified error message and a reference to the inner exception that is the cause of this exception
+		/// with a specified error message and a reference to the inner exception
+		/// that is the cause of this exception
 		/// </summary>
 		/// <param name="message">The error message that explains the reason for the exception</param>
 		/// <param name="innerException">The exception that is the cause of the current exception</param>
 		public JsRuntimeException(string message, Exception innerException)
-			: this(message, string.Empty, innerException)
+			: base(message, innerException)
 		{ }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JsRuntimeException"/> class
-		/// with a specified error message and a reference to the inner exception that is the cause of this exception
 		/// </summary>
 		/// <param name="message">The error message that explains the reason for the exception</param>
-		/// <param name="engineMode">Name of JavaScript engine mode</param>
+		/// <param name="engineMode">Name of JS engine mode</param>
 		public JsRuntimeException(string message, string engineMode)
-			: this(message, engineMode, null)
+			: base(message, engineMode)
 		{ }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JsRuntimeException"/> class
-		/// with a specified error message and a reference to the inner exception that is the cause of this exception
 		/// </summary>
 		/// <param name="message">The error message that explains the reason for the exception</param>
-		/// <param name="engineMode">Name of JavaScript engine mode</param>
+		/// <param name="engineMode">Name of JS engine mode</param>
 		/// <param name="innerException">The exception that is the cause of the current exception</param>
 		public JsRuntimeException(string message, string engineMode, Exception innerException)
 			: base(message, engineMode, innerException)
+		{ }
+#if !NETSTANDARD1_3
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="JsRuntimeException"/> class with serialized data
+		/// </summary>
+		/// <param name="info">The object that holds the serialized data</param>
+		/// <param name="context">The contextual information about the source or destination</param>
+		private JsRuntimeException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
 		{
-			ErrorCode = string.Empty;
-			Category = string.Empty;
-			LineNumber = 0;
-			ColumnNumber = 0;
-			SourceFragment = string.Empty;
+			if (info != null)
+			{
+				_errorCode = info.GetString("ErrorCode");
+				_category = info.GetString("Category");
+				_lineNumber = info.GetInt32("LineNumber");
+				_columnNumber = info.GetInt32("ColumnNumber");
+				_sourceFragment = info.GetString("SourceFragment");
+			}
 		}
+
+
+		#region JsException overrides
+
+		/// <summary>
+		/// Populates a <see cref="SerializationInfo"/> with the data needed to serialize the target object
+		/// </summary>
+		/// <param name="info">The <see cref="SerializationInfo"/> to populate with data</param>
+		/// <param name="context">The destination (see <see cref="StreamingContext"/>) for this serialization</param>
+		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			if (info == null)
+			{
+				throw new ArgumentNullException("info");
+			}
+
+			base.GetObjectData(info, context);
+			info.AddValue("ErrorCode", _errorCode);
+			info.AddValue("Category", _category);
+			info.AddValue("LineNumber", _lineNumber);
+			info.AddValue("ColumnNumber", _columnNumber);
+			info.AddValue("SourceFragment", _sourceFragment);
+		}
+
+		#endregion
+#endif
 	}
 }

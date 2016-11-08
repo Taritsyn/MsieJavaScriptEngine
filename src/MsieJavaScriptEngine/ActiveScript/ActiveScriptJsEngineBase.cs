@@ -267,7 +267,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 				LineNumber = (int)activeScriptException.LineNumber,
 				ColumnNumber = activeScriptException.ColumnNumber,
 				SourceFragment = activeScriptException.SourceError,
-				Source = activeScriptException.Source,
 				HelpLink = activeScriptException.HelpLink
 			};
 

@@ -10,7 +10,7 @@ localNugetPackageManager=.nuget/NuGet.exe
 packageDir=packages
 
 if test ! -d $packageDir/NUnit.Runners; then
-  mono $localNugetPackageManager install NUnit.Runners -Version 3.5.0 -O $packageDir% -ExcludeVersion -NoCache
+  mono $localNugetPackageManager install NUnit.Runners -Version 3.4.1 -O $packageDir% -ExcludeVersion -NoCache
 fi
 
 koreBuildZip="https://github.com/aspnet/KoreBuild/archive/1.0.0.zip"
