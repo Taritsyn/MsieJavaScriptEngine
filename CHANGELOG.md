@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## November 8, 2016 - v2.0.1
+ * All exceptions made serializable
+
 ## September 19, 2016 - v2.0.0
  * Added support of .NET Core 1.0.1 (only supported `ChakraIeJsRt` and `ChakraEdgeJsRt` modes) and .NET Framework 4.5.1
  * Added the `CollectGarbage` method
