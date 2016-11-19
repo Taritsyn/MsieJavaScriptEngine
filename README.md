@@ -90,7 +90,7 @@ Consider in detail properties of the <code title="MsieJavaScriptEngine.JsEngineS
 			<td><code>EnableDebugging</code></td>
 			<td><code title="System.Boolean">Boolean</code></td>
 			<td><code>false</code></td>
-			<td>Flag for whether to allow debugging in Visual Studio by adding the `debugger` statement to script code (only works in the `ChakraIeJsRt` and `ChakraEdgeJsRt` modes).</td>
+			<td>Flag for whether to allow debugging in Visual Studio by adding the <code>debugger</code> statement to script code (only works in the <code>ChakraIeJsRt</code> and <code>ChakraEdgeJsRt</code> modes).</td>
 		</tr>
 		<tr valign="top">
 			<td><code>EngineMode</code></td>
