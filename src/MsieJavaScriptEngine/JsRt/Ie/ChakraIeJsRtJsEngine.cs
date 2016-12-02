@@ -196,7 +196,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			switch (typeCode)
 			{
 				case TypeCode.Boolean:
-					return IeJsValue.FromBoolean((bool)value);
+					return (bool)value ? IeJsValue.True : IeJsValue.False;
 
 				case TypeCode.SByte:
 				case TypeCode.Byte:
@@ -305,6 +305,50 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		private object[] MapToHostType(IeJsValue[] args)
 		{
 			return args.Select(MapToHostType).ToArray();
+		}
+
+		/// <summary>
+		/// Adds a reference to the value
+		/// </summary>
+		/// <param name="value">The value</param>
+		private static void AddReferenceToValue(IeJsValue value)
+		{
+			if (CanHaveReferences(value))
+			{
+				value.AddRef();
+			}
+		}
+
+		/// <summary>
+		/// Removes a reference to the value
+		/// </summary>
+		/// <param name="value">The value</param>
+		private static void RemoveReferenceToValue(IeJsValue value)
+		{
+			if (CanHaveReferences(value))
+			{
+				value.Release();
+			}
+		}
+
+		/// <summary>
+		/// Checks whether the value can have references
+		/// </summary>
+		/// <param name="value">The value</param>
+		/// <returns>Result of check (true - may have; false - may not have)</returns>
+		private static bool CanHaveReferences(IeJsValue value)
+		{
+			JsValueType valueType = value.ValueType;
+
+			switch (valueType)
+			{
+				case JsValueType.Null:
+				case JsValueType.Undefined:
+				case JsValueType.Boolean:
+					return false;
+				default:
+					return true;
+			}
 		}
 #if NETSTANDARD1_3
 
@@ -983,11 +1027,30 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
 				}
 
-				var processedArgs = MapToScriptType(args);
-				var allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
-
+				IeJsValue resultValue;
 				IeJsValue functionValue = globalObj.GetProperty(functionId);
-				IeJsValue resultValue = functionValue.CallFunction(allProcessedArgs);
+
+				if (args.Length > 0)
+				{
+					IeJsValue[] processedArgs = MapToScriptType(args);
+
+					foreach (IeJsValue processedArg in processedArgs)
+					{
+						AddReferenceToValue(processedArg);
+					}
+
+					IeJsValue[] allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
+					resultValue = functionValue.CallFunction(allProcessedArgs);
+
+					foreach (IeJsValue processedArg in processedArgs)
+					{
+						RemoveReferenceToValue(processedArg);
+					}
+				}
+				else
+				{
+					resultValue = functionValue.CallFunction(globalObj);
+				}
 
 				return MapToHostType(resultValue);
 			});

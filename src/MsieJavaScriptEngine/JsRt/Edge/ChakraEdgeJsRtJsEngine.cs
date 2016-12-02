@@ -172,7 +172,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			switch (typeCode)
 			{
 				case TypeCode.Boolean:
-					return EdgeJsValue.FromBoolean((bool)value);
+					return (bool)value ? EdgeJsValue.True : EdgeJsValue.False;
 
 				case TypeCode.SByte:
 				case TypeCode.Byte:
@@ -281,6 +281,50 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		private object[] MapToHostType(EdgeJsValue[] args)
 		{
 			return args.Select(MapToHostType).ToArray();
+		}
+
+		/// <summary>
+		/// Adds a reference to the value
+		/// </summary>
+		/// <param name="value">The value</param>
+		private static void AddReferenceToValue(EdgeJsValue value)
+		{
+			if (CanHaveReferences(value))
+			{
+				value.AddRef();
+			}
+		}
+
+		/// <summary>
+		/// Removes a reference to the value
+		/// </summary>
+		/// <param name="value">The value</param>
+		private static void RemoveReferenceToValue(EdgeJsValue value)
+		{
+			if (CanHaveReferences(value))
+			{
+				value.Release();
+			}
+		}
+
+		/// <summary>
+		/// Checks whether the value can have references
+		/// </summary>
+		/// <param name="value">The value</param>
+		/// <returns>Result of check (true - may have; false - may not have)</returns>
+		private static bool CanHaveReferences(EdgeJsValue value)
+		{
+			JsValueType valueType = value.ValueType;
+
+			switch (valueType)
+			{
+				case JsValueType.Null:
+				case JsValueType.Undefined:
+				case JsValueType.Boolean:
+					return false;
+				default:
+					return true;
+			}
 		}
 #if NETSTANDARD1_3
 
@@ -945,11 +989,30 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
 				}
 
-				var processedArgs = MapToScriptType(args);
-				var allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
-
+				EdgeJsValue resultValue;
 				EdgeJsValue functionValue = globalObj.GetProperty(functionId);
-				EdgeJsValue resultValue = functionValue.CallFunction(allProcessedArgs);
+
+				if (args.Length > 0)
+				{
+					EdgeJsValue[] processedArgs = MapToScriptType(args);
+
+					foreach (EdgeJsValue processedArg in processedArgs)
+					{
+						AddReferenceToValue(processedArg);
+					}
+
+					EdgeJsValue[] allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
+					resultValue = functionValue.CallFunction(allProcessedArgs);
+
+					foreach (EdgeJsValue processedArg in processedArgs)
+					{
+						RemoveReferenceToValue(processedArg);
+					}
+				}
+				else
+				{
+					resultValue = functionValue.CallFunction(globalObj);
+				}
 
 				return MapToHostType(resultValue);
 			});
