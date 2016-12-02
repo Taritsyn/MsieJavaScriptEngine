@@ -1,7 +1,7 @@
 
 
    --------------------------------------------------------------------------------
-                README file for MSIE JavaScript Engine for .NET v2.0.1
+                README file for MSIE JavaScript Engine for .NET v2.0.2
 
    --------------------------------------------------------------------------------
 
@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   All exceptions made serializable.
+   Another attempt to prevent occurrence of the access violation exception in the
+   `CallFunction` method.
 
    ============
    PROJECT SITE

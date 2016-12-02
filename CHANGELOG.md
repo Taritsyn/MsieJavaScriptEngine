@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## December 2, 2016 - v2.0.2
+ * Another attempt to prevent occurrence of the access violation exception in the `CallFunction` method
+
 ## November 8, 2016 - v2.0.1
  * All exceptions made serializable
 
