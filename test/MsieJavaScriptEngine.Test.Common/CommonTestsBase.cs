@@ -201,10 +201,10 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
-		public virtual void ExecutionOfResourceByTypeIsCorrect()
+		public virtual void ExecutionOfResourceByNameAndTypeIsCorrect()
 		{
 			// Arrange
-			const string resourceName = "MsieJavaScriptEngine.Test.Common.Resources.cube.js";
+			const string resourceName = "Resources.cube.js";
 			const string input = "cube(5);";
 			const int targetOutput = 125;
 
@@ -222,7 +222,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
-		public virtual void ExecutionOfResourceByAssemblyIsCorrect()
+		public virtual void ExecutionOfResourceByNameAndAssemblyIsCorrect()
 		{
 			// Arrange
 			const string resourceName = "MsieJavaScriptEngine.Test.Common.Resources.power.js";

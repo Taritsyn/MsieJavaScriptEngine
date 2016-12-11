@@ -305,8 +305,9 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Executes a code from embedded JS-resource
 		/// </summary>
-		/// <param name="resourceName">JS-resource name</param>
-		/// <param name="type">Type from assembly that containing an embedded resource</param>
+		/// <param name="resourceName">The case-sensitive resource name without the namespace of the specified type</param>
+		/// <param name="type">The type, that determines the assembly and whose namespace is used to scope
+		/// the resource name</param>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
 		/// JavaScript engine.</exception>
 		/// <exception cref="System.ArgumentException" />
@@ -316,16 +317,22 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (string.IsNullOrWhiteSpace(resourceName))
+			if (resourceName == null)
 			{
-				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
+				throw new ArgumentNullException(
+					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
 			}
 
 			if (type == null)
 			{
 				throw new ArgumentNullException(
 					"type", string.Format(CommonStrings.Common_ArgumentIsNull, "type"));
+			}
+
+			if (string.IsNullOrWhiteSpace(resourceName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
 			}
 
 			string code = Utils.GetResourceAsString(resourceName, type);
@@ -335,8 +342,8 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Executes a code from embedded JS-resource
 		/// </summary>
-		/// <param name="resourceName">JS-resource name</param>
-		/// <param name="assembly">Assembly that containing an embedded resource</param>
+		/// <param name="resourceName">The case-sensitive resource name</param>
+		/// <param name="assembly">The assembly, which contains the embedded resource</param>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
 		/// JavaScript engine.</exception>
 		/// <exception cref="System.ArgumentException" />
@@ -346,16 +353,22 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (string.IsNullOrWhiteSpace(resourceName))
+			if (resourceName == null)
 			{
-				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
+				throw new ArgumentNullException(
+					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
 			}
 
 			if (assembly == null)
 			{
 				throw new ArgumentNullException(
 					"assembly", string.Format(CommonStrings.Common_ArgumentIsNull, "assembly"));
+			}
+
+			if (string.IsNullOrWhiteSpace(resourceName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
 			}
 
 			string code = Utils.GetResourceAsString(resourceName, assembly);

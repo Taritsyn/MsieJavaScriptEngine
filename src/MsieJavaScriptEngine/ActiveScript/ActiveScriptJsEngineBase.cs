@@ -512,39 +512,45 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
 		private void LoadResources(bool useEcmaScript5Polyfill, bool useJson2Library)
 		{
-			Type type = GetType();
+			Assembly assembly = GetType().GetTypeInfo().Assembly;
 
 			if (useEcmaScript5Polyfill)
 			{
-				ExecuteResource(ES5_POLYFILL_RESOURCE_NAME, type);
+				ExecuteResource(ES5_POLYFILL_RESOURCE_NAME, assembly);
 			}
 
 			if (useJson2Library)
 			{
-				ExecuteResource(JSON2_LIBRARY_RESOURCE_NAME, type);
+				ExecuteResource(JSON2_LIBRARY_RESOURCE_NAME, assembly);
 			}
 		}
 
 		/// <summary>
 		/// Executes a code from embedded JS-resource
 		/// </summary>
-		/// <param name="resourceName">JS-resource name</param>
-		/// <param name="type">Type from assembly that containing an embedded resource</param>
-		private void ExecuteResource(string resourceName, Type type)
+		/// <param name="resourceName">The case-sensitive resource name</param>
+		/// <param name="assembly">The assembly, which contains the embedded resource</param>
+		private void ExecuteResource(string resourceName, Assembly assembly)
 		{
+			if (resourceName == null)
+			{
+				throw new ArgumentNullException(
+					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
+			}
+
+			if (assembly == null)
+			{
+				throw new ArgumentNullException(
+					"assembly", string.Format(CommonStrings.Common_ArgumentIsNull, "assembly"));
+			}
+
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
 					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
 			}
 
-			if (type == null)
-			{
-				throw new ArgumentNullException(
-					"type", string.Format(CommonStrings.Common_ArgumentIsNull, "type"));
-			}
-
-			string code = Utils.GetResourceAsString(resourceName, type);
+			string code = Utils.GetResourceAsString(resourceName, assembly);
 			Execute(code);
 		}
 

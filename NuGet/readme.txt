@@ -21,8 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Another attempt to prevent occurrence of the access violation exception in the
-   `CallFunction` method.
+   Now when you call the overloaded version of the `ExecuteResource` method, that
+   takes the type, need to pass the resource name without the namespace.
 
    ============
    PROJECT SITE
