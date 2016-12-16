@@ -32,15 +32,10 @@ namespace MsieJavaScriptEngine.JsRt
 		/// Flag indicating whether debugging started
 		/// </summary>
 		private StatedFlag _debuggingStartedFlag;
-
-		/// <summary>
-		/// Synchronizer of code execution
-		/// </summary>
-		protected readonly object _executionSynchronizer = new object();
 #if NETSTANDARD1_3
 
 		/// <summary>
-		/// List of external objects
+		/// Set of external objects
 		/// </summary>
 		protected readonly HashSet<object> _externalObjects = new HashSet<object>();
 
@@ -50,9 +45,19 @@ namespace MsieJavaScriptEngine.JsRt
 		protected JsObjectFinalizeCallback _externalObjectFinalizeCallback;
 #endif
 
+		/// <summary>
+		/// Script dispatcher
+		/// </summary>
+		protected readonly ScriptDispatcher _dispatcher = new ScriptDispatcher();
 
 		/// <summary>
-		/// Constructs instance of the Chakra JsRT JavaScript engine
+		/// Flag that object is destroyed
+		/// </summary>
+		protected StatedFlag _disposedFlag = new StatedFlag();
+
+
+		/// <summary>
+		/// Constructs an instance of the Chakra JsRT JavaScript engine
 		/// </summary>
 		/// <param name="engineMode">JavaScript engine mode</param>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
@@ -96,12 +101,9 @@ namespace MsieJavaScriptEngine.JsRt
 				return;
 			}
 
-			lock (_executionSynchronizer)
+			if (_externalObjects != null)
 			{
-				if (_externalObjects != null)
-				{
-					_externalObjects.Remove(obj);
-				}
+				_externalObjects.Remove(obj);
 			}
 		}
 #endif
@@ -135,15 +137,25 @@ namespace MsieJavaScriptEngine.JsRt
 
 		#region IDisposable implementation
 
-		public virtual void Dispose()
+		public abstract void Dispose();
+
+		/// <summary>
+		/// Destroys object
+		/// </summary>
+		/// <param name="disposing">Flag, allowing destruction of
+		/// managed objects contained in fields of class</param>
+		protected virtual void Dispose(bool disposing)
 		{
 #if NETSTANDARD1_3
-			if (_externalObjects != null)
+			if (disposing)
 			{
-				_externalObjects.Clear();
-			}
+				if (_externalObjects != null)
+				{
+					_externalObjects.Clear();
+				}
 
-			_externalObjectFinalizeCallback = null;
+				_externalObjectFinalizeCallback = null;
+			}
 #endif
 		}
 

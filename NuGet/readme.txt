@@ -21,8 +21,9 @@
    =============
    RELEASE NOTES
    =============
-   Now when you call the overloaded version of the `ExecuteResource` method, that
-   takes the type, need to pass the resource name without the namespace.
+   1. Now when you call the overloaded version of the `ExecuteResource` method, that
+      takes the type, need to pass the resource name without the namespace;
+   2. Fixed a error “Out of stack space”.
 
    ============
    PROJECT SITE

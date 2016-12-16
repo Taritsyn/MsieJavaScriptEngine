@@ -345,6 +345,9 @@
     <Compile Include="..\MsieJavaScriptEngine\Resources\NetFrameworkStrings.ru-ru.Designer.cs">
       <Link>Resources\NetFrameworkStrings.ru-ru.Designer.cs</Link>
     </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ScriptDispatcher.cs">
+      <Link>ScriptDispatcher.cs</Link>
+    </Compile>
     <Compile Include="..\MsieJavaScriptEngine\StatedFlag.cs">
       <Link>StatedFlag.cs</Link>
     </Compile>
@@ -368,7 +371,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tools\Key.snk">

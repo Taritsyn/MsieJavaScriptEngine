@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Expando;
-using System.Windows.Threading;
 
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
@@ -87,9 +86,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private readonly string _engineModeName;
 
 		/// <summary>
-		/// <see cref="System.Windows.Threading.Dispatcher"/> for the thread currently executing
+		/// Script dispatcher
 		/// </summary>
-		private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
+		private static readonly ScriptDispatcher _dispatcher = new ScriptDispatcher();
 
 		/// <summary>
 		/// Flag that object is destroyed
@@ -111,53 +110,57 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			_engineMode = engineMode;
 			_engineModeName = JsEngineModeHelpers.GetModeName(engineMode);
-			_pActiveScript = IntPtr.Zero;
+			_documentVersion = DateTime.UtcNow.ToString("o");
 
-			try
+			_dispatcher.Invoke(() =>
 			{
-				_pActiveScript = ComHelpers.CreateInstanceByClsid<IActiveScript>(clsid);
-				_activeScript = (IActiveScript)Marshal.GetObjectForIUnknown(_pActiveScript);
-			}
-			catch (Exception e)
-			{
-				throw new JsEngineLoadException(
-					string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
-						_engineModeName, lowerIeVersion, e.Message), _engineModeName);
-			}
+				_pActiveScript = IntPtr.Zero;
 
-			if (languageVersion != ScriptLanguageVersion.None)
-			{
-				var activeScriptProperty = _activeScript as IActiveScriptProperty;
-				if (activeScriptProperty != null)
+				try
 				{
-					object scriptLanguageVersion = (int)languageVersion;
-					uint result = activeScriptProperty.SetProperty((uint)ScriptProperty.InvokeVersioning,
-						IntPtr.Zero, ref scriptLanguageVersion);
-					if (result != (uint)ScriptHResult.Ok)
+					_pActiveScript = ComHelpers.CreateInstanceByClsid<IActiveScript>(clsid);
+					_activeScript = (IActiveScript)Marshal.GetObjectForIUnknown(_pActiveScript);
+				}
+				catch (Exception e)
+				{
+					throw new JsEngineLoadException(
+						string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
+							_engineModeName, lowerIeVersion, e.Message), _engineModeName);
+				}
+
+				if (languageVersion != ScriptLanguageVersion.None)
+				{
+					var activeScriptProperty = _activeScript as IActiveScriptProperty;
+					if (activeScriptProperty != null)
 					{
-						throw new JsEngineLoadException(
-							string.Format(NetFrameworkStrings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
+						object scriptLanguageVersion = (int)languageVersion;
+						uint result = activeScriptProperty.SetProperty((uint)ScriptProperty.InvokeVersioning,
+							IntPtr.Zero, ref scriptLanguageVersion);
+						if (result != (uint)ScriptHResult.Ok)
+						{
+							throw new JsEngineLoadException(
+								string.Format(NetFrameworkStrings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
+						}
 					}
 				}
-			}
 
-			_activeScriptParse = new ActiveScriptParseWrapper(_pActiveScript, _activeScript);
-			_activeScriptParse.InitNew();
+				_activeScriptParse = new ActiveScriptParseWrapper(_pActiveScript, _activeScript);
+				_activeScriptParse.InitNew();
 
-			_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(_pActiveScript);
-			_activeScriptGarbageCollector = _activeScript as IActiveScriptGarbageCollector;
+				_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(_pActiveScript);
+				_activeScriptGarbageCollector = _activeScript as IActiveScriptGarbageCollector;
 
-			_activeScript.SetScriptSite(this);
-			_activeScript.SetScriptState(ScriptState.Started);
+				_activeScript.SetScriptSite(this);
+				_activeScript.SetScriptState(ScriptState.Started);
 
-			InitScriptDispatch();
-			_documentVersion = DateTime.UtcNow.ToString("o");
+				InitScriptDispatch();
+			});
 
 			LoadResources(useEcmaScript5Polyfill, useJson2Library);
 		}
 
 		/// <summary>
-		/// Destructs instance of ActiveScript JavaScript engine
+		/// Destructs an instance of ActiveScript JavaScript engine
 		/// </summary>
 		~ActiveScriptJsEngineBase()
 		{
@@ -318,46 +321,52 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		private void InvokeScript(Action action)
 		{
-			try
+			_dispatcher.Invoke(() =>
 			{
-				_dispatcher.Invoke(DispatcherPriority.Input, action);
-			}
-			catch (ActiveScriptException e)
-			{
-				throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-			}
-			catch (TargetInvocationException e)
-			{
-				var activeScriptException = e.InnerException as ActiveScriptException;
-				if (activeScriptException != null)
+				try
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(activeScriptException);
+					action();
 				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+				}
+				catch (TargetInvocationException e)
+				{
+					var activeScriptException = e.InnerException as ActiveScriptException;
+					if (activeScriptException != null)
+					{
+						throw ConvertActiveScriptExceptionToJsRuntimeException(activeScriptException);
+					}
 
-				throw;
-			}
+					throw;
+				}
+			});
 		}
 
 		private T InvokeScript<T>(Func<T> func)
 		{
-			try
+			return _dispatcher.Invoke(() =>
 			{
-				return (T)_dispatcher.Invoke(DispatcherPriority.Input, func);
-			}
-			catch (ActiveScriptException e)
-			{
-				throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-			}
-			catch (TargetInvocationException e)
-			{
-				var activeScriptException = e.InnerException as ActiveScriptException;
-				if (activeScriptException != null)
+				try
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(activeScriptException);
+					return func();
 				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+				}
+				catch (TargetInvocationException e)
+				{
+					var activeScriptException = e.InnerException as ActiveScriptException;
+					if (activeScriptException != null)
+					{
+						throw ConvertActiveScriptExceptionToJsRuntimeException(activeScriptException);
+					}
 
-				throw;
-			}
+					throw;
+				}
+			});
 		}
 
 		/// <summary>
@@ -552,51 +561,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			string code = Utils.GetResourceAsString(resourceName, assembly);
 			Execute(code);
-		}
-
-		/// <summary>
-		/// Destroys object
-		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of
-		/// managed objects contained in fields of class</param>
-		private void Dispose(bool disposing)
-		{
-			_dispatcher.Invoke(DispatcherPriority.Input, (Action)(() =>
-			{
-				if (_disposedFlag.Set())
-				{
-					if (_dispatch != null)
-					{
-						ComHelpers.ReleaseComObject(ref _dispatch, !disposing);
-						_dispatch = null;
-					}
-
-					_activeScriptGarbageCollector = null;
-					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptGarbageCollector);
-
-					if (_activeScriptParse != null)
-					{
-						_activeScriptParse.Dispose();
-						_activeScriptParse = null;
-					}
-
-					if (_activeScript != null)
-					{
-						_activeScript.Close();
-						Marshal.FinalReleaseComObject(_activeScript);
-						_activeScript = null;
-					}
-
-					ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
-
-					if (_hostItems != null)
-					{
-						_hostItems.Clear();
-					}
-
-					_lastException = null;
-				}
-			}));
 		}
 
 		#region IActiveScriptSite implementation
@@ -832,7 +796,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public void CollectGarbage()
 		{
-			InvokeScript(() => InnerCollectGarbage(ScriptGCType.Exhaustive));
+			_dispatcher.Invoke(() => InnerCollectGarbage(ScriptGCType.Exhaustive));
 		}
 
 		#endregion
@@ -846,6 +810,54 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			Dispose(true /* disposing */);
 			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Destroys object
+		/// </summary>
+		/// <param name="disposing">Flag, allowing destruction of
+		/// managed objects contained in fields of class</param>
+		private void Dispose(bool disposing)
+		{
+			if (_disposedFlag.Set())
+			{
+				_dispatcher.Invoke(() =>
+				{
+					if (_dispatch != null)
+					{
+						ComHelpers.ReleaseComObject(ref _dispatch, !disposing);
+						_dispatch = null;
+					}
+
+					_activeScriptGarbageCollector = null;
+					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptGarbageCollector);
+
+					if (_activeScriptParse != null)
+					{
+						_activeScriptParse.Dispose();
+						_activeScriptParse = null;
+					}
+
+					if (_activeScript != null)
+					{
+						_activeScript.Close();
+						Marshal.FinalReleaseComObject(_activeScript);
+						_activeScript = null;
+					}
+
+					ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
+
+					if (disposing)
+					{
+						if (_hostItems != null)
+						{
+							_hostItems.Clear();
+						}
+
+						_lastException = null;
+					}
+				});
+			}
 		}
 
 		#endregion

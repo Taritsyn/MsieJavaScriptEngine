@@ -29,7 +29,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <summary>
 		/// Instance of JavaScript context
 		/// </summary>
-		private readonly EdgeJsContext _jsContext;
+		private EdgeJsContext _jsContext;
 
 		/// <summary>
 		/// Flag indicating whether this JavaScript engine is supported
@@ -48,47 +48,45 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		private readonly HashSet<EdgeJsNativeFunction> _nativeFunctions = new HashSet<EdgeJsNativeFunction>();
 #endif
 
-		/// <summary>
-		/// Flag that object is destroyed
-		/// </summary>
-		private StatedFlag _disposedFlag = new StatedFlag();
-
 
 		/// <summary>
-		/// Constructs instance of the Chakra “Edge” JsRT JavaScript engine
+		/// Constructs an instance of the Chakra “Edge” JsRT JavaScript engine
 		/// </summary>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
 		public ChakraEdgeJsRtJsEngine(bool enableDebugging)
 			: base(JsEngineMode.ChakraEdgeJsRt, enableDebugging)
 		{
-			try
+			_dispatcher.Invoke(() =>
 			{
-				_jsRuntime = CreateJsRuntime();
-				_jsContext = _jsRuntime.CreateContext();
-			}
-			catch (JsUsageException e)
-			{
-				string errorMessage;
-				if (e.ErrorCode == JsErrorCode.WrongThread)
+				try
 				{
-					errorMessage = CommonStrings.Runtime_JsEnginesConflictOnMachine;
+					_jsRuntime = CreateJsRuntime();
+					_jsContext = _jsRuntime.CreateContext();
 				}
-				else
+				catch (JsUsageException e)
 				{
-					errorMessage = string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message);
-				}
+					string errorMessage;
+					if (e.ErrorCode == JsErrorCode.WrongThread)
+					{
+						errorMessage = CommonStrings.Runtime_JsEnginesConflictOnMachine;
+					}
+					else
+					{
+						errorMessage = string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message);
+					}
 
-				throw new JsEngineLoadException(errorMessage, _engineModeName);
-			}
-			catch (Exception e)
-			{
-				throw new JsEngineLoadException(
-					string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message), _engineModeName);
-			}
+					throw new JsEngineLoadException(errorMessage, _engineModeName);
+				}
+				catch (Exception e)
+				{
+					throw new JsEngineLoadException(
+						string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message), _engineModeName);
+				}
+			});
 		}
 
 		/// <summary>
-		/// Destructs instance of the Chakra “Edge” JsRT JavaScript engine
+		/// Destructs an instance of the Chakra “Edge” JsRT JavaScript engine
 		/// </summary>
 		~ChakraEdgeJsRtJsEngine()
 		{
@@ -887,68 +885,48 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		private void InvokeScript(Action action)
 		{
-			lock (_executionSynchronizer)
-			using (new EdgeJsScope(_jsContext))
+			_dispatcher.Invoke(() =>
 			{
-				if (_enableDebugging)
+				using (new EdgeJsScope(_jsContext))
 				{
-					StartDebugging();
-				}
+					if (_enableDebugging)
+					{
+						StartDebugging();
+					}
 
-				try
-				{
-					action();
+					try
+					{
+						action();
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
 				}
-				catch (JsException e)
-				{
-					throw ConvertJsExceptionToJsRuntimeException(e);
-				}
-			}
+			});
 		}
 
 		private T InvokeScript<T>(Func<T> func)
 		{
-			lock (_executionSynchronizer)
-			using (new EdgeJsScope(_jsContext))
+			return _dispatcher.Invoke(() =>
 			{
-				if (_enableDebugging)
+				using (new EdgeJsScope(_jsContext))
 				{
-					StartDebugging();
-				}
-
-				try
-				{
-					return func();
-				}
-				catch (JsException e)
-				{
-					throw ConvertJsExceptionToJsRuntimeException(e);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Destroys object
-		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of
-		/// managed objects contained in fields of class</param>
-		private void Dispose(bool disposing)
-		{
-			lock (_executionSynchronizer)
-			{
-				if (_disposedFlag.Set())
-				{
-					_jsRuntime.Dispose();
-					base.Dispose();
-#if NETSTANDARD1_3
-
-					if (_nativeFunctions != null)
+					if (_enableDebugging)
 					{
-						_nativeFunctions.Clear();
+						StartDebugging();
 					}
-#endif
+
+					try
+					{
+						return func();
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
 				}
-			}
+			});
 		}
 
 		#region IInnerJsEngine implementation
@@ -1099,10 +1077,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		public override void CollectGarbage()
 		{
-			lock (_executionSynchronizer)
-			{
-				_jsRuntime.CollectGarbage();
-			}
+			_dispatcher.Invoke(() => _jsRuntime.CollectGarbage());
 		}
 
 		#endregion
@@ -1116,6 +1091,34 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			Dispose(true /* disposing */);
 			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Destroys object
+		/// </summary>
+		/// <param name="disposing">Flag, allowing destruction of
+		/// managed objects contained in fields of class</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (_disposedFlag.Set())
+			{
+				_dispatcher.Invoke(() =>
+				{
+					_jsRuntime.Dispose();
+					base.Dispose(disposing);
+#if NETSTANDARD1_3
+
+					if (disposing)
+					{
+						if (_nativeFunctions != null)
+						{
+							_nativeFunctions.Clear();
+						}
+					}
+#endif
+				});
+				_dispatcher.Dispose();
+			}
 		}
 
 		#endregion
