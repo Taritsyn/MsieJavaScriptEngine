@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 
+using MsieJavaScriptEngine.Utilities;
+
 namespace MsieJavaScriptEngine
 {
 	/// <summary>
@@ -11,9 +13,14 @@ namespace MsieJavaScriptEngine
 	{
 #if !NETSTANDARD1_3
 		/// <summary>
-		/// The stack size is sufficient to run the code of modern JavaScript libraries
+		/// The stack size is sufficient to run the code of modern JavaScript libraries in 32-bit process
 		/// </summary>
-		const int SUFFICIENT_STACK_SIZE = 2 * 1024 * 1024;
+		const int STACK_SIZE_32 = 492 * 1024; // like 32-bit Node.js
+
+		/// <summary>
+		/// The stack size is sufficient to run the code of modern JavaScript libraries in 64-bit process
+		/// </summary>
+		const int STACK_SIZE_64 = 984 * 1024; // like 64-bit Node.js
 
 #endif
 		/// <summary>
@@ -29,7 +36,7 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Queue of script tasks
 		/// </summary>
-		private Queue<ScriptTask> _taskQueue = new Queue<ScriptTask>();
+		private readonly Queue<ScriptTask> _taskQueue = new Queue<ScriptTask>();
 
 		/// <summary>
 		/// Synchronizer of script task queue
@@ -50,7 +57,9 @@ namespace MsieJavaScriptEngine
 #if NETSTANDARD1_3
 			_thread = new Thread(StartThread)
 #else
-			_thread = new Thread(StartThread, SUFFICIENT_STACK_SIZE)
+			int sufficientStackSize = Utils.Is64BitProcess() ? STACK_SIZE_64 : STACK_SIZE_32;
+
+			_thread = new Thread(StartThread, sufficientStackSize)
 #endif
 			{
 				IsBackground = true
