@@ -1,6 +1,6 @@
 ﻿#if !NETSTANDARD1_3
 using System;
-#if NET451
+#if NET45
 using System.Reflection;
 #endif
 using System.Runtime.InteropServices;

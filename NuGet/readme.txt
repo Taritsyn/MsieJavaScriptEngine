@@ -24,7 +24,8 @@
    1. Now when you call the overloaded version of the `ExecuteResource` method, that
       takes the type, need to pass the resource name without the namespace;
    2. Fixed a error “Out of stack space”;
-   3. JSON2 library was updated to version of October 28, 2016.
+   3. JSON2 library was updated to version of October 28, 2016;
+   4. Downgraded .NET Framework version from 4.5.1 to 4.5.
 
    ============
    PROJECT SITE

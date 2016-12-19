@@ -53,7 +53,7 @@
 				}
 			}
 		},
-		"net451": {
+		"net45": {
 			"buildOptions": {
 				"embed": [ "Resources/ES5.min.js", "Resources/json2.min.js" ],
 				"compile": {
