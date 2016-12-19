@@ -1102,22 +1102,23 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			if (_disposedFlag.Set())
 			{
-				_dispatcher.Invoke(() =>
+				if (_dispatcher != null)
 				{
-					_jsRuntime.Dispose();
-					base.Dispose(disposing);
+					_dispatcher.Invoke(() => _jsRuntime.Dispose());
+					_dispatcher.Dispose();
+				}
+
+				base.Dispose(disposing);
 #if NETSTANDARD1_3
 
-					if (disposing)
+				if (disposing)
+				{
+					if (_nativeFunctions != null)
 					{
-						if (_nativeFunctions != null)
-						{
-							_nativeFunctions.Clear();
-						}
+						_nativeFunctions.Clear();
 					}
+				}
 #endif
-				});
-				_dispatcher.Dispose();
 			}
 		}
 

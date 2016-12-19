@@ -846,17 +846,17 @@ namespace MsieJavaScriptEngine.ActiveScript
 					}
 
 					ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
-
-					if (disposing)
-					{
-						if (_hostItems != null)
-						{
-							_hostItems.Clear();
-						}
-
-						_lastException = null;
-					}
 				});
+
+				if (disposing)
+				{
+					if (_hostItems != null)
+					{
+						_hostItems.Clear();
+					}
+
+					_lastException = null;
+				}
 			}
 		}
 

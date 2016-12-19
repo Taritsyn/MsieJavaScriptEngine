@@ -101,6 +101,7 @@ namespace MsieJavaScriptEngine
 						task = _taskQueue.Dequeue();
 						if (task == null)
 						{
+							_taskQueue.Clear();
 							return;
 						}
 					}
@@ -176,6 +177,11 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
+			if (func == null)
+			{
+				throw new ArgumentNullException("func");
+			}
+
 			return (T)InnnerInvoke(() => func());
 		}
 
@@ -187,6 +193,11 @@ namespace MsieJavaScriptEngine
 		public void Invoke(Action action)
 		{
 			VerifyNotDisposed();
+
+			if (action == null)
+			{
+				throw new ArgumentNullException("action");
+			}
 
 			InnnerInvoke(() =>
 			{
@@ -216,25 +227,17 @@ namespace MsieJavaScriptEngine
 			if (_disposedFlag.Set())
 			{
 				EnqueueTask(null);
-				_thread.Join();
+
+				if (_thread != null)
+				{
+					_thread.Join();
+					_thread = null;
+				}
 
 				if (_waitHandle != null)
 				{
 					_waitHandle.Dispose();
 					_waitHandle = null;
-				}
-
-				if (disposing)
-				{
-					lock (_taskQueueSynchronizer)
-					{
-						if (_taskQueue != null)
-						{
-							_taskQueue.Clear();
-						}
-					}
-
-					_thread = null;
 				}
 			}
 		}
