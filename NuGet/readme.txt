@@ -23,7 +23,8 @@
    =============
    1. Now when you call the overloaded version of the `ExecuteResource` method, that
       takes the type, need to pass the resource name without the namespace;
-   2. Fixed a error “Out of stack space”.
+   2. Fixed a error “Out of stack space”;
+   3. JSON2 library was updated to version of October 28, 2016.
 
    ============
    PROJECT SITE
