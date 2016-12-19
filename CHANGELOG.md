@@ -1,6 +1,13 @@
 Change log
 ==========
 
+## December 19, 2016 - v2.1.0
+ * Added support of .NET Core 1.0.3
+ * Downgraded .NET Framework version from 4.5.1 to 4.5
+ * Now when you call the overloaded version of the `ExecuteResource` method, that takes the type, need to pass the resource name without the namespace
+ * Fixed a error “Out of stack space”
+ * JSON2 library was updated to version of October 28, 2016
+
 ## December 2, 2016 - v2.0.2
  * Another attempt to prevent occurrence of the access violation exception in the `CallFunction` method
 
