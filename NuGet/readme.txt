@@ -25,7 +25,8 @@
       takes the type, need to pass the resource name without the namespace;
    2. Fixed a error “Out of stack space”;
    3. JSON2 library was updated to version of October 28, 2016;
-   4. Downgraded .NET Framework version from 4.5.1 to 4.5.
+   4. Downgraded .NET Framework version from 4.5.1 to 4.5;
+   5. Added support of .NET Core 1.0.3.
 
    ============
    PROJECT SITE
