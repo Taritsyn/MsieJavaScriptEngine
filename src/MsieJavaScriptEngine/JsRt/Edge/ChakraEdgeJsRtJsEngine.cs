@@ -836,14 +836,14 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				if (errorValue.HasProperty(linePropertyId))
 				{
 					EdgeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
-					lineNumber = (int)linePropertyValue.ConvertToNumber().ToDouble() + 1;
+					lineNumber = linePropertyValue.ConvertToNumber().ToInt32() + 1;
 				}
 
 				EdgeJsPropertyId columnPropertyId = EdgeJsPropertyId.FromString("column");
 				if (errorValue.HasProperty(columnPropertyId))
 				{
 					EdgeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
-					columnNumber = (int)columnPropertyValue.ConvertToNumber().ToDouble() + 1;
+					columnNumber = columnPropertyValue.ConvertToNumber().ToInt32() + 1;
 				}
 
 				EdgeJsPropertyId sourcePropertyId = EdgeJsPropertyId.FromString("source");

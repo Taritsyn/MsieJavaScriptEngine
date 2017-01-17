@@ -12,6 +12,8 @@ namespace MsieJavaScriptEngine.JsRt
 		/// </summary>
 		NoError = 0,
 
+		#region Usage
+
 		/// <summary>
 		/// Category of errors that relates to incorrect usage of the API itself
 		/// </summary>
@@ -109,6 +111,10 @@ namespace MsieJavaScriptEngine.JsRt
 		/// </summary>
 		IdleNotEnabled,
 
+		#endregion
+
+		#region Engine
+
 		/// <summary>
 		/// Category of errors that relates to errors occurring within the engine itself
 		/// </summary>
@@ -118,6 +124,10 @@ namespace MsieJavaScriptEngine.JsRt
 		/// The Chakra engine has run out of memory
 		/// </summary>
 		OutOfMemory,
+
+		#endregion
+
+		#region Script
 
 		/// <summary>
 		/// Category of errors that relates to errors in a script
@@ -145,6 +155,10 @@ namespace MsieJavaScriptEngine.JsRt
 		[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Eval is a valid function name.")]
 		ScriptEvalDisabled,
 
+		#endregion
+
+		#region Fatal
+
 		/// <summary>
 		/// Category of errors that are fatal and signify failure of the engine
 		/// </summary>
@@ -154,5 +168,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// A fatal error in the engine has occurred
 		/// </summary>
 		Fatal
+
+		#endregion
 	}
 }

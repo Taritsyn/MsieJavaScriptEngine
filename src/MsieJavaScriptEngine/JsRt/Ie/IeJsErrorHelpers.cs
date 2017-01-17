@@ -15,6 +15,8 @@
 			{
 				switch (error)
 				{
+					#region Usage
+
 					case JsErrorCode.InvalidArgument:
 						throw new JsUsageException(error, "Invalid argument.");
 
@@ -45,9 +47,6 @@
 					case JsErrorCode.CannotDisableExecution:
 						throw new JsUsageException(error, "Cannot disable execution.");
 
-					case JsErrorCode.AlreadyDebuggingContext:
-						throw new JsUsageException(error, "Context is already in debug mode.");
-
 					case JsErrorCode.HeapEnumInProgress:
 						throw new JsUsageException(error, "Heap enumeration is in progress.");
 
@@ -63,14 +62,25 @@
 					case JsErrorCode.CannotSerializeDebugScript:
 						throw new JsUsageException(error, "Cannot serialize a debug script.");
 
+					case JsErrorCode.AlreadyDebuggingContext:
+						throw new JsUsageException(error, "Context is already in debug mode.");
+
 					case JsErrorCode.AlreadyProfilingContext:
 						throw new JsUsageException(error, "Already profiling this context.");
 
 					case JsErrorCode.IdleNotEnabled:
 						throw new JsUsageException(error, "Idle is not enabled.");
 
+					#endregion
+
+					#region Engine
+
 					case JsErrorCode.OutOfMemory:
 						throw new JsEngineException(error, "Out of memory.");
+
+					#endregion
+
+					#region Script
 
 					case JsErrorCode.ScriptException:
 						{
@@ -104,8 +114,14 @@
 					case JsErrorCode.ScriptEvalDisabled:
 						throw new IeJsScriptException(error, IeJsValue.Invalid, "Eval of strings is disabled in this runtime.");
 
+					#endregion
+
+					#region Fatal
+
 					case JsErrorCode.Fatal:
 						throw new JsFatalException(error);
+
+					#endregion
 
 					default:
 						throw new JsFatalException(error);

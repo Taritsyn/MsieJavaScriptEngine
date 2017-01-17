@@ -41,6 +41,6 @@ namespace MsieJavaScriptEngine.JsRt
 		/// Using Eval or Function constructor will throw an exception
 		/// </summary>
 		[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Eval is a valid function name.")]
-		DisableEval = 0x00000010,
+		DisableEval = 0x00000010
 	}
 }

@@ -10,8 +10,46 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 	/// </summary>
 	internal static class EdgeNativeMethods
 	{
+		#region Hosting
+
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, out EdgeJsRuntime runtime);
+		internal static extern JsErrorCode JsParseScript(string script, JsSourceContext sourceContext,
+			string sourceUrl, out EdgeJsValue result);
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsRunScript(string script, JsSourceContext sourceContext,
+			string sourceUrl, out EdgeJsValue result);
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsSerializeScript(string script, byte[] buffer, ref ulong bufferSize);
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsParseSerializedScript(string script, byte[] buffer,
+			JsSourceContext sourceContext, string sourceUrl, out EdgeJsValue result);
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsRunSerializedScript(string script, byte[] buffer,
+			JsSourceContext sourceContext, string sourceUrl, out EdgeJsValue result);
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsGetPropertyIdFromName(string name, out EdgeJsPropertyId propertyId);
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsGetPropertyNameFromId(EdgeJsPropertyId propertyId, out IntPtr buffer);
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsPointerToString(string value, UIntPtr stringLength,
+			out EdgeJsValue stringValue);
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsStringToPointer(EdgeJsValue value, out IntPtr stringValue,
+			out UIntPtr stringLength);
+
+		#endregion
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes,
+			JsThreadServiceCallback threadService, out EdgeJsRuntime runtime);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsCollectGarbage(EdgeJsRuntime handle);
@@ -29,10 +67,12 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		internal static extern JsErrorCode JsSetRuntimeMemoryLimit(EdgeJsRuntime runtime, UIntPtr memoryLimit);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsSetRuntimeMemoryAllocationCallback(EdgeJsRuntime runtime, IntPtr callbackState, JsMemoryAllocationCallback allocationCallback);
+		internal static extern JsErrorCode JsSetRuntimeMemoryAllocationCallback(EdgeJsRuntime runtime,
+			IntPtr callbackState, JsMemoryAllocationCallback allocationCallback);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsSetRuntimeBeforeCollectCallback(EdgeJsRuntime runtime, IntPtr callbackState, JsBeforeCollectCallback beforeCollectCallback);
+		internal static extern JsErrorCode JsSetRuntimeBeforeCollectCallback(EdgeJsRuntime runtime,
+			IntPtr callbackState, JsBeforeCollectCallback beforeCollectCallback);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode, EntryPoint = "JsAddRef")]
 		internal static extern JsErrorCode JsContextAddRef(EdgeJsContext reference, out uint count);
@@ -63,27 +103,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsIdle(out uint nextIdleTick);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsParseScript(string script, JsSourceContext sourceContext, string sourceUrl, out EdgeJsValue result);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsRunScript(string script, JsSourceContext sourceContext, string sourceUrl, out EdgeJsValue result);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsSerializeScript(string script, byte[] buffer, ref ulong bufferSize);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsParseSerializedScript(string script, byte[] buffer, JsSourceContext sourceContext, string sourceUrl, out EdgeJsValue result);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsRunSerializedScript(string script, byte[] buffer, JsSourceContext sourceContext, string sourceUrl, out EdgeJsValue result);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsGetPropertyIdFromName(string name, out EdgeJsPropertyId propertyId);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsGetPropertyNameFromId(EdgeJsPropertyId propertyId, out IntPtr buffer);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsGetUndefinedValue(out EdgeJsValue undefinedValue);
@@ -119,26 +138,25 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		internal static extern JsErrorCode JsNumberToDouble(EdgeJsValue value, out double doubleValue);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
+		internal static extern JsErrorCode JsNumberToInt(EdgeJsValue value, out int intValue);
+
+		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsConvertValueToNumber(EdgeJsValue value, out EdgeJsValue numberValue);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsGetStringLength(EdgeJsValue sringValue, out int length);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsPointerToString(string value, UIntPtr stringLength, out EdgeJsValue stringValue);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsStringToPointer(EdgeJsValue value, out IntPtr stringValue, out UIntPtr stringLength);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsConvertValueToString(EdgeJsValue value, out EdgeJsValue stringValue);
 #if !NETSTANDARD1_3
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsVariantToValue([MarshalAs(UnmanagedType.Struct)] ref object var, out EdgeJsValue value);
+		internal static extern JsErrorCode JsVariantToValue([MarshalAs(UnmanagedType.Struct)] ref object var,
+			out EdgeJsValue value);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsValueToVariant(EdgeJsValue obj, [MarshalAs(UnmanagedType.Struct)] out object var);
+		internal static extern JsErrorCode JsValueToVariant(EdgeJsValue obj,
+			[MarshalAs(UnmanagedType.Struct)] out object var);
 #endif
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
@@ -148,7 +166,8 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		internal static extern JsErrorCode JsCreateObject(out EdgeJsValue obj);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsCreateExternalObject(IntPtr data, JsObjectFinalizeCallback finalizeCallback, out EdgeJsValue obj);
+		internal static extern JsErrorCode JsCreateExternalObject(IntPtr data,
+			JsObjectFinalizeCallback finalizeCallback, out EdgeJsValue obj);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsConvertValueToObject(EdgeJsValue value, out EdgeJsValue obj);
@@ -166,34 +185,42 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		internal static extern JsErrorCode JsPreventExtension(EdgeJsValue obj);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsGetProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId, out EdgeJsValue value);
+		internal static extern JsErrorCode JsGetProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId,
+			out EdgeJsValue value);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsGetOwnPropertyDescriptor(EdgeJsValue obj, EdgeJsPropertyId propertyId, out EdgeJsValue propertyDescriptor);
+		internal static extern JsErrorCode JsGetOwnPropertyDescriptor(EdgeJsValue obj, EdgeJsPropertyId propertyId,
+			out EdgeJsValue propertyDescriptor);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsGetOwnPropertyNames(EdgeJsValue obj, out EdgeJsValue propertyNames);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsSetProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId, EdgeJsValue value, bool useStrictRules);
+		internal static extern JsErrorCode JsSetProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId,
+			EdgeJsValue value, bool useStrictRules);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsHasProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId, out bool hasProperty);
+		internal static extern JsErrorCode JsHasProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId,
+			out bool hasProperty);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsDeleteProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId, bool useStrictRules, out EdgeJsValue result);
+		internal static extern JsErrorCode JsDeleteProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId,
+			bool useStrictRules, out EdgeJsValue result);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsDefineProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId, EdgeJsValue propertyDescriptor, out bool result);
+		internal static extern JsErrorCode JsDefineProperty(EdgeJsValue obj, EdgeJsPropertyId propertyId,
+			EdgeJsValue propertyDescriptor, out bool result);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsHasIndexedProperty(EdgeJsValue obj, EdgeJsValue index, out bool result);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsGetIndexedProperty(EdgeJsValue obj, EdgeJsValue index, out EdgeJsValue result);
+		internal static extern JsErrorCode JsGetIndexedProperty(EdgeJsValue obj, EdgeJsValue index,
+			out EdgeJsValue result);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsSetIndexedProperty(EdgeJsValue obj, EdgeJsValue index, EdgeJsValue value);
+		internal static extern JsErrorCode JsSetIndexedProperty(EdgeJsValue obj, EdgeJsValue index,
+			EdgeJsValue value);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsDeleteIndexedProperty(EdgeJsValue obj, EdgeJsValue index);
@@ -217,13 +244,16 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		internal static extern JsErrorCode JsCreateArray(uint length, out EdgeJsValue result);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsCallFunction(EdgeJsValue function, EdgeJsValue[] arguments, ushort argumentCount, out EdgeJsValue result);
+		internal static extern JsErrorCode JsCallFunction(EdgeJsValue function, EdgeJsValue[] arguments,
+			ushort argumentCount, out EdgeJsValue result);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsConstructObject(EdgeJsValue function, EdgeJsValue[] arguments, ushort argumentCount, out EdgeJsValue result);
+		internal static extern JsErrorCode JsConstructObject(EdgeJsValue function, EdgeJsValue[] arguments,
+			ushort argumentCount, out EdgeJsValue result);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsCreateFunction(EdgeJsNativeFunction nativeFunction, IntPtr externalData, out EdgeJsValue function);
+		internal static extern JsErrorCode JsCreateFunction(EdgeJsNativeFunction nativeFunction,
+			IntPtr externalData, out EdgeJsValue function);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsCreateError(EdgeJsValue message, out EdgeJsValue error);
@@ -262,7 +292,8 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		internal static extern JsErrorCode JsIsRuntimeExecutionDisabled(EdgeJsRuntime runtime, out bool isDisabled);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsStartProfiling(IActiveScriptProfilerCallback callback, ProfilerEventMask eventMask, int context);
+		internal static extern JsErrorCode JsStartProfiling(IActiveScriptProfilerCallback callback,
+			ProfilerEventMask eventMask, int context);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsStopProfiling(int reason);
