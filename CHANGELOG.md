@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## February 10, 2017 - v2.1.1
+ * Was made refactoring
+
 ## December 19, 2016 - v2.1.0
  * Added support of .NET Core 1.0.3
  * Downgraded .NET Framework version from 4.5.1 to 4.5
