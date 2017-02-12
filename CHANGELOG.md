@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## February 12, 2017 - v2.1.2
+ * Fixed a error causing a crash during finalization
+
 ## February 10, 2017 - v2.1.1
  * Was made refactoring
 
