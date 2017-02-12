@@ -67,14 +67,6 @@ namespace MsieJavaScriptEngine
 			_thread.Start();
 		}
 
-		/// <summary>
-		/// Destructs an instance of script dispatcher
-		/// </summary>
-		~ScriptDispatcher()
-		{
-			Dispose(false);
-		}
-
 
 		private void VerifyNotDisposed()
 		{
@@ -212,17 +204,6 @@ namespace MsieJavaScriptEngine
 		/// Destroys object
 		/// </summary>
 		public void Dispose()
-		{
-			Dispose(true /* disposing */);
-			GC.SuppressFinalize(this);
-		}
-
-		/// <summary>
-		/// Destroys object
-		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of
-		/// managed objects contained in fields of class</param>
-		private void Dispose(bool disposing)
 		{
 			if (_disposedFlag.Set())
 			{

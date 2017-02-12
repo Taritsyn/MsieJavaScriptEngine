@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Was made refactoring.
+   Fixed a error causing a crash during finalization.
 
    ============
    PROJECT SITE
