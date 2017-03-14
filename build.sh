@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 ORIGINAL_CURRENT_DIR=%cd%
-KOREBUILD_DOTNET_CHANNEL=preview
-KOREBUILD_DOTNET_VERSION=1.0.0-preview2-003156
 
 repoFolder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $repoFolder
@@ -13,7 +11,7 @@ if test ! -d $packageDir/NUnit.Runners; then
   mono $localNugetPackageManager install NUnit.Runners -Version 3.4.1 -O $packageDir% -ExcludeVersion -NoCache
 fi
 
-koreBuildZip="https://github.com/aspnet/KoreBuild/archive/1.0.0.zip"
+koreBuildZip="https://github.com/aspnet/KoreBuild/archive/rel/1.1.2.zip"
 if [ ! -z $KOREBUILD_ZIP ]; then
     koreBuildZip=$KOREBUILD_ZIP
 fi
@@ -23,12 +21,12 @@ buildFile="$buildFolder/KoreBuild.sh"
 
 if test ! -d $buildFolder; then
     echo "Downloading KoreBuild from $koreBuildZip"
-    
-    tempFolder="/tmp/KoreBuild-$(uuidgen)"    
+
+    tempFolder="/tmp/KoreBuild-$(uuidgen)"
     mkdir $tempFolder
-    
+
     localZipFile="$tempFolder/korebuild.zip"
-    
+
     retries=6
     until (wget -O $localZipFile $koreBuildZip 2>/dev/null || curl -o $localZipFile --location $koreBuildZip 2>/dev/null)
     do
@@ -40,17 +38,17 @@ if test ! -d $buildFolder; then
         echo "Waiting 10 seconds before retrying. Retries left: $retries"
         sleep 10s
     done
-    
+
     unzip -q -d $tempFolder $localZipFile
-  
+
     mkdir $buildFolder
     cp -r $tempFolder/**/build/** $buildFolder
-    
+
     chmod +x $buildFile
-    
+
     # Cleanup
     if test ! -d $tempFolder; then
-        rm -rf $tempFolder  
+        rm -rf $tempFolder
     fi
 fi
 
