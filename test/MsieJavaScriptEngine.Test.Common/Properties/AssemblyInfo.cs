@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+#if !NETCOREAPP1_0
 using System.Runtime.InteropServices;
+#endif
 
 [assembly: AssemblyTitle("MsieJavaScriptEngine.Test.Common")]
 [assembly: AssemblyDescription("")]
@@ -10,8 +12,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+#if !NETCOREAPP1_0
 [assembly: ComVisible(false)]
 [assembly: Guid("dad7743e-f458-4009-b96d-26ebcf5146f0")]
+#endif
 
 [assembly: AssemblyVersion("2.1.2.0")]
 [assembly: AssemblyFileVersion("2.1.2.0")]

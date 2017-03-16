@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETSTANDARD1_3
+using System;
 using System.Reflection;
 
 namespace MsieJavaScriptEngine.Utilities
@@ -21,3 +22,4 @@ namespace MsieJavaScriptEngine.Utilities
 		}
 	}
 }
+#endif

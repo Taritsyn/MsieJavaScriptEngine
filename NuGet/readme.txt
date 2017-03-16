@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a error causing a crash during finalization.
+   Added support of .NET Core 1.0.4.
 
    ============
    PROJECT SITE

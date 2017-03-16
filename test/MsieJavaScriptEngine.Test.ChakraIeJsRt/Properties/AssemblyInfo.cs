@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+#if !NETCOREAPP1_0
 using System.Runtime.InteropServices;
+#endif
 
 [assembly: AssemblyTitle("MsieJavaScriptEngine.Test.ChakraIeJsRt")]
 [assembly: AssemblyDescription("")]
@@ -10,8 +12,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+#if !NETCOREAPP1_0
 [assembly: ComVisible(false)]
 [assembly: Guid("2c54c249-206c-45f4-bd1b-6e67a07775af")]
+#endif
 
 [assembly: AssemblyVersion("2.1.2.0")]
 [assembly: AssemblyFileVersion("2.1.2.0")]

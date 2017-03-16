@@ -26,18 +26,12 @@ namespace MsieJavaScriptEngine.Test.Common
 		{
 #if NETCOREAPP1_0 || NET451
 			var appEnv = PlatformServices.Default.Application;
-			_baseDirectoryPath = Path.Combine(appEnv.ApplicationBasePath,
-#if NETCOREAPP1_0
-				"../../../../"
-#else
-				"../../../../../"
-#endif
-			);
+			_baseDirectoryPath = Path.Combine(appEnv.ApplicationBasePath, "../../../../");
 #elif NET40
 			string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
 			if (_binDirRegex.IsMatch(baseDirectoryPath))
 			{
-				baseDirectoryPath = Path.Combine(baseDirectoryPath, @"..\..\..\");
+				baseDirectoryPath = Path.Combine(baseDirectoryPath, "../../../");
 			}
 
 			_baseDirectoryPath = baseDirectoryPath;

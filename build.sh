@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 ORIGINAL_CURRENT_DIR=%cd%
+KOREBUILD_DOTNET_CHANNEL=rel-1.0.0
+KOREBUILD_DOTNET_VERSION=1.0.1
 
 repoFolder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $repoFolder
@@ -11,7 +13,7 @@ if test ! -d $packageDir/NUnit.Runners; then
   mono $localNugetPackageManager install NUnit.Runners -Version 3.4.1 -O $packageDir% -ExcludeVersion -NoCache
 fi
 
-koreBuildZip="https://github.com/aspnet/KoreBuild/archive/rel/1.1.2.zip"
+koreBuildZip="https://github.com/aspnet/KoreBuild/archive/02bd945d32558d24c1e5c6b74e37d44585ad9691.zip"
 if [ ! -z $KOREBUILD_ZIP ]; then
     koreBuildZip=$KOREBUILD_ZIP
 fi

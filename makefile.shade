@@ -6,13 +6,13 @@ use import="Files"
 use import="BuildEnv"
 use import="Environment"
 
-default BASE_DIR='${Directory.GetCurrentDirectory()}'
+default BASE_DIR="${Directory.GetCurrentDirectory()}"
 
-var AUTHORS='Andrey Taritsyn'
+var AUTHORS="Andrey Taritsyn"
 
 use-standard-lifecycle
 
-#resx description='Converts .resx files to .Designer.cs' target='initialize'
+#resx description="Converts .resx files to .Designer.cs" target="initialize"
 	@{
 		string currentDirPath;
 		string originalCurrentDirPath = Environment.GetEnvironmentVariable("ORIGINAL_CURRENT_DIR");
@@ -41,48 +41,66 @@ use-standard-lifecycle
 			Log.Info(string.Format('	* "{0}" is processed', relativeFilePath));
 		}
 		
-		Log.Info('');
+		Log.Info("");
 	}
 
-#run-dotnet-tests description='Runs a unit tests for DotNet version'
+#run-dotnet-tests description="Runs a unit tests for DotNet version"
 	@{
 		string testDirPath = Path.Combine(BASE_DIR, "test");
-		string[] testProjectDirPaths = {
-			'MsieJavaScriptEngine.Test.Common',
-			'MsieJavaScriptEngine.Test.Auto',
-			'MsieJavaScriptEngine.Test.ChakraEdgeJsRt',
-			'MsieJavaScriptEngine.Test.ChakraIeJsRt',
-			'MsieJavaScriptEngine.Test.ChakraActiveScript',
-			'MsieJavaScriptEngine.Test.Classic'
+		string[] testProjectNames = {
+			"MsieJavaScriptEngine.Test.Common",
+			"MsieJavaScriptEngine.Test.Auto",
+			"MsieJavaScriptEngine.Test.ChakraEdgeJsRt",
+			"MsieJavaScriptEngine.Test.ChakraIeJsRt",
+			"MsieJavaScriptEngine.Test.ChakraActiveScript",
+			"MsieJavaScriptEngine.Test.Classic"
 		};
 
-		Log.Info('Run unit tests for DotNet version:');
-		Log.Info('');
+		Log.Info("Run unit tests for DotNet version:");
+		Log.Info("");
 
-		foreach (string testProjectDirPath in testProjectDirPaths)
+		foreach (string testProjectName in testProjectNames)
 		{
-			Exec('dotnet', string.Format('test {0}', testProjectDirPath), testDirPath);
+			Log.Info(string.Format('Tests for "{0}" project:', testProjectName));
+			Log.Info("");
+
+			string testProjectDirPath = Path.Combine(testDirPath, testProjectName);
+			string testAssemblyDirPath;
+			string testAssemblyFilePath;
+
+			testAssemblyDirPath = Path.Combine(testProjectDirPath, "bin/Release/net451");
+			testAssemblyFilePath = Path.Combine(testAssemblyDirPath, testProjectName + ".exe");
+			Exec(testAssemblyFilePath, "", testProjectDirPath);
+
+			testAssemblyDirPath = Path.Combine(testProjectDirPath, "bin/Release/netcoreapp1.0");
+			if (Directory.Exists(testAssemblyDirPath))
+			{
+				testAssemblyFilePath = Path.Combine(testAssemblyDirPath, testProjectName + ".dll");
+				Exec("dotnet", testAssemblyFilePath, testProjectDirPath);
+			}
+
+			Log.Info("");
 		}
 
-		Log.Info('');
+		Log.Info("");
 	}
 
-#run-net4-tests description='Runs a unit tests for .NET 4.0 version'
+#run-net4-tests description="Runs a unit tests for .NET 4.0 version"
 	@{
 		string nunitConsolePath = "packages/NUnit.ConsoleRunner/tools/nunit3-console.exe";
 		string testDirPath = Path.Combine(BASE_DIR, "test");
 
-		Log.Info('Run unit tests for .NET 4.0 version:');
-		Log.Info('');
-		Exec(nunitConsolePath, 'MsieJavaScriptEngine.Test.Net4.nunit --verbose', testDirPath);
-		Log.Info('');
+		Log.Info("Run unit tests for .NET 4.0 version:");
+		Log.Info("");
+		Exec(nunitConsolePath, "MsieJavaScriptEngine.Test.Net4.nunit --verbose", testDirPath);
+		Log.Info("");
 	}
 
-macro name="GenerateResx" resxFile='string'
+macro name="GenerateResx" resxFile="string"
 	generate-resx
 
-macro name='Exec' program='string' commandline='string'
+macro name="Exec" program="string" commandline="string"
 	exec
 
-macro name='Exec' program='string' commandline='string' workingdir='string'
+macro name="Exec" program="string" commandline="string" workingdir="string"
 	exec
