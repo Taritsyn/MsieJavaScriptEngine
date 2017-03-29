@@ -824,12 +824,20 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				category = "Script error";
 				EdgeJsValue errorValue = jsScriptException.Error;
 
-				EdgeJsPropertyId messagePropertyId = EdgeJsPropertyId.FromString("message");
-				EdgeJsValue messagePropertyValue = errorValue.GetProperty(messagePropertyId);
-				string scriptMessage = messagePropertyValue.ConvertToString().ToString();
-				if (!string.IsNullOrWhiteSpace(scriptMessage))
+				EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
+				if (errorValue.HasProperty(stackPropertyId))
 				{
-					message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
+					EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
+					message = stackPropertyValue.ConvertToString().ToString();
+				}
+				else
+				{
+					EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
+					string scriptMessage = messagePropertyValue.ConvertToString().ToString();
+					if (!string.IsNullOrWhiteSpace(scriptMessage))
+					{
+						message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
+					}
 				}
 
 				EdgeJsPropertyId linePropertyId = EdgeJsPropertyId.FromString("line");

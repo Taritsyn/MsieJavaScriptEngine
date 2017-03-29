@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Added support of .NET Core 1.0.4.
+   1. Added support of .NET Core 1.0.4;
+   2. In JsRT modes now script error contains a full stack trace.
 
    ============
    PROJECT SITE

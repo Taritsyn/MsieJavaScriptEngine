@@ -847,12 +847,20 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				category = "Script error";
 				IeJsValue errorValue = jsScriptException.Error;
 
-				IeJsPropertyId messagePropertyId = IeJsPropertyId.FromString("message");
-				IeJsValue messagePropertyValue = errorValue.GetProperty(messagePropertyId);
-				string scriptMessage = messagePropertyValue.ConvertToString().ToString();
-				if (!string.IsNullOrWhiteSpace(scriptMessage))
+				IeJsPropertyId stackPropertyId = IeJsPropertyId.FromString("stack");
+				if (errorValue.HasProperty(stackPropertyId))
 				{
-					message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
+					IeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
+					message = stackPropertyValue.ConvertToString().ToString();
+				}
+				else
+				{
+					IeJsValue messagePropertyValue = errorValue.GetProperty("message");
+					string scriptMessage = messagePropertyValue.ConvertToString().ToString();
+					if (!string.IsNullOrWhiteSpace(scriptMessage))
+					{
+						message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
+					}
 				}
 
 				IeJsPropertyId linePropertyId = IeJsPropertyId.FromString("line");
