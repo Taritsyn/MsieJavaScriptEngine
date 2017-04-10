@@ -944,11 +944,11 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			get { return _engineModeName; }
 		}
 
-		public override object Evaluate(string expression)
+		public override object Evaluate(string expression, string documentName)
 		{
 			object result = InvokeScript(() =>
 			{
-				EdgeJsValue resultValue = EdgeJsContext.RunScript(expression);
+				EdgeJsValue resultValue = EdgeJsContext.RunScript(expression, _jsSourceContext++, documentName);
 
 				return MapToHostType(resultValue);
 			});
@@ -956,9 +956,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			return result;
 		}
 
-		public override void Execute(string code)
+		public override void Execute(string code, string documentName)
 		{
-			InvokeScript(() => EdgeJsContext.RunScript(code));
+			InvokeScript(() => EdgeJsContext.RunScript(code, _jsSourceContext++, documentName));
 		}
 
 		public override object CallFunction(string functionName, params object[] args)

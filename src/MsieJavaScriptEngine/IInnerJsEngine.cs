@@ -21,10 +21,25 @@ namespace MsieJavaScriptEngine
 		object Evaluate(string expression);
 
 		/// <summary>
+		/// Evaluates an expression
+		/// </summary>
+		/// <param name="expression">JavaScript expression</param>
+		/// <param name="documentName">Document name</param>
+		/// <returns>Result of the expression</returns>
+		object Evaluate(string expression, string documentName);
+
+		/// <summary>
 		/// Executes a code
 		/// </summary>
 		/// <param name="code">JavaScript code</param>
 		void Execute(string code);
+
+		/// <summary>
+		/// Executes a code
+		/// </summary>
+		/// <param name="code">JavaScript code</param>
+		/// <param name="documentName">Document name</param>
+		void Execute(string code, string documentName);
 
 		/// <summary>
 		/// Calls a function

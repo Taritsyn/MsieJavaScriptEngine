@@ -374,8 +374,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		/// <param name="code">Script text</param>
 		/// <param name="isExpression">Flag that script text needs to run as an expression</param>
+		/// <param name="documentName">Document name</param>
 		/// <returns>Result of the execution</returns>
-		private object InnerExecute(string code, bool isExpression)
+		private object InnerExecute(string code, bool isExpression, string documentName)
 		{
 			object result;
 
@@ -685,7 +686,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public object Evaluate(string expression)
 		{
-			object result = InvokeScript(() => InnerExecute(expression, true));
+			return Evaluate(expression, string.Empty);
+		}
+
+		public object Evaluate(string expression, string documentName)
+		{
+			object result = InvokeScript(() => InnerExecute(expression, true, documentName));
 			result = MapToHostType(result);
 
 			return result;
@@ -693,9 +699,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public void Execute(string code)
 		{
+			Execute(code, string.Empty);
+		}
+
+		public void Execute(string code, string documentName)
+		{
 			InvokeScript(() =>
 			{
-				InnerExecute(code, false);
+				InnerExecute(code, false, documentName);
 			});
 		}
 

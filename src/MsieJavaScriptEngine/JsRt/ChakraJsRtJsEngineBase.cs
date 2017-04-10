@@ -14,6 +14,11 @@ namespace MsieJavaScriptEngine.JsRt
 	internal abstract class ChakraJsRtJsEngineBase : IInnerJsEngine
 	{
 		/// <summary>
+		/// JS source context
+		/// </summary>
+		protected JsSourceContext _jsSourceContext = JsSourceContext.FromIntPtr(IntPtr.Zero);
+
+		/// <summary>
 		/// JavaScript engine mode
 		/// </summary>
 		protected readonly JsEngineMode _engineMode;
@@ -113,9 +118,19 @@ namespace MsieJavaScriptEngine.JsRt
 		public abstract string Mode { get; }
 
 
-		public abstract object Evaluate(string expression);
+		public object Evaluate(string expression)
+		{
+			return Evaluate(expression, string.Empty);
+		}
 
-		public abstract void Execute(string code);
+		public abstract object Evaluate(string expression, string documentName);
+
+		public void Execute(string code)
+		{
+			Execute(code, string.Empty);
+		}
+
+		public abstract void Execute(string code, string documentName);
 
 		public abstract object CallFunction(string functionName, params object[] args);
 

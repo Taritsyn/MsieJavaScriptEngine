@@ -226,6 +226,29 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Evaluates an expression
 		/// </summary>
+		/// <param name="expression">JavaScript expression</param>
+		/// <param name="documentName">Document name</param>
+		/// <returns>Result of the expression</returns>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		public object Evaluate(string expression, string documentName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(expression))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, "expression"), "expression");
+			}
+
+			return _jsEngine.Evaluate(expression, documentName);
+		}
+
+		/// <summary>
+		/// Evaluates an expression
+		/// </summary>
 		/// <typeparam name="T">Type of result</typeparam>
 		/// <param name="expression">JavaScript expression</param>
 		/// <returns>Result of the expression</returns>
@@ -258,6 +281,41 @@ namespace MsieJavaScriptEngine
 		}
 
 		/// <summary>
+		/// Evaluates an expression
+		/// </summary>
+		/// <typeparam name="T">Type of result</typeparam>
+		/// <param name="expression">JavaScript expression</param>
+		/// <param name="documentName">Document name</param>
+		/// <returns>Result of the expression</returns>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value
+		/// is not supported.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		public T Evaluate<T>(string expression, string documentName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(expression))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, "expression"), "expression");
+			}
+
+			Type returnValueType = typeof(T);
+			if (!ValidationHelpers.IsSupportedType(returnValueType))
+			{
+				throw new NotSupportedTypeException(
+				string.Format(CommonStrings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
+			}
+
+			object result = _jsEngine.Evaluate(expression, documentName);
+
+			return TypeConverter.ConvertToType<T>(result);
+		}
+
+		/// <summary>
 		/// Executes a code
 		/// </summary>
 		/// <param name="code">JavaScript code</param>
@@ -276,6 +334,28 @@ namespace MsieJavaScriptEngine
 			}
 
 			_jsEngine.Execute(code);
+		}
+
+		/// <summary>
+		/// Executes a code
+		/// </summary>
+		/// <param name="code">JavaScript code</param>
+		/// <param name="documentName">Document name</param>
+		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
+		/// JavaScript engine.</exception>
+		/// <exception cref="System.ArgumentException" />
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		public void Execute(string code, string documentName)
+		{
+			VerifyNotDisposed();
+
+			if (string.IsNullOrWhiteSpace(code))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, "code"), "code");
+			}
+
+			_jsEngine.Execute(code, documentName);
 		}
 
 		/// <summary>
@@ -299,7 +379,7 @@ namespace MsieJavaScriptEngine
 			}
 
 			string code = Utils.GetFileTextContent(path, encoding);
-			Execute(code);
+			Execute(code, path);
 		}
 
 		/// <summary>
@@ -336,7 +416,7 @@ namespace MsieJavaScriptEngine
 			}
 
 			string code = Utils.GetResourceAsString(resourceName, type);
-			Execute(code);
+			Execute(code, resourceName);
 		}
 
 		/// <summary>
@@ -372,7 +452,7 @@ namespace MsieJavaScriptEngine
 			}
 
 			string code = Utils.GetResourceAsString(resourceName, assembly);
-			Execute(code);
+			Execute(code, resourceName);
 		}
 
 		/// <summary>

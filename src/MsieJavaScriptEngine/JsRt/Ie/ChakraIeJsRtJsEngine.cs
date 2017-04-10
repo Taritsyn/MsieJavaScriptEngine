@@ -982,11 +982,11 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			get { return _engineModeName; }
 		}
 
-		public override object Evaluate(string expression)
+		public override object Evaluate(string expression, string documentName)
 		{
 			object result = InvokeScript(() =>
 			{
-				IeJsValue resultValue = IeJsContext.RunScript(expression);
+				IeJsValue resultValue = IeJsContext.RunScript(expression, _jsSourceContext++, documentName);
 
 				return MapToHostType(resultValue);
 			});
@@ -994,9 +994,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			return result;
 		}
 
-		public override void Execute(string code)
+		public override void Execute(string code, string documentName)
 		{
-			InvokeScript(() => IeJsContext.RunScript(code));
+			InvokeScript(() => IeJsContext.RunScript(code, _jsSourceContext++, documentName));
 		}
 
 		public override object CallFunction(string functionName, params object[] args)
