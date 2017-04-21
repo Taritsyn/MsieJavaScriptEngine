@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## April 21, 2017 - v2.2.0
+ * Added support of .NET Core 1.0.4
+ * In JsRT modes now script error contains a full stack trace
+ * In `MsieJsEngine` class was added overloaded versions of the `Evaluate`, `Evaluate<T>` and `Execute` methods, which take the document name as second parameter
+ * Now all modes support the possibility to debug in Visual Studio by adding the `debugger` statement to script code
+
 ## February 12, 2017 - v2.1.2
  * Fixed a error causing a crash during finalization
 
