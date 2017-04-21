@@ -2,7 +2,7 @@
 namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
-	/// The type of garbage collection
+	/// The type of garbage collection to perform
 	/// </summary>
 	internal enum ScriptGCType
 	{

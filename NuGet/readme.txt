@@ -22,7 +22,12 @@
    RELEASE NOTES
    =============
    1. Added support of .NET Core 1.0.4;
-   2. In JsRT modes now script error contains a full stack trace.
+   2. In JsRT modes now script error contains a full stack trace;
+   3. In `MsieJsEngine` class was added overloaded versions of the `Evaluate`,
+      `Evaluate<T>` and `Execute` methods, which take the document name as second
+      parameter;
+   4. Now all modes support the possibility to debug in Visual Studio by adding the
+      `debugger` statement to script code.
 
    ============
    PROJECT SITE

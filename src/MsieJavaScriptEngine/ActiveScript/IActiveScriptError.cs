@@ -6,7 +6,7 @@ using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
-	/// An object implementing this interface is passed to the IActiveScriptSite.OnScriptError method
+	/// An object implementing this interface is passed to the <see cref="IActiveScriptSite.OnScriptError"/> method
 	/// whenever the scripting engine encounters an unhandled error. The host then calls methods on
 	/// this object to obtain information about the error that occurred.
 	/// </summary>
@@ -21,11 +21,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		/// <param name="exceptionInfo">An EXCEPINFO structure that receives error information</param>
 		void GetExceptionInfo(
-			[Out] out EXCEPINFO exceptionInfo);
+			[Out] out EXCEPINFO exceptionInfo
+		);
 
 		/// <summary>
 		/// Retrieves the location in the source code where an error occurred while the scripting engine
-		/// was running a script.
+		/// was running a script
 		/// </summary>
 		/// <param name="sourceContext">A cookie that identifies the context. The interpretation of
 		/// this parameter depends on the host application.</param>
@@ -34,7 +35,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		void GetSourcePosition(
 			[Out] out uint sourceContext,
 			[Out] out uint lineNumber,
-			[Out] out int characterPosition);
+			[Out] out int characterPosition
+		);
 
 		/// <summary>
 		/// Retrieves the line in the source file where an error occurred while a scripting engine
@@ -42,7 +44,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		/// <param name="sourceLine">The line of source code in which the error occurred</param>
 		void GetSourceLineText(
-			[Out] [MarshalAs(UnmanagedType.BStr)] out string sourceLine);
+			[Out] [MarshalAs(UnmanagedType.BStr)] out string sourceLine
+		);
 	}
 }
 #endif

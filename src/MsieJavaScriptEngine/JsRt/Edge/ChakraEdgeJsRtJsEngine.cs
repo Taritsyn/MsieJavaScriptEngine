@@ -17,22 +17,22 @@ using MsieJavaScriptEngine.Utilities;
 namespace MsieJavaScriptEngine.JsRt.Edge
 {
 	/// <summary>
-	/// “Edge” JsRT version of Chakra JavaScript engine
+	/// “Edge” JsRT version of Chakra JS engine
 	/// </summary>
 	internal sealed class ChakraEdgeJsRtJsEngine : ChakraJsRtJsEngineBase
 	{
 		/// <summary>
-		/// Instance of JavaScript runtime
+		/// Instance of JS runtime
 		/// </summary>
 		private EdgeJsRuntime _jsRuntime;
 
 		/// <summary>
-		/// Instance of JavaScript context
+		/// Instance of JS context
 		/// </summary>
 		private EdgeJsContext _jsContext;
 
 		/// <summary>
-		/// Flag indicating whether this JavaScript engine is supported
+		/// Flag indicating whether this JS engine is supported
 		/// </summary>
 		private static bool? _isSupported;
 
@@ -50,7 +50,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 
 		/// <summary>
-		/// Constructs an instance of the Chakra “Edge” JsRT JavaScript engine
+		/// Constructs an instance of the Chakra “Edge” JsRT engine
 		/// </summary>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
 		public ChakraEdgeJsRtJsEngine(bool enableDebugging)
@@ -86,7 +86,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		}
 
 		/// <summary>
-		/// Destructs an instance of the Chakra “Edge” JsRT JavaScript engine
+		/// Destructs an instance of the Chakra “Edge” JsRT engine
 		/// </summary>
 		~ChakraEdgeJsRtJsEngine()
 		{
@@ -95,16 +95,16 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 
 		/// <summary>
-		/// Creates a instance of JavaScript runtime with special settings
+		/// Creates a instance of JS runtime with special settings
 		/// </summary>
-		/// <returns>Instance of JavaScript runtime with special settings</returns>
+		/// <returns>Instance of JS runtime with special settings</returns>
 		private static EdgeJsRuntime CreateJsRuntime()
 		{
 			return EdgeJsRuntime.Create(JsRuntimeAttributes.None, null);
 		}
 
 		/// <summary>
-		/// Checks a support of the Chakra “Edge” JsRT JavaScript engine
+		/// Checks a support of the Chakra “Edge” JsRT engine
 		/// </summary>
 		/// <returns>Result of check (true - supports; false - does not support)</returns>
 		public static bool IsSupported()

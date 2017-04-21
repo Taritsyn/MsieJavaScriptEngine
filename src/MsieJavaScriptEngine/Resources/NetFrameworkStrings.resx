@@ -123,9 +123,6 @@
   <data name="Runtime_ActiveScriptLanguageVersionSelectionFailed" xml:space="preserve">
     <value>Failed to set '{0}' version of script language for the ActiveScript JavaScript engine.</value>
   </data>
-  <data name="Runtime_InvalidParserImplementationError" xml:space="preserve">
-    <value>The parser you passed implements neither `IActiveScriptParse32` nor `IActiveScriptParse64`.</value>
-  </data>
   <data name="Runtime_ItemNotFound" xml:space="preserve">
     <value>Item with name '{0}' not found.</value>
   </data>

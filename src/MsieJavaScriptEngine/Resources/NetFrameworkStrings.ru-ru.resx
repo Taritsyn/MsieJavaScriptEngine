@@ -123,9 +123,6 @@
   <data name="Runtime_ActiveScriptLanguageVersionSelectionFailed" xml:space="preserve">
     <value>Не удалось установить "{0}" версию языка сценариев для ActiveScript JavaScript-движка!</value>
   </data>
-  <data name="Runtime_InvalidParserImplementationError" xml:space="preserve">
-    <value>Парсер, переданный вами, не реализует интерфейсы `IActiveScriptParse32` и `IActiveScriptParse64`!</value>
-  </data>
   <data name="Runtime_ItemNotFound" xml:space="preserve">
     <value>Элемент с именем "{0}" не найден!</value>
   </data>

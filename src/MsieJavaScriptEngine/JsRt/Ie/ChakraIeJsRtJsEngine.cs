@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 #endif
 
+using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
@@ -17,7 +18,7 @@ using MsieJavaScriptEngine.Utilities;
 namespace MsieJavaScriptEngine.JsRt.Ie
 {
 	/// <summary>
-	/// “IE” JsRT version of Chakra JavaScript engine
+	/// “IE” JsRT version of Chakra JS engine
 	/// </summary>
 	internal sealed class ChakraIeJsRtJsEngine : ChakraJsRtJsEngineBase
 	{
@@ -27,17 +28,17 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		const string LOWER_IE_VERSION = "11";
 
 		/// <summary>
-		/// Instance of JavaScript runtime
+		/// Instance of JS runtime
 		/// </summary>
 		private IeJsRuntime _jsRuntime;
 
 		/// <summary>
-		/// Instance of JavaScript context
+		/// Instance of JS context
 		/// </summary>
 		private IeJsContext _jsContext;
 
 		/// <summary>
-		/// Flag indicating whether this JavaScript engine is supported
+		/// Flag indicating whether this JS engine is supported
 		/// </summary>
 		private static bool? _isSupported;
 
@@ -55,7 +56,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 
 		/// <summary>
-		/// Constructs an instance of the Chakra “IE” JsRT JavaScript engine
+		/// Constructs an instance of the Chakra “IE” JsRT engine
 		/// </summary>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
 		public ChakraIeJsRtJsEngine(bool enableDebugging)
@@ -93,7 +94,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 
 		/// <summary>
-		/// Destructs an instance of the Chakra “IE” JsRT JavaScript engine
+		/// Destructs an instance of the Chakra “IE” JsRT engine
 		/// </summary>
 		~ChakraIeJsRtJsEngine()
 		{
@@ -102,16 +103,16 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 
 		/// <summary>
-		/// Creates a instance of JavaScript runtime with special settings
+		/// Creates a instance of JS runtime with special settings
 		/// </summary>
-		/// <returns>Instance of JavaScript runtime with special settings</returns>
+		/// <returns>Instance of JS runtime with special settings</returns>
 		private static IeJsRuntime CreateJsRuntime()
 		{
 			return IeJsRuntime.Create(JsRuntimeAttributes.None, JsRuntimeVersion.VersionEdge, null);
 		}
 
 		/// <summary>
-		/// Checks a support of the Chakra “IE” JsRT JavaScript engine
+		/// Checks a support of the Chakra “IE” JsRT engine
 		/// </summary>
 		/// <returns>Result of check (true - supports; false - does not support)</returns>
 		public static bool IsSupported()

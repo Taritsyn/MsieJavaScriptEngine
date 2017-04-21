@@ -2,8 +2,7 @@
 namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
-	/// Contains named constant values that specify the state of a thread in a scripting
-	/// engine. This enumeration is used by the IActiveScript::GetScriptThreadState method
+	/// Specifies the state of a thread in a scripting engine
 	/// </summary>
 	internal enum ScriptThreadState : uint
 	{
@@ -17,7 +16,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Specified thread is actively servicing a scripted event, processing
 		/// immediately executed script text, or running a script macro
 		/// </summary>
-		Running = 1,
+		Running = 1
 	}
 }
 #endif

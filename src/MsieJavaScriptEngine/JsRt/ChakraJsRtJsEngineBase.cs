@@ -4,29 +4,17 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 #endif
 
-using MsieJavaScriptEngine.Helpers;
-
 namespace MsieJavaScriptEngine.JsRt
 {
 	/// <summary>
-	/// Base class of the Chakra JsRT JavaScript engine
+	/// JsRT version of Chakra JS engine
 	/// </summary>
-	internal abstract class ChakraJsRtJsEngineBase : IInnerJsEngine
+	internal abstract class ChakraJsRtJsEngineBase : InnerJsEngineBase
 	{
 		/// <summary>
 		/// JS source context
 		/// </summary>
 		protected JsSourceContext _jsSourceContext = JsSourceContext.FromIntPtr(IntPtr.Zero);
-
-		/// <summary>
-		/// JavaScript engine mode
-		/// </summary>
-		protected readonly JsEngineMode _engineMode;
-
-		/// <summary>
-		/// Name of JavaScript engine mode
-		/// </summary>
-		protected readonly string _engineModeName;
 
 		/// <summary>
 		/// Flag for whether to enable script debugging features
@@ -55,21 +43,15 @@ namespace MsieJavaScriptEngine.JsRt
 		/// </summary>
 		protected readonly ScriptDispatcher _dispatcher = new ScriptDispatcher();
 
-		/// <summary>
-		/// Flag that object is destroyed
-		/// </summary>
-		protected StatedFlag _disposedFlag = new StatedFlag();
-
 
 		/// <summary>
-		/// Constructs an instance of the Chakra JsRT JavaScript engine
+		/// Constructs an instance of the Chakra JsRT engine
 		/// </summary>
-		/// <param name="engineMode">JavaScript engine mode</param>
+		/// <param name="engineMode">JS engine mode</param>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
 		protected ChakraJsRtJsEngineBase(JsEngineMode engineMode, bool enableDebugging)
+			: base(engineMode)
 		{
-			_engineMode = engineMode;
-			_engineModeName = JsEngineModeHelpers.GetModeName(engineMode);
 			_enableDebugging = enableDebugging;
 #if NETSTANDARD1_3
 			_externalObjectFinalizeCallback = ExternalObjectFinalizeCallback;
@@ -113,46 +95,7 @@ namespace MsieJavaScriptEngine.JsRt
 		}
 #endif
 
-		#region IInnerJsEngine implementation
-
-		public abstract string Mode { get; }
-
-
-		public object Evaluate(string expression)
-		{
-			return Evaluate(expression, string.Empty);
-		}
-
-		public abstract object Evaluate(string expression, string documentName);
-
-		public void Execute(string code)
-		{
-			Execute(code, string.Empty);
-		}
-
-		public abstract void Execute(string code, string documentName);
-
-		public abstract object CallFunction(string functionName, params object[] args);
-
-		public abstract bool HasVariable(string variableName);
-
-		public abstract object GetVariableValue(string variableName);
-
-		public abstract void SetVariableValue(string variableName, object value);
-
-		public abstract void RemoveVariable(string variableName);
-
-		public abstract void EmbedHostObject(string itemName, object value);
-
-		public abstract void EmbedHostType(string itemName, Type type);
-
-		public abstract void CollectGarbage();
-
-		#endregion
-
 		#region IDisposable implementation
-
-		public abstract void Dispose();
 
 		/// <summary>
 		/// Destroys object

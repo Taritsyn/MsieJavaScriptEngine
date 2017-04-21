@@ -2,28 +2,58 @@
 using System;
 using System.Runtime.InteropServices;
 
+using MsieJavaScriptEngine.ActiveScript.Debugging;
+
 namespace MsieJavaScriptEngine.ActiveScript
 {
-	/// <summary>
-	/// If the Windows Script engine allows raw text code scriptlets to be added to the script
-	/// or allows expression text to be evaluated at run time, it implements the
-	/// IActiveScriptParse interface. For interpreted scripting languages that have no
-	/// independent authoring environment, such as VBScript, this provides an alternate
-	/// mechanism (other than IPersist*) to get script code into the scripting engine, and
-	/// to attach script fragments to various object events.
-	/// </summary>
-	/// <remarks>
-	/// Before the scripting engine can be used, one of the following methods must be called
-	/// : IPersist*::Load, IPersist*::InitNew, or IActiveScriptParse::InitNew. The semantics
-	/// of this method are identical to IPersistStreamInit::InitNew, in that this method tells
-	/// the scripting engine to initialize itself. Note that it is not valid to call both
-	/// IPersist*::InitNew or IActiveScriptParse::InitNew and IPersist*::Load, nor is it valid
-	/// to call IPersist*::InitNew, IActiveScriptParse::InitNew, or IPersist*::Load more
-	/// than once.
-	/// </remarks>
 	[ComVisible(false)]
-	internal interface IActiveScriptParseWrapper : IDisposable
+	internal interface IActiveScriptWrapper : IDisposable
 	{
+		/// <summary>
+		/// Informs the scripting engine of the IActiveScriptSite interface site provided by the host.
+		/// Call this method before any other IActiveScript interface methods is used
+		/// </summary>
+		/// <param name="site">The host-supplied script site to be associated with this instance
+		/// of the scripting engine. The site must be uniquely assigned to this scripting engine
+		/// instance; it cannot be shared with other scripting engines.</param>
+		void SetScriptSite(
+			[In] IActiveScriptSite site);
+
+		/// <summary>
+		/// Puts the scripting engine into the given state. This method can be called from non-base
+		/// threads without resulting in a non-base callout to host objects or to the IActiveScriptSite
+		/// interface.
+		/// </summary>
+		/// <param name="state">Sets the scripting engine to the given state</param>
+		void SetScriptState(
+			[In] ScriptState state);
+
+		/// <summary>
+		/// Adds the name of a root-level item to the scripting engine's name space. A root-level item
+		/// is an object with properties and methods, an event source, or all three
+		/// </summary>
+		/// <param name="name">The name of the item as viewed from the script. The name must be unique
+		/// and persistable</param>
+		/// <param name="flags">Flags associated with an item</param>
+		void AddNamedItem(
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string name,
+			[In] ScriptItemFlags flags);
+
+		/// <summary>
+		/// Retrieves the IDispatch interface for the methods and properties associated with the
+		/// currently running script
+		/// </summary>
+		/// <param name="itemName">The name of the item for which the caller needs the associated
+		/// dispatch object. If this parameter is NULL, the dispatch object contains as its members
+		/// all of the global methods and properties defined by the script. Through the IDispatch
+		/// interface and the associated ITypeInfo interface, the host can invoke script methods
+		/// or view and modify script variables.</param>
+		/// <param name="dispatch">The object associated with the script's global methods and
+		/// properties. If the scripting engine does not support such an object, NULL is returned.</param>
+		void GetScriptDispatch(
+			[In] [MarshalAs(UnmanagedType.LPWStr)] string itemName,
+			[Out] [MarshalAs(UnmanagedType.IDispatch)] out object dispatch);
+
 		/// <summary>
 		/// Initializes the scripting engine.
 		/// </summary>
@@ -116,9 +146,21 @@ namespace MsieJavaScriptEngine.ActiveScript
 			string itemName,
 			object context,
 			string delimiter,
-			IntPtr sourceContextCookie,
+			UIntPtr sourceContextCookie,
 			uint startingLineNumber,
 			ScriptTextFlags flags);
+
+		void EnumCodeContextsOfPosition(
+			UIntPtr sourceContext,
+			uint offset,
+			uint length,
+			out IEnumDebugCodeContexts enumContexts);
+
+		/// <summary>
+		/// Starts a garbage collection
+		/// </summary>
+		/// <param name="type">The type of garbage collection</param>
+		void CollectGarbage(ScriptGCType type);
 	}
 }
 #endif

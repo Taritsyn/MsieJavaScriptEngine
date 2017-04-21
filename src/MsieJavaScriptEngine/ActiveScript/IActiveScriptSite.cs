@@ -1,16 +1,17 @@
 ﻿#if !NETSTANDARD1_3
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
-	/// Implemented by the host to create a site for the Windows Script engine. Usually, this site
-	/// will be associated with the container of all the objects that are visible to the script
-	/// (for example, the ActiveX Controls). Typically, this container will correspond to the document
-	/// or page being viewed. Microsoft Internet Explorer, for example, would create such a container
+	/// Implemented by the host to create a site for the Active Script engine. Usually, this site
+	/// will be associated with the container of all the objects that are visible to the script (for
+	/// example, the ActiveX Controls). Typically, this container will correspond to the document or
+	/// page being viewed. Microsoft Internet Explorer, for example, would create such a container
 	/// for each HTML page being displayed. Each ActiveX control (or other automation object) on the
 	/// page, and the scripting engine itself, would be enumerable within this container.
 	/// </summary>
@@ -27,83 +28,90 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="lcid">A variable that receives the locale identifier for user-interface
 		/// elements displayed by the scripting engine</param>
 		void GetLcid(
-			[Out] out int lcid);
+			[Out] out int lcid
+		);
 
 		/// <summary>
 		/// Allows the scripting engine to obtain information about an item added with the
-		/// IActiveScript.AddNamedItem method
+		/// <see cref="IActiveScript.AddNamedItem"/> method
 		/// </summary>
 		/// <param name="name">The name associated with the item, as specified in the
-		/// IActiveScript.AddNamedItem method</param>
+		/// <see cref="IActiveScript.AddNamedItem"/> method</param>
 		/// <param name="mask">A bit mask specifying what information about the item should be
 		/// returned. The scripting engine should request the minimum amount of information possible
-		/// because some of the return parameters (for example, ITypeInfo) can take considerable
-		/// time to load or generate.</param>
-		/// <param name="pUnkItem">A variable that receives a pointer to the IUnknown interface associated
-		/// with the given item. The scripting engine can use the IUnknown.QueryInterface method to
-		/// obtain the IDispatch interface for the item. This parameter receives null if mask
-		/// does not include the ScriptInfo.IUnknown value. Also, it receives null if there is no
-		/// object associated with the item name; this mechanism is used to create a simple class when
-		/// the named item was added with the ScriptItem.CodeOnly flag set in the
-		/// IActiveScript.AddNamedItem method.</param>
-		/// <param name="pTypeInfo">A variable that receives a pointer to the ITypeInfo interface
-		/// associated with the item. This parameter receives null if mask does not include the
-		/// ScriptInfo.ITypeInfo value, or if type information is not available for this item. If type
-		/// information is not available, the object cannot source events, and name binding must be
-		/// realized with the IDispatch.GetIDsOfNames method. Note that the ITypeInfo interface
-		/// retrieved describes the item's coclass (TKIND_COCLASS) because the object may support
-		/// multiple interfaces and event interfaces. If the item supports the IProvideMultipleTypeInfo
-		/// interface, the ITypeInfo interface retrieved is the same as the index zero ITypeInfo that
-		/// would be obtained using the IProvideMultipleTypeInfo.GetInfoOfIndex method.</param>
+		/// because some of the return parameters (for example, <see cref="ITypeInfo"/>) can take
+		/// considerable time to load or generate.</param>
+		/// <param name="pUnkItem">A variable that receives a pointer to the IUnknown interface
+		/// associated with the given item. The scripting engine can use the IUnknown.QueryInterface
+		/// method to obtain the IDispatch interface for the item. This parameter receives null if
+		/// mask does not include the <see cref="ScriptInfoFlags.IUnknown"/> value. Also, it receives
+		/// null if there is no object associated with the item name; this mechanism is used to create
+		/// a simple class when the named item was added with the <see cref="ScriptItemFlags.CodeOnly"/>
+		/// flag set in the <see cref="IActiveScript.AddNamedItem"/> method.</param>
+		/// <param name="pTypeInfo">A variable that receives a pointer to the <see cref="ITypeInfo"/>
+		/// interface associated with the item. This parameter receives null if mask does not include
+		/// the <see cref="ScriptInfoFlags.ITypeInfo"/> value, or if type information is not available
+		/// for this item. If type information is not available, the object cannot source events, and
+		/// name binding must be realized with the IDispatch.GetIDsOfNames method. Note that the
+		/// <see cref="ITypeInfo"/> interface retrieved describes the item's coclass (TKIND_COCLASS)
+		/// because the object may support multiple interfaces and event interfaces. If the item supports
+		/// the IProvideMultipleTypeInfo interface, the <see cref="ITypeInfo"/> interface retrieved is
+		/// the same as the index zero <see cref="ITypeInfo"/> that would be obtained using the
+		/// IProvideMultipleTypeInfo.GetInfoOfIndex method.</param>
 		void GetItemInfo(
 			[In] [MarshalAs(UnmanagedType.LPWStr)] string name,
 			[In] ScriptInfoFlags mask,
 			[In] [Out] ref IntPtr pUnkItem,
-			[In] [Out] ref IntPtr pTypeInfo);
+			[In] [Out] ref IntPtr pTypeInfo
+		);
 
 		/// <summary>
 		/// Retrieves a host-defined string that uniquely identifies the current document version. If
-		/// the related document has changed outside the scope of Windows Script (as in the case of an
+		/// the related document has changed outside the scope of Active Script (as in the case of an
 		/// HTML page being edited with Notepad), the scripting engine can save this along with its
 		/// persisted state, forcing a recompile the next time the script is loaded.
 		/// </summary>
 		/// <param name="version">The host-defined document version string</param>
 		void GetDocVersionString(
-			[Out] [MarshalAs(UnmanagedType.BStr)] out string version);
+			[Out] [MarshalAs(UnmanagedType.BStr)] out string version
+		);
 
 		/// <summary>
-		/// Informs the host that the script has completed execution.
+		/// Informs the host that the script has completed execution
 		/// </summary>
 		/// <param name="result">A variable that contains the script result, or null if the script
-		/// produced no result.</param>
+		/// produced no result</param>
 		/// <param name="exceptionInfo">Contains exception information generated when the script
 		/// terminated, or null if no exception was generated</param>
 		void OnScriptTerminate(
 			[In] object result,
-			[In] EXCEPINFO exceptionInfo);
+			[In] EXCEPINFO exceptionInfo
+		);
 
 		/// <summary>
-		/// Informs the host that the scripting engine has changed states.
+		/// Informs the host that the scripting engine has changed states
 		/// </summary>
-		/// <param name="state">Indicates the new script state.</param>
+		/// <param name="state">Indicates the new script state</param>
 		void OnStateChange(
-			[In] ScriptState state);
+			[In] ScriptState state
+		);
 
 		/// <summary>
-		/// Informs the host that an execution error occurred while the engine was running the script.
+		/// Informs the host that an execution error occurred while the engine was running the script
 		/// </summary>
 		/// <param name="error">A host can use this interface to obtain information about the
-		/// execution error.</param>
+		/// execution error</param>
 		void OnScriptError(
-			[In] IActiveScriptError error);
+			[In] IActiveScriptError error
+		);
 
 		/// <summary>
-		/// Informs the host that the scripting engine has begun executing the script code.
+		/// Informs the host that the scripting engine has begun executing the script code
 		/// </summary>
 		void OnEnterScript();
 
 		/// <summary>
-		/// Informs the host that the scripting engine has returned from executing script code.
+		/// Informs the host that the scripting engine has returned from executing script code
 		/// </summary>
 		void OnLeaveScript();
 	}

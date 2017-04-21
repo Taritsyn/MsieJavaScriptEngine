@@ -51,14 +51,173 @@
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptJsEngineBase.cs">
       <Link>ActiveScript\ActiveScriptJsEngineBase.cs</Link>
     </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptParseWrapper.cs">
-      <Link>ActiveScript\ActiveScriptParseWrapper.cs</Link>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptJsEngineBase.ScriptSite.cs">
+      <Link>ActiveScript\ActiveScriptJsEngineBase.ScriptSite.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptWrapper.cs">
+      <Link>ActiveScript\ActiveScriptWrapper.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ChakraActiveScriptJsEngine.cs">
       <Link>ActiveScript\ChakraActiveScriptJsEngine.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ClassicActiveScriptJsEngine.cs">
       <Link>ActiveScript\ClassicActiveScriptJsEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\AppBreakFlags.cs">
+      <Link>ActiveScript\Debugging\AppBreakFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\BreakpointState.cs">
+      <Link>ActiveScript\Debugging\BreakpointState.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\BreakReason.cs">
+      <Link>ActiveScript\Debugging\BreakReason.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\BreakResumeAction.cs">
+      <Link>ActiveScript\Debugging\BreakResumeAction.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\DebugApplicationWrapper.cs">
+      <Link>ActiveScript\Debugging\DebugApplicationWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\DebugDocument.cs">
+      <Link>ActiveScript\Debugging\DebugDocument.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\DebugDocumentContext.cs">
+      <Link>ActiveScript\Debugging\DebugDocumentContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\DebugLineInfo.cs">
+      <Link>ActiveScript\Debugging\DebugLineInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\DebugStackFrameDescriptor.cs">
+      <Link>ActiveScript\Debugging\DebugStackFrameDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\DocumentNameType.cs">
+      <Link>ActiveScript\Debugging\DocumentNameType.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\ErrorResumeAction.cs">
+      <Link>ActiveScript\Debugging\ErrorResumeAction.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IActiveScriptDebug32.cs">
+      <Link>ActiveScript\Debugging\IActiveScriptDebug32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IActiveScriptDebug64.cs">
+      <Link>ActiveScript\Debugging\IActiveScriptDebug64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IActiveScriptErrorDebug.cs">
+      <Link>ActiveScript\Debugging\IActiveScriptErrorDebug.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IActiveScriptSiteDebug32.cs">
+      <Link>ActiveScript\Debugging\IActiveScriptSiteDebug32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IActiveScriptSiteDebug64.cs">
+      <Link>ActiveScript\Debugging\IActiveScriptSiteDebug64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IActiveScriptSiteDebugEx.cs">
+      <Link>ActiveScript\Debugging\IActiveScriptSiteDebugEx.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IApplicationDebugger.cs">
+      <Link>ActiveScript\Debugging\IApplicationDebugger.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugApplication32.cs">
+      <Link>ActiveScript\Debugging\IDebugApplication32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugApplication64.cs">
+      <Link>ActiveScript\Debugging\IDebugApplication64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugApplicationNode.cs">
+      <Link>ActiveScript\Debugging\IDebugApplicationNode.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugApplicationThread.cs">
+      <Link>ActiveScript\Debugging\IDebugApplicationThread.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugAsyncOperation.cs">
+      <Link>ActiveScript\Debugging\IDebugAsyncOperation.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugCodeContext.cs">
+      <Link>ActiveScript\Debugging\IDebugCodeContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugDocument.cs">
+      <Link>ActiveScript\Debugging\IDebugDocument.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugDocumentContext.cs">
+      <Link>ActiveScript\Debugging\IDebugDocumentContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugDocumentHelper32.cs">
+      <Link>ActiveScript\Debugging\IDebugDocumentHelper32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugDocumentHelper64.cs">
+      <Link>ActiveScript\Debugging\IDebugDocumentHelper64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugDocumentInfo.cs">
+      <Link>ActiveScript\Debugging\IDebugDocumentInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugDocumentProvider.cs">
+      <Link>ActiveScript\Debugging\IDebugDocumentProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugDocumentText.cs">
+      <Link>ActiveScript\Debugging\IDebugDocumentText.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugProperty.cs">
+      <Link>ActiveScript\Debugging\IDebugProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugStackFrame.cs">
+      <Link>ActiveScript\Debugging\IDebugStackFrame.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugStackFrameSniffer.cs">
+      <Link>ActiveScript\Debugging\IDebugStackFrameSniffer.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugSyncOperation.cs">
+      <Link>ActiveScript\Debugging\IDebugSyncOperation.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugThreadCall32.cs">
+      <Link>ActiveScript\Debugging\IDebugThreadCall32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugThreadCall64.cs">
+      <Link>ActiveScript\Debugging\IDebugThreadCall64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IEnumDebugApplicationNodes.cs">
+      <Link>ActiveScript\Debugging\IEnumDebugApplicationNodes.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IEnumDebugCodeContexts.cs">
+      <Link>ActiveScript\Debugging\IEnumDebugCodeContexts.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IEnumDebugExpressionContexts.cs">
+      <Link>ActiveScript\Debugging\IEnumDebugExpressionContexts.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IEnumDebugStackFrames.cs">
+      <Link>ActiveScript\Debugging\IEnumDebugStackFrames.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IEnumRemoteDebugApplicationThreads.cs">
+      <Link>ActiveScript\Debugging\IEnumRemoteDebugApplicationThreads.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IProcessDebugManager32.cs">
+      <Link>ActiveScript\Debugging\IProcessDebugManager32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IProcessDebugManager64.cs">
+      <Link>ActiveScript\Debugging\IProcessDebugManager64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IProvideExpressionContexts.cs">
+      <Link>ActiveScript\Debugging\IProvideExpressionContexts.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IRemoteDebugApplicationThread.cs">
+      <Link>ActiveScript\Debugging\IRemoteDebugApplicationThread.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\ProcessDebugManager.cs">
+      <Link>ActiveScript\Debugging\ProcessDebugManager.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\ProcessDebugManagerWrapper.cs">
+      <Link>ActiveScript\Debugging\ProcessDebugManagerWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\RawEnumCodeContextsOfPosition32.cs">
+      <Link>ActiveScript\Debugging\RawEnumCodeContextsOfPosition32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\RawEnumCodeContextsOfPosition64.cs">
+      <Link>ActiveScript\Debugging\RawEnumCodeContextsOfPosition64.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\SourceTextAttrs.cs">
+      <Link>ActiveScript\Debugging\SourceTextAttrs.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\TextDocAttrs.cs">
+      <Link>ActiveScript\Debugging\TextDocAttrs.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScript.cs">
       <Link>ActiveScript\IActiveScript.cs</Link>
@@ -74,9 +233,6 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptParse64.cs">
       <Link>ActiveScript\IActiveScriptParse64.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptParseWrapper.cs">
-      <Link>ActiveScript\IActiveScriptParseWrapper.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptProperty.cs">
       <Link>ActiveScript\IActiveScriptProperty.cs</Link>
@@ -117,6 +273,9 @@
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptTypeLibFlags.cs">
       <Link>ActiveScript\ScriptTypeLibFlags.cs</Link>
     </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Constants\ClassId.cs">
+      <Link>Constants\ClassId.cs</Link>
+    </Compile>
     <Compile Include="..\MsieJavaScriptEngine\Constants\ComErrorCode.cs">
       <Link>Constants\ComErrorCode.cs</Link>
     </Compile>
@@ -155,6 +314,9 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\IInnerJsEngine.cs">
       <Link>IInnerJsEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\InnerJsEngineBase.cs">
+      <Link>InnerJsEngineBase.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\InterlockedStatedFlag.cs">
       <Link>InterlockedStatedFlag.cs</Link>
@@ -219,18 +381,6 @@
     <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\ChakraIeJsRtJsEngine.cs">
       <Link>JsRt\Ie\ChakraIeJsRtJsEngine.cs</Link>
     </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IDebugApplication32.cs">
-      <Link>JsRt\Ie\IDebugApplication32.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IDebugApplication64.cs">
-      <Link>JsRt\Ie\IDebugApplication64.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IDebugDocumentHelper32.cs">
-      <Link>JsRt\Ie\IDebugDocumentHelper32.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IDebugDocumentHelper64.cs">
-      <Link>JsRt\Ie\IDebugDocumentHelper64.cs</Link>
-    </Compile>
     <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeJsContext.cs">
       <Link>JsRt\Ie\IeJsContext.cs</Link>
     </Compile>
@@ -260,15 +410,6 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IeNativeMethods.cs">
       <Link>JsRt\Ie\IeNativeMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IProcessDebugManager32.cs">
-      <Link>JsRt\Ie\IProcessDebugManager32.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\IProcessDebugManager64.cs">
-      <Link>JsRt\Ie\IProcessDebugManager64.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\ProcessDebugManager.cs">
-      <Link>JsRt\Ie\ProcessDebugManager.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\JsRt\JsBackgroundWorkItemCallback.cs">
       <Link>JsRt\JsBackgroundWorkItemCallback.cs</Link>
@@ -362,6 +503,9 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\Utilities\TypeExtensions.cs">
       <Link>Utilities\TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Utilities\UniqueDocumentNameManager.cs">
+      <Link>Utilities\UniqueDocumentNameManager.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\Utilities\Utils.cs">
       <Link>Utilities\Utils.cs</Link>

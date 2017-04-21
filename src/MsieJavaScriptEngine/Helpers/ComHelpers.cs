@@ -52,6 +52,32 @@ namespace MsieJavaScriptEngine.Helpers
 			return clsid;
 		}
 
+		public static bool TryCreateComObject<T>(string progId, string serverName, out T obj) where T : class
+		{
+			Type type;
+			if (!TryGetComType(progId, serverName, out type))
+			{
+				obj = null;
+				return false;
+			}
+
+			obj = Activator.CreateInstance(type) as T;
+
+			return obj != null;
+		}
+
+		public static bool TryGetComType(string progId, string serverName, out Type type)
+		{
+			Guid clsid;
+			type = Guid.TryParseExact(progId, "B", out clsid) ?
+				Type.GetTypeFromCLSID(clsid, serverName)
+				:
+				Type.GetTypeFromProgID(progId, serverName)
+				;
+
+			return type != null;
+		}
+
 		public static IntPtr QueryInterface<T>(IntPtr pUnknown)
 		{
 			IntPtr pInterface;
@@ -69,6 +95,14 @@ namespace MsieJavaScriptEngine.Helpers
 			int result = Marshal.QueryInterface(pUnknown, ref iid, out pInterface);
 
 			return result == HResult.S_OK ? pInterface : IntPtr.Zero;
+		}
+
+		public static T GetMethodDelegate<T>(IntPtr pInterface, int methodIndex) where T : class
+		{
+			var pVTable = Marshal.ReadIntPtr(pInterface);
+			var pMethod = Marshal.ReadIntPtr(pVTable + methodIndex * IntPtr.Size);
+
+			return Marshal.GetDelegateForFunctionPointer(pMethod, typeof(T)) as T;
 		}
 
 		public static void ReleaseAndEmpty(ref IntPtr pUnk)
@@ -148,6 +182,11 @@ namespace MsieJavaScriptEngine.Helpers
 			public static void Check(int result)
 			{
 				Marshal.ThrowExceptionForHR(result);
+			}
+
+			public static bool Succeeded(uint result)
+			{
+				return GetSeverity(result) == SEVERITY_SUCCESS;
 			}
 
 			public static int GetSeverity(uint result)

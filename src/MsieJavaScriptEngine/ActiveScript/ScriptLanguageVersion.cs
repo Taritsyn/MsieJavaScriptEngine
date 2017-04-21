@@ -2,7 +2,7 @@
 namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
-	/// Version of script language (see https://msdn.microsoft.com/en-gb/library/hh769820(v=vs.94).aspx)
+	/// Specifies the possible scripting versions
 	/// </summary>
 	internal enum ScriptLanguageVersion
 	{
@@ -29,7 +29,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// ECMAScript 5
 		/// </summary>
-		EcmaScript5 = 3,
+		EcmaScript5 = 3
 	}
 }
 #endif

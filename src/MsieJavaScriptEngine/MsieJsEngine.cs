@@ -34,6 +34,12 @@ namespace MsieJavaScriptEngine
 		private static readonly object _creationSynchronizer = new object();
 
 		/// <summary>
+		/// Unique document name manager
+		/// </summary>
+		private readonly UniqueDocumentNameManager _documentNameManager =
+			new UniqueDocumentNameManager("Script Document");
+
+		/// <summary>
 		/// Flag that object is destroyed
 		/// </summary>
 		private InterlockedStatedFlag _disposedFlag = new InterlockedStatedFlag();
@@ -48,7 +54,7 @@ namespace MsieJavaScriptEngine
 
 
 		/// <summary>
-		/// Constructs instance of MSIE JavaScript engine
+		/// Constructs an instance of MSIE JavaScript engine
 		/// </summary>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
 		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
@@ -57,7 +63,7 @@ namespace MsieJavaScriptEngine
 		{ }
 
 		/// <summary>
-		/// Constructs instance of MSIE JavaScript engine
+		/// Constructs an instance of MSIE JavaScript engine
 		/// </summary>
 		/// <param name="settings">JavaScript engine settings</param>
 		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
@@ -155,7 +161,7 @@ namespace MsieJavaScriptEngine
 						if (previousMode != JsEngineMode.ChakraEdgeJsRt)
 						{
 
-							_jsEngine = new ChakraActiveScriptJsEngine();
+							_jsEngine = new ChakraActiveScriptJsEngine(settings.EnableDebugging);
 						}
 						else
 						{
@@ -175,8 +181,8 @@ namespace MsieJavaScriptEngine
 #endif
 					case JsEngineMode.Classic:
 #if !NETSTANDARD1_3
-						_jsEngine = new ClassicActiveScriptJsEngine(settings.UseEcmaScript5Polyfill,
-							settings.UseJson2Library);
+						_jsEngine = new ClassicActiveScriptJsEngine(settings.EnableDebugging,
+							settings.UseEcmaScript5Polyfill, settings.UseJson2Library);
 
 						break;
 #else
@@ -212,15 +218,7 @@ namespace MsieJavaScriptEngine
 		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public object Evaluate(string expression)
 		{
-			VerifyNotDisposed();
-
-			if (string.IsNullOrWhiteSpace(expression))
-			{
-				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "expression"), "expression");
-			}
-
-			return _jsEngine.Evaluate(expression);
+			return Evaluate(expression, string.Empty);
 		}
 
 		/// <summary>
@@ -243,7 +241,9 @@ namespace MsieJavaScriptEngine
 					string.Format(CommonStrings.Common_ArgumentIsEmpty, "expression"), "expression");
 			}
 
-			return _jsEngine.Evaluate(expression, documentName);
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(documentName);
+
+			return _jsEngine.Evaluate(expression, uniqueDocumentName);
 		}
 
 		/// <summary>
@@ -260,24 +260,7 @@ namespace MsieJavaScriptEngine
 		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public T Evaluate<T>(string expression)
 		{
-			VerifyNotDisposed();
-
-			if (string.IsNullOrWhiteSpace(expression))
-			{
-				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "expression"), "expression");
-			}
-
-			Type returnValueType = typeof(T);
-			if (!ValidationHelpers.IsSupportedType(returnValueType))
-			{
-				throw new NotSupportedTypeException(
-				string.Format(CommonStrings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
-			}
-
-			object result = _jsEngine.Evaluate(expression);
-
-			return TypeConverter.ConvertToType<T>(result);
+			return Evaluate<T>(expression, string.Empty);
 		}
 
 		/// <summary>
@@ -310,7 +293,8 @@ namespace MsieJavaScriptEngine
 				string.Format(CommonStrings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
 			}
 
-			object result = _jsEngine.Evaluate(expression, documentName);
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(documentName);
+			object result = _jsEngine.Evaluate(expression, uniqueDocumentName);
 
 			return TypeConverter.ConvertToType<T>(result);
 		}
@@ -325,15 +309,7 @@ namespace MsieJavaScriptEngine
 		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
 		public void Execute(string code)
 		{
-			VerifyNotDisposed();
-
-			if (string.IsNullOrWhiteSpace(code))
-			{
-				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "code"), "code");
-			}
-
-			_jsEngine.Execute(code);
+			Execute(code, string.Empty);
 		}
 
 		/// <summary>
@@ -355,7 +331,8 @@ namespace MsieJavaScriptEngine
 					string.Format(CommonStrings.Common_ArgumentIsEmpty, "code"), "code");
 			}
 
-			_jsEngine.Execute(code, documentName);
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(documentName);
+			_jsEngine.Execute(code, uniqueDocumentName);
 		}
 
 		/// <summary>

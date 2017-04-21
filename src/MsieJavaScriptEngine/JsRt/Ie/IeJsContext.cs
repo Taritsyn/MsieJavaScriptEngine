@@ -1,5 +1,6 @@
 ﻿using System;
 
+using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.JsRt.Ie

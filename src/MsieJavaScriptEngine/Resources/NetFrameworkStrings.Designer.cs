@@ -76,14 +76,6 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "The parser you passed implements neither `IActiveScriptParse32` nor `IActiveScriptParse64`."
-		/// </summary>
-		public static string Runtime_InvalidParserImplementationError
-		{
-			get { return GetString("Runtime_InvalidParserImplementationError"); }
-		}
-
-		/// <summary>
 		/// Looks up a localized string similar to "Item with name '{0}' not found."
 		/// </summary>
 		public static string Runtime_ItemNotFound

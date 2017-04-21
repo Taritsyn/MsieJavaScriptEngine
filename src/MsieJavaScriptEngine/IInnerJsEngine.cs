@@ -3,12 +3,12 @@
 namespace MsieJavaScriptEngine
 {
 	/// <summary>
-	/// Interface for the inner JavaScript engine
+	/// Interface for the inner JS engine
 	/// </summary>
 	internal interface IInnerJsEngine : IDisposable
 	{
 		/// <summary>
-		/// Gets a name of JavaScript engine mode
+		/// Gets a name of JS engine mode
 		/// </summary>
 		string Mode { get; }
 
@@ -16,14 +16,7 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Evaluates an expression
 		/// </summary>
-		/// <param name="expression">JavaScript expression</param>
-		/// <returns>Result of the expression</returns>
-		object Evaluate(string expression);
-
-		/// <summary>
-		/// Evaluates an expression
-		/// </summary>
-		/// <param name="expression">JavaScript expression</param>
+		/// <param name="expression">JS expression</param>
 		/// <param name="documentName">Document name</param>
 		/// <returns>Result of the expression</returns>
 		object Evaluate(string expression, string documentName);
@@ -31,13 +24,7 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Executes a code
 		/// </summary>
-		/// <param name="code">JavaScript code</param>
-		void Execute(string code);
-
-		/// <summary>
-		/// Executes a code
-		/// </summary>
-		/// <param name="code">JavaScript code</param>
+		/// <param name="code">JS code</param>
 		/// <param name="documentName">Document name</param>
 		void Execute(string code, string documentName);
 

@@ -23,11 +23,11 @@
 		/// <summary>
 		/// Trace all calls except DOM methods
 		/// </summary>
-		TraceAll = (TraceScriptFunctionCall | TraceNativeFunctionCall),
+		TraceAll = TraceScriptFunctionCall | TraceNativeFunctionCall,
 
 		/// <summary>
 		/// Trace all calls
 		/// </summary>
-		TraceAllWithDom = (TraceAll | TraceDomFunctionCall)
+		TraceAllWithDom = TraceAll | TraceDomFunctionCall
 	}
 }
