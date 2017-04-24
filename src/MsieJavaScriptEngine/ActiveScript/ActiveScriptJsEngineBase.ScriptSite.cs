@@ -34,6 +34,56 @@ namespace MsieJavaScriptEngine.ActiveScript
 				_jsEngine = jsEngine;
 			}
 
+			/// <summary>
+			/// Gets a error details
+			/// </summary>
+			/// <param name="error">Instance of Active Script error</param>
+			/// <returns>Error details</returns>
+			private string GetErrorDetails(IActiveScriptError error)
+			{
+				EXCEPINFO excepInfo;
+				error.GetExceptionInfo(out excepInfo);
+
+				string errorDetails = excepInfo.bstrDescription;
+				if (_jsEngine._processDebugManagerWrapper != null)
+				{
+					string errorLocation = GetErrorLocation(error);
+					if (!string.IsNullOrWhiteSpace(errorLocation))
+					{
+						errorDetails += Environment.NewLine + errorLocation;
+					}
+				}
+
+				return errorDetails;
+			}
+
+			/// <summary>
+			/// Gets a error location
+			/// </summary>
+			/// <param name="error">Instance of Active Script error</param>
+			/// <returns>Error location</returns>
+			private string GetErrorLocation(IActiveScriptError error)
+			{
+				string errorLocation = string.Empty;
+				uint sourceContext;
+				uint lineNumber;
+				int columnNumber;
+
+				error.GetSourcePosition(out sourceContext, out lineNumber, out columnNumber);
+				++lineNumber;
+				++columnNumber;
+
+				DebugDocument document;
+				if (_jsEngine._debugDocuments.TryGetValue(new UIntPtr(sourceContext), out document))
+				{
+					string documentName;
+					document.GetName(DocumentNameType.Title, out documentName);
+
+					errorLocation = string.Format("   at ({0}:{1}:{2})", documentName, lineNumber, columnNumber);
+				}
+
+				return errorLocation;
+			}
 
 			#region IActiveScriptSite implementation
 
@@ -75,7 +125,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			public void OnScriptError(IActiveScriptError error)
 			{
-				_jsEngine._lastException = ActiveScriptException.Create(error);
+				_jsEngine._lastException = ActiveScriptException.Create(GetErrorDetails(error), error);
 			}
 
 			public void OnEnterScript()
@@ -96,9 +146,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 			public void OnScriptErrorDebug(IActiveScriptErrorDebug errorDebug, out bool enterDebugger,
 				out bool callOnScriptErrorWhenContinuing)
 			{
-				if (errorDebug != null)
+				var error = errorDebug as IActiveScriptError;
+				if (error != null)
 				{
-					_jsEngine._lastException = ActiveScriptException.Create((IActiveScriptError)errorDebug);
+					_jsEngine._lastException = ActiveScriptException.Create(GetErrorDetails(error), error);
 				}
 
 				enterDebugger = true;

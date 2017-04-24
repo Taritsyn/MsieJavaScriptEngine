@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+
+using MsieJavaScriptEngine.Resources;
 
 namespace MsieJavaScriptEngine.Utilities
 {
@@ -30,6 +33,18 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <param name="defaultName">Default document name</param>
 		public UniqueDocumentNameManager(string defaultName)
 		{
+			if (defaultName == null)
+			{
+				throw new ArgumentNullException(
+					"defaultName", string.Format(CommonStrings.Common_ArgumentIsNull, "defaultName"));
+			}
+
+			if (string.IsNullOrWhiteSpace(defaultName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, "defaultName"), "defaultName");
+			}
+
 			_defaultName = defaultName;
 		}
 

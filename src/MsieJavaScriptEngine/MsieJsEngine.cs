@@ -349,6 +349,12 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
+			if (path == null)
+			{
+				throw new ArgumentNullException(
+					"path", string.Format(CommonStrings.Common_ArgumentIsNull, "path"));
+			}
+
 			if (string.IsNullOrWhiteSpace(path))
 			{
 				throw new ArgumentException(
@@ -392,7 +398,11 @@ namespace MsieJavaScriptEngine
 					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
 			}
 
-			string code = Utils.GetResourceAsString(resourceName, type);
+			Assembly assembly = type.GetTypeInfo().Assembly;
+			string nameSpace = type.Namespace;
+			string resourceFullName = nameSpace != null ? nameSpace + "." + resourceName : resourceName;
+
+			string code = Utils.GetResourceAsString(resourceFullName, assembly);
 			Execute(code, resourceName);
 		}
 

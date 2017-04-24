@@ -149,9 +149,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		}
 
 
-		internal static ActiveScriptException Create(IActiveScriptError error)
+		internal static ActiveScriptException Create(string message, IActiveScriptError error)
 		{
-			string message = string.Empty;
 			int errorCode = 0;
 			short errorWCode = 0;
 			uint sourceContext = 0;
@@ -186,7 +185,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 				EXCEPINFO excepInfo;
 				error.GetExceptionInfo(out excepInfo);
 
-				message = excepInfo.bstrDescription;
 				subcategory = excepInfo.bstrSource;
 				errorCode = excepInfo.scode;
 				errorWCode = excepInfo.wCode;

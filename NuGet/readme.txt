@@ -27,7 +27,9 @@
       `Evaluate<T>` and `Execute` methods, which take the document name as second
       parameter;
    4. Now all modes support the possibility to debug in Visual Studio by adding the
-      `debugger` statement to script code.
+      `debugger` statement to script code;
+   5. Now during debugging in ActiveScript modes the script error contains a error
+      location.
 
    ============
    PROJECT SITE

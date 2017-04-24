@@ -203,7 +203,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 			position = 0;
 			int lineCount = _lines.Count;
 
-			if (lineNumber == 0 || lineNumber >= lineCount)
+			if (lineNumber == 0 || lineNumber > lineCount)
 			{
 				throw new ArgumentOutOfRangeException("lineNumber");
 			}
