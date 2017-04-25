@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## April 25, 2017 - v2.2.1
+ * Now during debugging in ActiveScript modes the script error contains a error location
+
 ## April 21, 2017 - v2.2.0
  * Added support of .NET Core 1.0.4
  * In JsRT modes now script error contains a full stack trace
