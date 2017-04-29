@@ -854,6 +854,11 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					columnNumber = columnPropertyValue.ConvertToNumber().ToInt32() + 1;
 				}
 
+				if (lineNumber <= 0 && columnNumber <= 0)
+				{
+					GetErrorCoordinatesFromMessage(message, out lineNumber, out columnNumber);
+				}
+
 				EdgeJsPropertyId sourcePropertyId = EdgeJsPropertyId.FromString("source");
 				if (errorValue.HasProperty(sourcePropertyId))
 				{

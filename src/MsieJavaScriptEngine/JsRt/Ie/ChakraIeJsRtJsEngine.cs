@@ -878,6 +878,11 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					columnNumber = (int)columnPropertyValue.ConvertToNumber().ToDouble() + 1;
 				}
 
+				if (lineNumber <= 0 && columnNumber <= 0)
+				{
+					GetErrorCoordinatesFromMessage(message, out lineNumber, out columnNumber);
+				}
+
 				IeJsPropertyId sourcePropertyId = IeJsPropertyId.FromString("source");
 				if (errorValue.HasProperty(sourcePropertyId))
 				{
