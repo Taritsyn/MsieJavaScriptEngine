@@ -68,6 +68,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					_jsRuntime = CreateJsRuntime();
 					_jsContext = _jsRuntime.CreateContext();
+					_jsContext.AddRef();
 				}
 				catch (JsUsageException e)
 				{
@@ -1156,7 +1157,11 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			{
 				if (_dispatcher != null)
 				{
-					_dispatcher.Invoke(() => _jsRuntime.Dispose());
+					_dispatcher.Invoke(() =>
+					{
+						_jsContext.Release();
+						_jsRuntime.Dispose();
+					});
 					_dispatcher.Dispose();
 				}
 

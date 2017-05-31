@@ -21,8 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Now during debugging in ActiveScript modes the script error contains a error
-   location.
+   1. In JsRT modes fixed a problems in calculation of error locations;
+   2. An attempt was made to prevent occurrence of the access violation exception.
 
    ============
    PROJECT SITE
