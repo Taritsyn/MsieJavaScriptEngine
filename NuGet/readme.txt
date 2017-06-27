@@ -24,7 +24,8 @@
    1. In JsRT modes fixed a problems in calculation of error locations;
    2. An attempt was made to prevent occurrence of the access violation exception;
    3. Now the original exception is added to instance of the `JsRuntimeException`
-      class as an inner exception.
+      class as an inner exception;
+   4. An attempt was made to prevent a blocking of finalizer's thread.
 
    ============
    PROJECT SITE

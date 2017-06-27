@@ -141,12 +141,15 @@ namespace MsieJavaScriptEngine
 		/// <returns>Result of the delegate invocation</returns>
 		private object InnnerInvoke(Func<object> del)
 		{
-			var waitHandle = new ManualResetEvent(false);
-			var task = new ScriptTask(del, waitHandle);
-			EnqueueTask(task);
+			ScriptTask task;
 
-			waitHandle.WaitOne();
-			waitHandle.Dispose();
+			using (var waitHandle = new ManualResetEvent(false))
+			{
+				task = new ScriptTask(del, waitHandle);
+				EnqueueTask(task);
+
+				waitHandle.WaitOne();
+			}
 
 			if (task.Exception != null)
 			{
