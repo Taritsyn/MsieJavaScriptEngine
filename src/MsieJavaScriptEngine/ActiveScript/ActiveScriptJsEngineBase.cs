@@ -250,7 +250,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private JsRuntimeException ConvertActiveScriptExceptionToJsRuntimeException(
 			ActiveScriptException activeScriptException)
 		{
-			var jsEngineException = new JsRuntimeException(activeScriptException.Message, _engineModeName)
+			var jsEngineException = new JsRuntimeException(activeScriptException.Message, _engineModeName,
+				activeScriptException)
 			{
 				ErrorCode = activeScriptException.ErrorCode.ToString(CultureInfo.InvariantCulture),
 				Category = activeScriptException.Subcategory,

@@ -11,7 +11,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 #if !NETSTANDARD1_3
 	[Serializable]
 #endif
-	internal sealed class IeJsScriptException : JsException
+	public sealed class IeJsScriptException : JsException
 	{
 		/// <summary>
 		/// The error
@@ -24,7 +24,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <summary>
 		/// Gets a JavaScript object representing the script error
 		/// </summary>
-		public IeJsValue Error
+		internal IeJsValue Error
 		{
 			get { return _error; }
 		}
@@ -34,9 +34,17 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// Initializes a new instance of the <see cref="IeJsScriptException"/> class
 		/// </summary>
 		/// <param name="errorCode">The error code returned</param>
-		/// <param name="error">The JavaScript error object</param>
-		public IeJsScriptException(JsErrorCode errorCode, IeJsValue error)
-			: this(errorCode, error, "JavaScript Exception")
+		public IeJsScriptException(JsErrorCode errorCode)
+			: this(errorCode, "JavaScript Exception")
+		{ }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="IeJsScriptException"/> class
+		/// </summary>
+		/// <param name="errorCode">The error code returned</param>
+		/// <param name="message">The error message</param>
+		public IeJsScriptException(JsErrorCode errorCode, string message)
+			: this(errorCode, IeJsValue.Invalid, message)
 		{ }
 
 		/// <summary>
@@ -46,7 +54,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <param name="errorCode">The error code returned</param>
 		/// <param name="error">The JavaScript error object</param>
 		/// <param name="message">The error message</param>
-		public IeJsScriptException(JsErrorCode errorCode, IeJsValue error, string message)
+		internal IeJsScriptException(JsErrorCode errorCode, IeJsValue error, string message)
 			: base(errorCode, message)
 		{
 			_error = error;

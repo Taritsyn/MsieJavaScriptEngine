@@ -7,7 +7,7 @@ using System.Security.Permissions;
 namespace MsieJavaScriptEngine.ActiveScript
 {
 	[Serializable]
-	internal sealed class ActiveScriptException : Exception
+	public sealed class ActiveScriptException : Exception
 	{
 		/// <summary>
 		/// Error code

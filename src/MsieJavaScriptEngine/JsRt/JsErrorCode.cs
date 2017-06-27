@@ -5,7 +5,7 @@ namespace MsieJavaScriptEngine.JsRt
 	/// <summary>
 	/// The error code returned from a Chakra hosting API
 	/// </summary>
-	internal enum JsErrorCode : uint
+	public enum JsErrorCode : uint
 	{
 		/// <summary>
 		/// Success error code

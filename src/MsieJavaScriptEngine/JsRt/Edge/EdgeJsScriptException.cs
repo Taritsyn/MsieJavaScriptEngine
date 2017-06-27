@@ -11,7 +11,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 #if !NETSTANDARD1_3
 	[Serializable]
 #endif
-	internal sealed class EdgeJsScriptException : JsException
+	public sealed class EdgeJsScriptException : JsException
 	{
 		/// <summary>
 		/// The error
@@ -24,7 +24,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <summary>
 		/// Gets a JavaScript object representing the script error
 		/// </summary>
-		public EdgeJsValue Error
+		internal EdgeJsValue Error
 		{
 			get { return _error; }
 		}
@@ -34,9 +34,17 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// Initializes a new instance of the <see cref="EdgeJsScriptException"/> class
 		/// </summary>
 		/// <param name="errorCode">The error code returned</param>
-		/// <param name="error">The JavaScript error object</param>
-		public EdgeJsScriptException(JsErrorCode errorCode, EdgeJsValue error)
-			: this(errorCode, error, "JavaScript Exception")
+		public EdgeJsScriptException(JsErrorCode errorCode)
+			: this(errorCode, "JavaScript Exception")
+		{ }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EdgeJsScriptException"/> class
+		/// </summary>
+		/// <param name="errorCode">The error code returned</param>
+		/// <param name="message">The error message</param>
+		public EdgeJsScriptException(JsErrorCode errorCode, string message)
+			: this(errorCode, EdgeJsValue.Invalid, message)
 		{ }
 
 		/// <summary>
@@ -46,7 +54,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <param name="errorCode">The error code returned</param>
 		/// <param name="error">The JavaScript error object</param>
 		/// <param name="message">The error message</param>
-		public EdgeJsScriptException(JsErrorCode errorCode, EdgeJsValue error, string message)
+		internal EdgeJsScriptException(JsErrorCode errorCode, EdgeJsValue error, string message)
 			: base(errorCode, message)
 		{
 			_error = error;

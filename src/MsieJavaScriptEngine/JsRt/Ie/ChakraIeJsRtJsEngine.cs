@@ -834,8 +834,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 #endif
 
-		private JsRuntimeException ConvertJsExceptionToJsRuntimeException(
-			JsException jsException)
+		private JsRuntimeException ConvertJsExceptionToJsRuntimeException(JsException jsException)
 		{
 			string message = jsException.Message;
 			string category = string.Empty;
@@ -849,46 +848,49 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				category = "Script error";
 				IeJsValue errorValue = jsScriptException.Error;
 
-				IeJsPropertyId stackPropertyId = IeJsPropertyId.FromString("stack");
-				if (errorValue.HasProperty(stackPropertyId))
+				if (errorValue.IsValid)
 				{
-					IeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
-					message = stackPropertyValue.ConvertToString().ToString();
-				}
-				else
-				{
-					IeJsValue messagePropertyValue = errorValue.GetProperty("message");
-					string scriptMessage = messagePropertyValue.ConvertToString().ToString();
-					if (!string.IsNullOrWhiteSpace(scriptMessage))
+					IeJsPropertyId stackPropertyId = IeJsPropertyId.FromString("stack");
+					if (errorValue.HasProperty(stackPropertyId))
 					{
-						message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
+						IeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
+						message = stackPropertyValue.ConvertToString().ToString();
 					}
-				}
+					else
+					{
+						IeJsValue messagePropertyValue = errorValue.GetProperty("message");
+						string scriptMessage = messagePropertyValue.ConvertToString().ToString();
+						if (!string.IsNullOrWhiteSpace(scriptMessage))
+						{
+							message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
+						}
+					}
 
-				IeJsPropertyId linePropertyId = IeJsPropertyId.FromString("line");
-				if (errorValue.HasProperty(linePropertyId))
-				{
-					IeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
-					lineNumber = (int)linePropertyValue.ConvertToNumber().ToDouble() + 1;
-				}
+					IeJsPropertyId linePropertyId = IeJsPropertyId.FromString("line");
+					if (errorValue.HasProperty(linePropertyId))
+					{
+						IeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
+						lineNumber = (int) linePropertyValue.ConvertToNumber().ToDouble() + 1;
+					}
 
-				IeJsPropertyId columnPropertyId = IeJsPropertyId.FromString("column");
-				if (errorValue.HasProperty(columnPropertyId))
-				{
-					IeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
-					columnNumber = (int)columnPropertyValue.ConvertToNumber().ToDouble() + 1;
-				}
+					IeJsPropertyId columnPropertyId = IeJsPropertyId.FromString("column");
+					if (errorValue.HasProperty(columnPropertyId))
+					{
+						IeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
+						columnNumber = (int) columnPropertyValue.ConvertToNumber().ToDouble() + 1;
+					}
 
-				if (lineNumber <= 0 && columnNumber <= 0)
-				{
-					GetErrorCoordinatesFromMessage(message, out lineNumber, out columnNumber);
-				}
+					if (lineNumber <= 0 && columnNumber <= 0)
+					{
+						GetErrorCoordinatesFromMessage(message, out lineNumber, out columnNumber);
+					}
 
-				IeJsPropertyId sourcePropertyId = IeJsPropertyId.FromString("source");
-				if (errorValue.HasProperty(sourcePropertyId))
-				{
-					IeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
-					sourceFragment = sourcePropertyValue.ConvertToString().ToString();
+					IeJsPropertyId sourcePropertyId = IeJsPropertyId.FromString("source");
+					if (errorValue.HasProperty(sourcePropertyId))
+					{
+						IeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
+						sourceFragment = sourcePropertyValue.ConvertToString().ToString();
+					}
 				}
 			}
 			else if (jsException is JsUsageException)
@@ -904,7 +906,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				category = "Fatal error";
 			}
 
-			var jsEngineException = new JsRuntimeException(message, _engineModeName)
+			var jsEngineException = new JsRuntimeException(message, _engineModeName, jsException)
 			{
 				ErrorCode = ((uint)jsException.ErrorCode).ToString(CultureInfo.InvariantCulture),
 				Category = category,
