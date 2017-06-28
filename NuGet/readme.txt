@@ -25,7 +25,8 @@
    2. An attempt was made to prevent occurrence of the access violation exception;
    3. Now the original exception is added to instance of the `JsRuntimeException`
       class as an inner exception;
-   4. An attempt was made to prevent a blocking of finalizer's thread.
+   4. An attempt was made to prevent a blocking of finalizer's thread;
+   5. Added support of identifier names compliant with ECMAScript 5.
 
    ============
    PROJECT SITE

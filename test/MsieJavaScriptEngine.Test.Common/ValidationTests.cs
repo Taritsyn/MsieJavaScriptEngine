@@ -18,6 +18,7 @@ namespace MsieJavaScriptEngine.Test.Common
 			bool name3FormatIsCorrect = ValidationHelpers.CheckNameFormat("fooBar");
 			bool name4FormatIsCorrect = ValidationHelpers.CheckNameFormat("$grid");
 			bool name5FormatIsCorrect = ValidationHelpers.CheckNameFormat("a");
+			bool name6FormatIsCorrect = ValidationHelpers.CheckNameFormat("À_la_maison");
 
 			// Assert
 			Assert.IsTrue(name1FormatIsCorrect);
@@ -25,6 +26,7 @@ namespace MsieJavaScriptEngine.Test.Common
 			Assert.IsTrue(name3FormatIsCorrect);
 			Assert.IsTrue(name4FormatIsCorrect);
 			Assert.IsTrue(name5FormatIsCorrect);
+			Assert.IsTrue(name6FormatIsCorrect);
 		}
 
 		[Test]
