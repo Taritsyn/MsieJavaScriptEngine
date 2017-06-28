@@ -118,7 +118,7 @@ Consider in detail properties of the <code title="MsieJavaScriptEngine.JsEngineS
 See the [changelog](CHANGELOG.md).
 
 ## License
-[Microsoft Public License (Ms-PL)](http://github.com/Taritsyn/MsieJavaScriptEngine/blob/master/LICENSE.md)
+[Apache License Version 2.0](LICENSE.md)
 
 ## Credits
  * [SassAndCoffee.JavaScript](http://github.com/xpaulbettsx/SassAndCoffee) - [License: Microsoft Public License (Ms-PL)](http://github.com/paulcbetts/SassAndCoffee/blob/master/COPYING) Part of the code of this library served as the basis for the ActiveScript version of Chakra and Classic JavaScript Engine.
