@@ -841,7 +841,7 @@ namespace MsieJavaScriptEngine.Test.Common
 			}
 
 			// Assert
-			Assert.True(variableExists);
+			Assert.IsTrue(variableExists);
 			Assert.AreEqual(targetOutput1, output1);
 
 			Assert.AreEqual(input2, output2);
@@ -875,7 +875,7 @@ namespace MsieJavaScriptEngine.Test.Common
 			}
 
 			// Assert
-			Assert.True(variableExists);
+			Assert.IsTrue(variableExists);
 			Assert.AreEqual(targetOutput1, output1);
 
 			Assert.AreEqual(input2, output2);

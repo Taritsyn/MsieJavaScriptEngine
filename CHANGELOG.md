@@ -1,6 +1,14 @@
 Change log
 ==========
 
+## June 28, 2017 - v2.2.2
+ * Switched to Apache license
+ * In JsRT modes fixed a problems in calculation of error locations
+ * An attempt was made to prevent occurrence of the access violation exception
+ * Now the original exception is added to instance of the `JsRuntimeException` class as an inner exception
+ * An attempt was made to prevent a blocking of finalizer's thread
+ * Added support of identifier names compliant with ECMAScript 5
+
 ## April 25, 2017 - v2.2.1
  * Now during debugging in ActiveScript modes the script error contains a error location
 
