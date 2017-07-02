@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NETSTANDARD1_3 || NET45
+using System.Runtime.ExceptionServices;
+#endif
 using System.Threading;
 
 using MsieJavaScriptEngine.Utilities;
@@ -151,9 +154,17 @@ namespace MsieJavaScriptEngine
 				waitHandle.WaitOne();
 			}
 
-			if (task.Exception != null)
+			Exception exception = task.Exception;
+			if (exception != null)
 			{
-				throw task.Exception;
+#if NETSTANDARD1_3 || NET45
+				ExceptionDispatchInfo.Capture(exception).Throw();
+#elif NET40
+				exception.PreserveStackTrace();
+				throw exception;
+#else
+#error No implementation for this target
+#endif
 			}
 
 			return task.Result;

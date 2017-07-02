@@ -21,13 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   1. Switched to Apache license;
-   2. In JsRT modes fixed a problems in calculation of error locations;
-   3. An attempt was made to prevent occurrence of the access violation exception;
-   4. Now the original exception is added to instance of the `JsRuntimeException`
-      class as an inner exception;
-   5. An attempt was made to prevent a blocking of finalizer's thread;
-   6. Added support of identifier names compliant with ECMAScript 5.
+   Now during the rethrowing of exceptions are preserved the full call stack trace.
 
    ============
    PROJECT SITE
