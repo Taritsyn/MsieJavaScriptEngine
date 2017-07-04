@@ -918,6 +918,22 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			return jsEngineException;
 		}
 
+		/// <summary>
+		/// Creates a instance of JS scope
+		/// </summary>
+		/// <returns>Instance of JS scope</returns>
+		private IeJsScope CreateJsScope()
+		{
+			var jsScope = new IeJsScope(_jsContext);
+
+			if (_enableDebugging)
+			{
+				StartDebugging();
+			}
+
+			return jsScope;
+		}
+
 		protected override void InnerStartDebugging()
 		{
 			if (Utils.Is64BitProcess())
@@ -938,52 +954,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			}
 		}
 
-		private void InvokeScript(Action action)
-		{
-			_dispatcher.Invoke(() =>
-			{
-				using (new IeJsScope(_jsContext))
-				{
-					if (_enableDebugging)
-					{
-						StartDebugging();
-					}
-
-					try
-					{
-						action();
-					}
-					catch (JsException e)
-					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
-					}
-				}
-			});
-		}
-
-		private T InvokeScript<T>(Func<T> func)
-		{
-			return _dispatcher.Invoke(() =>
-			{
-				using (new IeJsScope(_jsContext))
-				{
-					if (_enableDebugging)
-					{
-						StartDebugging();
-					}
-
-					try
-					{
-						return func();
-					}
-					catch (JsException e)
-					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
-					}
-				}
-			});
-		}
-
 		#region IInnerJsEngine implementation
 
 		public override string Mode
@@ -993,11 +963,22 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		public override object Evaluate(string expression, string documentName)
 		{
-			object result = InvokeScript(() =>
+			object result = _dispatcher.Invoke(() =>
 			{
-				IeJsValue resultValue = IeJsContext.RunScript(expression, _jsSourceContext++, documentName);
+				using (CreateJsScope())
+				{
+					try
+					{
+						IeJsValue resultValue = IeJsContext.RunScript(expression, _jsSourceContext++,
+							documentName);
 
-				return MapToHostType(resultValue);
+						return MapToHostType(resultValue);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 
 			return result;
@@ -1005,49 +986,75 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		public override void Execute(string code, string documentName)
 		{
-			InvokeScript(() => IeJsContext.RunScript(code, _jsSourceContext++, documentName));
+			_dispatcher.Invoke(() =>
+			{
+				using (CreateJsScope())
+				{
+					try
+					{
+						IeJsContext.RunScript(code, _jsSourceContext++, documentName);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
+			});
 		}
 
 		public override object CallFunction(string functionName, params object[] args)
 		{
-			object result = InvokeScript(() =>
+			object result = _dispatcher.Invoke(() =>
 			{
-				IeJsValue globalObj = IeJsValue.GlobalObject;
-				IeJsPropertyId functionId = IeJsPropertyId.FromString(functionName);
-
-				bool functionExist = globalObj.HasProperty(functionId);
-				if (!functionExist)
+				using (CreateJsScope())
 				{
-					throw new JsRuntimeException(
-						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
-				}
-
-				IeJsValue resultValue;
-				IeJsValue functionValue = globalObj.GetProperty(functionId);
-
-				if (args.Length > 0)
-				{
-					IeJsValue[] processedArgs = MapToScriptType(args);
-
-					foreach (IeJsValue processedArg in processedArgs)
+					try
 					{
-						AddReferenceToValue(processedArg);
+						IeJsValue globalObj = IeJsValue.GlobalObject;
+						IeJsPropertyId functionId = IeJsPropertyId.FromString(functionName);
+
+						bool functionExist = globalObj.HasProperty(functionId);
+						if (!functionExist)
+						{
+							throw new JsRuntimeException(
+								string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
+						}
+
+						IeJsValue resultValue;
+						IeJsValue functionValue = globalObj.GetProperty(functionId);
+
+						if (args.Length > 0)
+						{
+							IeJsValue[] processedArgs = MapToScriptType(args);
+
+							foreach (IeJsValue processedArg in processedArgs)
+							{
+								AddReferenceToValue(processedArg);
+							}
+
+							IeJsValue[] allProcessedArgs = new[] { globalObj }
+								.Concat(processedArgs)
+								.ToArray()
+								;
+							resultValue = functionValue.CallFunction(allProcessedArgs);
+
+							foreach (IeJsValue processedArg in processedArgs)
+							{
+								RemoveReferenceToValue(processedArg);
+							}
+						}
+						else
+						{
+							resultValue = functionValue.CallFunction(globalObj);
+						}
+
+						return MapToHostType(resultValue);
 					}
-
-					IeJsValue[] allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
-					resultValue = functionValue.CallFunction(allProcessedArgs);
-
-					foreach (IeJsValue processedArg in processedArgs)
+					catch (JsException e)
 					{
-						RemoveReferenceToValue(processedArg);
+						throw ConvertJsExceptionToJsRuntimeException(e);
 					}
 				}
-				else
-				{
-					resultValue = functionValue.CallFunction(globalObj);
-				}
-
-				return MapToHostType(resultValue);
 			});
 
 			return result;
@@ -1055,19 +1062,29 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		public override bool HasVariable(string variableName)
 		{
-			bool result = InvokeScript(() =>
+			bool result = _dispatcher.Invoke(() =>
 			{
-				IeJsValue globalObj = IeJsValue.GlobalObject;
-				IeJsPropertyId variableId = IeJsPropertyId.FromString(variableName);
-				bool variableExist = globalObj.HasProperty(variableId);
-
-				if (variableExist)
+				using (CreateJsScope())
 				{
-					IeJsValue variableValue = globalObj.GetProperty(variableId);
-					variableExist = variableValue.ValueType != JsValueType.Undefined;
-				}
+					try
+					{
+						IeJsValue globalObj = IeJsValue.GlobalObject;
+						IeJsPropertyId variableId = IeJsPropertyId.FromString(variableName);
+						bool variableExist = globalObj.HasProperty(variableId);
 
-				return variableExist;
+						if (variableExist)
+						{
+							IeJsValue variableValue = globalObj.GetProperty(variableId);
+							variableExist = variableValue.ValueType != JsValueType.Undefined;
+						}
+
+						return variableExist;
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 
 			return result;
@@ -1075,11 +1092,21 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		public override object GetVariableValue(string variableName)
 		{
-			object result = InvokeScript(() =>
+			object result = _dispatcher.Invoke(() =>
 			{
-				IeJsValue variableValue = IeJsValue.GlobalObject.GetProperty(variableName);
+				using (CreateJsScope())
+				{
+					try
+					{
+						IeJsValue variableValue = IeJsValue.GlobalObject.GetProperty(variableName);
 
-				return MapToHostType(variableValue);
+						return MapToHostType(variableValue);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 
 			return result;
@@ -1087,46 +1114,86 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		public override void SetVariableValue(string variableName, object value)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
-				IeJsValue inputValue = MapToScriptType(value);
-				IeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+				using (CreateJsScope())
+				{
+					try
+					{
+						IeJsValue inputValue = MapToScriptType(value);
+						IeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 		}
 
 		public override void RemoveVariable(string variableName)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
-				IeJsValue globalObj = IeJsValue.GlobalObject;
-				IeJsPropertyId variableId = IeJsPropertyId.FromString(variableName);
-
-				if (globalObj.HasProperty(variableId))
+				using (CreateJsScope())
 				{
-					globalObj.SetProperty(variableId, IeJsValue.Undefined, true);
+					try
+					{
+						IeJsValue globalObj = IeJsValue.GlobalObject;
+						IeJsPropertyId variableId = IeJsPropertyId.FromString(variableName);
+
+						if (globalObj.HasProperty(variableId))
+						{
+							globalObj.SetProperty(variableId, IeJsValue.Undefined, true);
+						}
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
 				}
 			});
 		}
 
 		public override void EmbedHostObject(string itemName, object value)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
-				IeJsValue processedValue = MapToScriptType(value);
-				IeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
+				using (CreateJsScope())
+				{
+					try
+					{
+						IeJsValue processedValue = MapToScriptType(value);
+						IeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 		}
 
 		public override void EmbedHostType(string itemName, Type type)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
+				using (CreateJsScope())
+				{
+					try
+					{
 #if NETSTANDARD1_3
-				IeJsValue typeValue = CreateObjectFromType(type);
+						IeJsValue typeValue = CreateObjectFromType(type);
 #else
-				IeJsValue typeValue = IeJsValue.FromObject(new HostType(type, _engineMode));
+						IeJsValue typeValue = IeJsValue.FromObject(new HostType(type, _engineMode));
 #endif
-				IeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
+						IeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 		}
 

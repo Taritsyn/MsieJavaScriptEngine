@@ -895,55 +895,25 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			return jsEngineException;
 		}
 
+		/// <summary>
+		/// Creates a instance of JS scope
+		/// </summary>
+		/// <returns>Instance of JS scope</returns>
+		private EdgeJsScope CreateJsScope()
+		{
+			var jsScope = new EdgeJsScope(_jsContext);
+
+			if (_enableDebugging)
+			{
+				StartDebugging();
+			}
+
+			return jsScope;
+		}
+
 		protected override void InnerStartDebugging()
 		{
 			EdgeJsContext.StartDebugging();
-		}
-
-		private void InvokeScript(Action action)
-		{
-			_dispatcher.Invoke(() =>
-			{
-				using (new EdgeJsScope(_jsContext))
-				{
-					if (_enableDebugging)
-					{
-						StartDebugging();
-					}
-
-					try
-					{
-						action();
-					}
-					catch (JsException e)
-					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
-					}
-				}
-			});
-		}
-
-		private T InvokeScript<T>(Func<T> func)
-		{
-			return _dispatcher.Invoke(() =>
-			{
-				using (new EdgeJsScope(_jsContext))
-				{
-					if (_enableDebugging)
-					{
-						StartDebugging();
-					}
-
-					try
-					{
-						return func();
-					}
-					catch (JsException e)
-					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
-					}
-				}
-			});
 		}
 
 		#region IInnerJsEngine implementation
@@ -955,11 +925,22 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		public override object Evaluate(string expression, string documentName)
 		{
-			object result = InvokeScript(() =>
+			object result = _dispatcher.Invoke(() =>
 			{
-				EdgeJsValue resultValue = EdgeJsContext.RunScript(expression, _jsSourceContext++, documentName);
+				using (CreateJsScope())
+				{
+					try
+					{
+						EdgeJsValue resultValue = EdgeJsContext.RunScript(expression, _jsSourceContext++,
+							documentName);
 
-				return MapToHostType(resultValue);
+						return MapToHostType(resultValue);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 
 			return result;
@@ -967,49 +948,75 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		public override void Execute(string code, string documentName)
 		{
-			InvokeScript(() => EdgeJsContext.RunScript(code, _jsSourceContext++, documentName));
+			_dispatcher.Invoke(() =>
+			{
+				using (CreateJsScope())
+				{
+					try
+					{
+						EdgeJsContext.RunScript(code, _jsSourceContext++, documentName);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
+			});
 		}
 
 		public override object CallFunction(string functionName, params object[] args)
 		{
-			object result = InvokeScript(() =>
+			object result = _dispatcher.Invoke(() =>
 			{
-				EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
-				EdgeJsPropertyId functionId = EdgeJsPropertyId.FromString(functionName);
-
-				bool functionExist = globalObj.HasProperty(functionId);
-				if (!functionExist)
+				using (CreateJsScope())
 				{
-					throw new JsRuntimeException(
-						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
-				}
-
-				EdgeJsValue resultValue;
-				EdgeJsValue functionValue = globalObj.GetProperty(functionId);
-
-				if (args.Length > 0)
-				{
-					EdgeJsValue[] processedArgs = MapToScriptType(args);
-
-					foreach (EdgeJsValue processedArg in processedArgs)
+					try
 					{
-						AddReferenceToValue(processedArg);
+						EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
+						EdgeJsPropertyId functionId = EdgeJsPropertyId.FromString(functionName);
+
+						bool functionExist = globalObj.HasProperty(functionId);
+						if (!functionExist)
+						{
+							throw new JsRuntimeException(
+								string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
+						}
+
+						EdgeJsValue resultValue;
+						EdgeJsValue functionValue = globalObj.GetProperty(functionId);
+
+						if (args.Length > 0)
+						{
+							EdgeJsValue[] processedArgs = MapToScriptType(args);
+
+							foreach (EdgeJsValue processedArg in processedArgs)
+							{
+								AddReferenceToValue(processedArg);
+							}
+
+							EdgeJsValue[] allProcessedArgs = new[] { globalObj }
+								.Concat(processedArgs)
+								.ToArray()
+								;
+							resultValue = functionValue.CallFunction(allProcessedArgs);
+
+							foreach (EdgeJsValue processedArg in processedArgs)
+							{
+								RemoveReferenceToValue(processedArg);
+							}
+						}
+						else
+						{
+							resultValue = functionValue.CallFunction(globalObj);
+						}
+
+						return MapToHostType(resultValue);
 					}
-
-					EdgeJsValue[] allProcessedArgs = new[] { globalObj }.Concat(processedArgs).ToArray();
-					resultValue = functionValue.CallFunction(allProcessedArgs);
-
-					foreach (EdgeJsValue processedArg in processedArgs)
+					catch (JsException e)
 					{
-						RemoveReferenceToValue(processedArg);
+						throw ConvertJsExceptionToJsRuntimeException(e);
 					}
 				}
-				else
-				{
-					resultValue = functionValue.CallFunction(globalObj);
-				}
-
-				return MapToHostType(resultValue);
 			});
 
 			return result;
@@ -1017,19 +1024,29 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		public override bool HasVariable(string variableName)
 		{
-			bool result = InvokeScript(() =>
+			bool result = _dispatcher.Invoke(() =>
 			{
-				EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
-				EdgeJsPropertyId variableId = EdgeJsPropertyId.FromString(variableName);
-				bool variableExist = globalObj.HasProperty(variableId);
-
-				if (variableExist)
+				using (CreateJsScope())
 				{
-					EdgeJsValue variableValue = globalObj.GetProperty(variableId);
-					variableExist = variableValue.ValueType != JsValueType.Undefined;
-				}
+					try
+					{
+						EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
+						EdgeJsPropertyId variableId = EdgeJsPropertyId.FromString(variableName);
+						bool variableExist = globalObj.HasProperty(variableId);
 
-				return variableExist;
+						if (variableExist)
+						{
+							EdgeJsValue variableValue = globalObj.GetProperty(variableId);
+							variableExist = variableValue.ValueType != JsValueType.Undefined;
+						}
+
+						return variableExist;
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 
 			return result;
@@ -1037,11 +1054,21 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		public override object GetVariableValue(string variableName)
 		{
-			object result = InvokeScript(() =>
+			object result = _dispatcher.Invoke(() =>
 			{
-				EdgeJsValue variableValue = EdgeJsValue.GlobalObject.GetProperty(variableName);
+				using (CreateJsScope())
+				{
+					try
+					{
+						EdgeJsValue variableValue = EdgeJsValue.GlobalObject.GetProperty(variableName);
 
-				return MapToHostType(variableValue);
+						return MapToHostType(variableValue);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 
 			return result;
@@ -1049,46 +1076,86 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		public override void SetVariableValue(string variableName, object value)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
-				EdgeJsValue inputValue = MapToScriptType(value);
-				EdgeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+				using (CreateJsScope())
+				{
+					try
+					{
+						EdgeJsValue inputValue = MapToScriptType(value);
+						EdgeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 		}
 
 		public override void RemoveVariable(string variableName)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
-				EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
-				EdgeJsPropertyId variableId = EdgeJsPropertyId.FromString(variableName);
-
-				if (globalObj.HasProperty(variableId))
+				using (CreateJsScope())
 				{
-					globalObj.SetProperty(variableId, EdgeJsValue.Undefined, true);
+					try
+					{
+						EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
+						EdgeJsPropertyId variableId = EdgeJsPropertyId.FromString(variableName);
+
+						if (globalObj.HasProperty(variableId))
+						{
+							globalObj.SetProperty(variableId, EdgeJsValue.Undefined, true);
+						}
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
 				}
 			});
 		}
 
 		public override void EmbedHostObject(string itemName, object value)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
-				EdgeJsValue processedValue = MapToScriptType(value);
-				EdgeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
+				using (CreateJsScope())
+				{
+					try
+					{
+						EdgeJsValue processedValue = MapToScriptType(value);
+						EdgeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 		}
 
 		public override void EmbedHostType(string itemName, Type type)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
+				using (CreateJsScope())
+				{
+					try
+					{
 #if NETSTANDARD1_3
-				EdgeJsValue typeValue = CreateObjectFromType(type);
+						EdgeJsValue typeValue = CreateObjectFromType(type);
 #else
-				EdgeJsValue typeValue = EdgeJsValue.FromObject(new HostType(type, _engineMode));
+						EdgeJsValue typeValue = EdgeJsValue.FromObject(new HostType(type, _engineMode));
 #endif
-				EdgeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
+						EdgeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
+					}
+					catch (JsException e)
+					{
+						throw ConvertJsExceptionToJsRuntimeException(e);
+					}
+				}
 			});
 		}
 

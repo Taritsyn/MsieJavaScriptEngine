@@ -330,56 +330,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 		}
 
-		private void InvokeScript(Action action)
-		{
-			_dispatcher.Invoke(() =>
-			{
-				try
-				{
-					action();
-				}
-				catch (ActiveScriptException e)
-				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-				}
-				catch (TargetInvocationException e)
-				{
-					var activeScriptException = e.InnerException as ActiveScriptException;
-					if (activeScriptException != null)
-					{
-						throw ConvertActiveScriptExceptionToJsRuntimeException(activeScriptException);
-					}
-
-					throw;
-				}
-			});
-		}
-
-		private T InvokeScript<T>(Func<T> func)
-		{
-			return _dispatcher.Invoke(() =>
-			{
-				try
-				{
-					return func();
-				}
-				catch (ActiveScriptException e)
-				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
-				}
-				catch (TargetInvocationException e)
-				{
-					var activeScriptException = e.InnerException as ActiveScriptException;
-					if (activeScriptException != null)
-					{
-						throw ConvertActiveScriptExceptionToJsRuntimeException(activeScriptException);
-					}
-
-					throw;
-				}
-			});
-		}
-
 		/// <summary>
 		/// Executes a script text
 		/// </summary>
@@ -516,35 +466,33 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 		}
 
-		private void EmbedHostItem(string itemName, object value)
+		private void InnerEmbedHostItem(string itemName, object value)
 		{
-			InvokeScript(() =>
+			object oldValue = null;
+			if (_hostItems.ContainsKey(itemName))
 			{
-				object oldValue = null;
-				if (_hostItems.ContainsKey(itemName))
-				{
-					oldValue = _hostItems[itemName];
-				}
-				_hostItems[itemName] = value;
+				oldValue = _hostItems[itemName];
+			}
+			_hostItems[itemName] = value;
 
-				try
+			try
+			{
+				_activeScriptWrapper.AddNamedItem(itemName, ScriptItemFlags.IsVisible | ScriptItemFlags.GlobalMembers);
+			}
+			catch
+			{
+				if (oldValue != null)
 				{
-					_activeScriptWrapper.AddNamedItem(itemName, ScriptItemFlags.IsVisible | ScriptItemFlags.GlobalMembers);
+					_hostItems[itemName] = oldValue;
 				}
-				catch (Exception)
+				else
 				{
-					if (oldValue != null)
-					{
-						_hostItems[itemName] = oldValue;
-					}
-					else
-					{
-						_hostItems.Remove(itemName);
-					}
+					_hostItems.Remove(itemName);
+				}
 
-					throw;
-				}
-			});
+				ThrowError();
+				throw;
+			}
 		}
 
 		/// <summary>
@@ -614,7 +562,18 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public override object Evaluate(string expression, string documentName)
 		{
-			object result = InvokeScript(() => InnerExecute(expression, documentName, true));
+			object result = _dispatcher.Invoke(() =>
+			{
+				try
+				{
+					return InnerExecute(expression, documentName, true);
+				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+				}
+			});
+
 			result = MapToHostType(result);
 
 			return result;
@@ -622,9 +581,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public override void Execute(string code, string documentName)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
-				InnerExecute(code, documentName, false);
+				try
+				{
+					InnerExecute(code, documentName, false);
+				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+				}
 			});
 		}
 
@@ -632,11 +598,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			object[] processedArgs = MapToScriptType(args);
 
-			object result = InvokeScript(() =>
+			object result = _dispatcher.Invoke(() =>
 			{
 				try
 				{
 					return InnerCallFunction(functionName, processedArgs);
+				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -652,7 +622,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public override bool HasVariable(string variableName)
 		{
-			bool result = InvokeScript(() =>
+			bool result = _dispatcher.Invoke(() =>
 			{
 				bool variableExist;
 
@@ -660,6 +630,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 				{
 					object variableValue = InnerGetVariableValue(variableName);
 					variableExist = variableValue != null;
+				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -674,11 +648,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public override object GetVariableValue(string variableName)
 		{
-			object result = InvokeScript(() =>
+			object result = _dispatcher.Invoke(() =>
 			{
 				try
 				{
 					return InnerGetVariableValue(variableName);
+				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -695,18 +673,36 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public override void SetVariableValue(string variableName, object value)
 		{
 			object processedValue = MapToScriptType(value);
-			InvokeScript(() => InnerSetVariableValue(variableName, processedValue));
+
+			_dispatcher.Invoke(() =>
+			{
+				try
+				{
+					InnerSetVariableValue(variableName, processedValue);
+				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+				}
+			});
 		}
 
 		public override void RemoveVariable(string variableName)
 		{
-			InvokeScript(() =>
+			_dispatcher.Invoke(() =>
 			{
-				InnerSetVariableValue(variableName, null);
-
-				if (_hostItems.ContainsKey(variableName))
+				try
 				{
-					_hostItems.Remove(variableName);
+					InnerSetVariableValue(variableName, null);
+
+					if (_hostItems.ContainsKey(variableName))
+					{
+						_hostItems.Remove(variableName);
+					}
+				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
 				}
 			});
 		}
@@ -714,13 +710,35 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public override void EmbedHostObject(string itemName, object value)
 		{
 			object processedValue = MapToScriptType(value);
-			EmbedHostItem(itemName, processedValue);
+
+			_dispatcher.Invoke(() =>
+			{
+				try
+				{
+					InnerEmbedHostItem(itemName, processedValue);
+				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+				}
+			});
 		}
 
 		public override void EmbedHostType(string itemName, Type type)
 		{
 			var typeValue = new HostType(type, _engineMode);
-			EmbedHostItem(itemName, typeValue);
+
+			_dispatcher.Invoke(() =>
+			{
+				try
+				{
+					InnerEmbedHostItem(itemName, typeValue);
+				}
+				catch (ActiveScriptException e)
+				{
+					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+				}
+			});
 		}
 
 		public override void CollectGarbage()
