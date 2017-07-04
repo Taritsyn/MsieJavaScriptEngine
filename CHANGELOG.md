@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## July 4, 2017 - v2.2.3
+ * Now during the rethrowing of exceptions are preserved the full call stack trace
+ * Reduced a number of delegate-wrappers
+
 ## June 28, 2017 - v2.2.2
  * Switched to Apache license
  * In JsRT modes fixed a problems in calculation of error locations
