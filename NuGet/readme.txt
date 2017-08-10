@@ -21,9 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   1. Now during the rethrowing of exceptions are preserved the full call stack
-      trace;
-   2. Reduced a number of delegate-wrappers.
+   In ActiveScript modes now are uses the short names of error categories.
 
    ============
    PROJECT SITE

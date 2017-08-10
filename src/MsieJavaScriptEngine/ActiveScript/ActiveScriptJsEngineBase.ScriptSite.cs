@@ -44,7 +44,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 				EXCEPINFO excepInfo;
 				error.GetExceptionInfo(out excepInfo);
 
-				string errorDetails = excepInfo.bstrDescription;
+				string errorDetails = string.Format("{0}: {1}",
+					_jsEngine.ShortenErrorCategoryName(excepInfo.bstrSource), excepInfo.bstrDescription);
 				if (_jsEngine._processDebugManagerWrapper != null)
 				{
 					string errorLocation = GetErrorLocation(error);

@@ -85,6 +85,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		private uint _nextSourceContext = 1;
 
+		/// <summary>
+		/// Prefix of error category name
+		/// </summary>
+		private string _errorCategoryNamePrefix;
+
 
 		/// <summary>
 		/// Constructs an instance of the Active Script engine
@@ -106,12 +111,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 				clsid = ClassId.Chakra;
 				lowerIeVersion = "9";
 				languageVersion = ScriptLanguageVersion.EcmaScript5;
+				_errorCategoryNamePrefix = "JavaScript ";
 			}
 			else if (_engineMode == JsEngineMode.Classic)
 			{
 				clsid = ClassId.Classic;
 				lowerIeVersion = "6";
 				languageVersion = ScriptLanguageVersion.None;
+				_errorCategoryNamePrefix = "Microsoft JScript ";
 			}
 			else
 			{
@@ -254,7 +261,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				activeScriptException)
 			{
 				ErrorCode = activeScriptException.ErrorCode.ToString(CultureInfo.InvariantCulture),
-				Category = activeScriptException.Subcategory,
+				Category = ShortenErrorCategoryName(activeScriptException.Subcategory),
 				LineNumber = (int)activeScriptException.LineNumber,
 				ColumnNumber = activeScriptException.ColumnNumber,
 				SourceFragment = activeScriptException.SourceError,
@@ -262,6 +269,33 @@ namespace MsieJavaScriptEngine.ActiveScript
 			};
 
 			return jsEngineException;
+		}
+
+		/// <summary>
+		/// Shortens a name of error category
+		/// </summary>
+		/// <param name="categoryName">Name of error category</param>
+		/// <returns>Short name of error category</returns>
+		private string ShortenErrorCategoryName(string categoryName)
+		{
+			if (categoryName == null)
+			{
+				throw new ArgumentNullException("categoryName");
+			}
+
+			string shortCategoryName = categoryName;
+			if (categoryName.StartsWith(_errorCategoryNamePrefix, StringComparison.Ordinal))
+			{
+				shortCategoryName = categoryName.Substring(_errorCategoryNamePrefix.Length);
+				if (shortCategoryName.Length > 0)
+				{
+					char[] chars = shortCategoryName.ToCharArray();
+					chars[0] = char.ToUpperInvariant(chars[0]);
+					shortCategoryName = new string(chars);
+				}
+			}
+
+			return shortCategoryName;
 		}
 
 		/// <summary>
