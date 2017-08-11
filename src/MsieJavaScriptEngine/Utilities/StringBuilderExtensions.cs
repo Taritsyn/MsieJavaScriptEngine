@@ -54,5 +54,44 @@ namespace MsieJavaScriptEngine.Utilities
 
 			return source.AppendLine(format.Replace("{{", "{").Replace("}}", "}"));
 		}
+#if !NETSTANDARD1_3
+
+		/// <summary>
+		/// Removes the all trailing white-space characters from the current <see cref="StringBuilder"/> instance
+		/// </summary>
+		/// <param name="source">Instance of <see cref="StringBuilder"/></param>
+		/// <returns>Instance of <see cref="StringBuilder"/> without trailing white-space characters</returns>
+		public static StringBuilder TrimEnd(this StringBuilder source)
+		{
+			if (source == null)
+			{
+				throw new ArgumentNullException("source");
+			}
+
+			int charCount = source.Length;
+			if (charCount == 0)
+			{
+				return source;
+			}
+
+			int charIndex = charCount - 1;
+
+			for (; charIndex >= 0; charIndex--)
+			{
+				char charValue = source[charIndex];
+				if (!charValue.IsWhitespace())
+				{
+					break;
+				}
+			}
+
+			if (charIndex < source.Length - 1)
+			{
+				source.Length = charIndex + 1;
+			}
+
+			return source;
+		}
+#endif
 	}
 }

@@ -53,6 +53,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private IntPtr _pActiveScriptGarbageCollector;
 
 		/// <summary>
+		/// Pointer to an instance of 32-bit debug stack frame sniffer
+		/// </summary>
+		private IntPtr _pDebugStackFrameSniffer32;
+
+		/// <summary>
+		/// Pointer to an instance of 64-bit debug stack frame sniffer
+		/// </summary>
+		private IntPtr _pDebugStackFrameSniffer64;
+
+		/// <summary>
 		/// Instance of Active Script engine
 		/// </summary>
 		private IActiveScript _activeScript;
@@ -71,6 +81,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Instance of Active Script garbage collector
 		/// </summary>
 		private IActiveScriptGarbageCollector _activeScriptGarbageCollector;
+
+		/// <summary>
+		/// Instance of 32-bit debug stack frame sniffer
+		/// </summary>
+		private IDebugStackFrameSnifferEx32 _debugStackFrameSniffer32;
+
+		/// <summary>
+		/// Instance of 64-bit debug stack frame sniffer
+		/// </summary>
+		private IDebugStackFrameSnifferEx64 _debugStackFrameSniffer64;
 
 		/// <summary>
 		/// Last COM exception
@@ -105,11 +125,13 @@ namespace MsieJavaScriptEngine.ActiveScript
 			{
 				_pActiveScriptParse64 = ComHelpers.QueryInterface<IActiveScriptParse64>(_pActiveScript);
 				_pActiveScriptDebug64 = ComHelpers.QueryInterface<IActiveScriptDebug64>(_pActiveScript);
+				_pDebugStackFrameSniffer64 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx64>(_pActiveScript);
 			}
 			else
 			{
 				_pActiveScriptParse32 = ComHelpers.QueryInterface<IActiveScriptParse32>(_pActiveScript);
 				_pActiveScriptDebug32 = ComHelpers.QueryInterface<IActiveScriptDebug32>(_pActiveScript);
+				_pDebugStackFrameSniffer32 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx32>(_pActiveScript);
 			}
 			_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(_pActiveScript);
 
@@ -117,10 +139,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 			if (_is64Bit)
 			{
 				_activeScriptParse64 = (IActiveScriptParse64)_activeScript;
+				_debugStackFrameSniffer64 = _pDebugStackFrameSniffer64 != IntPtr.Zero ?
+					_activeScript as IDebugStackFrameSnifferEx64 : null;
 			}
 			else
 			{
 				_activeScriptParse32 = (IActiveScriptParse32)_activeScript;
+				_debugStackFrameSniffer32 = _pDebugStackFrameSniffer32 != IntPtr.Zero ?
+					_activeScript as IDebugStackFrameSnifferEx32 : null;
 			}
 			_activeScriptGarbageCollector = _activeScript as IActiveScriptGarbageCollector;
 
@@ -301,6 +327,31 @@ namespace MsieJavaScriptEngine.ActiveScript
 			ComHelpers.HResult.Check(result);
 		}
 
+		public void EnumStackFrames(out IEnumDebugStackFrames enumFrames)
+		{
+			enumFrames = null;
+
+			if (_is64Bit)
+			{
+				if (_debugStackFrameSniffer64 != null)
+				{
+					_debugStackFrameSniffer64.EnumStackFrames(out enumFrames);
+				}
+			}
+			else
+			{
+				if (_debugStackFrameSniffer32 != null)
+				{
+					_debugStackFrameSniffer32.EnumStackFrames(out enumFrames);
+				}
+			}
+
+			if (enumFrames == null)
+			{
+				enumFrames = new NullEnumDebugStackFrames();
+			}
+		}
+
 		/// <summary>
 		/// The Active Script host calls this method to start garbage collection
 		/// </summary>
@@ -325,21 +376,25 @@ namespace MsieJavaScriptEngine.ActiveScript
 				_activeScriptGarbageCollector = null;
 				if (_is64Bit)
 				{
+					_debugStackFrameSniffer64 = null;
 					_activeScriptParse64 = null;
 				}
 				else
 				{
+					_debugStackFrameSniffer32 = null;
 					_activeScriptParse32 = null;
 				}
 
 				ComHelpers.ReleaseAndEmpty(ref _pActiveScriptGarbageCollector);
 				if (_is64Bit)
 				{
+					ComHelpers.ReleaseAndEmpty(ref _pDebugStackFrameSniffer64);
 					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptDebug64);
 					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse64);
 				}
 				else
 				{
+					ComHelpers.ReleaseAndEmpty(ref _pDebugStackFrameSniffer32);
 					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptDebug32);
 					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse32);
 				}

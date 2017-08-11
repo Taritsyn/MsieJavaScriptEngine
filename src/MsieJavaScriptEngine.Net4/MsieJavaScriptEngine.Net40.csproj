@@ -165,6 +165,12 @@
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugStackFrameSniffer.cs">
       <Link>ActiveScript\Debugging\IDebugStackFrameSniffer.cs</Link>
     </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugStackFrameSnifferEx32.cs">
+      <Link>ActiveScript\Debugging\IDebugStackFrameSnifferEx32.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugStackFrameSnifferEx64.cs">
+      <Link>ActiveScript\Debugging\IDebugStackFrameSnifferEx64.cs</Link>
+    </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IDebugSyncOperation.cs">
       <Link>ActiveScript\Debugging\IDebugSyncOperation.cs</Link>
     </Compile>
@@ -200,6 +206,9 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\IRemoteDebugApplicationThread.cs">
       <Link>ActiveScript\Debugging\IRemoteDebugApplicationThread.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\NullEnumDebugStackFrames.cs">
+      <Link>ActiveScript\Debugging\NullEnumDebugStackFrames.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\ProcessDebugManager.cs">
       <Link>ActiveScript\Debugging\ProcessDebugManager.cs</Link>
@@ -494,6 +503,9 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\Undefined.cs">
       <Link>Undefined.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Utilities\CharExtensions.cs">
+      <Link>Utilities\CharExtensions.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\Utilities\StringBuilderExtensions.cs">
       <Link>Utilities\StringBuilderExtensions.cs</Link>

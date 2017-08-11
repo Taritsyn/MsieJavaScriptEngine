@@ -20,7 +20,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// <param name="countFetched">The actual number of segments fetched by the enumerator</param>
 		void Next(
 			[In] uint count,
-			[Out] out DebugStackFrameDescriptor[] descriptor,
+			[Out] out DebugStackFrameDescriptor descriptor,
 			[Out] out uint countFetched
 		);
 

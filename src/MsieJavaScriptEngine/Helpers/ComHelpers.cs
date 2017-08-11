@@ -170,6 +170,17 @@ namespace MsieJavaScriptEngine.Helpers
 			public const int SEVERITY_SUCCESS = 0;
 			public const int SEVERITY_ERROR = 1;
 
+			public const int FACILITY_NULL = 0;
+			public const int FACILITY_RPC = 1;
+			public const int FACILITY_DISPATCH = 2;
+			public const int FACILITY_STORAGE = 3;
+			public const int FACILITY_ITF = 4;
+			public const int FACILITY_WIN32 = 7;
+			public const int FACILITY_WINDOWS = 8;
+			public const int FACILITY_CONTROL = 10;
+			public const int FACILITY_INTERNET = 12;
+			public const int FACILITY_URT = 19;
+
 			public const int S_OK = 0;
 			public const int S_FALSE = 1;
 			// ReSharper restore InconsistentNaming

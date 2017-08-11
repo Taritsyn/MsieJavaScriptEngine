@@ -2,11 +2,13 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Text;
 
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
+using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
 
 namespace MsieJavaScriptEngine.ActiveScript
@@ -44,15 +46,44 @@ namespace MsieJavaScriptEngine.ActiveScript
 				EXCEPINFO excepInfo;
 				error.GetExceptionInfo(out excepInfo);
 
-				string errorDetails = string.Format("{0}: {1}",
+				string errorDetails;
+				string message = string.Format("{0}: {1}",
 					_jsEngine.ShortenErrorCategoryName(excepInfo.bstrSource), excepInfo.bstrDescription);
+
 				if (_jsEngine._processDebugManagerWrapper != null)
 				{
-					string errorLocation = GetErrorLocation(error);
-					if (!string.IsNullOrWhiteSpace(errorLocation))
+					bool isSyntaxError = false;
+
+					if (ComHelpers.HResult.GetFacility(excepInfo.scode) == ComHelpers.HResult.FACILITY_CONTROL)
 					{
-						errorDetails += Environment.NewLine + errorLocation;
+						int errorCode = ComHelpers.HResult.GetCode(excepInfo.scode);
+						isSyntaxError = errorCode >= 1002 && errorCode <= 1035;
 					}
+
+					var errorBuilder = new StringBuilder(message);
+					string stackTrace = !isSyntaxError ? _jsEngine.GetStackTrace() : string.Empty;
+
+					if (!string.IsNullOrWhiteSpace(stackTrace))
+					{
+						errorBuilder.AppendLine();
+						errorBuilder.Append(stackTrace);
+					}
+					else
+					{
+						string errorLocation = GetErrorLocation(error);
+						if (!string.IsNullOrWhiteSpace(errorLocation))
+						{
+							errorBuilder.AppendLine();
+							errorBuilder.Append(errorLocation);
+						}
+					}
+
+					errorDetails = errorBuilder.ToString();
+					errorBuilder.Clear();
+				}
+				else
+				{
+					errorDetails = message;
 				}
 
 				return errorDetails;
