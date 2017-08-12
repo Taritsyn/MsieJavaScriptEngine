@@ -827,22 +827,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 				if (errorValue.IsValid)
 				{
-					EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
-					if (errorValue.HasProperty(stackPropertyId))
-					{
-						EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
-						message = stackPropertyValue.ConvertToString().ToString();
-					}
-					else
-					{
-						EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
-						string scriptMessage = messagePropertyValue.ConvertToString().ToString();
-						if (!string.IsNullOrWhiteSpace(scriptMessage))
-						{
-							message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
-						}
-					}
-
 					EdgeJsPropertyId linePropertyId = EdgeJsPropertyId.FromString("line");
 					if (errorValue.HasProperty(linePropertyId))
 					{
@@ -855,6 +839,20 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					{
 						EdgeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
 						columnNumber = columnPropertyValue.ConvertToNumber().ToInt32() + 1;
+					}
+
+					EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
+					if (errorValue.HasProperty(stackPropertyId))
+					{
+						EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
+						message = stackPropertyValue.ConvertToString().ToString();
+					}
+					else
+					{
+						EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
+						string scriptMessage = messagePropertyValue.ConvertToString().ToString();
+						message = GenerateErrorMessageWithLocation(message.TrimEnd('.'), scriptMessage,
+							lineNumber, columnNumber);
 					}
 
 					if (lineNumber <= 0 && columnNumber <= 0)

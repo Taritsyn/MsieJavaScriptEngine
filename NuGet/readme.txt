@@ -23,7 +23,9 @@
    =============
    1. In ActiveScript modes now are uses the short names of error categories;
    2. In `Classic` mode during debugging now script error contains a full stack
-      trace.
+      trace;
+   3. In JsRT modes the compilation error messages now contains a information about
+      the error location.
 
    ============
    PROJECT SITE

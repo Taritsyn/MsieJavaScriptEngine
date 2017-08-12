@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 #endif
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MsieJavaScriptEngine.JsRt
@@ -66,6 +67,39 @@ namespace MsieJavaScriptEngine.JsRt
 #endif
 		}
 
+
+		/// <summary>
+		/// Generates a error message with location
+		/// </summary>
+		/// <param name="category">Error category</param>
+		/// <param name="message">Error message</param>
+		/// <param name="lineNumber">Line number</param>
+		/// <param name="columnNumber">Column number</param>
+		/// <returns>Error message with location</returns>
+		protected static string GenerateErrorMessageWithLocation(string category, string message,
+			int lineNumber, int columnNumber)
+		{
+			var messageBuilder = new StringBuilder();
+			if (!string.IsNullOrWhiteSpace(category))
+			{
+				messageBuilder.AppendFormat("{0}: ", category);
+			}
+			messageBuilder.Append(message);
+			if (lineNumber > 0)
+			{
+				messageBuilder.AppendLine();
+				messageBuilder.AppendFormat("   at {0}", lineNumber);
+				if (columnNumber > 0)
+				{
+					messageBuilder.AppendFormat(":{0}", columnNumber);
+				}
+			}
+
+			string errorMessage = messageBuilder.ToString();
+			messageBuilder.Clear();
+
+			return errorMessage;
+		}
 
 		/// <summary>
 		/// Gets a error coordinates from message

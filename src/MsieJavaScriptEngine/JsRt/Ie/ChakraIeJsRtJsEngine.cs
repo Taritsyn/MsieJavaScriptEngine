@@ -850,6 +850,20 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 				if (errorValue.IsValid)
 				{
+					IeJsPropertyId linePropertyId = IeJsPropertyId.FromString("line");
+					if (errorValue.HasProperty(linePropertyId))
+					{
+						IeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
+						lineNumber = (int)linePropertyValue.ConvertToNumber().ToDouble() + 1;
+					}
+
+					IeJsPropertyId columnPropertyId = IeJsPropertyId.FromString("column");
+					if (errorValue.HasProperty(columnPropertyId))
+					{
+						IeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
+						columnNumber = (int)columnPropertyValue.ConvertToNumber().ToDouble() + 1;
+					}
+
 					IeJsPropertyId stackPropertyId = IeJsPropertyId.FromString("stack");
 					if (errorValue.HasProperty(stackPropertyId))
 					{
@@ -860,24 +874,8 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					{
 						IeJsValue messagePropertyValue = errorValue.GetProperty("message");
 						string scriptMessage = messagePropertyValue.ConvertToString().ToString();
-						if (!string.IsNullOrWhiteSpace(scriptMessage))
-						{
-							message = string.Format("{0}: {1}", message.TrimEnd('.'), scriptMessage);
-						}
-					}
-
-					IeJsPropertyId linePropertyId = IeJsPropertyId.FromString("line");
-					if (errorValue.HasProperty(linePropertyId))
-					{
-						IeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
-						lineNumber = (int) linePropertyValue.ConvertToNumber().ToDouble() + 1;
-					}
-
-					IeJsPropertyId columnPropertyId = IeJsPropertyId.FromString("column");
-					if (errorValue.HasProperty(columnPropertyId))
-					{
-						IeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
-						columnNumber = (int) columnPropertyValue.ConvertToNumber().ToDouble() + 1;
+						message = GenerateErrorMessageWithLocation(message.TrimEnd('.'), scriptMessage,
+							lineNumber, columnNumber);
 					}
 
 					if (lineNumber <= 0 && columnNumber <= 0)
