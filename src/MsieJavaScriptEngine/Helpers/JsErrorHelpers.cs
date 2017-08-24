@@ -75,5 +75,60 @@ namespace MsieJavaScriptEngine.Helpers
 
 			return errorMessage.ToString();
 		}
+
+		/// <summary>
+		/// Writes a information about error location to the buffer
+		/// </summary>
+		/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
+		/// <param name="documentName">Document name</param>
+		internal static void WriteErrorLocation(StringBuilder buffer, string documentName)
+		{
+			WriteErrorLocation(buffer, documentName, 0, 0);
+		}
+
+		/// <summary>
+		/// Writes a information about error location to the buffer
+		/// </summary>
+		/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
+		/// <param name="lineNumber">Line number</param>
+		/// <param name="columnNumber">Column number</param>
+		internal static void WriteErrorLocation(StringBuilder buffer, int lineNumber, int columnNumber)
+		{
+			WriteErrorLocation(buffer, string.Empty, lineNumber, columnNumber);
+		}
+
+		/// <summary>
+		/// Writes a information about error location to the buffer
+		/// </summary>
+		/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
+		/// <param name="documentName">Document name</param>
+		/// <param name="lineNumber">Line number</param>
+		/// <param name="columnNumber">Column number</param>
+		internal static void WriteErrorLocation(StringBuilder buffer, string documentName,
+			int lineNumber, int columnNumber)
+		{
+			bool documentNameNotEmpty = !string.IsNullOrWhiteSpace(documentName);
+
+			if (documentNameNotEmpty || lineNumber > 0)
+			{
+				buffer.Append("   at ");
+				if (documentNameNotEmpty)
+				{
+					buffer.Append(documentName);
+				}
+				if (lineNumber > 0)
+				{
+					if (documentNameNotEmpty)
+					{
+						buffer.Append(":");
+					}
+					buffer.Append(lineNumber);
+					if (columnNumber > 0)
+					{
+						buffer.AppendFormat(":{0}", columnNumber);
+					}
+				}
+			}
+		}
 	}
 }

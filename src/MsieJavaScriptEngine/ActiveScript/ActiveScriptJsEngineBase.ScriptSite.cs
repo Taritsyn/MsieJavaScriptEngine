@@ -10,6 +10,9 @@ using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
+
+using HResultHelpers = MsieJavaScriptEngine.Helpers.ComHelpers.HResult;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -36,67 +39,32 @@ namespace MsieJavaScriptEngine.ActiveScript
 				_jsEngine = jsEngine;
 			}
 
-			/// <summary>
-			/// Gets a error details
-			/// </summary>
-			/// <param name="error">Instance of Active Script error</param>
-			/// <returns>Error details</returns>
-			private string GetErrorDetails(IActiveScriptError error)
-			{
-				EXCEPINFO excepInfo;
-				error.GetExceptionInfo(out excepInfo);
-
-				string errorDetails;
-				string message = string.Format("{0}: {1}",
-					_jsEngine.ShortenErrorCategoryName(excepInfo.bstrSource), excepInfo.bstrDescription);
-
-				if (_jsEngine._processDebugManagerWrapper != null)
-				{
-					bool isSyntaxError = false;
-
-					if (ComHelpers.HResult.GetFacility(excepInfo.scode) == ComHelpers.HResult.FACILITY_CONTROL)
-					{
-						int errorCode = ComHelpers.HResult.GetCode(excepInfo.scode);
-						isSyntaxError = errorCode >= 1002 && errorCode <= 1035;
-					}
-
-					var errorBuilder = new StringBuilder(message);
-					string stackTrace = !isSyntaxError ? _jsEngine.GetStackTrace() : string.Empty;
-
-					if (!string.IsNullOrWhiteSpace(stackTrace))
-					{
-						errorBuilder.AppendLine();
-						errorBuilder.Append(stackTrace);
-					}
-					else
-					{
-						string errorLocation = GetErrorLocation(error);
-						if (!string.IsNullOrWhiteSpace(errorLocation))
-						{
-							errorBuilder.AppendLine();
-							errorBuilder.Append(errorLocation);
-						}
-					}
-
-					errorDetails = errorBuilder.ToString();
-					errorBuilder.Clear();
-				}
-				else
-				{
-					errorDetails = message;
-				}
-
-				return errorDetails;
-			}
 
 			/// <summary>
-			/// Gets a error location
+			/// Creates a instance of <see cref="ActiveScriptException"/>
 			/// </summary>
-			/// <param name="error">Instance of Active Script error</param>
-			/// <returns>Error location</returns>
-			private string GetErrorLocation(IActiveScriptError error)
+			/// <param name="error">Instance of <see cref="IActiveScriptError"/></param>
+			/// <returns>Instance of <see cref="ActiveScriptException"/></returns>
+			private ActiveScriptException CreateActiveScriptException(IActiveScriptError error)
 			{
-				string errorLocation = string.Empty;
+				EXCEPINFO exceptionInfo;
+				error.GetExceptionInfo(out exceptionInfo);
+
+				int hResult = exceptionInfo.scode;
+				int errorCode = HResultHelpers.GetCode(hResult);
+				bool isSyntaxError = IsSyntaxError(hResult);
+				string category = exceptionInfo.bstrSource;
+				string description = exceptionInfo.bstrDescription;
+				string helpLink = string.Empty;
+				if (!string.IsNullOrWhiteSpace(exceptionInfo.bstrHelpFile))
+				{
+					helpLink = exceptionInfo.dwHelpContext != 0 ?
+						string.Format("{0}: {1}", exceptionInfo.bstrHelpFile, exceptionInfo.dwHelpContext)
+						:
+						exceptionInfo.bstrHelpFile
+						;
+				}
+
 				uint sourceContext;
 				uint lineNumber;
 				int columnNumber;
@@ -105,16 +73,230 @@ namespace MsieJavaScriptEngine.ActiveScript
 				++lineNumber;
 				++columnNumber;
 
+				string sourceFragment = string.Empty;
+				if (isSyntaxError)
+				{
+					error.GetSourceLineText(out sourceFragment);
+				}
+
+				string message = GetErrorDetails(category, description, isSyntaxError, sourceContext,
+					lineNumber, columnNumber);
+
+				var activeScriptException = new ActiveScriptException(message)
+				{
+					ErrorCode = errorCode,
+					Category = category,
+					Description = description,
+					SourceContext = sourceContext,
+					LineNumber = lineNumber,
+					ColumnNumber = columnNumber,
+					SourceFragment = sourceFragment,
+					HelpLink = helpLink
+				};
+
+				return activeScriptException;
+			}
+
+			/// <summary>
+			/// Checks whether the specified HRESULT value is syntax error
+			/// </summary>
+			/// <param name="hResult">The HRESULT value</param>
+			/// <returns>Result of check (true - is syntax error; false - is not syntax error)</returns>
+			private static bool IsSyntaxError(int hResult)
+			{
+				bool isSyntaxError = false;
+
+				if (HResultHelpers.GetFacility(hResult) == HResultHelpers.FACILITY_CONTROL)
+				{
+					int errorCode = HResultHelpers.GetCode(hResult);
+					isSyntaxError = errorCode >= 1002 && errorCode <= 1035;
+				}
+
+				return isSyntaxError;
+			}
+
+			/// <summary>
+			/// Gets a error details
+			/// </summary>
+			/// <param name="category">Category of error</param>
+			/// <param name="description">Description of error</param>
+			/// <param name="isSyntaxError">Value indicating whether this exception is syntax error</param>
+			/// <param name="sourceContext">Application specific source context</param>
+			/// <param name="lineNumber">Line number</param>
+			/// <param name="columnNumber">Column number</param>
+			/// <returns>Error details</returns>
+			private string GetErrorDetails(string category, string description, bool isSyntaxError,
+				uint sourceContext, uint lineNumber, int columnNumber)
+			{
+				var errorBuilder = new StringBuilder();
+				errorBuilder.AppendFormatLine("{0}: {1}",
+					_jsEngine.ShortenErrorCategoryName(category), description);
+
+				if (_jsEngine._processDebugManagerWrapper != null)
+				{
+					bool stackTraceNotEmpty = false;
+					if (!isSyntaxError)
+					{
+						stackTraceNotEmpty = TryWriteStackTrace(errorBuilder);
+					}
+
+					bool fullErrorLocationNotEmpty = false;
+					if (!stackTraceNotEmpty)
+					{
+						fullErrorLocationNotEmpty = TryWriteFullErrorLocation(errorBuilder, sourceContext,
+							lineNumber, columnNumber);
+					}
+
+					if (!stackTraceNotEmpty && !fullErrorLocationNotEmpty)
+					{
+						TryWriteErrorLocation(errorBuilder, lineNumber, columnNumber);
+					}
+				}
+				else
+				{
+					TryWriteErrorLocation(errorBuilder, lineNumber, columnNumber);
+				}
+
+				string errorDetails = errorBuilder.TrimEnd().ToString();
+				errorBuilder.Clear();
+
+				return errorDetails;
+			}
+
+			/// <summary>
+			/// Writes a information about error location to the buffer.
+			/// A return value indicates whether the writing succeeded.
+			/// </summary>
+			/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
+			/// <param name="lineNumber">Line number</param>
+			/// <param name="columnNumber">Column number</param>
+			/// <returns>true if the writing was successful; otherwise, false</returns>
+			private bool TryWriteErrorLocation(StringBuilder buffer, uint lineNumber, int columnNumber)
+			{
+				bool result = false;
+
+				if (lineNumber > 0)
+				{
+					JsErrorHelpers.WriteErrorLocation(buffer, (int)lineNumber, columnNumber);
+					result = true;
+				}
+
+				return result;
+			}
+
+			/// <summary>
+			/// Writes a information about full error location to the buffer.
+			/// A return value indicates whether the writing succeeded.
+			/// </summary>
+			/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
+			/// <param name="sourceContext">Application specific source context</param>
+			/// <param name="lineNumber">Line number</param>
+			/// <param name="columnNumber">Column number</param>
+			/// <returns>true if the writing was successful; otherwise, false</returns>
+			private bool TryWriteFullErrorLocation(StringBuilder buffer, uint sourceContext, uint lineNumber,
+				int columnNumber)
+			{
+				bool result = false;
 				DebugDocument document;
+
 				if (_jsEngine._debugDocuments.TryGetValue(new UIntPtr(sourceContext), out document))
 				{
 					string documentName;
 					document.GetName(DocumentNameType.Title, out documentName);
 
-					errorLocation = string.Format("   at ({0}:{1}:{2})", documentName, lineNumber, columnNumber);
+					JsErrorHelpers.WriteErrorLocation(buffer, documentName, (int)lineNumber, columnNumber);
+					result = true;
 				}
 
-				return errorLocation;
+				return result;
+			}
+
+			/// <summary>
+			/// Writes a string representation of the script call stack to the buffer.
+			/// A return value indicates whether the writing succeeded.
+			/// </summary>
+			/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
+			/// <returns>true if the writing was successful; otherwise, false</returns>
+			private bool TryWriteStackTrace(StringBuilder buffer)
+			{
+				bool result = false;
+
+				IEnumDebugStackFrames enumFrames;
+				_jsEngine._activeScriptWrapper.EnumStackFrames(out enumFrames);
+
+				while (true)
+				{
+					DebugStackFrameDescriptor descriptor;
+					uint countFetched;
+					enumFrames.Next(1, out descriptor, out countFetched);
+					if (countFetched < 1)
+					{
+						break;
+					}
+
+					try
+					{
+						IDebugStackFrame stackFrame = descriptor.Frame;
+
+						string description;
+						stackFrame.GetDescriptionString(true, out description);
+
+						if (string.Equals(description, "JScript global code", StringComparison.Ordinal))
+						{
+							description = "Global code";
+						}
+
+						IDebugCodeContext codeContext;
+						stackFrame.GetCodeContext(out codeContext);
+
+						IDebugDocumentContext documentContext;
+						codeContext.GetDocumentContext(out documentContext);
+
+						if (documentContext == null)
+						{
+							JsErrorHelpers.WriteErrorLocation(buffer, description);
+							buffer.AppendLine();
+						}
+						else
+						{
+							IDebugDocument document;
+							documentContext.GetDocument(out document);
+
+							string documentName;
+							document.GetName(DocumentNameType.Title, out documentName);
+
+							var documentText = (IDebugDocumentText)document;
+
+							uint position;
+							uint length;
+							documentText.GetPositionOfContext(documentContext, out position, out length);
+
+							uint lineNumber;
+							uint offsetInLine;
+							documentText.GetLineOfPosition(position, out lineNumber, out offsetInLine);
+							uint columnNumber = offsetInLine + 1;
+
+							buffer.AppendFormatLine("   at {0} ({1}:{2}:{3})", description, documentName,
+								lineNumber, columnNumber);
+						}
+
+						result = true;
+					}
+					finally
+					{
+						if (descriptor.pFinalObject != IntPtr.Zero)
+						{
+							Marshal.Release(descriptor.pFinalObject);
+						}
+					}
+				}
+
+				if (result)
+				{
+					buffer.TrimEnd();
+				}
+
+				return result;
 			}
 
 			#region IActiveScriptSite implementation
@@ -157,7 +339,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			public void OnScriptError(IActiveScriptError error)
 			{
-				_jsEngine._lastException = ActiveScriptException.Create(GetErrorDetails(error), error);
+				_jsEngine._lastException = CreateActiveScriptException(error);
 			}
 
 			public void OnEnterScript()
@@ -181,7 +363,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				var error = errorDebug as IActiveScriptError;
 				if (error != null)
 				{
-					_jsEngine._lastException = ActiveScriptException.Create(GetErrorDetails(error), error);
+					_jsEngine._lastException = CreateActiveScriptException(error);
 				}
 
 				enterDebugger = true;

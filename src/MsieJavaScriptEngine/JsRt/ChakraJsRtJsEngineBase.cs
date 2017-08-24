@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using MsieJavaScriptEngine.Helpers;
+
 namespace MsieJavaScriptEngine.JsRt
 {
 	/// <summary>
@@ -88,11 +90,7 @@ namespace MsieJavaScriptEngine.JsRt
 			if (lineNumber > 0)
 			{
 				messageBuilder.AppendLine();
-				messageBuilder.AppendFormat("   at {0}", lineNumber);
-				if (columnNumber > 0)
-				{
-					messageBuilder.AppendFormat(":{0}", columnNumber);
-				}
+				JsErrorHelpers.WriteErrorLocation(messageBuilder, lineNumber, columnNumber);
 			}
 
 			string errorMessage = messageBuilder.ToString();

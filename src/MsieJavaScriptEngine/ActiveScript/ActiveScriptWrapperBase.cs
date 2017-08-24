@@ -3,49 +3,32 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
-
 using MsieJavaScriptEngine.ActiveScript.Debugging;
+using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
-using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
-	/// Active Script wrapper
+	/// Base class of the Active Script wrapper
 	/// </summary>
-	internal sealed class ActiveScriptWrapper
+	internal abstract class ActiveScriptWrapperBase : IActiveScriptWrapper
 	{
 		/// <summary>
-		/// Flag that the current process is a 64-bit process
+		/// JS engine mode
 		/// </summary>
-		private readonly bool _is64Bit;
+		protected readonly JsEngineMode _engineMode;
+
+		/// <summary>
+		/// Flag for whether to enable script debugging features
+		/// </summary>
+		protected readonly bool _enableDebugging;
 
 		/// <summary>
 		/// Pointer to an instance of Active Script engine
 		/// </summary>
-		private IntPtr _pActiveScript;
-
-		/// <summary>
-		/// Pointer to an instance of 32-bit Active Script parser
-		/// </summary>
-		private IntPtr _pActiveScriptParse32;
-
-		/// <summary>
-		/// Pointer to an instance of 64-bit Active Script parser
-		/// </summary>
-		private IntPtr _pActiveScriptParse64;
-
-		/// <summary>
-		/// Pointer to an instance of 32-bit Active Script debugger
-		/// </summary>
-		private IntPtr _pActiveScriptDebug32;
-
-		/// <summary>
-		/// Pointer to an instance of 64-bit Active Script debugger
-		/// </summary>
-		private IntPtr _pActiveScriptDebug64;
+		protected IntPtr _pActiveScript;
 
 		/// <summary>
 		/// Pointer to an instance of Active Script garbage collector
@@ -53,29 +36,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private IntPtr _pActiveScriptGarbageCollector;
 
 		/// <summary>
-		/// Pointer to an instance of 32-bit debug stack frame sniffer
-		/// </summary>
-		private IntPtr _pDebugStackFrameSniffer32;
-
-		/// <summary>
-		/// Pointer to an instance of 64-bit debug stack frame sniffer
-		/// </summary>
-		private IntPtr _pDebugStackFrameSniffer64;
-
-		/// <summary>
 		/// Instance of Active Script engine
 		/// </summary>
-		private IActiveScript _activeScript;
-
-		/// <summary>
-		/// Instance of 32-bit Active Script parser
-		/// </summary>
-		private IActiveScriptParse32 _activeScriptParse32;
-
-		/// <summary>
-		/// Instance of 64-bit Active Script parser
-		/// </summary>
-		private IActiveScriptParse64 _activeScriptParse64;
+		protected IActiveScript _activeScript;
 
 		/// <summary>
 		/// Instance of Active Script garbage collector
@@ -83,71 +46,40 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private IActiveScriptGarbageCollector _activeScriptGarbageCollector;
 
 		/// <summary>
-		/// Instance of 32-bit debug stack frame sniffer
-		/// </summary>
-		private IDebugStackFrameSnifferEx32 _debugStackFrameSniffer32;
-
-		/// <summary>
-		/// Instance of 64-bit debug stack frame sniffer
-		/// </summary>
-		private IDebugStackFrameSnifferEx64 _debugStackFrameSniffer64;
-
-		/// <summary>
-		/// Last COM exception
-		/// </summary>
-		private EXCEPINFO _lastException;
-
-		/// <summary>
 		/// Flag that object is destroyed
 		/// </summary>
-		private StatedFlag _disposedFlag = new StatedFlag();
-
-		/// <summary>
-		/// Gets a last COM exception
-		/// </summary>
-		public EXCEPINFO LastException
-		{
-			get { return _lastException; }
-		}
+		protected StatedFlag _disposedFlag = new StatedFlag();
 
 
 		/// <summary>
 		/// Constructs an instance of the Active Script wrapper
 		/// </summary>
-		/// <param name="clsid">CLSID of script engine</param>
-		/// <param name="languageVersion">Version of script language</param>
-		public ActiveScriptWrapper(string clsid, ScriptLanguageVersion languageVersion)
+		/// <param name="engineMode">JS engine mode</param>
+		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
+		protected ActiveScriptWrapperBase(JsEngineMode engineMode, bool enableDebugging)
 		{
-			_is64Bit = Utils.Is64BitProcess();
+			_engineMode = engineMode;
+			_enableDebugging = enableDebugging;
+
+			string clsid;
+			ScriptLanguageVersion languageVersion;
+
+			if (engineMode == JsEngineMode.ChakraActiveScript)
+			{
+				clsid = ClassId.Chakra;
+				languageVersion = ScriptLanguageVersion.EcmaScript5;
+			}
+			else
+			{
+				clsid = ClassId.Classic;
+				languageVersion = ScriptLanguageVersion.None;
+			}
 
 			_pActiveScript = ComHelpers.CreateInstanceByClsid<IActiveScript>(clsid);
-			if (_is64Bit)
-			{
-				_pActiveScriptParse64 = ComHelpers.QueryInterface<IActiveScriptParse64>(_pActiveScript);
-				_pActiveScriptDebug64 = ComHelpers.QueryInterface<IActiveScriptDebug64>(_pActiveScript);
-				_pDebugStackFrameSniffer64 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx64>(_pActiveScript);
-			}
-			else
-			{
-				_pActiveScriptParse32 = ComHelpers.QueryInterface<IActiveScriptParse32>(_pActiveScript);
-				_pActiveScriptDebug32 = ComHelpers.QueryInterface<IActiveScriptDebug32>(_pActiveScript);
-				_pDebugStackFrameSniffer32 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx32>(_pActiveScript);
-			}
-			_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(_pActiveScript);
+			_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(
+				_pActiveScript);
 
 			_activeScript = (IActiveScript)Marshal.GetObjectForIUnknown(_pActiveScript);
-			if (_is64Bit)
-			{
-				_activeScriptParse64 = (IActiveScriptParse64)_activeScript;
-				_debugStackFrameSniffer64 = _pDebugStackFrameSniffer64 != IntPtr.Zero ?
-					_activeScript as IDebugStackFrameSnifferEx64 : null;
-			}
-			else
-			{
-				_activeScriptParse32 = (IActiveScriptParse32)_activeScript;
-				_debugStackFrameSniffer32 = _pDebugStackFrameSniffer32 != IntPtr.Zero ?
-					_activeScript as IDebugStackFrameSnifferEx32 : null;
-			}
 			_activeScriptGarbageCollector = _activeScript as IActiveScriptGarbageCollector;
 
 			if (languageVersion != ScriptLanguageVersion.None)
@@ -167,6 +99,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 		}
 
+
+		protected abstract uint InnerEnumCodeContextsOfPosition(UIntPtr sourceContext, uint offset,
+			uint length, out IEnumDebugCodeContexts enumContexts);
+
+		#region IActiveScriptWrapper implementation
 
 		/// <summary>
 		/// Informs the scripting engine of the <see cref="IActiveScriptSite"/> interface site
@@ -223,17 +160,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Initializes the scripting engine
 		/// </summary>
-		public void InitNew()
-		{
-			if (_is64Bit)
-			{
-				_activeScriptParse64.InitNew();
-			}
-			else
-			{
-				_activeScriptParse32.InitNew();
-			}
-		}
+		public abstract void InitNew();
 
 		/// <summary>
 		/// Parses the given code scriptlet, adding declarations into the namespace and
@@ -264,40 +191,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="flags">Flags associated with the scriptlet</param>
 		/// <returns>The results of scriptlet processing, or null if the caller expects no
 		/// result (that is, the <see cref="ScriptTextFlags.IsExpression"/> value is not set)</returns>
-		public object ParseScriptText(string code, string itemName, object context, string delimiter,
-			UIntPtr sourceContextCookie, uint startingLineNumber, ScriptTextFlags flags)
-		{
-			object result;
-
-			if (_is64Bit)
-			{
-				_activeScriptParse64.ParseScriptText(
-					code,
-					itemName,
-					context,
-					delimiter,
-					sourceContextCookie,
-					startingLineNumber,
-					flags,
-					out result,
-					out _lastException);
-			}
-			else
-			{
-				_activeScriptParse32.ParseScriptText(
-					code,
-					itemName,
-					context,
-					delimiter,
-					sourceContextCookie,
-					startingLineNumber,
-					flags,
-					out result,
-					out _lastException);
-			}
-
-			return result;
-		}
+		public abstract object ParseScriptText(string code, string itemName, object context, string delimiter,
+			UIntPtr sourceContextCookie, uint startingLineNumber, ScriptTextFlags flags);
 
 		/// <summary>
 		/// Used by a smart host to delegate the <see cref="IDebugDocumentContext.EnumCodeContexts"/> method
@@ -311,46 +206,18 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public void EnumCodeContextsOfPosition(UIntPtr sourceContext, uint offset, uint length,
 			out IEnumDebugCodeContexts enumContexts)
 		{
-			uint result;
-
-			if (_is64Bit)
+			if (_enableDebugging)
 			{
-				var del = ComHelpers.GetMethodDelegate<RawEnumCodeContextsOfPosition64>(_pActiveScriptDebug64, 5);
-				result = del(_pActiveScriptDebug64, sourceContext.ToUInt64(), offset, length, out enumContexts);
+				uint result = InnerEnumCodeContextsOfPosition(sourceContext, offset, length, out enumContexts);
+				ComHelpers.HResult.Check(result);
 			}
 			else
 			{
-				var del = ComHelpers.GetMethodDelegate<RawEnumCodeContextsOfPosition32>(_pActiveScriptDebug32, 5);
-				result = del(_pActiveScriptDebug32, sourceContext.ToUInt32(), offset, length, out enumContexts);
-			}
-
-			ComHelpers.HResult.Check(result);
-		}
-
-		public void EnumStackFrames(out IEnumDebugStackFrames enumFrames)
-		{
-			enumFrames = null;
-
-			if (_is64Bit)
-			{
-				if (_debugStackFrameSniffer64 != null)
-				{
-					_debugStackFrameSniffer64.EnumStackFrames(out enumFrames);
-				}
-			}
-			else
-			{
-				if (_debugStackFrameSniffer32 != null)
-				{
-					_debugStackFrameSniffer32.EnumStackFrames(out enumFrames);
-				}
-			}
-
-			if (enumFrames == null)
-			{
-				enumFrames = new NullEnumDebugStackFrames();
+				throw new InvalidOperationException();
 			}
 		}
+
+		public abstract void EnumStackFrames(out IEnumDebugStackFrames enumFrames);
 
 		/// <summary>
 		/// The Active Script host calls this method to start garbage collection
@@ -364,48 +231,25 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 		}
 
+		#endregion
+
 		#region IDisposable implementation
 
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		public void Dispose()
+		public virtual void Dispose()
 		{
-			if (_disposedFlag.Set())
+			_activeScriptGarbageCollector = null;
+
+			ComHelpers.ReleaseAndEmpty(ref _pActiveScriptGarbageCollector);
+			ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
+
+			if (_activeScript != null)
 			{
-				_activeScriptGarbageCollector = null;
-				if (_is64Bit)
-				{
-					_debugStackFrameSniffer64 = null;
-					_activeScriptParse64 = null;
-				}
-				else
-				{
-					_debugStackFrameSniffer32 = null;
-					_activeScriptParse32 = null;
-				}
-
-				ComHelpers.ReleaseAndEmpty(ref _pActiveScriptGarbageCollector);
-				if (_is64Bit)
-				{
-					ComHelpers.ReleaseAndEmpty(ref _pDebugStackFrameSniffer64);
-					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptDebug64);
-					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse64);
-				}
-				else
-				{
-					ComHelpers.ReleaseAndEmpty(ref _pDebugStackFrameSniffer32);
-					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptDebug32);
-					ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse32);
-				}
-				ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
-
-				if (_activeScript != null)
-				{
-					_activeScript.Close();
-					Marshal.FinalReleaseComObject(_activeScript);
-					_activeScript = null;
-				}
+				_activeScript.Close();
+				Marshal.FinalReleaseComObject(_activeScript);
+				_activeScript = null;
 			}
 		}
 

@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Expando;
-using System.Text;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
@@ -33,7 +32,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Instance of Active Script wrapper
 		/// </summary>
-		private ActiveScriptWrapper _activeScriptWrapper;
+		private IActiveScriptWrapper _activeScriptWrapper;
 
 		/// <summary>
 		/// Instance of script dispatch
@@ -103,22 +102,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 			bool useEcmaScript5Polyfill, bool useJson2Library)
 			: base(engineMode)
 		{
-			string clsid;
 			string lowerIeVersion;
-			ScriptLanguageVersion languageVersion;
 
 			if (_engineMode == JsEngineMode.ChakraActiveScript)
 			{
-				clsid = ClassId.Chakra;
 				lowerIeVersion = "9";
-				languageVersion = ScriptLanguageVersion.EcmaScript5;
 				_errorCategoryNamePrefix = "JavaScript ";
 			}
 			else if (_engineMode == JsEngineMode.Classic)
 			{
-				clsid = ClassId.Classic;
 				lowerIeVersion = "6";
-				languageVersion = ScriptLanguageVersion.None;
 				_errorCategoryNamePrefix = "Microsoft JScript ";
 			}
 			else
@@ -130,7 +123,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 			{
 				try
 				{
-					_activeScriptWrapper = new ActiveScriptWrapper(clsid, languageVersion);
+					_activeScriptWrapper = Utils.Is64BitProcess() ?
+						(IActiveScriptWrapper)new ActiveScriptWrapper64(engineMode, enableDebugging)
+						:
+						new ActiveScriptWrapper32(engineMode, enableDebugging)
+						;
 				}
 				catch (Exception e)
 				{
@@ -262,10 +259,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 				activeScriptException)
 			{
 				ErrorCode = activeScriptException.ErrorCode.ToString(CultureInfo.InvariantCulture),
-				Category = ShortenErrorCategoryName(activeScriptException.Subcategory),
+				Category = ShortenErrorCategoryName(activeScriptException.Category),
 				LineNumber = (int)activeScriptException.LineNumber,
 				ColumnNumber = activeScriptException.ColumnNumber,
-				SourceFragment = activeScriptException.SourceError,
+				SourceFragment = activeScriptException.SourceFragment,
 				HelpLink = activeScriptException.HelpLink
 			};
 
@@ -363,100 +360,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 			{
 				throw last;
 			}
-		}
-
-		/// <summary>
-		/// Gets a string representation of the script call stack
-		/// </summary>
-		/// <returns>The script call stack formatted as a string</returns>
-		private string GetStackTrace()
-		{
-			StringBuilder stackTraceBuilder = null;
-
-			IEnumDebugStackFrames enumFrames;
-			_activeScriptWrapper.EnumStackFrames(out enumFrames);
-
-			while (true)
-			{
-				DebugStackFrameDescriptor descriptor;
-				uint countFetched;
-				enumFrames.Next(1, out descriptor, out countFetched);
-				if (countFetched < 1)
-				{
-					break;
-				}
-
-				if (stackTraceBuilder == null)
-				{
-					stackTraceBuilder = new StringBuilder();
-				}
-
-				try
-				{
-					IDebugStackFrame stackFrame = descriptor.Frame;
-
-					string description;
-					stackFrame.GetDescriptionString(true, out description);
-
-					if (string.Equals(description, "JScript global code", StringComparison.Ordinal))
-					{
-						description = "Global code";
-					}
-
-					IDebugCodeContext codeContext;
-					stackFrame.GetCodeContext(out codeContext);
-
-					IDebugDocumentContext documentContext;
-					codeContext.GetDocumentContext(out documentContext);
-
-					if (documentContext == null)
-					{
-						stackTraceBuilder.AppendFormatLine("   at {0}", description);
-					}
-					else
-					{
-						IDebugDocument document;
-						documentContext.GetDocument(out document);
-
-						string documentName;
-						document.GetName(DocumentNameType.Title, out documentName);
-
-						var documentText = (IDebugDocumentText)document;
-
-						uint position;
-						uint length;
-						documentText.GetPositionOfContext(documentContext, out position, out length);
-
-						uint lineNumber;
-						uint offsetInLine;
-						documentText.GetLineOfPosition(position, out lineNumber, out offsetInLine);
-						uint columnNumber = offsetInLine + 1;
-
-						stackTraceBuilder.AppendFormatLine("   at {0} ({1}:{2}:{3})", description, documentName,
-							lineNumber, columnNumber);
-					}
-				}
-				finally
-				{
-					if (descriptor.pFinalObject != IntPtr.Zero)
-					{
-						Marshal.Release(descriptor.pFinalObject);
-					}
-				}
-			}
-
-			string stackTrace;
-			if (stackTraceBuilder != null)
-			{
-				stackTrace = stackTraceBuilder.TrimEnd().ToString();
-				stackTraceBuilder.Clear();
-			}
-			else
-			{
-				stackTrace = string.Empty;
-			}
-
-			return stackTrace;
 		}
 
 		/// <summary>

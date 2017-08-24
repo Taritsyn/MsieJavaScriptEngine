@@ -21,7 +21,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// <summary>
 		/// Active Script wrapper
 		/// </summary>
-		private readonly ActiveScriptWrapper _activeScriptWrapper;
+		private readonly IActiveScriptWrapper _activeScriptWrapper;
 
 		/// <summary>
 		/// Wrapper for debug application
@@ -70,7 +70,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// <param name="sourceContext">Source context</param>
 		/// <param name="name">Document name</param>
 		/// <param name="code">Script text</param>
-		public DebugDocument(ActiveScriptWrapper activeScriptWrapper,
+		public DebugDocument(IActiveScriptWrapper activeScriptWrapper,
 			DebugApplicationWrapper debugApplicationWrapper, UIntPtr sourceContext, string name,
 			string code)
 		{
