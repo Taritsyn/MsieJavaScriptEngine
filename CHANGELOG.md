@@ -1,6 +1,11 @@
 Change log
 ==========
 
+## v2.2.4 - August 25, 2017
+ * In ActiveScript modes now are uses the short names of error categories
+ * In `Classic` mode during debugging now script error contains a full stack trace
+ * In JsRT modes the compilation error messages now contains a information about the error location
+
 ## v2.2.3 - July 4, 2017
  * Now during the rethrowing of exceptions are preserved the full call stack trace
  * Reduced a number of delegate-wrappers
