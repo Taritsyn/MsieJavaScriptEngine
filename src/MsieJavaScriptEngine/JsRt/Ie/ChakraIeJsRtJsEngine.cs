@@ -14,6 +14,11 @@ using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
+using HostException = MsieJavaScriptEngine.JsException;
+using HostExtendedException = MsieJavaScriptEngine.JsRuntimeException;
+using HostInterruptedException = MsieJavaScriptEngine.JsScriptInterruptedException;
+using ScriptException = MsieJavaScriptEngine.JsRt.JsException;
+using ScriptExtendedException = MsieJavaScriptEngine.JsRt.Ie.IeJsScriptException;
 
 namespace MsieJavaScriptEngine.JsRt.Ie
 {
@@ -109,7 +114,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <returns>Instance of JS runtime with special settings</returns>
 		private static IeJsRuntime CreateJsRuntime()
 		{
-			return IeJsRuntime.Create(JsRuntimeAttributes.None, JsRuntimeVersion.VersionEdge, null);
+			return IeJsRuntime.Create(JsRuntimeAttributes.AllowScriptInterrupt, JsRuntimeVersion.VersionEdge, null);
 		}
 
 		/// <summary>
@@ -834,86 +839,97 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 #endif
 
-		private JsRuntimeException ConvertJsExceptionToJsRuntimeException(JsException jsException)
+		private HostException ConvertScriptExceptionToHostException(ScriptException scriptException)
 		{
-			string message = jsException.Message;
+			HostException hostException;
+			string message = scriptException.Message;
 			string category = string.Empty;
-			int lineNumber = 0;
-			int columnNumber = 0;
-			string sourceFragment = string.Empty;
+			JsErrorCode errorCode = scriptException.ErrorCode;
 
-			var jsScriptException = jsException as IeJsScriptException;
-			if (jsScriptException != null)
+			if (errorCode == JsErrorCode.ScriptTerminated)
 			{
-				category = "Script error";
-				IeJsValue errorValue = jsScriptException.Error;
+				hostException = new HostInterruptedException(CommonStrings.Runtime_ScriptInterrupted,
+					_engineModeName, scriptException);
+			}
+			else
+			{
+				int lineNumber = 0;
+				int columnNumber = 0;
+				string sourceFragment = string.Empty;
 
-				if (errorValue.IsValid)
+				var scriptExtendedException = scriptException as ScriptExtendedException;
+				if (scriptExtendedException != null)
 				{
-					IeJsPropertyId linePropertyId = IeJsPropertyId.FromString("line");
-					if (errorValue.HasProperty(linePropertyId))
-					{
-						IeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
-						lineNumber = (int)linePropertyValue.ConvertToNumber().ToDouble() + 1;
-					}
+					category = "Script error";
+					IeJsValue errorValue = scriptExtendedException.Error;
 
-					IeJsPropertyId columnPropertyId = IeJsPropertyId.FromString("column");
-					if (errorValue.HasProperty(columnPropertyId))
+					if (errorValue.IsValid)
 					{
-						IeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
-						columnNumber = (int)columnPropertyValue.ConvertToNumber().ToDouble() + 1;
-					}
+						IeJsPropertyId linePropertyId = IeJsPropertyId.FromString("line");
+						if (errorValue.HasProperty(linePropertyId))
+						{
+							IeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
+							lineNumber = (int) linePropertyValue.ConvertToNumber().ToDouble() + 1;
+						}
 
-					IeJsPropertyId stackPropertyId = IeJsPropertyId.FromString("stack");
-					if (errorValue.HasProperty(stackPropertyId))
-					{
-						IeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
-						message = stackPropertyValue.ConvertToString().ToString();
-					}
-					else
-					{
-						IeJsValue messagePropertyValue = errorValue.GetProperty("message");
-						string scriptMessage = messagePropertyValue.ConvertToString().ToString();
-						message = GenerateErrorMessageWithLocation(message.TrimEnd('.'), scriptMessage,
-							lineNumber, columnNumber);
-					}
+						IeJsPropertyId columnPropertyId = IeJsPropertyId.FromString("column");
+						if (errorValue.HasProperty(columnPropertyId))
+						{
+							IeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
+							columnNumber = (int) columnPropertyValue.ConvertToNumber().ToDouble() + 1;
+						}
 
-					if (lineNumber <= 0 && columnNumber <= 0)
-					{
-						GetErrorCoordinatesFromMessage(message, out lineNumber, out columnNumber);
-					}
+						IeJsPropertyId stackPropertyId = IeJsPropertyId.FromString("stack");
+						if (errorValue.HasProperty(stackPropertyId))
+						{
+							IeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
+							message = stackPropertyValue.ConvertToString().ToString();
+						}
+						else
+						{
+							IeJsValue messagePropertyValue = errorValue.GetProperty("message");
+							string scriptMessage = messagePropertyValue.ConvertToString().ToString();
+							message = GenerateErrorMessageWithLocation(message.TrimEnd('.'), scriptMessage,
+								lineNumber, columnNumber);
+						}
 
-					IeJsPropertyId sourcePropertyId = IeJsPropertyId.FromString("source");
-					if (errorValue.HasProperty(sourcePropertyId))
-					{
-						IeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
-						sourceFragment = sourcePropertyValue.ConvertToString().ToString();
+						if (lineNumber <= 0 && columnNumber <= 0)
+						{
+							GetErrorCoordinatesFromMessage(message, out lineNumber, out columnNumber);
+						}
+
+						IeJsPropertyId sourcePropertyId = IeJsPropertyId.FromString("source");
+						if (errorValue.HasProperty(sourcePropertyId))
+						{
+							IeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
+							sourceFragment = sourcePropertyValue.ConvertToString().ToString();
+						}
 					}
 				}
-			}
-			else if (jsException is JsUsageException)
-			{
-				category = "Usage error";
-			}
-			else if (jsException is JsEngineException)
-			{
-				category = "Engine error";
-			}
-			else if (jsException is JsFatalException)
-			{
-				category = "Fatal error";
+				else if (scriptException is JsUsageException)
+				{
+					category = "Usage error";
+				}
+				else if (scriptException is JsEngineException)
+				{
+					category = "Engine error";
+				}
+				else if (scriptException is JsFatalException)
+				{
+					category = "Fatal error";
+				}
+
+				hostException = new HostExtendedException(message, _engineModeName, scriptException)
+				{
+					ErrorCode = ((uint)errorCode).ToString(CultureInfo.InvariantCulture),
+					Category = category,
+					LineNumber = lineNumber,
+					ColumnNumber = columnNumber,
+					SourceFragment = sourceFragment
+				};
 			}
 
-			var jsEngineException = new JsRuntimeException(message, _engineModeName, jsException)
-			{
-				ErrorCode = ((uint)jsException.ErrorCode).ToString(CultureInfo.InvariantCulture),
-				Category = category,
-				LineNumber = lineNumber,
-				ColumnNumber = columnNumber,
-				SourceFragment = sourceFragment
-			};
-
-			return jsEngineException;
+			return hostException;
 		}
 
 		/// <summary>
@@ -922,6 +938,11 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <returns>Instance of JS scope</returns>
 		private IeJsScope CreateJsScope()
 		{
+			if (_jsRuntime.Disabled)
+			{
+				_jsRuntime.Disabled = false;
+			}
+
 			var jsScope = new IeJsScope(_jsContext);
 
 			if (_enableDebugging)
@@ -974,7 +995,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -994,7 +1015,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1050,7 +1071,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1080,7 +1101,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1102,7 +1123,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1123,7 +1144,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1147,7 +1168,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1166,7 +1187,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1189,10 +1210,15 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
+		}
+
+		public override void Interrupt()
+		{
+			_jsRuntime.Disabled = true;
 		}
 
 		public override void CollectGarbage()

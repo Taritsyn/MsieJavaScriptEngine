@@ -13,6 +13,11 @@ using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
+using HostException = MsieJavaScriptEngine.JsException;
+using HostExtendedException = MsieJavaScriptEngine.JsRuntimeException;
+using HostInterruptedException = MsieJavaScriptEngine.JsScriptInterruptedException;
+using ScriptException = MsieJavaScriptEngine.JsRt.JsException;
+using ScriptExtendedException = MsieJavaScriptEngine.JsRt.Edge.EdgeJsScriptException;
 
 namespace MsieJavaScriptEngine.JsRt.Edge
 {
@@ -101,7 +106,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <returns>Instance of JS runtime with special settings</returns>
 		private static EdgeJsRuntime CreateJsRuntime()
 		{
-			return EdgeJsRuntime.Create(JsRuntimeAttributes.None, null);
+			return EdgeJsRuntime.Create(JsRuntimeAttributes.AllowScriptInterrupt, null);
 		}
 
 		/// <summary>
@@ -810,87 +815,97 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		}
 #endif
 
-		private JsRuntimeException ConvertJsExceptionToJsRuntimeException(
-			JsException jsException)
+		private HostException ConvertScriptExceptionToHostException(ScriptException scriptException)
 		{
-			string message = jsException.Message;
+			HostException hostException;
+			string message = scriptException.Message;
 			string category = string.Empty;
-			int lineNumber = 0;
-			int columnNumber = 0;
-			string sourceFragment = string.Empty;
+			JsErrorCode errorCode = scriptException.ErrorCode;
 
-			var jsScriptException = jsException as EdgeJsScriptException;
-			if (jsScriptException != null)
+			if (errorCode == JsErrorCode.ScriptTerminated)
 			{
-				category = "Script error";
-				EdgeJsValue errorValue = jsScriptException.Error;
+				hostException = new HostInterruptedException(CommonStrings.Runtime_ScriptInterrupted,
+					_engineModeName, scriptException);
+			}
+			else
+			{
+				int lineNumber = 0;
+				int columnNumber = 0;
+				string sourceFragment = string.Empty;
 
-				if (errorValue.IsValid)
+				var scriptExtendedException = scriptException as ScriptExtendedException;
+				if (scriptExtendedException != null)
 				{
-					EdgeJsPropertyId linePropertyId = EdgeJsPropertyId.FromString("line");
-					if (errorValue.HasProperty(linePropertyId))
-					{
-						EdgeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
-						lineNumber = linePropertyValue.ConvertToNumber().ToInt32() + 1;
-					}
+					category = "Script error";
+					EdgeJsValue errorValue = scriptExtendedException.Error;
 
-					EdgeJsPropertyId columnPropertyId = EdgeJsPropertyId.FromString("column");
-					if (errorValue.HasProperty(columnPropertyId))
+					if (errorValue.IsValid)
 					{
-						EdgeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
-						columnNumber = columnPropertyValue.ConvertToNumber().ToInt32() + 1;
-					}
+						EdgeJsPropertyId linePropertyId = EdgeJsPropertyId.FromString("line");
+						if (errorValue.HasProperty(linePropertyId))
+						{
+							EdgeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
+							lineNumber = linePropertyValue.ConvertToNumber().ToInt32() + 1;
+						}
 
-					EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
-					if (errorValue.HasProperty(stackPropertyId))
-					{
-						EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
-						message = stackPropertyValue.ConvertToString().ToString();
-					}
-					else
-					{
-						EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
-						string scriptMessage = messagePropertyValue.ConvertToString().ToString();
-						message = GenerateErrorMessageWithLocation(message.TrimEnd('.'), scriptMessage,
-							lineNumber, columnNumber);
-					}
+						EdgeJsPropertyId columnPropertyId = EdgeJsPropertyId.FromString("column");
+						if (errorValue.HasProperty(columnPropertyId))
+						{
+							EdgeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
+							columnNumber = columnPropertyValue.ConvertToNumber().ToInt32() + 1;
+						}
 
-					if (lineNumber <= 0 && columnNumber <= 0)
-					{
-						GetErrorCoordinatesFromMessage(message, out lineNumber, out columnNumber);
-					}
+						EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
+						if (errorValue.HasProperty(stackPropertyId))
+						{
+							EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
+							message = stackPropertyValue.ConvertToString().ToString();
+						}
+						else
+						{
+							EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
+							string scriptMessage = messagePropertyValue.ConvertToString().ToString();
+							message = GenerateErrorMessageWithLocation(message.TrimEnd('.'), scriptMessage,
+								lineNumber, columnNumber);
+						}
 
-					EdgeJsPropertyId sourcePropertyId = EdgeJsPropertyId.FromString("source");
-					if (errorValue.HasProperty(sourcePropertyId))
-					{
-						EdgeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
-						sourceFragment = sourcePropertyValue.ConvertToString().ToString();
+						if (lineNumber <= 0 && columnNumber <= 0)
+						{
+							GetErrorCoordinatesFromMessage(message, out lineNumber, out columnNumber);
+						}
+
+						EdgeJsPropertyId sourcePropertyId = EdgeJsPropertyId.FromString("source");
+						if (errorValue.HasProperty(sourcePropertyId))
+						{
+							EdgeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
+							sourceFragment = sourcePropertyValue.ConvertToString().ToString();
+						}
 					}
 				}
-			}
-			else if (jsException is JsUsageException)
-			{
-				category = "Usage error";
-			}
-			else if (jsException is JsEngineException)
-			{
-				category = "Engine error";
-			}
-			else if (jsException is JsFatalException)
-			{
-				category = "Fatal error";
+				else if (scriptException is JsUsageException)
+				{
+					category = "Usage error";
+				}
+				else if (scriptException is JsEngineException)
+				{
+					category = "Engine error";
+				}
+				else if (scriptException is JsFatalException)
+				{
+					category = "Fatal error";
+				}
+
+				hostException = new HostExtendedException(message, _engineModeName, scriptException)
+				{
+					ErrorCode = ((uint)errorCode).ToString(CultureInfo.InvariantCulture),
+					Category = category,
+					LineNumber = lineNumber,
+					ColumnNumber = columnNumber,
+					SourceFragment = sourceFragment
+				};
 			}
 
-			var jsEngineException = new JsRuntimeException(message, _engineModeName, jsException)
-			{
-				ErrorCode = ((uint)jsException.ErrorCode).ToString(CultureInfo.InvariantCulture),
-				Category = category,
-				LineNumber = lineNumber,
-				ColumnNumber = columnNumber,
-				SourceFragment = sourceFragment
-			};
-
-			return jsEngineException;
+			return hostException;
 		}
 
 		/// <summary>
@@ -899,6 +914,11 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <returns>Instance of JS scope</returns>
 		private EdgeJsScope CreateJsScope()
 		{
+			if (_jsRuntime.Disabled)
+			{
+				_jsRuntime.Disabled = false;
+			}
+
 			var jsScope = new EdgeJsScope(_jsContext);
 
 			if (_enableDebugging)
@@ -936,7 +956,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -956,7 +976,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1012,7 +1032,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1042,7 +1062,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1064,7 +1084,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1085,7 +1105,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1109,7 +1129,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1128,7 +1148,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
@@ -1151,10 +1171,15 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (JsException e)
 					{
-						throw ConvertJsExceptionToJsRuntimeException(e);
+						throw ConvertScriptExceptionToHostException(e);
 					}
 				}
 			});
+		}
+
+		public override void Interrupt()
+		{
+			_jsRuntime.Disabled = true;
 		}
 
 		public override void CollectGarbage()

@@ -83,6 +83,11 @@ namespace MsieJavaScriptEngine
 		void EmbedHostType(string itemName, Type type);
 
 		/// <summary>
+		/// Interrupts script execution and causes the JS engine to throw an exception
+		/// </summary>
+		void Interrupt();
+
+		/// <summary>
 		/// Performs a full garbage collection
 		/// </summary>
 		void CollectGarbage();

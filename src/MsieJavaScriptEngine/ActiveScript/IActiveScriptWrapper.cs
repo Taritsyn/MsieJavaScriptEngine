@@ -123,6 +123,21 @@ namespace MsieJavaScriptEngine.ActiveScript
 		);
 
 		/// <summary>
+		/// Interrupts the execution of a running script thread (an event sink, an immediate execution,
+		/// or a macro invocation). This method can be used to terminate a script that is stuck (for
+		/// example, in an infinite loop). It can be called from non-base threads without resulting in
+		/// a non-base callout to host objects or to the <see cref="IActiveScriptSite"/> method.
+		/// </summary>
+		/// <param name="scriptThreadId">Identifier of the thread to interrupt</param>
+		/// <param name="exceptionInfo">The error information that should be reported to the aborted script</param>
+		/// <param name="flags">Option flags associated with the interruption</param>
+		void InterruptScriptThread(
+			uint scriptThreadId,
+			ref EXCEPINFO exceptionInfo,
+			ScriptInterruptFlags flags
+		);
+
+		/// <summary>
 		/// The Active Script host calls this method to start garbage collection
 		/// </summary>
 		/// <param name="type">The type of garbage collection</param>

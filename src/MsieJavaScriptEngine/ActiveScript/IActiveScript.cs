@@ -165,7 +165,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="flags">Option flags associated with the interruption</param>
 		void InterruptScriptThread(
 			[In] uint scriptThreadId,
-			[In] EXCEPINFO exceptionInfo,
+			[In] ref EXCEPINFO exceptionInfo,
 			[In] ScriptInterruptFlags flags
 		);
 

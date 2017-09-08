@@ -12,8 +12,6 @@ using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
 
-using HResultHelpers = MsieJavaScriptEngine.Helpers.ComHelpers.HResult;
-
 namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
@@ -21,8 +19,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 	/// </summary>
 	internal abstract partial class ActiveScriptJsEngineBase
 	{
-		private sealed class ScriptSite : IActiveScriptSite, IActiveScriptSiteDebug32, IActiveScriptSiteDebug64,
-			IActiveScriptSiteDebugEx, ICustomQueryInterface
+		private sealed class ScriptSite : IActiveScriptSite, IActiveScriptSiteInterruptPoll,
+			IActiveScriptSiteDebug32, IActiveScriptSiteDebug64, IActiveScriptSiteDebugEx,
+			ICustomQueryInterface
 		{
 			/// <summary>
 			/// Instance of Active Script engine
@@ -41,6 +40,25 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 
 			/// <summary>
+			/// Processes a Active Script error
+			/// </summary>
+			/// <param name="error">Instance of <see cref="IActiveScriptError"/></param>
+			private void ProcessActiveScriptError(IActiveScriptError error)
+			{
+				var activeScriptException = CreateActiveScriptException(error);
+				if (_jsEngine._engineMode == JsEngineMode.Classic
+					&& activeScriptException.ErrorCode == ComErrorCode.E_ABORT)
+				{
+					// Script execution was interrupted explicitly. At this point the script
+					// engine might be in an odd state; the following call seems to get it back
+					// to normal.
+					_jsEngine._activeScriptWrapper.SetScriptState(ScriptState.Started);
+				}
+
+				_jsEngine._lastException = activeScriptException;
+			}
+
+			/// <summary>
 			/// Creates a instance of <see cref="ActiveScriptException"/>
 			/// </summary>
 			/// <param name="error">Instance of <see cref="IActiveScriptError"/></param>
@@ -51,10 +69,19 @@ namespace MsieJavaScriptEngine.ActiveScript
 				error.GetExceptionInfo(out exceptionInfo);
 
 				int hResult = exceptionInfo.scode;
-				int errorCode = HResultHelpers.GetCode(hResult);
 				bool isSyntaxError = IsSyntaxError(hResult);
-				string category = exceptionInfo.bstrSource;
-				string description = exceptionInfo.bstrDescription;
+				string category;
+				string description;
+				if (hResult == ComErrorCode.E_ABORT)
+				{
+					category = string.Empty;
+					description = CommonStrings.Runtime_ScriptInterrupted;
+				}
+				else
+				{
+					category = _jsEngine.ShortenErrorCategoryName(exceptionInfo.bstrSource);
+					description = exceptionInfo.bstrDescription;
+				}
 				string helpLink = string.Empty;
 				if (!string.IsNullOrWhiteSpace(exceptionInfo.bstrHelpFile))
 				{
@@ -84,7 +111,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 				var activeScriptException = new ActiveScriptException(message)
 				{
-					ErrorCode = errorCode,
+					ErrorCode = hResult,
 					Category = category,
 					Description = description,
 					SourceContext = sourceContext,
@@ -106,10 +133,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 			{
 				bool isSyntaxError = false;
 
-				if (HResultHelpers.GetFacility(hResult) == HResultHelpers.FACILITY_CONTROL)
+				if (ComHelpers.HResult.GetFacility(hResult) == ComErrorCode.FACILITY_CONTROL)
 				{
-					int errorCode = HResultHelpers.GetCode(hResult);
-					isSyntaxError = errorCode >= 1002 && errorCode <= 1035;
+					int errorNumber = ComHelpers.HResult.GetCode(hResult);
+					isSyntaxError = errorNumber >= (int)JsErrorNumber.SyntaxError
+						&& errorNumber <= (int)JsErrorNumber.ThrowMustBeFollowedByExpressionOnSameSourceLine;
 				}
 
 				return isSyntaxError;
@@ -129,8 +157,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 				uint sourceContext, uint lineNumber, int columnNumber)
 			{
 				var errorBuilder = new StringBuilder();
-				errorBuilder.AppendFormatLine("{0}: {1}",
-					_jsEngine.ShortenErrorCategoryName(category), description);
+				if (!string.IsNullOrWhiteSpace(category))
+				{
+					errorBuilder.AppendFormat("{0}: ", category);
+				}
+				errorBuilder.AppendLine(description);
 
 				if (_jsEngine._processDebugManagerWrapper != null)
 				{
@@ -312,7 +343,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				if (item == null)
 				{
 					throw new COMException(
-						string.Format(NetFrameworkStrings.Runtime_ItemNotFound, name), ComErrorCode.ElementNotFound);
+						string.Format(NetFrameworkStrings.Runtime_ItemNotFound, name), ComErrorCode.E_ELEMENT_NOT_FOUND);
 				}
 
 				if (mask.HasFlag(ScriptInfoFlags.IUnknown))
@@ -339,7 +370,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			public void OnScriptError(IActiveScriptError error)
 			{
-				_jsEngine._lastException = CreateActiveScriptException(error);
+				ProcessActiveScriptError(error);
 			}
 
 			public void OnEnterScript()
@@ -347,6 +378,35 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			public void OnLeaveScript()
 			{ }
+
+			#endregion
+
+			#region IActiveScriptSiteInterruptPoll implementation
+
+			public uint QueryContinue()
+			{
+				int hResult;
+
+				if (_jsEngine._engineMode == JsEngineMode.ChakraActiveScript
+					&& _jsEngine._interruptRequested)
+				{
+					hResult = ComErrorCode.E_ABORT;
+					var activeScriptException = new ActiveScriptException(
+						CommonStrings.Runtime_ScriptInterrupted)
+					{
+						ErrorCode = hResult,
+						Description = CommonStrings.Runtime_ScriptInterrupted
+					};
+
+					_jsEngine._lastException = activeScriptException;
+				}
+				else
+				{
+					hResult = ComErrorCode.S_OK;
+				}
+
+				return NumericHelpers.SignedAsUnsigned(hResult);
+			}
 
 			#endregion
 
@@ -363,7 +423,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				var error = errorDebug as IActiveScriptError;
 				if (error != null)
 				{
-					_jsEngine._lastException = CreateActiveScriptException(error);
+					ProcessActiveScriptError(error);
 				}
 
 				enterDebugger = true;

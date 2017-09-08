@@ -814,6 +814,16 @@ namespace MsieJavaScriptEngine
 		}
 
 		/// <summary>
+		/// Interrupts script execution and causes the JS engine to throw an exception
+		/// </summary>
+		public void Interrupt()
+		{
+			VerifyNotDisposed();
+
+			_jsEngine.Interrupt();
+		}
+
+		/// <summary>
 		/// Performs a full garbage collection
 		/// </summary>
 		public void CollectGarbage()

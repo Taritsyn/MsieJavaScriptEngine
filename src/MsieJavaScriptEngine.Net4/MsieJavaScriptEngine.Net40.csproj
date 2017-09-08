@@ -255,8 +255,14 @@
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptSite.cs">
       <Link>ActiveScript\IActiveScriptSite.cs</Link>
     </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptSiteInterruptPoll.cs">
+      <Link>ActiveScript\IActiveScriptSiteInterruptPoll.cs</Link>
+    </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\IActiveScriptWrapper.cs">
       <Link>ActiveScript\IActiveScriptWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\JsErrorNumber.cs">
+      <Link>ActiveScript\JsErrorNumber.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptGCType.cs">
       <Link>ActiveScript\ScriptGCType.cs</Link>
@@ -284,6 +290,9 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptTextFlags.cs">
       <Link>ActiveScript\ScriptTextFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptThreadId.cs">
+      <Link>ActiveScript\ScriptThreadId.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ScriptThreadState.cs">
       <Link>ActiveScript\ScriptThreadState.cs</Link>
@@ -482,6 +491,9 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\JsRuntimeException.cs">
       <Link>JsRuntimeException.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\JsScriptInterruptedException.cs">
+      <Link>JsScriptInterruptedException.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\MsieJsEngine.cs">
       <Link>MsieJsEngine.cs</Link>

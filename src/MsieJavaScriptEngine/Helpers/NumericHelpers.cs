@@ -71,5 +71,15 @@ namespace MsieJavaScriptEngine.Helpers
 
 			return value;
 		}
+
+		internal static int UnsignedAsSigned(uint value)
+		{
+			return BitConverter.ToInt32(BitConverter.GetBytes(value), 0);
+		}
+
+		internal static uint SignedAsUnsigned(int value)
+		{
+			return BitConverter.ToUInt32(BitConverter.GetBytes(value), 0);
+		}
 	}
 }

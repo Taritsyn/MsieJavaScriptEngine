@@ -24,7 +24,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Otherwise, the script method is aborted and the error code is returned to the caller; that
 		/// is, the event source or macro invoker.
 		/// </summary>
-		RaiseException = 2,
+		RaiseException = 2
 	}
 }
 #endif

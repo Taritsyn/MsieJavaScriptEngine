@@ -5,6 +5,7 @@ using System.Reflection;
 #endif
 using System.Runtime.InteropServices;
 
+using MsieJavaScriptEngine.Constants;
 #if NET40
 using MsieJavaScriptEngine.Utilities;
 #endif
@@ -94,7 +95,7 @@ namespace MsieJavaScriptEngine.Helpers
 			Guid iid = typeof(T).GetTypeInfo().GUID;
 			int result = Marshal.QueryInterface(pUnknown, ref iid, out pInterface);
 
-			return result == HResult.S_OK ? pInterface : IntPtr.Zero;
+			return result == ComErrorCode.S_OK ? pInterface : IntPtr.Zero;
 		}
 
 		public static T GetMethodDelegate<T>(IntPtr pInterface, int methodIndex) where T : class
@@ -131,15 +132,6 @@ namespace MsieJavaScriptEngine.Helpers
 			obj = null;
 		}
 
-		#region Private methods
-
-		private static int UnsignedAsSigned(uint value)
-		{
-			return BitConverter.ToInt32(BitConverter.GetBytes(value), 0);
-		}
-
-		#endregion
-
 		#region Nested type: NativeMethods
 
 		private static class NativeMethods
@@ -166,28 +158,9 @@ namespace MsieJavaScriptEngine.Helpers
 
 		public static class HResult
 		{
-			// ReSharper disable InconsistentNaming
-			public const int SEVERITY_SUCCESS = 0;
-			public const int SEVERITY_ERROR = 1;
-
-			public const int FACILITY_NULL = 0;
-			public const int FACILITY_RPC = 1;
-			public const int FACILITY_DISPATCH = 2;
-			public const int FACILITY_STORAGE = 3;
-			public const int FACILITY_ITF = 4;
-			public const int FACILITY_WIN32 = 7;
-			public const int FACILITY_WINDOWS = 8;
-			public const int FACILITY_CONTROL = 10;
-			public const int FACILITY_INTERNET = 12;
-			public const int FACILITY_URT = 19;
-
-			public const int S_OK = 0;
-			public const int S_FALSE = 1;
-			// ReSharper restore InconsistentNaming
-
 			public static void Check(uint result)
 			{
-				Check(UnsignedAsSigned(result));
+				Check(NumericHelpers.UnsignedAsSigned(result));
 			}
 
 			public static void Check(int result)
@@ -197,12 +170,12 @@ namespace MsieJavaScriptEngine.Helpers
 
 			public static bool Succeeded(uint result)
 			{
-				return GetSeverity(result) == SEVERITY_SUCCESS;
+				return GetSeverity(result) == ComErrorCode.SEVERITY_SUCCESS;
 			}
 
 			public static int GetSeverity(uint result)
 			{
-				return GetSeverity(UnsignedAsSigned(result));
+				return GetSeverity(NumericHelpers.UnsignedAsSigned(result));
 			}
 
 			public static int GetSeverity(int result)
@@ -212,7 +185,7 @@ namespace MsieJavaScriptEngine.Helpers
 
 			public static int GetFacility(uint result)
 			{
-				return GetFacility(UnsignedAsSigned(result));
+				return GetFacility(NumericHelpers.UnsignedAsSigned(result));
 			}
 
 			public static int GetFacility(int result)
@@ -222,7 +195,7 @@ namespace MsieJavaScriptEngine.Helpers
 
 			public static int GetCode(uint result)
 			{
-				return GetCode(UnsignedAsSigned(result));
+				return GetCode(NumericHelpers.UnsignedAsSigned(result));
 			}
 
 			public static int GetCode(int result)
@@ -232,7 +205,7 @@ namespace MsieJavaScriptEngine.Helpers
 
 			public static int MakeResult(int severity, int facility, int code)
 			{
-				return UnsignedAsSigned((uint)(code & 0xFFFF) | ((uint)(facility & 0x1FFF) << 16) | ((uint)(severity & 0x1) << 31));
+				return NumericHelpers.UnsignedAsSigned((uint)(code & 0xFFFF) | ((uint)(facility & 0x1FFF) << 16) | ((uint)(severity & 0x1) << 31));
 			}
 		}
 

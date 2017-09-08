@@ -9,7 +9,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 	public sealed class ActiveScriptException : Exception
 	{
 		/// <summary>
-		/// Error code
+		/// The HRESULT of the error
 		/// </summary>
 		private int _errorCode;
 
@@ -44,7 +44,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private string _sourceFragment = string.Empty;
 
 		/// <summary>
-		/// Gets or sets a error code
+		/// Gets or sets a HRESULT of the error
 		/// </summary>
 		public int ErrorCode
 		{

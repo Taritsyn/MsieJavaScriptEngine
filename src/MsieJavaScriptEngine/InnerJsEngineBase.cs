@@ -59,6 +59,8 @@ namespace MsieJavaScriptEngine
 
 		public abstract void EmbedHostType(string itemName, Type type);
 
+		public abstract void Interrupt();
+
 		public abstract void CollectGarbage();
 
 		#endregion

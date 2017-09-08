@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 using NUnit.Framework;
 
@@ -903,6 +904,61 @@ namespace MsieJavaScriptEngine.Test.Common
 			// Assert
 			Assert.IsTrue(variableBeforeRemovingExists);
 			Assert.IsFalse(variableAfterRemovingExists);
+		}
+
+		#endregion
+
+		#region Script interruption
+
+		[Test]
+		public virtual void ScriptInterruptionIsCorrect()
+		{
+			// Arrange
+			const string sleepyСode = @"function sleep(millisecondsTimeout) {
+	var totalMilliseconds = new Date().getTime() + millisecondsTimeout;
+
+	while (new Date() < totalMilliseconds)
+	{ }
+}
+
+waitHandle.Set();
+sleep(5000);";
+
+			const string input = "!0";
+			const bool targetOutput = true;
+
+			// Act
+			Exception currentException = null;
+			bool output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				using (var waitHandle = new ManualResetEvent(false))
+				{
+					ThreadPool.QueueUserWorkItem(state =>
+					{
+						waitHandle.WaitOne();
+						jsEngine.Interrupt();
+					});
+
+					jsEngine.EmbedHostObject("waitHandle", waitHandle);
+
+					try
+					{
+						jsEngine.Execute(sleepyСode);
+					}
+					catch (Exception e)
+					{
+						currentException = e;
+					}
+				}
+
+				output = jsEngine.Evaluate<bool>(input);
+			}
+
+			// Assert
+			Assert.IsInstanceOf<JsScriptInterruptedException>(currentException);
+			Assert.AreEqual(targetOutput, output);
 		}
 
 		#endregion

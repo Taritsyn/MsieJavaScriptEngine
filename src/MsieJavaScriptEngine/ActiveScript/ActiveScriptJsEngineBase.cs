@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Expando;
 
+using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
+
 using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
@@ -89,6 +91,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Prefix of error category name
 		/// </summary>
 		private readonly string _errorCategoryNamePrefix;
+
+		/// <summary>
+		/// Flag that indicates if the script interruption is requested
+		/// </summary>
+		private bool _interruptRequested;
 
 
 		/// <summary>
@@ -190,7 +197,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (COMException e)
 				{
-					if (e.ErrorCode == ComErrorCode.ClassNotRegistered)
+					if (e.ErrorCode == ComErrorCode.E_CLASS_NOT_REGISTERED)
 					{
 						isSupported = false;
 					}
@@ -252,21 +259,32 @@ namespace MsieJavaScriptEngine.ActiveScript
 			return TypeMappingHelpers.MapToHostType(args);
 		}
 
-		private JsRuntimeException ConvertActiveScriptExceptionToJsRuntimeException(
-			ActiveScriptException activeScriptException)
+		private JsException ConvertScriptExceptionToHostException(
+			ActiveScriptException scriptException)
 		{
-			var jsEngineException = new JsRuntimeException(activeScriptException.Message, _engineModeName,
-				activeScriptException)
-			{
-				ErrorCode = activeScriptException.ErrorCode.ToString(CultureInfo.InvariantCulture),
-				Category = ShortenErrorCategoryName(activeScriptException.Category),
-				LineNumber = (int)activeScriptException.LineNumber,
-				ColumnNumber = activeScriptException.ColumnNumber,
-				SourceFragment = activeScriptException.SourceFragment,
-				HelpLink = activeScriptException.HelpLink
-			};
+			JsException hostException;
+			int hResult = scriptException.ErrorCode;
 
-			return jsEngineException;
+			if (hResult == ComErrorCode.E_ABORT)
+			{
+				hostException = new JsScriptInterruptedException(CommonStrings.Runtime_ScriptInterrupted,
+					_engineModeName, scriptException);
+			}
+			else
+			{
+				hostException = new JsRuntimeException(scriptException.Message, _engineModeName,
+					scriptException)
+				{
+					ErrorCode = hResult.ToString(CultureInfo.InvariantCulture),
+					Category = scriptException.Category,
+					LineNumber = (int)scriptException.LineNumber,
+					ColumnNumber = scriptException.ColumnNumber,
+					SourceFragment = scriptException.SourceFragment,
+					HelpLink = scriptException.HelpLink
+				};
+			}
+
+			return hostException;
 		}
 
 		/// <summary>
@@ -340,6 +358,17 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 
 			_dispatch = dispatch;
+		}
+
+		/// <summary>
+		/// Initializes a script context
+		/// </summary>
+		private void InitScriptContext()
+		{
+			if (_engineMode == JsEngineMode.ChakraActiveScript)
+			{
+				_interruptRequested = false;
+			}
 		}
 
 		/// <summary>
@@ -596,13 +625,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			object result = _dispatcher.Invoke(() =>
 			{
+				InitScriptContext();
+
 				try
 				{
 					return InnerExecute(expression, documentName, true);
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+					throw ConvertScriptExceptionToHostException(e);
 				}
 			});
 
@@ -615,13 +646,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			_dispatcher.Invoke(() =>
 			{
+				InitScriptContext();
+
 				try
 				{
 					InnerExecute(code, documentName, false);
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+					throw ConvertScriptExceptionToHostException(e);
 				}
 			});
 		}
@@ -632,13 +665,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			object result = _dispatcher.Invoke(() =>
 			{
+				InitScriptContext();
+
 				try
 				{
 					return InnerCallFunction(functionName, processedArgs);
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+					throw ConvertScriptExceptionToHostException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -656,6 +691,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			bool result = _dispatcher.Invoke(() =>
 			{
+				InitScriptContext();
+
 				bool variableExist;
 
 				try
@@ -665,7 +702,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+					throw ConvertScriptExceptionToHostException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -682,13 +719,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			object result = _dispatcher.Invoke(() =>
 			{
+				InitScriptContext();
+
 				try
 				{
 					return InnerGetVariableValue(variableName);
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+					throw ConvertScriptExceptionToHostException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -708,13 +747,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			_dispatcher.Invoke(() =>
 			{
+				InitScriptContext();
+
 				try
 				{
 					InnerSetVariableValue(variableName, processedValue);
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+					throw ConvertScriptExceptionToHostException(e);
 				}
 			});
 		}
@@ -723,6 +764,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			_dispatcher.Invoke(() =>
 			{
+				InitScriptContext();
+
 				try
 				{
 					InnerSetVariableValue(variableName, null);
@@ -734,7 +777,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+					throw ConvertScriptExceptionToHostException(e);
 				}
 			});
 		}
@@ -745,13 +788,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			_dispatcher.Invoke(() =>
 			{
+				InitScriptContext();
+
 				try
 				{
 					InnerEmbedHostItem(itemName, processedValue);
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+					throw ConvertScriptExceptionToHostException(e);
 				}
 			});
 		}
@@ -762,15 +807,34 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			_dispatcher.Invoke(() =>
 			{
+				InitScriptContext();
+
 				try
 				{
 					InnerEmbedHostItem(itemName, typeValue);
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertActiveScriptExceptionToJsRuntimeException(e);
+					throw ConvertScriptExceptionToHostException(e);
 				}
 			});
+		}
+
+		public override void Interrupt()
+		{
+			if (_engineMode == JsEngineMode.ChakraActiveScript)
+			{
+				_interruptRequested = true;
+			}
+			else
+			{
+				var exceptionInfo = new EXCEPINFO
+				{
+					scode = ComErrorCode.E_ABORT
+				};
+				_activeScriptWrapper.InterruptScriptThread(ScriptThreadId.Base, ref exceptionInfo,
+					ScriptInterruptFlags.None);
+			}
 		}
 
 		public override void CollectGarbage()
