@@ -18,13 +18,13 @@ namespace MsieJavaScriptEngine
 		/// Constructs an instance of the wrapper for type, that implements <see cref="IReflect"/> interface
 		/// </summary>
 		/// <param name="type">Target type</param>
-		/// <param name="engineMode">JavaScript engine mode</param>
+		/// <param name="engineMode">JS engine mode</param>
 		public HostType(Type type, JsEngineMode engineMode)
 			: base(type, null, engineMode, false)
 		{ }
 
 
-		#region HostItemBase implementation
+		#region HostItemBase overrides
 
 		protected override object InnerInvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target,
 			object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)

@@ -14,26 +14,51 @@ using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
-	/// <summary>
-	/// Active Script site
-	/// </summary>
 	internal abstract partial class ActiveScriptJsEngineBase
 	{
-		private sealed class ScriptSite : IActiveScriptSite, IActiveScriptSiteInterruptPoll,
-			IActiveScriptSiteDebug32, IActiveScriptSiteDebug64, IActiveScriptSiteDebugEx,
-			ICustomQueryInterface
+		/// <summary>
+		/// Active Script site
+		/// </summary>
+		protected abstract class ScriptSiteBase : IActiveScriptSite,
+			IActiveScriptSiteDebug32, IActiveScriptSiteDebug64,
+			IActiveScriptSiteDebugEx, ICustomQueryInterface
 		{
 			/// <summary>
-			/// Instance of Active Script engine
+			/// Instance of the Active Script JS engine
 			/// </summary>
 			private readonly ActiveScriptJsEngineBase _jsEngine;
+
+			/// <summary>
+			/// Gets or sets a last Active Script exception
+			/// </summary>
+			public ActiveScriptException LastException
+			{
+				get { return _jsEngine._lastException; }
+				set { _jsEngine._lastException = value; }
+			}
+
+			/// <summary>
+			/// Gets a instance of Active Script wrapper
+			/// </summary>
+			public IActiveScriptWrapper ActiveScriptWrapper
+			{
+				get { return _jsEngine._activeScriptWrapper; }
+			}
+
+			/// <summary>
+			/// Gets a flag that indicates if the script interruption is requested
+			/// </summary>
+			public virtual bool InterruptRequested
+			{
+				get { return _jsEngine._interruptRequested; }
+			}
 
 
 			/// <summary>
 			/// Constructs an instance of the Active Script site
 			/// </summary>
-			/// <param name="jsEngine">Active Script engine</param>
-			public ScriptSite(ActiveScriptJsEngineBase jsEngine)
+			/// <param name="jsEngine">Instance of the Active Script JS engine</param>
+			protected ScriptSiteBase(ActiveScriptJsEngineBase jsEngine)
 			{
 				_jsEngine = jsEngine;
 			}
@@ -43,19 +68,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 			/// Processes a Active Script error
 			/// </summary>
 			/// <param name="error">Instance of <see cref="IActiveScriptError"/></param>
-			private void ProcessActiveScriptError(IActiveScriptError error)
+			protected virtual void ProcessActiveScriptError(IActiveScriptError error)
 			{
 				var activeScriptException = CreateActiveScriptException(error);
-				if (_jsEngine._engineMode == JsEngineMode.Classic
-					&& activeScriptException.ErrorCode == ComErrorCode.E_ABORT)
-				{
-					// Script execution was interrupted explicitly. At this point the script
-					// engine might be in an odd state; the following call seems to get it back
-					// to normal.
-					_jsEngine._activeScriptWrapper.SetScriptState(ScriptState.Started);
-				}
-
-				_jsEngine._lastException = activeScriptException;
+				LastException = activeScriptException;
 			}
 
 			/// <summary>
@@ -63,7 +79,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			/// </summary>
 			/// <param name="error">Instance of <see cref="IActiveScriptError"/></param>
 			/// <returns>Instance of <see cref="ActiveScriptException"/></returns>
-			private ActiveScriptException CreateActiveScriptException(IActiveScriptError error)
+			protected ActiveScriptException CreateActiveScriptException(IActiveScriptError error)
 			{
 				EXCEPINFO exceptionInfo;
 				error.GetExceptionInfo(out exceptionInfo);
@@ -248,86 +264,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 			/// </summary>
 			/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
 			/// <returns>true if the writing was successful; otherwise, false</returns>
-			private bool TryWriteStackTrace(StringBuilder buffer)
+			protected virtual bool TryWriteStackTrace(StringBuilder buffer)
 			{
-				bool result = false;
-
-				IEnumDebugStackFrames enumFrames;
-				_jsEngine._activeScriptWrapper.EnumStackFrames(out enumFrames);
-
-				while (true)
-				{
-					DebugStackFrameDescriptor descriptor;
-					uint countFetched;
-					enumFrames.Next(1, out descriptor, out countFetched);
-					if (countFetched < 1)
-					{
-						break;
-					}
-
-					try
-					{
-						IDebugStackFrame stackFrame = descriptor.Frame;
-
-						string description;
-						stackFrame.GetDescriptionString(true, out description);
-
-						if (string.Equals(description, "JScript global code", StringComparison.Ordinal))
-						{
-							description = "Global code";
-						}
-
-						IDebugCodeContext codeContext;
-						stackFrame.GetCodeContext(out codeContext);
-
-						IDebugDocumentContext documentContext;
-						codeContext.GetDocumentContext(out documentContext);
-
-						if (documentContext == null)
-						{
-							JsErrorHelpers.WriteErrorLocation(buffer, description);
-							buffer.AppendLine();
-						}
-						else
-						{
-							IDebugDocument document;
-							documentContext.GetDocument(out document);
-
-							string documentName;
-							document.GetName(DocumentNameType.Title, out documentName);
-
-							var documentText = (IDebugDocumentText)document;
-
-							uint position;
-							uint length;
-							documentText.GetPositionOfContext(documentContext, out position, out length);
-
-							uint lineNumber;
-							uint offsetInLine;
-							documentText.GetLineOfPosition(position, out lineNumber, out offsetInLine);
-							uint columnNumber = offsetInLine + 1;
-
-							buffer.AppendFormatLine("   at {0} ({1}:{2}:{3})", description, documentName,
-								lineNumber, columnNumber);
-						}
-
-						result = true;
-					}
-					finally
-					{
-						if (descriptor.pFinalObject != IntPtr.Zero)
-						{
-							Marshal.Release(descriptor.pFinalObject);
-						}
-					}
-				}
-
-				if (result)
-				{
-					buffer.TrimEnd();
-				}
-
-				return result;
+				return false;
 			}
 
 			#region IActiveScriptSite implementation
@@ -378,35 +317,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			public void OnLeaveScript()
 			{ }
-
-			#endregion
-
-			#region IActiveScriptSiteInterruptPoll implementation
-
-			public uint QueryContinue()
-			{
-				int hResult;
-
-				if (_jsEngine._engineMode == JsEngineMode.ChakraActiveScript
-					&& _jsEngine._interruptRequested)
-				{
-					hResult = ComErrorCode.E_ABORT;
-					var activeScriptException = new ActiveScriptException(
-						CommonStrings.Runtime_ScriptInterrupted)
-					{
-						ErrorCode = hResult,
-						Description = CommonStrings.Runtime_ScriptInterrupted
-					};
-
-					_jsEngine._lastException = activeScriptException;
-				}
-				else
-				{
-					hResult = ComErrorCode.S_OK;
-				}
-
-				return NumericHelpers.SignedAsUnsigned(hResult);
-			}
 
 			#endregion
 

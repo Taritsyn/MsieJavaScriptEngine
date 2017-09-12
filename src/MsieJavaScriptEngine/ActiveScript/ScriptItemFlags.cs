@@ -61,7 +61,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// without this flag being set, VBScript will create a separate module for the named item,
 		/// and C++ might create a separate wrapper class for the named item.
 		/// </summary>
-		NoCode = 0x00000400,
+		NoCode = 0x00000400
 	}
 }
 #endif

@@ -12,6 +12,8 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	internal interface IDebugDocumentText // : IDebugDocument
 	{
+		#region IDebugDocument methods
+
 		#region IDebugDocumentInfo methods
 
 		/// <summary>
@@ -31,6 +33,8 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		void GetDocumentClassId(
 			[Out] out Guid clsid
 		);
+
+		#endregion
 
 		#endregion
 

@@ -13,6 +13,8 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	internal interface IDebugApplicationNode // : IDebugDocumentProvider
 	{
+		#region IDebugDocumentProvider methods
+
 		#region IDebugDocumentInfo methods
 
 		/// <summary>
@@ -34,8 +36,6 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		);
 
 		#endregion
-
-		#region IDebugDocumentProvider methods
 
 		/// <summary>
 		/// Causes the document to be instantiated if it does not already exist

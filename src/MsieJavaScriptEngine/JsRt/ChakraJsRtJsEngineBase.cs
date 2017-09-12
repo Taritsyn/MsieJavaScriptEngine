@@ -28,11 +28,6 @@ namespace MsieJavaScriptEngine.JsRt
 		protected JsSourceContext _jsSourceContext = JsSourceContext.FromIntPtr(IntPtr.Zero);
 
 		/// <summary>
-		/// Flag for whether to enable script debugging features
-		/// </summary>
-		protected readonly bool _enableDebugging;
-
-		/// <summary>
 		/// Flag indicating whether debugging started
 		/// </summary>
 		private StatedFlag _debuggingStartedFlag;
@@ -58,12 +53,10 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// Constructs an instance of the Chakra JsRT engine
 		/// </summary>
-		/// <param name="engineMode">JS engine mode</param>
-		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		protected ChakraJsRtJsEngineBase(JsEngineMode engineMode, bool enableDebugging)
-			: base(engineMode)
+		/// <param name="settings">JS engine settings</param>
+		protected ChakraJsRtJsEngineBase(JsEngineSettings settings)
+			: base(settings)
 		{
-			_enableDebugging = enableDebugging;
 #if NETSTANDARD1_3
 			_externalObjectFinalizeCallback = ExternalObjectFinalizeCallback;
 #endif

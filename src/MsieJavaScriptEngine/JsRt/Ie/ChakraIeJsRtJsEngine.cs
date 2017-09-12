@@ -63,9 +63,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <summary>
 		/// Constructs an instance of the Chakra “IE” JsRT engine
 		/// </summary>
-		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		public ChakraIeJsRtJsEngine(bool enableDebugging)
-			: base(JsEngineMode.ChakraIeJsRt, enableDebugging)
+		/// <param name="settings">JS engine settings</param>
+		public ChakraIeJsRtJsEngine(JsEngineSettings settings)
+			: base(settings)
 		{
 			_dispatcher.Invoke(() =>
 			{
@@ -180,6 +180,73 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 
 		/// <summary>
+		/// Adds a reference to the value
+		/// </summary>
+		/// <param name="value">The value</param>
+		private static void AddReferenceToValue(IeJsValue value)
+		{
+			if (CanHaveReferences(value))
+			{
+				value.AddRef();
+			}
+		}
+
+		/// <summary>
+		/// Removes a reference to the value
+		/// </summary>
+		/// <param name="value">The value</param>
+		private static void RemoveReferenceToValue(IeJsValue value)
+		{
+			if (CanHaveReferences(value))
+			{
+				value.Release();
+			}
+		}
+
+		/// <summary>
+		/// Checks whether the value can have references
+		/// </summary>
+		/// <param name="value">The value</param>
+		/// <returns>Result of check (true - may have; false - may not have)</returns>
+		private static bool CanHaveReferences(IeJsValue value)
+		{
+			JsValueType valueType = value.ValueType;
+
+			switch (valueType)
+			{
+				case JsValueType.Null:
+				case JsValueType.Undefined:
+				case JsValueType.Boolean:
+					return false;
+				default:
+					return true;
+			}
+		}
+
+		/// <summary>
+		/// Creates a instance of JS scope
+		/// </summary>
+		/// <returns>Instance of JS scope</returns>
+		private IeJsScope CreateJsScope()
+		{
+			if (_jsRuntime.Disabled)
+			{
+				_jsRuntime.Disabled = false;
+			}
+
+			var jsScope = new IeJsScope(_jsContext);
+
+			if (_settings.EnableDebugging)
+			{
+				StartDebugging();
+			}
+
+			return jsScope;
+		}
+
+		#region Mapping
+
+		/// <summary>
 		/// Makes a mapping of value from the host type to a script type
 		/// </summary>
 		/// <param name="value">The source value</param>
@@ -227,7 +294,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					return FromObject(value);
 #else
 					object processedValue = !TypeConverter.IsPrimitiveType(typeCode) ?
-						new HostObject(value, _engineMode) : value;
+						new HostObject(value, _settings.EngineMode) : value;
 					return IeJsValue.FromObject(processedValue);
 #endif
 			}
@@ -310,50 +377,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		private object[] MapToHostType(IeJsValue[] args)
 		{
 			return args.Select(MapToHostType).ToArray();
-		}
-
-		/// <summary>
-		/// Adds a reference to the value
-		/// </summary>
-		/// <param name="value">The value</param>
-		private static void AddReferenceToValue(IeJsValue value)
-		{
-			if (CanHaveReferences(value))
-			{
-				value.AddRef();
-			}
-		}
-
-		/// <summary>
-		/// Removes a reference to the value
-		/// </summary>
-		/// <param name="value">The value</param>
-		private static void RemoveReferenceToValue(IeJsValue value)
-		{
-			if (CanHaveReferences(value))
-			{
-				value.Release();
-			}
-		}
-
-		/// <summary>
-		/// Checks whether the value can have references
-		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns>Result of check (true - may have; false - may not have)</returns>
-		private static bool CanHaveReferences(IeJsValue value)
-		{
-			JsValueType valueType = value.ValueType;
-
-			switch (valueType)
-			{
-				case JsValueType.Null:
-				case JsValueType.Undefined:
-				case JsValueType.Boolean:
-					return false;
-				default:
-					return true;
-			}
 		}
 #if NETSTANDARD1_3
 
@@ -932,26 +955,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			return hostException;
 		}
 
-		/// <summary>
-		/// Creates a instance of JS scope
-		/// </summary>
-		/// <returns>Instance of JS scope</returns>
-		private IeJsScope CreateJsScope()
-		{
-			if (_jsRuntime.Disabled)
-			{
-				_jsRuntime.Disabled = false;
-			}
+		#endregion
 
-			var jsScope = new IeJsScope(_jsContext);
-
-			if (_enableDebugging)
-			{
-				StartDebugging();
-			}
-
-			return jsScope;
-		}
+		#region ChakraJsRtJsEngineBase overrides
 
 		protected override void InnerStartDebugging()
 		{
@@ -979,6 +985,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			get { return _engineModeName; }
 		}
+
 
 		public override object Evaluate(string expression, string documentName)
 		{
@@ -1204,7 +1211,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 #if NETSTANDARD1_3
 						IeJsValue typeValue = CreateObjectFromType(type);
 #else
-						IeJsValue typeValue = IeJsValue.FromObject(new HostType(type, _engineMode));
+						IeJsValue typeValue = IeJsValue.FromObject(new HostType(type, _settings.EngineMode));
 #endif
 						IeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
 					}
@@ -1271,6 +1278,8 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 #endif
 			}
 		}
+
+		#endregion
 
 		#endregion
 	}

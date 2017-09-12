@@ -1,7 +1,7 @@
 ﻿namespace MsieJavaScriptEngine
 {
 	/// <summary>
-	/// JavaScript engine settings
+	/// JS engine settings
 	/// </summary>
 	public sealed class JsEngineSettings
 	{
@@ -15,7 +15,7 @@
 		}
 
 		/// <summary>
-		/// Gets or sets a JavaScript engine mode
+		/// Gets or sets a JS engine mode
 		/// </summary>
 		public JsEngineMode EngineMode
 		{
@@ -43,7 +43,7 @@
 
 
 		/// <summary>
-		/// Constructs instance of JavaScript engine settings
+		/// Constructs an instance of JS engine settings
 		/// </summary>
 		public JsEngineSettings()
 		{
@@ -51,6 +51,16 @@
 			EngineMode = JsEngineMode.Auto;
 			UseEcmaScript5Polyfill = false;
 			UseJson2Library = false;
+		}
+
+
+		/// <summary>
+		/// Creates a new object that is a copy of the current instance
+		/// </summary>
+		/// <returns>A new object that is a copy of this instance</returns>
+		public JsEngineSettings Clone()
+		{
+			return (JsEngineSettings)MemberwiseClone();
 		}
 	}
 }

@@ -14,22 +14,22 @@ using MsieJavaScriptEngine.Utilities;
 namespace MsieJavaScriptEngine
 {
 	/// <summary>
-	/// .NET-wrapper for working with the Internet Explorer's JavaScript engines
+	/// .NET-wrapper for working with the Internet Explorer's JS engines
 	/// </summary>
 	public sealed class MsieJsEngine : IDisposable
 	{
 		/// <summary>
-		/// JavaScript engine
+		/// JS engine
 		/// </summary>
 		private IInnerJsEngine _jsEngine;
 
 		/// <summary>
-		/// Current JavaScript engine mode
+		/// Current JS engine mode
 		/// </summary>
 		private static JsEngineMode _currentMode;
 
 		/// <summary>
-		/// Synchronizer of JavaScript engines creation
+		/// Synchronizer of JS engines creation
 		/// </summary>
 		private static readonly object _creationSynchronizer = new object();
 
@@ -45,7 +45,7 @@ namespace MsieJavaScriptEngine
 		private InterlockedStatedFlag _disposedFlag = new InterlockedStatedFlag();
 
 		/// <summary>
-		/// Gets a name of JavaScript engine mode
+		/// Gets a name of JS engine mode
 		/// </summary>
 		public string Mode
 		{
@@ -54,24 +54,25 @@ namespace MsieJavaScriptEngine
 
 
 		/// <summary>
-		/// Constructs an instance of MSIE JavaScript engine
+		/// Constructs an instance of MSIE JS engine
 		/// </summary>
-		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
-		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JS engine.</exception>
+		/// <exception cref="System.NotSupportedException">Selected mode of JS engine is not supported.</exception>
 		public MsieJsEngine()
 			: this(new JsEngineSettings())
 		{ }
 
 		/// <summary>
-		/// Constructs an instance of MSIE JavaScript engine
+		/// Constructs an instance of MSIE JS engine
 		/// </summary>
-		/// <param name="settings">JavaScript engine settings</param>
-		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JavaScript engine.</exception>
-		/// <exception cref="System.NotSupportedException">Selected mode of JavaScript engine is not supported.</exception>
+		/// <param name="settings">JS engine settings</param>
+		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JS engine.</exception>
+		/// <exception cref="System.NotSupportedException">Selected mode of JS engine is not supported.</exception>
 		public MsieJsEngine(JsEngineSettings settings)
 		{
 			JsEngineMode engineMode = settings.EngineMode;
 			JsEngineMode processedEngineMode = engineMode;
+			JsEngineSettings processedSettings = settings;
 
 			if (engineMode == JsEngineMode.Auto)
 			{
@@ -105,6 +106,12 @@ namespace MsieJavaScriptEngine
 				}
 			}
 
+			if (processedEngineMode != engineMode)
+			{
+				processedSettings = settings.Clone();
+				processedSettings.EngineMode = processedEngineMode;
+			}
+
 			lock (_creationSynchronizer)
 			{
 				JsEngineMode previousMode = _currentMode;
@@ -115,7 +122,7 @@ namespace MsieJavaScriptEngine
 						if (previousMode != JsEngineMode.ChakraIeJsRt
 							&& previousMode != JsEngineMode.ChakraActiveScript)
 						{
-							_jsEngine = new ChakraEdgeJsRtJsEngine(settings.EnableDebugging);
+							_jsEngine = new ChakraEdgeJsRtJsEngine(processedSettings);
 						}
 						else if (previousMode == JsEngineMode.ChakraIeJsRt)
 						{
@@ -142,7 +149,7 @@ namespace MsieJavaScriptEngine
 					case JsEngineMode.ChakraIeJsRt:
 						if (previousMode != JsEngineMode.ChakraEdgeJsRt)
 						{
-							_jsEngine = new ChakraIeJsRtJsEngine(settings.EnableDebugging);
+							_jsEngine = new ChakraIeJsRtJsEngine(processedSettings);
 						}
 						else
 						{
@@ -161,7 +168,7 @@ namespace MsieJavaScriptEngine
 						if (previousMode != JsEngineMode.ChakraEdgeJsRt)
 						{
 
-							_jsEngine = new ChakraActiveScriptJsEngine(settings.EnableDebugging);
+							_jsEngine = new ChakraActiveScriptJsEngine(processedSettings);
 						}
 						else
 						{
@@ -181,8 +188,7 @@ namespace MsieJavaScriptEngine
 #endif
 					case JsEngineMode.Classic:
 #if !NETSTANDARD1_3
-						_jsEngine = new ClassicActiveScriptJsEngine(settings.EnableDebugging,
-							settings.UseEcmaScript5Polyfill, settings.UseJson2Library);
+						_jsEngine = new ClassicActiveScriptJsEngine(processedSettings);
 
 						break;
 #else
@@ -210,12 +216,12 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Evaluates an expression
 		/// </summary>
-		/// <param name="expression">JavaScript expression</param>
+		/// <param name="expression">JS expression</param>
 		/// <returns>Result of the expression</returns>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public object Evaluate(string expression)
 		{
 			return Evaluate(expression, string.Empty);
@@ -224,13 +230,13 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Evaluates an expression
 		/// </summary>
-		/// <param name="expression">JavaScript expression</param>
+		/// <param name="expression">JS expression</param>
 		/// <param name="documentName">Document name</param>
 		/// <returns>Result of the expression</returns>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public object Evaluate(string expression, string documentName)
 		{
 			VerifyNotDisposed();
@@ -250,14 +256,14 @@ namespace MsieJavaScriptEngine
 		/// Evaluates an expression
 		/// </summary>
 		/// <typeparam name="T">Type of result</typeparam>
-		/// <param name="expression">JavaScript expression</param>
+		/// <param name="expression">JS expression</param>
 		/// <returns>Result of the expression</returns>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value
 		/// is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public T Evaluate<T>(string expression)
 		{
 			return Evaluate<T>(expression, string.Empty);
@@ -267,15 +273,15 @@ namespace MsieJavaScriptEngine
 		/// Evaluates an expression
 		/// </summary>
 		/// <typeparam name="T">Type of result</typeparam>
-		/// <param name="expression">JavaScript expression</param>
+		/// <param name="expression">JS expression</param>
 		/// <param name="documentName">Document name</param>
 		/// <returns>Result of the expression</returns>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value
 		/// is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public T Evaluate<T>(string expression, string documentName)
 		{
 			VerifyNotDisposed();
@@ -302,11 +308,11 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Executes a code
 		/// </summary>
-		/// <param name="code">JavaScript code</param>
+		/// <param name="code">JS code</param>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public void Execute(string code)
 		{
 			Execute(code, string.Empty);
@@ -315,12 +321,12 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Executes a code
 		/// </summary>
-		/// <param name="code">JavaScript code</param>
+		/// <param name="code">JS code</param>
 		/// <param name="documentName">Document name</param>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public void Execute(string code, string documentName)
 		{
 			VerifyNotDisposed();
@@ -341,10 +347,10 @@ namespace MsieJavaScriptEngine
 		/// <param name="path">Path to the JS-file</param>
 		/// <param name="encoding">Text encoding</param>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.IO.FileNotFoundException">Specified JS-file not found.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public void ExecuteFile(string path, Encoding encoding = null)
 		{
 			VerifyNotDisposed();
@@ -372,10 +378,10 @@ namespace MsieJavaScriptEngine
 		/// <param name="type">The type, that determines the assembly and whose namespace is used to scope
 		/// the resource name</param>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.ArgumentNullException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public void ExecuteResource(string resourceName, Type type)
 		{
 			VerifyNotDisposed();
@@ -412,10 +418,10 @@ namespace MsieJavaScriptEngine
 		/// <param name="resourceName">The case-sensitive resource name</param>
 		/// <param name="assembly">The assembly, which contains the embedded resource</param>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.ArgumentNullException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public void ExecuteResource(string resourceName, Assembly assembly)
 		{
 			VerifyNotDisposed();
@@ -449,12 +455,12 @@ namespace MsieJavaScriptEngine
 		/// <param name="args">Function arguments</param>
 		/// <returns>Result of the function execution</returns>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.FormatException">The function name has incorrect format.</exception>
 		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of one function
 		/// parameter is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public object CallFunction(string functionName, params object[] args)
 		{
 			VerifyNotDisposed();
@@ -505,12 +511,12 @@ namespace MsieJavaScriptEngine
 		/// <param name="args">Function arguments</param>
 		/// <returns>Result of the function execution</returns>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.FormatException">The function name has incorrect format.</exception>
 		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value or
 		/// one function parameter is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public T CallFunction<T>(string functionName, params object[] args)
 		{
 			VerifyNotDisposed();
@@ -566,10 +572,10 @@ namespace MsieJavaScriptEngine
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Result of check (true - exists; false - not exists</returns>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public bool HasVariable(string variableName)
 		{
 			VerifyNotDisposed();
@@ -595,10 +601,10 @@ namespace MsieJavaScriptEngine
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Value of variable</returns>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public object GetVariableValue(string variableName)
 		{
 			VerifyNotDisposed();
@@ -625,12 +631,12 @@ namespace MsieJavaScriptEngine
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Value of variable</returns>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
 		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value
 		/// is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public T GetVariableValue<T>(string variableName)
 		{
 			VerifyNotDisposed();
@@ -665,12 +671,12 @@ namespace MsieJavaScriptEngine
 		/// <param name="variableName">Name of variable</param>
 		/// <param name="value">Value of variable</param>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
 		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of variable value
 		/// is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public void SetVariableValue(string variableName, object value)
 		{
 			VerifyNotDisposed();
@@ -707,10 +713,10 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JavaScript engine.</exception>
+		/// JS engine.</exception>
 		/// <exception cref="System.ArgumentException" />
 		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JavaScript runtime error.</exception>
+		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
 		public void RemoveVariable(string variableName)
 		{
 			VerifyNotDisposed();

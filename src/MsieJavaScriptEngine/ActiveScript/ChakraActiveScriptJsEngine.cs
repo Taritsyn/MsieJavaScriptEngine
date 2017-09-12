@@ -6,7 +6,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 	/// <summary>
 	/// Active Script version of Chakra JS engine
 	/// </summary>
-	internal sealed class ChakraActiveScriptJsEngine : ActiveScriptJsEngineBase
+	internal sealed partial class ChakraActiveScriptJsEngine : ActiveScriptJsEngineBase
 	{
 		/// <summary>
 		/// Flag indicating whether this JS engine is supported
@@ -20,11 +20,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 
 		/// <summary>
-		/// Constructs instance of the Chakra Active Script engine
+		/// Constructs an instance of the Chakra Active Script engine
 		/// </summary>
-		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		public ChakraActiveScriptJsEngine(bool enableDebugging)
-			: base(JsEngineMode.ChakraActiveScript, enableDebugging, false, false)
+		/// <param name="settings">JS engine settings</param>
+		public ChakraActiveScriptJsEngine(JsEngineSettings settings)
+			: base(settings, ClassId.Chakra, ScriptLanguageVersion.EcmaScript5, "9", "JavaScript ")
 		{ }
 
 
@@ -38,6 +38,36 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			return isSupported;
 		}
+
+		#region ActiveScriptJsEngineBase overrides
+
+		/// <summary>
+		/// Creates a instance of the Active Script site
+		/// </summary>
+		/// <returns>Instance of the Active Script site</returns>
+		protected override ScriptSiteBase CreateScriptSite()
+		{
+			return new ScriptSite(this);
+		}
+
+		/// <summary>
+		/// Initializes a script context
+		/// </summary>
+		protected override void InitScriptContext()
+		{
+			_interruptRequested = false;
+		}
+
+		#region IInnerJsEngine implementation
+
+		public override void Interrupt()
+		{
+			_interruptRequested = true;
+		}
+
+		#endregion
+
+		#endregion
 	}
 }
 #endif

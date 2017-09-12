@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Expando;
 
-using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
-
 using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
@@ -22,19 +20,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 	internal abstract partial class ActiveScriptJsEngineBase : InnerJsEngineBase
 	{
 		/// <summary>
-		/// Name of resource, which contains a ECMAScript 5 Polyfill
-		/// </summary>
-		private const string ES5_POLYFILL_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.ES5.min.js";
-
-		/// <summary>
-		/// Name of resource, which contains a JSON2 library
-		/// </summary>
-		private const string JSON2_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.json2.min.js";
-
-		/// <summary>
 		/// Instance of Active Script wrapper
 		/// </summary>
-		private IActiveScriptWrapper _activeScriptWrapper;
+		protected IActiveScriptWrapper _activeScriptWrapper;
 
 		/// <summary>
 		/// Instance of script dispatch
@@ -95,46 +83,28 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Flag that indicates if the script interruption is requested
 		/// </summary>
-		private bool _interruptRequested;
+		protected bool _interruptRequested;
 
 
 		/// <summary>
 		/// Constructs an instance of the Active Script engine
 		/// </summary>
-		/// <param name="engineMode">JS engine mode</param>
-		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
-		protected ActiveScriptJsEngineBase(JsEngineMode engineMode, bool enableDebugging,
-			bool useEcmaScript5Polyfill, bool useJson2Library)
-			: base(engineMode)
+		/// <param name="settings">JS engine settings</param>
+		/// <param name="clsid">CLSID of JS engine</param>
+		/// <param name="languageVersion">Version of script language</param>
+		/// <param name="lowerIeVersion">Lowest supported version of Internet Explorer</param>
+		/// <param name="errorCategoryNamePrefix">Prefix of error category name</param>
+		protected ActiveScriptJsEngineBase(JsEngineSettings settings, string clsid,
+			ScriptLanguageVersion languageVersion, string lowerIeVersion, string errorCategoryNamePrefix)
+			: base(settings)
 		{
-			string lowerIeVersion;
-
-			if (_engineMode == JsEngineMode.ChakraActiveScript)
-			{
-				lowerIeVersion = "9";
-				_errorCategoryNamePrefix = "JavaScript ";
-			}
-			else if (_engineMode == JsEngineMode.Classic)
-			{
-				lowerIeVersion = "6";
-				_errorCategoryNamePrefix = "Microsoft JScript ";
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
+			_errorCategoryNamePrefix = errorCategoryNamePrefix;
 
 			_dispatcher.Invoke(() =>
 			{
 				try
 				{
-					_activeScriptWrapper = Utils.Is64BitProcess() ?
-						(IActiveScriptWrapper)new ActiveScriptWrapper64(engineMode, enableDebugging)
-						:
-						new ActiveScriptWrapper32(engineMode, enableDebugging)
-						;
+					_activeScriptWrapper = CreateActiveScriptWrapper(clsid, languageVersion);
 				}
 				catch (Exception e)
 				{
@@ -143,19 +113,17 @@ namespace MsieJavaScriptEngine.ActiveScript
 							_engineModeName, lowerIeVersion, e.Message), _engineModeName);
 				}
 
-				if (enableDebugging)
+				if (_settings.EnableDebugging)
 				{
 					StartDebugging();
 				}
 
-				_activeScriptWrapper.SetScriptSite(new ScriptSite(this));
+				_activeScriptWrapper.SetScriptSite(CreateScriptSite());
 				_activeScriptWrapper.InitNew();
 				_activeScriptWrapper.SetScriptState(ScriptState.Started);
 
 				InitScriptDispatch();
 			});
-
-			LoadResources(useEcmaScript5Polyfill, useJson2Library);
 		}
 
 		/// <summary>
@@ -220,98 +188,25 @@ namespace MsieJavaScriptEngine.ActiveScript
 		}
 
 		/// <summary>
-		/// Makes a mapping of value from the host type to a script type
+		/// Creates a instance of the Active Script wrapper
 		/// </summary>
-		/// <param name="value">The source value</param>
-		/// <returns>The mapped value</returns>
-		private object MapToScriptType(object value)
+		/// <param name="clsid">CLSID of JS engine</param>
+		/// <param name="languageVersion">Version of script language</param>
+		/// <returns>Instance of the Active Script wrapper</returns>
+		private IActiveScriptWrapper CreateActiveScriptWrapper(string clsid, ScriptLanguageVersion languageVersion)
 		{
-			return TypeMappingHelpers.MapToScriptType(value, _engineMode);
-		}
+			IActiveScriptWrapper activeScriptWrapper;
 
-		/// <summary>
-		/// Makes a mapping of array items from the host type to a script type
-		/// </summary>
-		/// <param name="args">The source array</param>
-		/// <returns>The mapped array</returns>
-		private object[] MapToScriptType(object[] args)
-		{
-			return TypeMappingHelpers.MapToScriptType(args, _engineMode);
-		}
-
-		/// <summary>
-		/// Makes a mapping of value from the script type to a host type
-		/// </summary>
-		/// <param name="value">The source value</param>
-		/// <returns>The mapped value</returns>
-		private object MapToHostType(object value)
-		{
-			return TypeMappingHelpers.MapToHostType(value);
-		}
-
-		/// <summary>
-		/// Makes a mapping of array items from the script type to a host type
-		/// </summary>
-		/// <param name="args">The source array</param>
-		/// <returns>The mapped array</returns>
-		private object[] MapToHostType(object[] args)
-		{
-			return TypeMappingHelpers.MapToHostType(args);
-		}
-
-		private JsException ConvertScriptExceptionToHostException(
-			ActiveScriptException scriptException)
-		{
-			JsException hostException;
-			int hResult = scriptException.ErrorCode;
-
-			if (hResult == ComErrorCode.E_ABORT)
+			if (Utils.Is64BitProcess())
 			{
-				hostException = new JsScriptInterruptedException(CommonStrings.Runtime_ScriptInterrupted,
-					_engineModeName, scriptException);
+				activeScriptWrapper = new ActiveScriptWrapper64(clsid, languageVersion, _settings.EnableDebugging);
 			}
 			else
 			{
-				hostException = new JsRuntimeException(scriptException.Message, _engineModeName,
-					scriptException)
-				{
-					ErrorCode = hResult.ToString(CultureInfo.InvariantCulture),
-					Category = scriptException.Category,
-					LineNumber = (int)scriptException.LineNumber,
-					ColumnNumber = scriptException.ColumnNumber,
-					SourceFragment = scriptException.SourceFragment,
-					HelpLink = scriptException.HelpLink
-				};
+				activeScriptWrapper = new ActiveScriptWrapper32(clsid, languageVersion, _settings.EnableDebugging);
 			}
 
-			return hostException;
-		}
-
-		/// <summary>
-		/// Shortens a name of error category
-		/// </summary>
-		/// <param name="categoryName">Name of error category</param>
-		/// <returns>Short name of error category</returns>
-		private string ShortenErrorCategoryName(string categoryName)
-		{
-			if (categoryName == null)
-			{
-				throw new ArgumentNullException("categoryName");
-			}
-
-			string shortCategoryName = categoryName;
-			if (categoryName.StartsWith(_errorCategoryNamePrefix, StringComparison.Ordinal))
-			{
-				shortCategoryName = categoryName.Substring(_errorCategoryNamePrefix.Length);
-				if (shortCategoryName.Length > 0)
-				{
-					char[] chars = shortCategoryName.ToCharArray();
-					chars[0] = char.ToUpperInvariant(chars[0]);
-					shortCategoryName = new string(chars);
-				}
-			}
-
-			return shortCategoryName;
+			return activeScriptWrapper;
 		}
 
 		/// <summary>
@@ -336,6 +231,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 			}
 		}
+
+		/// <summary>
+		/// Creates a instance of the Active Script site
+		/// </summary>
+		/// <returns>Instance of the Active Script site</returns>
+		protected abstract ScriptSiteBase CreateScriptSite();
 
 		/// <summary>
 		/// Initializes a script dispatch
@@ -363,12 +264,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Initializes a script context
 		/// </summary>
-		private void InitScriptContext()
+		protected virtual void InitScriptContext()
 		{
-			if (_engineMode == JsEngineMode.ChakraActiveScript)
-			{
-				_interruptRequested = false;
-			}
+			// Do nothing
 		}
 
 		/// <summary>
@@ -565,54 +463,106 @@ namespace MsieJavaScriptEngine.ActiveScript
 			_activeScriptWrapper.CollectGarbage(type);
 		}
 
+		#region Mapping
+
 		/// <summary>
-		/// Loads a resources
+		/// Makes a mapping of value from the host type to a script type
 		/// </summary>
-		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
-		private void LoadResources(bool useEcmaScript5Polyfill, bool useJson2Library)
+		/// <param name="value">The source value</param>
+		/// <returns>The mapped value</returns>
+		private object MapToScriptType(object value)
 		{
-			Assembly assembly = GetType().GetTypeInfo().Assembly;
-
-			if (useEcmaScript5Polyfill)
-			{
-				ExecuteResource(ES5_POLYFILL_RESOURCE_NAME, assembly);
-			}
-
-			if (useJson2Library)
-			{
-				ExecuteResource(JSON2_LIBRARY_RESOURCE_NAME, assembly);
-			}
+			return TypeMappingHelpers.MapToScriptType(value, _settings.EngineMode);
 		}
 
 		/// <summary>
-		/// Executes a code from embedded JS-resource
+		/// Makes a mapping of array items from the host type to a script type
 		/// </summary>
-		/// <param name="resourceName">The case-sensitive resource name</param>
-		/// <param name="assembly">The assembly, which contains the embedded resource</param>
-		private void ExecuteResource(string resourceName, Assembly assembly)
+		/// <param name="args">The source array</param>
+		/// <returns>The mapped array</returns>
+		private object[] MapToScriptType(object[] args)
 		{
-			if (resourceName == null)
-			{
-				throw new ArgumentNullException(
-					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
-			}
-
-			if (assembly == null)
-			{
-				throw new ArgumentNullException(
-					"assembly", string.Format(CommonStrings.Common_ArgumentIsNull, "assembly"));
-			}
-
-			if (string.IsNullOrWhiteSpace(resourceName))
-			{
-				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
-			}
-
-			string code = Utils.GetResourceAsString(resourceName, assembly);
-			Execute(code, resourceName);
+			return TypeMappingHelpers.MapToScriptType(args, _settings.EngineMode);
 		}
+
+		/// <summary>
+		/// Makes a mapping of value from the script type to a host type
+		/// </summary>
+		/// <param name="value">The source value</param>
+		/// <returns>The mapped value</returns>
+		private object MapToHostType(object value)
+		{
+			return TypeMappingHelpers.MapToHostType(value);
+		}
+
+		/// <summary>
+		/// Makes a mapping of array items from the script type to a host type
+		/// </summary>
+		/// <param name="args">The source array</param>
+		/// <returns>The mapped array</returns>
+		private object[] MapToHostType(object[] args)
+		{
+			return TypeMappingHelpers.MapToHostType(args);
+		}
+
+		private JsException ConvertScriptExceptionToHostException(
+			ActiveScriptException scriptException)
+		{
+			JsException hostException;
+			int hResult = scriptException.ErrorCode;
+
+			if (hResult == ComErrorCode.E_ABORT)
+			{
+				hostException = new JsScriptInterruptedException(CommonStrings.Runtime_ScriptInterrupted,
+					_engineModeName, scriptException);
+			}
+			else
+			{
+				hostException = new JsRuntimeException(scriptException.Message, _engineModeName,
+					scriptException)
+				{
+					ErrorCode = hResult.ToString(CultureInfo.InvariantCulture),
+					Category = scriptException.Category,
+					LineNumber = (int)scriptException.LineNumber,
+					ColumnNumber = scriptException.ColumnNumber,
+					SourceFragment = scriptException.SourceFragment,
+					HelpLink = scriptException.HelpLink
+				};
+			}
+
+			return hostException;
+		}
+
+		/// <summary>
+		/// Shortens a name of error category
+		/// </summary>
+		/// <param name="categoryName">Name of error category</param>
+		/// <returns>Short name of error category</returns>
+		private string ShortenErrorCategoryName(string categoryName)
+		{
+			if (categoryName == null)
+			{
+				throw new ArgumentNullException("categoryName");
+			}
+
+			string shortCategoryName = categoryName;
+			if (categoryName.StartsWith(_errorCategoryNamePrefix, StringComparison.Ordinal))
+			{
+				shortCategoryName = categoryName.Substring(_errorCategoryNamePrefix.Length);
+				if (shortCategoryName.Length > 0)
+				{
+					char[] chars = shortCategoryName.ToCharArray();
+					chars[0] = char.ToUpperInvariant(chars[0]);
+					shortCategoryName = new string(chars);
+				}
+			}
+
+			return shortCategoryName;
+		}
+
+		#endregion
+
+		#region InnerJsEngineBase overrides
 
 		#region IInnerJsEngine implementation
 
@@ -620,6 +570,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			get { return _engineModeName; }
 		}
+
 
 		public override object Evaluate(string expression, string documentName)
 		{
@@ -803,7 +754,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public override void EmbedHostType(string itemName, Type type)
 		{
-			var typeValue = new HostType(type, _engineMode);
+			var typeValue = new HostType(type, _settings.EngineMode);
 
 			_dispatcher.Invoke(() =>
 			{
@@ -818,23 +769,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 					throw ConvertScriptExceptionToHostException(e);
 				}
 			});
-		}
-
-		public override void Interrupt()
-		{
-			if (_engineMode == JsEngineMode.ChakraActiveScript)
-			{
-				_interruptRequested = true;
-			}
-			else
-			{
-				var exceptionInfo = new EXCEPINFO
-				{
-					scode = ComErrorCode.E_ABORT
-				};
-				_activeScriptWrapper.InterruptScriptThread(ScriptThreadId.Base, ref exceptionInfo,
-					ScriptInterruptFlags.None);
-			}
 		}
 
 		public override void CollectGarbage()
@@ -907,6 +841,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 			}
 		}
+
+		#endregion
 
 		#endregion
 	}

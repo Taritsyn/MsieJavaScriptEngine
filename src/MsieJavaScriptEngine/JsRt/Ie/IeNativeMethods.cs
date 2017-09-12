@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
+using MsieJavaScriptEngine.ActiveScript.Profiling;
 using MsieJavaScriptEngine.Constants;
 
 namespace MsieJavaScriptEngine.JsRt.Ie

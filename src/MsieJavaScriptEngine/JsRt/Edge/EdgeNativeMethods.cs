@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+using MsieJavaScriptEngine.ActiveScript.Profiling;
 using MsieJavaScriptEngine.Constants;
 
 namespace MsieJavaScriptEngine.JsRt.Edge

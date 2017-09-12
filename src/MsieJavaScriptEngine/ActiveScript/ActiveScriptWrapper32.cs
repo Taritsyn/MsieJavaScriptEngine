@@ -42,10 +42,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Constructs an instance of the 32-bit Active Script wrapper
 		/// </summary>
-		/// <param name="engineMode">JS engine mode</param>
+		/// <param name="clsid">CLSID of JS engine</param>
+		/// <param name="languageVersion">Version of script language</param>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		public ActiveScriptWrapper32(JsEngineMode engineMode, bool enableDebugging)
-			: base(engineMode, enableDebugging)
+		public ActiveScriptWrapper32(string clsid, ScriptLanguageVersion languageVersion,
+			bool enableDebugging)
+			: base(clsid, languageVersion, enableDebugging)
 		{
 			_pActiveScriptParse32 = ComHelpers.QueryInterface<IActiveScriptParse32>(_pActiveScript);
 			_activeScriptParse32 = (IActiveScriptParse32)_activeScript;
@@ -53,10 +55,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 			if (_enableDebugging)
 			{
 				_pActiveScriptDebug32 = ComHelpers.QueryInterface<IActiveScriptDebug32>(_pActiveScript);
-				if (engineMode == JsEngineMode.Classic)
+				_pDebugStackFrameSniffer32 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx32>(
+					_pActiveScript);
+				if (_pDebugStackFrameSniffer32 != IntPtr.Zero)
 				{
-					_pDebugStackFrameSniffer32 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx32>(
-						_pActiveScript);
 					_debugStackFrameSniffer32 = _activeScript as IDebugStackFrameSnifferEx32;
 				}
 			}

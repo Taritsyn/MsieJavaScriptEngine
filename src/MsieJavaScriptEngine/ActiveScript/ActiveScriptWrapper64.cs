@@ -42,10 +42,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Constructs an instance of the 64-bit Active Script wrapper
 		/// </summary>
-		/// <param name="engineMode">JS engine mode</param>
+		/// <param name="clsid">CLSID of JS engine</param>
+		/// <param name="languageVersion">Version of script language</param>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		public ActiveScriptWrapper64(JsEngineMode engineMode, bool enableDebugging)
-			: base(engineMode, enableDebugging)
+		public ActiveScriptWrapper64(string clsid, ScriptLanguageVersion languageVersion,
+			bool enableDebugging)
+			: base(clsid, languageVersion, enableDebugging)
 		{
 			_pActiveScriptParse64 = ComHelpers.QueryInterface<IActiveScriptParse64>(_pActiveScript);
 			_activeScriptParse64 = (IActiveScriptParse64)_activeScript;
@@ -53,10 +55,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 			if (_enableDebugging)
 			{
 				_pActiveScriptDebug64 = ComHelpers.QueryInterface<IActiveScriptDebug64>(_pActiveScript);
-				if (engineMode == JsEngineMode.Classic)
+				_pDebugStackFrameSniffer64 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx64>(
+					_pActiveScript);
+				if (_pDebugStackFrameSniffer64 != IntPtr.Zero)
 				{
-					_pDebugStackFrameSniffer64 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx64>(
-						_pActiveScript);
 					_debugStackFrameSniffer64 = _activeScript as IDebugStackFrameSnifferEx64;
 				}
 			}

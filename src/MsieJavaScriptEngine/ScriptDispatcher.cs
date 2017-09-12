@@ -16,12 +16,12 @@ namespace MsieJavaScriptEngine
 	{
 #if !NETSTANDARD1_3
 		/// <summary>
-		/// The stack size is sufficient to run the code of modern JavaScript libraries in 32-bit process
+		/// The stack size is sufficient to run the code of modern JS libraries in 32-bit process
 		/// </summary>
 		const int STACK_SIZE_32 = 492 * 1024; // like 32-bit Node.js
 
 		/// <summary>
-		/// The stack size is sufficient to run the code of modern JavaScript libraries in 64-bit process
+		/// The stack size is sufficient to run the code of modern JS libraries in 64-bit process
 		/// </summary>
 		const int STACK_SIZE_64 = 984 * 1024; // like 64-bit Node.js
 

@@ -1,5 +1,7 @@
 ﻿using System;
 
+using MsieJavaScriptEngine.ActiveScript.Profiling;
+
 namespace MsieJavaScriptEngine.JsRt.Edge
 {
 	/// <summary>

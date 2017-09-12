@@ -18,7 +18,7 @@ namespace MsieJavaScriptEngine
 		/// Constructs an instance of the wrapper for object, that implements <see cref="IReflect"/> interface
 		/// </summary>
 		/// <param name="target">Target object</param>
-		/// <param name="engineMode">JavaScript engine mode</param>
+		/// <param name="engineMode">JS engine mode</param>
 		public HostObject(object target, JsEngineMode engineMode)
 			: base(target.GetType(), target, engineMode, true)
 		{ }
@@ -43,7 +43,7 @@ namespace MsieJavaScriptEngine
 			return result;
 		}
 
-		#region HostItemBase implementation
+		#region HostItemBase overrides
 
 		protected override object InnerInvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target,
 			object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)

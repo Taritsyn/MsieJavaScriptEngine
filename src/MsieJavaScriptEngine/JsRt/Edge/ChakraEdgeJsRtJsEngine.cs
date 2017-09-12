@@ -57,9 +57,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <summary>
 		/// Constructs an instance of the Chakra “Edge” JsRT engine
 		/// </summary>
-		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		public ChakraEdgeJsRtJsEngine(bool enableDebugging)
-			: base(JsEngineMode.ChakraEdgeJsRt, enableDebugging)
+		/// <param name="settings">JS engine settings</param>
+		public ChakraEdgeJsRtJsEngine(JsEngineSettings settings)
+			: base(settings)
 		{
 			_dispatcher.Invoke(() =>
 			{
@@ -155,6 +155,73 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		}
 
 		/// <summary>
+		/// Adds a reference to the value
+		/// </summary>
+		/// <param name="value">The value</param>
+		private static void AddReferenceToValue(EdgeJsValue value)
+		{
+			if (CanHaveReferences(value))
+			{
+				value.AddRef();
+			}
+		}
+
+		/// <summary>
+		/// Removes a reference to the value
+		/// </summary>
+		/// <param name="value">The value</param>
+		private static void RemoveReferenceToValue(EdgeJsValue value)
+		{
+			if (CanHaveReferences(value))
+			{
+				value.Release();
+			}
+		}
+
+		/// <summary>
+		/// Checks whether the value can have references
+		/// </summary>
+		/// <param name="value">The value</param>
+		/// <returns>Result of check (true - may have; false - may not have)</returns>
+		private static bool CanHaveReferences(EdgeJsValue value)
+		{
+			JsValueType valueType = value.ValueType;
+
+			switch (valueType)
+			{
+				case JsValueType.Null:
+				case JsValueType.Undefined:
+				case JsValueType.Boolean:
+					return false;
+				default:
+					return true;
+			}
+		}
+
+		/// <summary>
+		/// Creates a instance of JS scope
+		/// </summary>
+		/// <returns>Instance of JS scope</returns>
+		private EdgeJsScope CreateJsScope()
+		{
+			if (_jsRuntime.Disabled)
+			{
+				_jsRuntime.Disabled = false;
+			}
+
+			var jsScope = new EdgeJsScope(_jsContext);
+
+			if (_settings.EnableDebugging)
+			{
+				StartDebugging();
+			}
+
+			return jsScope;
+		}
+
+		#region Mapping
+
+		/// <summary>
 		/// Makes a mapping of value from the host type to a script type
 		/// </summary>
 		/// <param name="value">The source value</param>
@@ -202,7 +269,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					return FromObject(value);
 #else
 					object processedValue = !TypeConverter.IsPrimitiveType(typeCode) ?
-						new HostObject(value, _engineMode) : value;
+						new HostObject(value, _settings.EngineMode) : value;
 					return EdgeJsValue.FromObject(processedValue);
 #endif
 			}
@@ -285,50 +352,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		private object[] MapToHostType(EdgeJsValue[] args)
 		{
 			return args.Select(MapToHostType).ToArray();
-		}
-
-		/// <summary>
-		/// Adds a reference to the value
-		/// </summary>
-		/// <param name="value">The value</param>
-		private static void AddReferenceToValue(EdgeJsValue value)
-		{
-			if (CanHaveReferences(value))
-			{
-				value.AddRef();
-			}
-		}
-
-		/// <summary>
-		/// Removes a reference to the value
-		/// </summary>
-		/// <param name="value">The value</param>
-		private static void RemoveReferenceToValue(EdgeJsValue value)
-		{
-			if (CanHaveReferences(value))
-			{
-				value.Release();
-			}
-		}
-
-		/// <summary>
-		/// Checks whether the value can have references
-		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns>Result of check (true - may have; false - may not have)</returns>
-		private static bool CanHaveReferences(EdgeJsValue value)
-		{
-			JsValueType valueType = value.ValueType;
-
-			switch (valueType)
-			{
-				case JsValueType.Null:
-				case JsValueType.Undefined:
-				case JsValueType.Boolean:
-					return false;
-				default:
-					return true;
-			}
 		}
 #if NETSTANDARD1_3
 
@@ -908,26 +931,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			return hostException;
 		}
 
-		/// <summary>
-		/// Creates a instance of JS scope
-		/// </summary>
-		/// <returns>Instance of JS scope</returns>
-		private EdgeJsScope CreateJsScope()
-		{
-			if (_jsRuntime.Disabled)
-			{
-				_jsRuntime.Disabled = false;
-			}
+		#endregion
 
-			var jsScope = new EdgeJsScope(_jsContext);
-
-			if (_enableDebugging)
-			{
-				StartDebugging();
-			}
-
-			return jsScope;
-		}
+		#region ChakraJsRtJsEngineBase overrides
 
 		protected override void InnerStartDebugging()
 		{
@@ -940,6 +946,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			get { return _engineModeName; }
 		}
+
 
 		public override object Evaluate(string expression, string documentName)
 		{
@@ -1165,7 +1172,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 #if NETSTANDARD1_3
 						EdgeJsValue typeValue = CreateObjectFromType(type);
 #else
-						EdgeJsValue typeValue = EdgeJsValue.FromObject(new HostType(type, _engineMode));
+						EdgeJsValue typeValue = EdgeJsValue.FromObject(new HostType(type, _settings.EngineMode));
 #endif
 						EdgeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
 					}
@@ -1232,6 +1239,8 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 #endif
 			}
 		}
+
+		#endregion
 
 		#endregion
 	}

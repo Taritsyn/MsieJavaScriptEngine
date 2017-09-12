@@ -55,7 +55,7 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="type">Target type</param>
 		/// <param name="target">Target object</param>
-		/// <param name="engineMode">JavaScript engine mode</param>
+		/// <param name="engineMode">JS engine mode</param>
 		/// <param name="instance">Flag for whether to allow access to members of the instance</param>
 		protected HostItemBase(Type type, object target, JsEngineMode engineMode, bool instance)
 		{

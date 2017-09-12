@@ -10,9 +10,9 @@ namespace MsieJavaScriptEngine
 	internal abstract class InnerJsEngineBase : IInnerJsEngine
 	{
 		/// <summary>
-		/// JS engine mode
+		/// JS engine settings
 		/// </summary>
-		protected readonly JsEngineMode _engineMode;
+		protected JsEngineSettings _settings;
 
 		/// <summary>
 		/// Name of JS engine mode
@@ -28,11 +28,11 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Constructs an instance of the inner JS engine
 		/// </summary>
-		/// <param name="engineMode">JS engine mode</param>
-		protected InnerJsEngineBase(JsEngineMode engineMode)
+		/// <param name="settings">JS engine settings</param>
+		protected InnerJsEngineBase(JsEngineSettings settings)
 		{
-			_engineMode = engineMode;
-			_engineModeName = JsEngineModeHelpers.GetModeName(engineMode);
+			_settings = settings;
+			_engineModeName = JsEngineModeHelpers.GetModeName(_settings.EngineMode);
 		}
 
 

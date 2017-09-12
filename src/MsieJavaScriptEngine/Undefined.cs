@@ -1,7 +1,7 @@
 ﻿namespace MsieJavaScriptEngine
 {
 	/// <summary>
-	/// Represents an JavaScript <code>undefined</code> type
+	/// Represents an JS <code>undefined</code> type
 	/// </summary>
 	public sealed class Undefined
 	{

@@ -18,11 +18,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 	internal abstract class ActiveScriptWrapperBase : IActiveScriptWrapper
 	{
 		/// <summary>
-		/// JS engine mode
-		/// </summary>
-		protected readonly JsEngineMode _engineMode;
-
-		/// <summary>
 		/// Flag for whether to enable script debugging features
 		/// </summary>
 		protected readonly bool _enableDebugging;
@@ -56,26 +51,13 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Constructs an instance of the Active Script wrapper
 		/// </summary>
-		/// <param name="engineMode">JS engine mode</param>
+		/// <param name="clsid">CLSID of JS engine</param>
+		/// <param name="languageVersion">Version of script language</param>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		protected ActiveScriptWrapperBase(JsEngineMode engineMode, bool enableDebugging)
+		protected ActiveScriptWrapperBase(string clsid, ScriptLanguageVersion languageVersion,
+			bool enableDebugging)
 		{
-			_engineMode = engineMode;
 			_enableDebugging = enableDebugging;
-
-			string clsid;
-			ScriptLanguageVersion languageVersion;
-
-			if (engineMode == JsEngineMode.ChakraActiveScript)
-			{
-				clsid = ClassId.Chakra;
-				languageVersion = ScriptLanguageVersion.EcmaScript5;
-			}
-			else
-			{
-				clsid = ClassId.Classic;
-				languageVersion = ScriptLanguageVersion.None;
-			}
 
 			_pActiveScript = ComHelpers.CreateInstanceByClsid<IActiveScript>(clsid);
 			_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(
@@ -92,7 +74,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 					object scriptLanguageVersion = (int)languageVersion;
 					uint result = activeScriptProperty.SetProperty((uint)ScriptProperty.InvokeVersioning,
 						IntPtr.Zero, ref scriptLanguageVersion);
-					if (result != (uint)ScriptHResult.Ok)
+					if (result != ComErrorCode.S_OK)
 					{
 						throw new JsEngineLoadException(
 							string.Format(NetFrameworkStrings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
@@ -233,14 +215,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public void InterruptScriptThread(uint scriptThreadId, ref EXCEPINFO exceptionInfo,
 			ScriptInterruptFlags flags)
 		{
-			if (_engineMode == JsEngineMode.Classic)
-			{
-				_activeScript.InterruptScriptThread(scriptThreadId, ref exceptionInfo, flags);
-			}
-			else
-			{
-				throw new NotImplementedException();
-			}
+			_activeScript.InterruptScriptThread(scriptThreadId, ref exceptionInfo, flags);
 		}
 
 		/// <summary>
