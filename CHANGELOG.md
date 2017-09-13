@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.0 Alpha 1 - September 13, 2017
+ * Added a ability to interrupt execution of the script
+
 ## v2.2.4 - August 25, 2017
  * In ActiveScript modes now are uses the short names of error categories
  * In `Classic` mode during debugging now script error contains a full stack trace
