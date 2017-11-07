@@ -1,4 +1,4 @@
-MSIE JavaScript Engine for .NET
+MSIE JavaScript Engine for .NET [![NuGet version](http://img.shields.io/nuget/v/MsieJavaScriptEngine.svg)](https://www.nuget.org/packages/MsieJavaScriptEngine/)  [![Download count](https://img.shields.io/nuget/dt/MsieJavaScriptEngine.svg)](https://www.nuget.org/packages/MsieJavaScriptEngine/)
 ===============================
 
 ![MSIE JS Engine Logo](http://i.imgur.com/T3K5q.png)
