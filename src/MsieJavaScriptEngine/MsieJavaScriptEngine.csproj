@@ -38,11 +38,19 @@
 
 	<ItemGroup>
 		<DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.4.337" />
+		<DotNetCliToolReference Include="dotnet-resx2cs" Version="1.0.0-alpha2" />
 	</ItemGroup>
 
-	<Target Name="PrecompileScript" BeforeTargets="BeforeBuild" Condition=" '$(IsCrossTargetingBuild)' != 'true' ">
+	<Target Name="BundleMinify" BeforeTargets="BeforeCompile" Condition=" '$(BundleMinifyWasRun)' != 'true' ">
 		<Exec Command="dotnet bundle" />
-		<Exec Command="../../build resx" />
+		<PropertyGroup>
+			<BundleMinifyWasRun>true</BundleMinifyWasRun>
+		</PropertyGroup>
 	</Target>
-
+	<Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile" Condition=" '$(ResxToCsConversionWasRun)' != 'true' ">
+		<Exec Command="dotnet resx2cs ./Resources/" />
+		<PropertyGroup>
+			<ResxToCsConversionWasRun>true</ResxToCsConversionWasRun>
+		</PropertyGroup>
+	</Target>
 </Project>

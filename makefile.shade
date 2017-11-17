@@ -1,4 +1,3 @@
-use assembly="System.Xml.Linq, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
 use namespace="System"
 use namespace="System.Collections"
 use namespace="System.IO"
@@ -11,38 +10,6 @@ default BASE_DIR="${Directory.GetCurrentDirectory()}"
 var AUTHORS="Andrey Taritsyn"
 
 use-standard-lifecycle
-
-#resx description="Converts .resx files to .Designer.cs" target="initialize"
-	@{
-		string currentDirPath;
-		string originalCurrentDirPath = Environment.GetEnvironmentVariable("ORIGINAL_CURRENT_DIR");
-		string vsProjectDirPath= Environment.GetEnvironmentVariable("VS_PROJECT_DIR");
-		
-		if (!string.IsNullOrEmpty(vsProjectDirPath))
-		{
-			currentDirPath = vsProjectDirPath;
-		}
-		else if (!string.IsNullOrEmpty(originalCurrentDirPath))
-		{
-			currentDirPath = originalCurrentDirPath;
-		}
-		else
-		{
-			currentDirPath = BASE_DIR;
-		}
-	
-		Log.Info(string.Format('Processing of resx-files in "{0}" directory:', currentDirPath));
-	
-		foreach (var filePath in Directory.EnumerateFiles(currentDirPath, "*.resx", SearchOption.AllDirectories))
-		{
-			GenerateResx(filePath);
-			
-			string relativeFilePath = filePath.Substring(currentDirPath.Length);
-			Log.Info(string.Format('	* "{0}" is processed', relativeFilePath));
-		}
-		
-		Log.Info("");
-	}
 
 #run-dotnet-tests description="Runs a unit tests for DotNet version"
 	@{
@@ -95,9 +62,6 @@ use-standard-lifecycle
 		Exec(nunitConsolePath, "MsieJavaScriptEngine.Test.Net4.nunit --verbose", testDirPath);
 		Log.Info("");
 	}
-
-macro name="GenerateResx" resxFile="string"
-	generate-resx
 
 macro name="Exec" program="string" commandline="string"
 	exec
