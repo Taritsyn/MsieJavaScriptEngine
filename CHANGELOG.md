@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.0 Alpha 2 - November 17, 2017
+ * Fixed a error, that occurred during finding the suitable method overload, that receives numeric values and interfaces as parameters, of the host object
+
 ## v3.0.0 Alpha 1 - September 13, 2017
  * Added a ability to interrupt execution of the script
 
