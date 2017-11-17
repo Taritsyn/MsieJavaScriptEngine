@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Added a ability to interrupt execution of the script.
+   Fixed a error, that occurred during finding the suitable method overload, that
+   receives numeric values and interfaces as parameters, of the host object.
 
    ============
    PROJECT SITE
