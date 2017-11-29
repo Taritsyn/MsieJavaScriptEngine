@@ -14,7 +14,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>93f7ad1b</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>9f1c37fe</NuGetPackageImportStamp>
     <DisableDefaultResxToCsConversionTarget>true</DisableDefaultResxToCsConversionTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -597,10 +597,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets'))" />
-    <Error Condition="!Exists('..\..\packages\ResxToCs.MSBuild.1.0.0-alpha4\build\ResxToCs.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ResxToCs.MSBuild.1.0.0-alpha4\build\ResxToCs.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\..\packages\ResxToCs.MSBuild.1.0.0-alpha5\build\ResxToCs.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ResxToCs.MSBuild.1.0.0-alpha5\build\ResxToCs.MSBuild.targets'))" />
   </Target>
   <Import Project="..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets')" />
-  <Import Project="..\..\packages\ResxToCs.MSBuild.1.0.0-alpha4\build\ResxToCs.MSBuild.targets" Condition="Exists('..\..\packages\ResxToCs.MSBuild.1.0.0-alpha4\build\ResxToCs.MSBuild.targets')" />
+  <Import Project="..\..\packages\ResxToCs.MSBuild.1.0.0-alpha5\build\ResxToCs.MSBuild.targets" Condition="Exists('..\..\packages\ResxToCs.MSBuild.1.0.0-alpha5\build\ResxToCs.MSBuild.targets')" />
   <Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile">
     <ResxToCsTask
       InputDirectory="..\MsieJavaScriptEngine\Resources\"
