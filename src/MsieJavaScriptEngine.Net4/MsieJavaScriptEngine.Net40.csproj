@@ -14,7 +14,8 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>9c0c6282</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>93f7ad1b</NuGetPackageImportStamp>
+    <DisableDefaultResxToCsConversionTarget>true</DisableDefaultResxToCsConversionTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -596,14 +597,14 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets'))" />
-    <Error Condition="!Exists('..\..\packages\ResxToCs.MSBuild.1.0.0-alpha2\build\ResxToCs.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ResxToCs.MSBuild.1.0.0-alpha2\build\ResxToCs.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\..\packages\ResxToCs.MSBuild.1.0.0-alpha4\build\ResxToCs.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ResxToCs.MSBuild.1.0.0-alpha4\build\ResxToCs.MSBuild.targets'))" />
   </Target>
   <Import Project="..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets')" />
-  <Import Project="..\..\packages\ResxToCs.MSBuild.1.0.0-alpha2\build\ResxToCs.MSBuild.targets" Condition="Exists('..\..\packages\ResxToCs.MSBuild.1.0.0-alpha2\build\ResxToCs.MSBuild.targets')" />
-  <Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile" Condition=" '$(ResxToCsConversionWasRun)' != 'true' ">
-    <ResxToCsTask ResourceDirectory="..\MsieJavaScriptEngine\Resources\" />
-    <PropertyGroup>
-      <ResxToCsConversionWasRun>true</ResxToCsConversionWasRun>
-    </PropertyGroup>
+  <Import Project="..\..\packages\ResxToCs.MSBuild.1.0.0-alpha4\build\ResxToCs.MSBuild.targets" Condition="Exists('..\..\packages\ResxToCs.MSBuild.1.0.0-alpha4\build\ResxToCs.MSBuild.targets')" />
+  <Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile">
+    <ResxToCsTask
+      InputDirectory="..\MsieJavaScriptEngine\Resources\"
+      Namespace="$(RootNamespace).Resources"
+      InternalAccessModifier="true" />
   </Target>
 </Project>

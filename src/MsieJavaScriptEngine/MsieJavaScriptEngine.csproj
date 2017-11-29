@@ -38,7 +38,7 @@
 
 	<ItemGroup>
 		<DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.4.337" />
-		<DotNetCliToolReference Include="dotnet-resx2cs" Version="1.0.0-alpha2" />
+		<DotNetCliToolReference Include="dotnet-resx2cs" Version="1.0.0-alpha4" />
 	</ItemGroup>
 
 	<Target Name="BundleMinify" BeforeTargets="BeforeCompile" Condition=" '$(BundleMinifyWasRun)' != 'true' ">
@@ -47,10 +47,7 @@
 			<BundleMinifyWasRun>true</BundleMinifyWasRun>
 		</PropertyGroup>
 	</Target>
-	<Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile" Condition=" '$(ResxToCsConversionWasRun)' != 'true' ">
-		<Exec Command="dotnet resx2cs ./Resources/" />
-		<PropertyGroup>
-			<ResxToCsConversionWasRun>true</ResxToCsConversionWasRun>
-		</PropertyGroup>
+	<Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile">
+		<Exec Command="dotnet resx2cs -n '$(RootNamespace).Resources' -i './Resources/'" />
 	</Target>
 </Project>

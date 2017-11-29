@@ -16,7 +16,7 @@ namespace MsieJavaScriptEngine.Resources
 	/// <summary>
 	/// A strongly-typed resource class, for looking up localized strings, etc.
 	/// </summary>
-	public class CommonStrings
+	internal class CommonStrings
 	{
 		private static Lazy<ResourceManager> _resourceManager =
 			new Lazy<ResourceManager>(() => new ResourceManager(
@@ -33,7 +33,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Returns a cached ResourceManager instance used by this class
 		/// </summary>
-		public static ResourceManager ResourceManager
+		internal static ResourceManager ResourceManager
 		{
 			get
 			{
@@ -45,7 +45,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// Overrides a current thread's CurrentUICulture property for all
 		/// resource lookups using this strongly typed resource class
 		/// </summary>
-		public static CultureInfo Culture
+		internal static CultureInfo Culture
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The parameter '{0}' must be a non-empty string."
 		/// </summary>
-		public static string Common_ArgumentIsEmpty
+		internal static string Common_ArgumentIsEmpty
 		{
 			get { return GetString("Common_ArgumentIsEmpty"); }
 		}
@@ -68,7 +68,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The parameter '{0}' must be a non-nullable."
 		/// </summary>
-		public static string Common_ArgumentIsNull
+		internal static string Common_ArgumentIsNull
 		{
 			get { return GetString("Common_ArgumentIsNull"); }
 		}
@@ -76,7 +76,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Cannot convert object of type `{0}` to type `{1}`."
 		/// </summary>
-		public static string Common_CannotConvertObjectToType
+		internal static string Common_CannotConvertObjectToType
 		{
 			get { return GetString("Common_CannotConvertObjectToType"); }
 		}
@@ -84,7 +84,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "File '{0}' not exist."
 		/// </summary>
-		public static string Common_FileNotExist
+		internal static string Common_FileNotExist
 		{
 			get { return GetString("Common_FileNotExist"); }
 		}
@@ -92,7 +92,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Cannot convert null to a value type."
 		/// </summary>
-		public static string Common_ValueTypeCannotBeNull
+		internal static string Common_ValueTypeCannotBeNull
 		{
 			get { return GetString("Common_ValueTypeCannotBeNull"); }
 		}
@@ -100,7 +100,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Category"
 		/// </summary>
-		public static string ErrorDetails_Category
+		internal static string ErrorDetails_Category
 		{
 			get { return GetString("ErrorDetails_Category"); }
 		}
@@ -108,7 +108,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Column number"
 		/// </summary>
-		public static string ErrorDetails_ColumnNumber
+		internal static string ErrorDetails_ColumnNumber
 		{
 			get { return GetString("ErrorDetails_ColumnNumber"); }
 		}
@@ -116,7 +116,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Engine mode"
 		/// </summary>
-		public static string ErrorDetails_EngineMode
+		internal static string ErrorDetails_EngineMode
 		{
 			get { return GetString("ErrorDetails_EngineMode"); }
 		}
@@ -124,7 +124,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Error code"
 		/// </summary>
-		public static string ErrorDetails_ErrorCode
+		internal static string ErrorDetails_ErrorCode
 		{
 			get { return GetString("ErrorDetails_ErrorCode"); }
 		}
@@ -132,7 +132,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Line number"
 		/// </summary>
-		public static string ErrorDetails_LineNumber
+		internal static string ErrorDetails_LineNumber
 		{
 			get { return GetString("ErrorDetails_LineNumber"); }
 		}
@@ -140,7 +140,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Message"
 		/// </summary>
-		public static string ErrorDetails_Message
+		internal static string ErrorDetails_Message
 		{
 			get { return GetString("ErrorDetails_Message"); }
 		}
@@ -148,7 +148,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Source fragment"
 		/// </summary>
-		public static string ErrorDetails_SourceFragment
+		internal static string ErrorDetails_SourceFragment
 		{
 			get { return GetString("ErrorDetails_SourceFragment"); }
 		}
@@ -156,7 +156,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Resource with name '{0}' is null."
 		/// </summary>
-		public static string Resources_ResourceIsNull
+		internal static string Resources_ResourceIsNull
 		{
 			get { return GetString("Resources_ResourceIsNull"); }
 		}
@@ -164,7 +164,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Failed to load a Chakra Edge JsRT JavaScript engine. Try to install the Windows 10 with Edge..."
 		/// </summary>
-		public static string Runtime_EdgeJsEngineNotLoaded
+		internal static string Runtime_EdgeJsEngineNotLoaded
 		{
 			get { return GetString("Runtime_EdgeJsEngineNotLoaded"); }
 		}
@@ -172,7 +172,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The embedded host object '{0}' has a type `{1}`, which is not supported."
 		/// </summary>
-		public static string Runtime_EmbeddedHostObjectTypeNotSupported
+		internal static string Runtime_EmbeddedHostObjectTypeNotSupported
 		{
 			get { return GetString("Runtime_EmbeddedHostObjectTypeNotSupported"); }
 		}
@@ -180,7 +180,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The embedded host type `{0}` is not supported."
 		/// </summary>
-		public static string Runtime_EmbeddedHostTypeNotSupported
+		internal static string Runtime_EmbeddedHostTypeNotSupported
 		{
 			get { return GetString("Runtime_EmbeddedHostTypeNotSupported"); }
 		}
@@ -188,7 +188,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The function with the name '{0}' does not exist."
 		/// </summary>
-		public static string Runtime_FunctionNotExist
+		internal static string Runtime_FunctionNotExist
 		{
 			get { return GetString("Runtime_FunctionNotExist"); }
 		}
@@ -196,7 +196,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "One of the function parameters '{0}' has a type `{1}`, which is not supported."
 		/// </summary>
-		public static string Runtime_FunctionParameterTypeNotSupported
+		internal static string Runtime_FunctionParameterTypeNotSupported
 		{
 			get { return GetString("Runtime_FunctionParameterTypeNotSupported"); }
 		}
@@ -204,7 +204,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Failed to load a {0} JavaScript engine. Try to install the Internet Explorer {1} or higher. See more..."
 		/// </summary>
-		public static string Runtime_IeJsEngineNotLoaded
+		internal static string Runtime_IeJsEngineNotLoaded
 		{
 			get { return GetString("Runtime_IeJsEngineNotLoaded"); }
 		}
@@ -212,7 +212,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The function name '{0}' has incorrect format."
 		/// </summary>
-		public static string Runtime_InvalidFunctionNameFormat
+		internal static string Runtime_InvalidFunctionNameFormat
 		{
 			get { return GetString("Runtime_InvalidFunctionNameFormat"); }
 		}
@@ -220,7 +220,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The script item name '{0}' has incorrect format."
 		/// </summary>
-		public static string Runtime_InvalidScriptItemNameFormat
+		internal static string Runtime_InvalidScriptItemNameFormat
 		{
 			get { return GetString("Runtime_InvalidScriptItemNameFormat"); }
 		}
@@ -228,7 +228,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The variable name '{0}' has incorrect format."
 		/// </summary>
-		public static string Runtime_InvalidVariableNameFormat
+		internal static string Runtime_InvalidVariableNameFormat
 		{
 			get { return GetString("Runtime_InvalidVariableNameFormat"); }
 		}
@@ -236,7 +236,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Selected '{0}' mode of JavaScript engine is not supported."
 		/// </summary>
-		public static string Runtime_JsEngineModeNotSupported
+		internal static string Runtime_JsEngineModeNotSupported
 		{
 			get { return GetString("Runtime_JsEngineModeNotSupported"); }
 		}
@@ -244,7 +244,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "It is prohibited to use the {0} and {1} engines in one process."
 		/// </summary>
-		public static string Runtime_JsEnginesConflictInProcess
+		internal static string Runtime_JsEnginesConflictInProcess
 		{
 			get { return GetString("Runtime_JsEnginesConflictInProcess"); }
 		}
@@ -252,7 +252,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "It is prohibited to use the Chakra JsRT and Chakra ActiveScript engines on one machine at a time."
 		/// </summary>
-		public static string Runtime_JsEnginesConflictOnMachine
+		internal static string Runtime_JsEnginesConflictOnMachine
 		{
 			get { return GetString("Runtime_JsEnginesConflictOnMachine"); }
 		}
@@ -260,7 +260,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The type of return value `{0}` is not supported."
 		/// </summary>
-		public static string Runtime_ReturnValueTypeNotSupported
+		internal static string Runtime_ReturnValueTypeNotSupported
 		{
 			get { return GetString("Runtime_ReturnValueTypeNotSupported"); }
 		}
@@ -268,7 +268,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Script execution was interrupted."
 		/// </summary>
-		public static string Runtime_ScriptInterrupted
+		internal static string Runtime_ScriptInterrupted
 		{
 			get { return GetString("Runtime_ScriptInterrupted"); }
 		}
@@ -276,16 +276,16 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The variable '{0}' has a type `{1}`, which is not supported."
 		/// </summary>
-		public static string Runtime_VariableTypeNotSupported
+		internal static string Runtime_VariableTypeNotSupported
 		{
 			get { return GetString("Runtime_VariableTypeNotSupported"); }
 		}
 
-			private static string GetString(string name)
-			{
-				string value = ResourceManager.GetString(name, _resourceCulture);
+		private static string GetString(string name)
+		{
+			string value = ResourceManager.GetString(name, _resourceCulture);
 
-				return value;
-			}
+			return value;
 		}
 	}
+}
