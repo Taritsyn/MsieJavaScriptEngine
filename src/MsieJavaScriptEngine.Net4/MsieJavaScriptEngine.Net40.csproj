@@ -15,7 +15,6 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <NuGetPackageImportStamp>9f1c37fe</NuGetPackageImportStamp>
-    <DisableDefaultResxToCsConversionTarget>true</DisableDefaultResxToCsConversionTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -601,10 +600,4 @@
   </Target>
   <Import Project="..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.2.3.327\build\BuildBundlerMinifier.targets')" />
   <Import Project="..\..\packages\ResxToCs.MSBuild.1.0.0-alpha5\build\ResxToCs.MSBuild.targets" Condition="Exists('..\..\packages\ResxToCs.MSBuild.1.0.0-alpha5\build\ResxToCs.MSBuild.targets')" />
-  <Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile">
-    <ResxToCsTask
-      InputDirectory="..\MsieJavaScriptEngine\Resources\"
-      Namespace="$(RootNamespace).Resources"
-      InternalAccessModifier="true" />
-  </Target>
 </Project>

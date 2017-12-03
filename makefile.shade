@@ -32,19 +32,7 @@ use-standard-lifecycle
 			Log.Info("");
 
 			string testProjectDirPath = Path.Combine(testDirPath, testProjectName);
-			string testAssemblyDirPath;
-			string testAssemblyFilePath;
-
-			testAssemblyDirPath = Path.Combine(testProjectDirPath, "bin/Release/net451");
-			testAssemblyFilePath = Path.Combine(testAssemblyDirPath, testProjectName + ".exe");
-			Exec(testAssemblyFilePath, "", testProjectDirPath);
-
-			testAssemblyDirPath = Path.Combine(testProjectDirPath, "bin/Release/netcoreapp1.0");
-			if (Directory.Exists(testAssemblyDirPath))
-			{
-				testAssemblyFilePath = Path.Combine(testAssemblyDirPath, testProjectName + ".dll");
-				Exec("dotnet", testAssemblyFilePath, testProjectDirPath);
-			}
+			Exec("dotnet", "test", testProjectDirPath);
 
 			Log.Info("");
 		}
@@ -59,7 +47,7 @@ use-standard-lifecycle
 
 		Log.Info("Run unit tests for .NET 4.0 version:");
 		Log.Info("");
-		Exec(nunitConsolePath, "MsieJavaScriptEngine.Test.Net4.nunit --verbose", testDirPath);
+		Exec(nunitConsolePath, "MsieJavaScriptEngine.Test.Net4.nunit --process=Multiple --domain=Single --trace=Verbose", testDirPath);
 		Log.Info("");
 	}
 

@@ -10,8 +10,8 @@ cd %~dp0
 set local_nuget_package_manager=.nuget\NuGet.exe
 set package_dir=packages
 
-if not exist %package_dir%\NUnit.Runners (
-	%local_nuget_package_manager% install NUnit.Runners -Version 3.4.1 -O %package_dir% -ExcludeVersion -NoCache
+if not exist %package_dir%\NUnit.Console (
+	%local_nuget_package_manager% install NUnit.Console -Version 3.7.0 -O %package_dir% -ExcludeVersion -NoCache
 )
 
 PowerShell -NoProfile -NoLogo -ExecutionPolicy unrestricted -Command "[System.Threading.Thread]::CurrentThread.CurrentCulture = ''; [System.Threading.Thread]::CurrentThread.CurrentUICulture = '';& '%~dp0build.ps1' %*; exit $LASTEXITCODE"

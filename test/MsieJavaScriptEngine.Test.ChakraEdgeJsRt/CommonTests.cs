@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 using NUnit.Framework;
 
@@ -101,9 +102,9 @@ var a = 8;
 var b = 15;
 
 foo(a, b);";
-			string targetOutput = "ReferenceError: 'bar' is undefined\n" +
-				"   at foo (functions.js:4:3)\n" +
-				"   at Global code (functions.js:11:1)"
+			string targetOutputPattern = @"ReferenceError: 'bar' is (un|not )defined\n" +
+				@"   at foo \(functions.js:4:3\)\n" +
+				@"   at Global code \(functions.js:11:1\)"
 				;
 
 			JsException exception = null;
@@ -123,7 +124,7 @@ foo(a, b);";
 
 			Assert.NotNull(exception);
 			Assert.IsNotEmpty(exception.Message);
-			Assert.AreEqual(targetOutput, exception.Message);
+			Assert.True(Regex.IsMatch(exception.Message, targetOutputPattern));
 		}
 
 		#endregion

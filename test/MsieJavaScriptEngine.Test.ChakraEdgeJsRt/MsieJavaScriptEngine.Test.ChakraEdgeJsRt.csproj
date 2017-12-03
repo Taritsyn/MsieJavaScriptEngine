@@ -5,7 +5,7 @@
 		<VersionSuffix>alpha2</VersionSuffix>
 		<TargetFrameworks>netcoreapp1.0;net451</TargetFrameworks>
 		<RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">1.0.8</RuntimeFrameworkVersion>
-		<OutputType>Exe</OutputType>
+		<OutputType>Library</OutputType>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
 		<GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -19,6 +19,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+
 		<ProjectReference Include="..\MsieJavaScriptEngine.Test.Common\MsieJavaScriptEngine.Test.Common.csproj" />
 	</ItemGroup>
 

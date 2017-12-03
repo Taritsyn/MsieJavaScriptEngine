@@ -27,6 +27,8 @@
 		<PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
 		<PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
 		<PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+		<PackageReference Include="BuildBundlerMinifier" Version="2.4.337" PrivateAssets="All" />
+		<PackageReference Include="ResxToCs.MSBuild" Version="1.0.0-alpha5" PrivateAssets="All" />
 
 		<Compile Remove="Resources/NetFrameworkStrings.*" />
 	</ItemGroup>
@@ -36,18 +38,4 @@
 		<EmbeddedResource Include="Resources/ES5.min.js;Resources/json2.min.js" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.4.337" />
-		<DotNetCliToolReference Include="dotnet-resx2cs" Version="1.0.0-alpha5" />
-	</ItemGroup>
-
-	<Target Name="BundleMinify" BeforeTargets="BeforeCompile" Condition=" '$(BundleMinifyWasRun)' != 'true' ">
-		<Exec Command="dotnet bundle" />
-		<PropertyGroup>
-			<BundleMinifyWasRun>true</BundleMinifyWasRun>
-		</PropertyGroup>
-	</Target>
-	<Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile">
-		<Exec Command="dotnet resx2cs -n '$(RootNamespace).Resources' -i './Resources/'" />
-	</Target>
 </Project>

@@ -1,5 +1,4 @@
 ﻿<NUnitProject>
-  <Settings processModel="Multiple" domainUsage="Single" />
   <Config name="Release" runtimeFramework="v4.0" binpathtype="None">
     <assembly path="MsieJavaScriptEngine.Test.Common.Net4/bin/Release\MsieJavaScriptEngine.Test.Common.dll" />
     <assembly path="MsieJavaScriptEngine.Test.Auto.Net4/bin/Release/MsieJavaScriptEngine.Test.Auto.dll" />
