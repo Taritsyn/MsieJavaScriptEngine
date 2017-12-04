@@ -4,6 +4,10 @@ using System.Reflection;
 using System.Threading;
 
 using NUnit.Framework;
+#if NET40
+
+using MsieJavaScriptEngine.Utilities;
+#endif
 
 namespace MsieJavaScriptEngine.Test.Common
 {

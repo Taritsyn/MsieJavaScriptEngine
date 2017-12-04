@@ -8,7 +8,7 @@ namespace MsieJavaScriptEngine.Utilities
 	/// <summary>
 	/// Type extensions
 	/// </summary>
-	internal static class TypeExtensions
+	public static class TypeExtensions
 	{
 		/// <summary>
 		/// Gets a underlying type code of the specified <see cref="Type"/>
@@ -17,6 +17,11 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <returns>The code of the underlying type</returns>
 		public static TypeCode GetTypeCode(this Type source)
 		{
+			if (source == null)
+			{
+				throw new ArgumentNullException("source");
+			}
+
 			TypeCode typeCode;
 
 #if NETSTANDARD1_3

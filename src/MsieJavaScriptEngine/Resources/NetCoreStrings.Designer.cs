@@ -16,7 +16,7 @@ namespace MsieJavaScriptEngine.Resources
 	/// <summary>
 	/// A strongly-typed resource class, for looking up localized strings, etc.
 	/// </summary>
-	public class NetCoreStrings
+	internal class NetCoreStrings
 	{
 		private static Lazy<ResourceManager> _resourceManager =
 			new Lazy<ResourceManager>(() => new ResourceManager(
@@ -33,7 +33,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Returns a cached ResourceManager instance used by this class
 		/// </summary>
-		public static ResourceManager ResourceManager
+		internal static ResourceManager ResourceManager
 		{
 			get
 			{
@@ -45,7 +45,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// Overrides a current thread's CurrentUICulture property for all
 		/// resource lookups using this strongly typed resource class
 		/// </summary>
-		public static CultureInfo Culture
+		internal static CultureInfo Culture
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During invocation of the host delegate an error has occurred - “{0}”."
 		/// </summary>
-		public static string Runtime_HostDelegateInvocationFailed
+		internal static string Runtime_HostDelegateInvocationFailed
 		{
 			get { return GetString("Runtime_HostDelegateInvocationFailed"); }
 		}
@@ -68,7 +68,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During getting value of '{0}' field of the host object an error has occurred - “{1}”."
 		/// </summary>
-		public static string Runtime_HostObjectFieldGettingFailed
+		internal static string Runtime_HostObjectFieldGettingFailed
 		{
 			get { return GetString("Runtime_HostObjectFieldGettingFailed"); }
 		}
@@ -76,7 +76,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During setting value of '{0}' field of the host object an error has occurred - “{1}”."
 		/// </summary>
-		public static string Runtime_HostObjectFieldSettingFailed
+		internal static string Runtime_HostObjectFieldSettingFailed
 		{
 			get { return GetString("Runtime_HostObjectFieldSettingFailed"); }
 		}
@@ -84,7 +84,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During invocation of '{0}' method of the host object an error has occurred - “{1}”."
 		/// </summary>
-		public static string Runtime_HostObjectMethodInvocationFailed
+		internal static string Runtime_HostObjectMethodInvocationFailed
 		{
 			get { return GetString("Runtime_HostObjectMethodInvocationFailed"); }
 		}
@@ -92,7 +92,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During getting value of '{0}' property of the host object an error has occurred - “{1}”."
 		/// </summary>
-		public static string Runtime_HostObjectPropertyGettingFailed
+		internal static string Runtime_HostObjectPropertyGettingFailed
 		{
 			get { return GetString("Runtime_HostObjectPropertyGettingFailed"); }
 		}
@@ -100,7 +100,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During setting value of '{0}' property of the host object an error has occurred - “{1}”."
 		/// </summary>
-		public static string Runtime_HostObjectPropertySettingFailed
+		internal static string Runtime_HostObjectPropertySettingFailed
 		{
 			get { return GetString("Runtime_HostObjectPropertySettingFailed"); }
 		}
@@ -108,7 +108,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During invocation of constructor of the `{0}` host type an error has occurred - “{1}”."
 		/// </summary>
-		public static string Runtime_HostTypeConstructorInvocationFailed
+		internal static string Runtime_HostTypeConstructorInvocationFailed
 		{
 			get { return GetString("Runtime_HostTypeConstructorInvocationFailed"); }
 		}
@@ -116,7 +116,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Could not create instance of the `{0}` host type, because it does not have any public constructor."
 		/// </summary>
-		public static string Runtime_HostTypeConstructorNotFound
+		internal static string Runtime_HostTypeConstructorNotFound
 		{
 			get { return GetString("Runtime_HostTypeConstructorNotFound"); }
 		}
@@ -124,7 +124,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During getting value of '{0}' field of the `{1}` host type an error has occurred - “{2}”."
 		/// </summary>
-		public static string Runtime_HostTypeFieldGettingFailed
+		internal static string Runtime_HostTypeFieldGettingFailed
 		{
 			get { return GetString("Runtime_HostTypeFieldGettingFailed"); }
 		}
@@ -132,7 +132,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During setting value of '{0}' field of the `{1}` host type an error has occurred - “{2}”."
 		/// </summary>
-		public static string Runtime_HostTypeFieldSettingFailed
+		internal static string Runtime_HostTypeFieldSettingFailed
 		{
 			get { return GetString("Runtime_HostTypeFieldSettingFailed"); }
 		}
@@ -140,7 +140,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During invocation of '{0}' method of the `{1}` host type an error has occurred - “{2}”."
 		/// </summary>
-		public static string Runtime_HostTypeMethodInvocationFailed
+		internal static string Runtime_HostTypeMethodInvocationFailed
 		{
 			get { return GetString("Runtime_HostTypeMethodInvocationFailed"); }
 		}
@@ -148,7 +148,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During getting value of '{0}' property of the `{1}` host type an error has occurred - “{2}”."
 		/// </summary>
-		public static string Runtime_HostTypePropertyGettingFailed
+		internal static string Runtime_HostTypePropertyGettingFailed
 		{
 			get { return GetString("Runtime_HostTypePropertyGettingFailed"); }
 		}
@@ -156,7 +156,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "During setting value of '{0}' property of the host type `{1}` an error has occurred - “{2}”."
 		/// </summary>
-		public static string Runtime_HostTypePropertySettingFailed
+		internal static string Runtime_HostTypePropertySettingFailed
 		{
 			get { return GetString("Runtime_HostTypePropertySettingFailed"); }
 		}
@@ -164,7 +164,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Could not retrieve field '{0}' of the host object, because there was an invalid `this` context."
 		/// </summary>
-		public static string Runtime_InvalidThisContextForHostObjectField
+		internal static string Runtime_InvalidThisContextForHostObjectField
 		{
 			get { return GetString("Runtime_InvalidThisContextForHostObjectField"); }
 		}
@@ -172,7 +172,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Could not call method '{0}' of the host object, because there was an invalid `this` context."
 		/// </summary>
-		public static string Runtime_InvalidThisContextForHostObjectMethod
+		internal static string Runtime_InvalidThisContextForHostObjectMethod
 		{
 			get { return GetString("Runtime_InvalidThisContextForHostObjectMethod"); }
 		}
@@ -180,7 +180,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Could not retrieve property '{0}' of the host object, because there was an invalid `this` context."
 		/// </summary>
-		public static string Runtime_InvalidThisContextForHostObjectProperty
+		internal static string Runtime_InvalidThisContextForHostObjectProperty
 		{
 			get { return GetString("Runtime_InvalidThisContextForHostObjectProperty"); }
 		}
@@ -188,7 +188,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The '{0}' mode of JavaScript engine is not compatible with .NET Core."
 		/// </summary>
-		public static string Runtime_JsEngineModeNotCompatibleWithNetCore
+		internal static string Runtime_JsEngineModeNotCompatibleWithNetCore
 		{
 			get { return GetString("Runtime_JsEngineModeNotCompatibleWithNetCore"); }
 		}
@@ -196,7 +196,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps..."
 		/// </summary>
-		public static string Runtime_JsEnginesNotFound
+		internal static string Runtime_JsEnginesNotFound
 		{
 			get { return GetString("Runtime_JsEnginesNotFound"); }
 		}
@@ -204,7 +204,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Could not find suitable constructor or not enough arguments to invoke of constructor of the `{0}`..."
 		/// </summary>
-		public static string Runtime_SuitableConstructorOfHostTypeNotFound
+		internal static string Runtime_SuitableConstructorOfHostTypeNotFound
 		{
 			get { return GetString("Runtime_SuitableConstructorOfHostTypeNotFound"); }
 		}
@@ -212,7 +212,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Could not find suitable method or not enough arguments to invoke of '{0}' method of the host object."
 		/// </summary>
-		public static string Runtime_SuitableMethodOfHostObjectNotFound
+		internal static string Runtime_SuitableMethodOfHostObjectNotFound
 		{
 			get { return GetString("Runtime_SuitableMethodOfHostObjectNotFound"); }
 		}

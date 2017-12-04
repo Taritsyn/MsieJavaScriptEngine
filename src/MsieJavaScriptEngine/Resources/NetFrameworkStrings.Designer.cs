@@ -16,7 +16,7 @@ namespace MsieJavaScriptEngine.Resources
 	/// <summary>
 	/// A strongly-typed resource class, for looking up localized strings, etc.
 	/// </summary>
-	public class NetFrameworkStrings
+	internal class NetFrameworkStrings
 	{
 		private static Lazy<ResourceManager> _resourceManager =
 			new Lazy<ResourceManager>(() => new ResourceManager(
@@ -33,7 +33,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Returns a cached ResourceManager instance used by this class
 		/// </summary>
-		public static ResourceManager ResourceManager
+		internal static ResourceManager ResourceManager
 		{
 			get
 			{
@@ -45,7 +45,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// Overrides a current thread's CurrentUICulture property for all
 		/// resource lookups using this strongly typed resource class
 		/// </summary>
-		public static CultureInfo Culture
+		internal static CultureInfo Culture
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "ActiveScript dispatcher is not initialized."
 		/// </summary>
-		public static string Runtime_ActiveScriptDispatcherNotInitialized
+		internal static string Runtime_ActiveScriptDispatcherNotInitialized
 		{
 			get { return GetString("Runtime_ActiveScriptDispatcherNotInitialized"); }
 		}
@@ -68,7 +68,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Failed to set '{0}' version of script language for the ActiveScript JavaScript engine."
 		/// </summary>
-		public static string Runtime_ActiveScriptLanguageVersionSelectionFailed
+		internal static string Runtime_ActiveScriptLanguageVersionSelectionFailed
 		{
 			get { return GetString("Runtime_ActiveScriptLanguageVersionSelectionFailed"); }
 		}
@@ -76,7 +76,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Item with name '{0}' not found."
 		/// </summary>
-		public static string Runtime_ItemNotFound
+		internal static string Runtime_ItemNotFound
 		{
 			get { return GetString("Runtime_ItemNotFound"); }
 		}
@@ -84,7 +84,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "Could not found none of the JavaScript engines. Perhaps you have not installed the Internet Explorer..."
 		/// </summary>
-		public static string Runtime_JsEnginesNotFound
+		internal static string Runtime_JsEnginesNotFound
 		{
 			get { return GetString("Runtime_JsEnginesNotFound"); }
 		}
@@ -92,7 +92,7 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "The variable with the name '{0}' does not exist."
 		/// </summary>
-		public static string Runtime_VariableNotExist
+		internal static string Runtime_VariableNotExist
 		{
 			get { return GetString("Runtime_VariableNotExist"); }
 		}

@@ -102,9 +102,9 @@ var a = 8;
 var b = 15;
 
 foo(a, b);";
-			string targetOutputPattern = @"ReferenceError: 'bar' is (un|not )defined\n" +
+			string targetOutputPattern = @"^ReferenceError: 'bar' is (un|not )defined\n" +
 				@"   at foo \(functions.js:4:3\)\n" +
-				@"   at Global code \(functions.js:11:1\)"
+				@"   at Global code \(functions.js:11:1\)$"
 				;
 
 			JsException exception = null;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NETSTANDARD1_3 || NET45
+#if NET45 || NETSTANDARD1_3
 using System.Runtime.ExceptionServices;
 #endif
 using System.Threading;
@@ -157,7 +157,7 @@ namespace MsieJavaScriptEngine
 			Exception exception = task.Exception;
 			if (exception != null)
 			{
-#if NETSTANDARD1_3 || NET45
+#if NET45 || NETSTANDARD1_3
 				ExceptionDispatchInfo.Capture(exception).Throw();
 #elif NET40
 				exception.PreserveStackTrace();
