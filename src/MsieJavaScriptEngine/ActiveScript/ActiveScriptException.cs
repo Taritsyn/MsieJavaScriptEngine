@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD1_3
+﻿#if !NETSTANDARD
 using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;

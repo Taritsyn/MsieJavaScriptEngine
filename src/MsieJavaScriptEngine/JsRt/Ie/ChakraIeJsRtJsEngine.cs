@@ -1,10 +1,10 @@
 ﻿using System;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 using System.Collections.Generic;
 #endif
 using System.Globalization;
 using System.Linq;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 using System.Reflection;
 using System.Runtime.InteropServices;
 #endif
@@ -51,7 +51,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// Support synchronizer
 		/// </summary>
 		private static readonly object _supportSynchronizer = new object();
-#if NETSTANDARD1_3
+#if NETSTANDARD
 
 		/// <summary>
 		/// List of native function callbacks
@@ -153,7 +153,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						_isSupported = null;
 					}
 				}
-#if NETSTANDARD1_3
+#if NETSTANDARD
 				catch (TypeLoadException e)
 #else
 				catch (EntryPointNotFoundException e)
@@ -290,7 +290,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					return IeJsValue.FromString((string)value);
 
 				default:
-#if NETSTANDARD1_3
+#if NETSTANDARD
 					return FromObject(value);
 #else
 					object processedValue = !TypeConverter.IsPrimitiveType(typeCode) ?
@@ -345,7 +345,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				case JsValueType.Function:
 				case JsValueType.Error:
 				case JsValueType.Array:
-#if NETSTANDARD1_3
+#if NETSTANDARD
 					result = ToObject(value);
 #else
 					processedValue = value.ConvertToObject();
@@ -378,7 +378,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			return args.Select(MapToHostType).ToArray();
 		}
-#if NETSTANDARD1_3
+#if NETSTANDARD
 
 		private IeJsValue FromObject(object value)
 		{
@@ -1208,7 +1208,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					try
 					{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 						IeJsValue typeValue = CreateObjectFromType(type);
 #else
 						IeJsValue typeValue = IeJsValue.FromObject(new HostType(type, _settings.EngineMode));
@@ -1266,7 +1266,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				}
 
 				base.Dispose(disposing);
-#if NETSTANDARD1_3
+#if NETSTANDARD
 
 				if (disposing)
 				{

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NET45 || NETSTANDARD1_3
+#if NET45 || NETSTANDARD
 using System.Runtime.ExceptionServices;
 #endif
 using System.Threading;
@@ -14,7 +14,7 @@ namespace MsieJavaScriptEngine
 	/// </summary>
 	internal sealed class ScriptDispatcher : IDisposable
 	{
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 		/// <summary>
 		/// The stack size is sufficient to run the code of modern JS libraries in 32-bit process
 		/// </summary>
@@ -57,7 +57,7 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		public ScriptDispatcher()
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 			_thread = new Thread(StartThread)
 #else
 			int sufficientStackSize = Utils.Is64BitProcess() ? STACK_SIZE_64 : STACK_SIZE_32;
@@ -157,7 +157,7 @@ namespace MsieJavaScriptEngine
 			Exception exception = task.Exception;
 			if (exception != null)
 			{
-#if NET45 || NETSTANDARD1_3
+#if NET45 || NETSTANDARD
 				ExceptionDispatchInfo.Capture(exception).Throw();
 #elif NET40
 				exception.PreserveStackTrace();

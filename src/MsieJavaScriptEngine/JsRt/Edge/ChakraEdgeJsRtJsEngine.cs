@@ -1,10 +1,10 @@
 ﻿using System;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 using System.Collections.Generic;
 #endif
 using System.Globalization;
 using System.Linq;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 using System.Reflection;
 using System.Runtime.InteropServices;
 #endif
@@ -45,7 +45,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// Support synchronizer
 		/// </summary>
 		private static readonly object _supportSynchronizer = new object();
-#if NETSTANDARD1_3
+#if NETSTANDARD
 
 		/// <summary>
 		/// List of native function callbacks
@@ -265,7 +265,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					return EdgeJsValue.FromString((string)value);
 
 				default:
-#if NETSTANDARD1_3
+#if NETSTANDARD
 					return FromObject(value);
 #else
 					object processedValue = !TypeConverter.IsPrimitiveType(typeCode) ?
@@ -320,7 +320,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				case JsValueType.Function:
 				case JsValueType.Error:
 				case JsValueType.Array:
-#if NETSTANDARD1_3
+#if NETSTANDARD
 					result = ToObject(value);
 #else
 					processedValue = value.ConvertToObject();
@@ -353,7 +353,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			return args.Select(MapToHostType).ToArray();
 		}
-#if NETSTANDARD1_3
+#if NETSTANDARD
 
 		private EdgeJsValue FromObject(object value)
 		{
@@ -1169,7 +1169,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					try
 					{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 						EdgeJsValue typeValue = CreateObjectFromType(type);
 #else
 						EdgeJsValue typeValue = EdgeJsValue.FromObject(new HostType(type, _settings.EngineMode));
@@ -1227,7 +1227,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				}
 
 				base.Dispose(disposing);
-#if NETSTANDARD1_3
+#if NETSTANDARD
 
 				if (disposing)
 				{

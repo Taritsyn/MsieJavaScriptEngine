@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 using MsieJavaScriptEngine.ActiveScript;
 #endif
 using MsieJavaScriptEngine.Helpers;
@@ -84,7 +84,7 @@ namespace MsieJavaScriptEngine
 				{
 					processedEngineMode = JsEngineMode.ChakraIeJsRt;
 				}
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 				else if (ChakraActiveScriptJsEngine.IsSupported())
 				{
 					processedEngineMode = JsEngineMode.ChakraActiveScript;
@@ -97,7 +97,7 @@ namespace MsieJavaScriptEngine
 				else
 				{
 					throw new JsEngineLoadException(
-#if NETSTANDARD1_3
+#if NETSTANDARD
 						NetCoreStrings.Runtime_JsEnginesNotFound
 #else
 						NetFrameworkStrings.Runtime_JsEnginesNotFound
@@ -164,7 +164,7 @@ namespace MsieJavaScriptEngine
 
 						break;
 					case JsEngineMode.ChakraActiveScript:
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 						if (previousMode != JsEngineMode.ChakraEdgeJsRt)
 						{
 
@@ -187,7 +187,7 @@ namespace MsieJavaScriptEngine
 								string.Format(NetCoreStrings.Runtime_JsEngineModeNotCompatibleWithNetCore, processedEngineMode));
 #endif
 					case JsEngineMode.Classic:
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 						_jsEngine = new ClassicActiveScriptJsEngine(processedSettings);
 
 						break;

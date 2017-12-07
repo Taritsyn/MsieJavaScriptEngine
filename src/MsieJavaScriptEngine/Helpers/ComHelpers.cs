@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD1_3
+﻿#if !NETSTANDARD
 using System;
 #if NET45
 using System.Reflection;

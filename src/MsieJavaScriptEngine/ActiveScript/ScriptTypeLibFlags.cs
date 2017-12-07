@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD1_3
+﻿#if !NETSTANDARD
 using System;
 
 namespace MsieJavaScriptEngine.ActiveScript
@@ -19,7 +19,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Not documented
 		/// </summary>
-		IsPersistent = 0x00000040,
+		IsPersistent = 0x00000040
 	}
 }
 #endif

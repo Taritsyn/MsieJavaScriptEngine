@@ -304,7 +304,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 			return reference;
 		}
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 
 		/// <summary>
 		/// Creates a JavaScript value that is a projection of the passed in object
@@ -589,7 +589,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 			return Marshal.PtrToStringUni(buffer, (int)length);
 		}
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 
 		/// <summary>
 		/// Retrieves a object representation of an <c>Object</c> value

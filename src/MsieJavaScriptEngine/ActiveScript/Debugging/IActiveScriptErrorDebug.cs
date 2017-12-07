@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD1_3
+﻿#if !NETSTANDARD
 using System.Runtime.InteropServices;
 
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;

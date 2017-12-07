@@ -1,4 +1,4 @@
-﻿#if NET451 || NETCOREAPP1_0
+﻿#if NET451 || NETCOREAPP
 using Microsoft.Extensions.PlatformAbstractions;
 #elif NET40
 using System;
@@ -24,7 +24,7 @@ namespace MsieJavaScriptEngine.Test.Common
 
 		protected FileSystemTestsBase()
 		{
-#if NET451 || NETCOREAPP1_0
+#if NET451 || NETCOREAPP
 			var appEnv = PlatformServices.Default.Application;
 			_baseDirectoryPath = Path.Combine(appEnv.ApplicationBasePath, "../../../../");
 #elif NET40

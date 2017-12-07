@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD1_3
+﻿#if !NETSTANDARD
 using MsieJavaScriptEngine.Constants;
 
 namespace MsieJavaScriptEngine.ActiveScript

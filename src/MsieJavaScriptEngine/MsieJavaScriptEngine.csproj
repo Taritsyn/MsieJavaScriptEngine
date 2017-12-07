@@ -4,7 +4,7 @@
 		<Product>MSIE JavaScript Engine for .NET</Product>
 		<VersionPrefix>3.0.0</VersionPrefix>
 		<VersionSuffix>alpha2</VersionSuffix>
-		<TargetFrameworks>net40-client;net45;netstandard1.3</TargetFrameworks>
+		<TargetFrameworks>net40-client;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
 		<NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.0</NetStandardImplicitPackageVersion>
 		<OutputType>Library</OutputType>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -24,7 +24,7 @@
 		<RepositoryUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-		<PackageReleaseNotes>Fixed a error, that occurred during finding the suitable method overload, that receives numeric values and interfaces as parameters, of the host object.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added support of .NET Standard 2.0.</PackageReleaseNotes>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageOutputPath>../../nuget</PackageOutputPath>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -45,12 +45,14 @@
 		<EmbeddedResource Include="Resources/ES5.min.js;Resources/json2.min.js" />
 	</ItemGroup>
 
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard2.0' ">
+		<Compile Remove="Resources/NetFrameworkStrings.*" />
+	</ItemGroup>
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
 		<PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
 		<PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
 		<PackageReference Include="System.Threading.Thread" Version="4.0.0" />
-
-		<Compile Remove="Resources/NetFrameworkStrings.*" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -61,6 +63,7 @@
 		<Content Include="../../Licenses/*.txt">
 			<PackagePath>/</PackagePath>
 			<Pack>true</Pack>
+			<Visible>false</Visible>
 		</Content>
 	</ItemGroup>
 

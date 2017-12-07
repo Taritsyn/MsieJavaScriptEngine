@@ -149,7 +149,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsConvertValueToString(EdgeJsValue value, out EdgeJsValue stringValue);
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsVariantToValue([MarshalAs(UnmanagedType.Struct)] ref object var,

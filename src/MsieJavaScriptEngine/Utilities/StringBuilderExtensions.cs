@@ -54,7 +54,7 @@ namespace MsieJavaScriptEngine.Utilities
 
 			return source.AppendLine(format.Replace("{{", "{").Replace("}}", "}"));
 		}
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 
 		/// <summary>
 		/// Removes the all trailing white-space characters from the current <see cref="StringBuilder"/> instance

@@ -1,5 +1,5 @@
 ﻿using System;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 #endif
@@ -31,7 +31,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// Flag indicating whether debugging started
 		/// </summary>
 		private StatedFlag _debuggingStartedFlag;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 
 		/// <summary>
 		/// Set of external objects
@@ -57,7 +57,7 @@ namespace MsieJavaScriptEngine.JsRt
 		protected ChakraJsRtJsEngineBase(JsEngineSettings settings)
 			: base(settings)
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 			_externalObjectFinalizeCallback = ExternalObjectFinalizeCallback;
 #endif
 		}
@@ -129,7 +129,7 @@ namespace MsieJavaScriptEngine.JsRt
 		}
 
 		protected abstract void InnerStartDebugging();
-#if NETSTANDARD1_3
+#if NETSTANDARD
 
 		private void ExternalObjectFinalizeCallback(IntPtr data)
 		{
@@ -162,7 +162,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// managed objects contained in fields of class</param>
 		protected virtual void Dispose(bool disposing)
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 			if (disposing)
 			{
 				if (_externalObjects != null)
