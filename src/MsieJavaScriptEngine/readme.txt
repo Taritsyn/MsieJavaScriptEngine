@@ -21,7 +21,9 @@
    =============
    RELEASE NOTES
    =============
-   Added support of .NET Standard 2.0.
+   1. Added support of .NET Standard 2.0;
+   2. Fixed a error, that occurred in the `Classic` mode during removing the
+      embedded host objects and types.
 
    ============
    PROJECT SITE

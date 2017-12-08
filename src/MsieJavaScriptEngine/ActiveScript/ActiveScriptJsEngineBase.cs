@@ -32,7 +32,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// List of host items
 		/// </summary>
-		private readonly Dictionary<string, object> _hostItems = new Dictionary<string, object>();
+		protected readonly Dictionary<string, object> _hostItems = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Last Active Script exception
@@ -403,7 +403,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		/// <param name="value">Value of variable</param>
-		private void InnerSetVariableValue(string variableName, object value)
+		protected void InnerSetVariableValue(string variableName, object value)
 		{
 			object[] args = { value };
 
@@ -424,6 +424,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 				throw;
 			}
 		}
+
+		/// <summary>
+		/// Removes a variable
+		/// </summary>
+		/// <param name="variableName">Name of variable</param>
+		protected abstract void InnerRemoveVariable(string variableName);
 
 		private void InnerEmbedHostItem(string itemName, object value)
 		{
@@ -719,12 +725,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 				try
 				{
-					InnerSetVariableValue(variableName, null);
-
-					if (_hostItems.ContainsKey(variableName))
-					{
-						_hostItems.Remove(variableName);
-					}
+					InnerRemoveVariable(variableName);
 				}
 				catch (ActiveScriptException e)
 				{

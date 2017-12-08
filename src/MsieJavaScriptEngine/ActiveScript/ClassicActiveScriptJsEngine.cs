@@ -118,6 +118,18 @@ namespace MsieJavaScriptEngine.ActiveScript
 			return new ScriptSite(this);
 		}
 
+		protected override void InnerRemoveVariable(string variableName)
+		{
+			if (_hostItems.ContainsKey(variableName))
+			{
+				_hostItems.Remove(variableName);
+			}
+			else
+			{
+				InnerSetVariableValue(variableName, null);
+			}
+		}
+
 		#region IInnerJsEngine implementation
 
 		public override void Interrupt()

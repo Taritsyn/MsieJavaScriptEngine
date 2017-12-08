@@ -24,7 +24,8 @@
 		<RepositoryUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-		<PackageReleaseNotes>Added support of .NET Standard 2.0.</PackageReleaseNotes>
+		<PackageReleaseNotes>1. Added support of .NET Standard 2.0;
+2. Fixed a error, that occurred in the `Classic` mode during removing the embedded host objects and types.</PackageReleaseNotes>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageOutputPath>../../nuget</PackageOutputPath>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

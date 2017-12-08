@@ -58,6 +58,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 			_interruptRequested = false;
 		}
 
+		protected override void InnerRemoveVariable(string variableName)
+		{
+			InnerSetVariableValue(variableName, null);
+
+			if (_hostItems.ContainsKey(variableName))
+			{
+				_hostItems.Remove(variableName);
+			}
+		}
+
 		#region IInnerJsEngine implementation
 
 		public override void Interrupt()
