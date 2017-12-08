@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace MsieJavaScriptEngine.Utilities
 {
-	public static class TypeInfoExtensions
+	internal static class TypeInfoExtensions
 	{
 		public static bool IsInstanceOfType(this TypeInfo source, object o)
 		{

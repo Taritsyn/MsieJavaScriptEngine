@@ -9,7 +9,7 @@ namespace MsieJavaScriptEngine.Utilities
 	/// enumeration types, type parameters, generic type definitions, and open
 	/// or closed constructed generic types.
 	/// </summary>
-	public class TypeInfo
+	internal class TypeInfo
 	{
 		/// <summary>
 		/// Target type

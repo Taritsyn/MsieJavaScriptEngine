@@ -8,7 +8,7 @@ namespace MsieJavaScriptEngine.Utilities
 	/// <summary>
 	/// Type extensions
 	/// </summary>
-	public static class TypeExtensions
+	internal static class TypeExtensions
 	{
 		/// <summary>
 		/// Gets a underlying type code of the specified <see cref="Type"/>
