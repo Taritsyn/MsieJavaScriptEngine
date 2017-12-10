@@ -25,12 +25,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Pointer to an instance of Active Script engine
 		/// </summary>
-		protected IntPtr _pActiveScript;
-
-		/// <summary>
-		/// Pointer to an instance of Active Script garbage collector
-		/// </summary>
-		private IntPtr _pActiveScriptGarbageCollector;
+		private IntPtr _pActiveScript;
 
 		/// <summary>
 		/// Instance of Active Script engine
@@ -60,9 +55,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 			_enableDebugging = enableDebugging;
 
 			_pActiveScript = ComHelpers.CreateInstanceByClsid<IActiveScript>(clsid);
-			_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(
-				_pActiveScript);
-
 			_activeScript = (IActiveScript)Marshal.GetObjectForIUnknown(_pActiveScript);
 			_activeScriptGarbageCollector = _activeScript as IActiveScriptGarbageCollector;
 
@@ -241,7 +233,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			_activeScriptGarbageCollector = null;
 
-			ComHelpers.ReleaseAndEmpty(ref _pActiveScriptGarbageCollector);
 			ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
 
 			if (_activeScript != null)

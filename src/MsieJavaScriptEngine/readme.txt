@@ -23,7 +23,8 @@
    =============
    1. Added support of .NET Standard 2.0;
    2. Fixed a error, that occurred in the `Classic` mode during removing the
-      embedded host objects and types.
+      embedded host objects and types;
+   3. Removed a redundant code.
 
    ============
    PROJECT SITE

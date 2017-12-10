@@ -1,7 +1,6 @@
 ﻿using System;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
-using MsieJavaScriptEngine.ActiveScript.Profiling;
 using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.JsRt.Ie
@@ -80,23 +79,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsHasException(out hasException));
 
 				return hasException;
-			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether the heap of the current context is being enumerated
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		public static bool IsEnumeratingHeap
-		{
-			get
-			{
-				bool isEnumerating;
-				IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsIsEnumeratingHeap(out isEnumerating));
-
-				return isEnumerating;
 			}
 		}
 
@@ -384,58 +366,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			}
 
 			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsStartDebugging(debugApplication));
-		}
-
-		/// <summary>
-		/// Starts profiling in the current context
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <param name="callback">The profiling callback to use</param>
-		/// <param name="eventMask">The profiling events to callback with</param>
-		/// <param name="context">The context to pass to the profiling callback</param>
-		public static void StartProfiling(IActiveScriptProfilerCallback callback, ProfilerEventMask eventMask, int context)
-		{
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsStartProfiling(callback, eventMask, context));
-		}
-
-		/// <summary>
-		/// Stops profiling in the current context
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Will not return an error if profiling has not started.
-		/// </para>
-		/// <para>
-		/// Requires an active script context.
-		/// </para>
-		/// </remarks>
-		/// <param name="reason">The reason for stopping profiling to pass to the profiler callback</param>
-		public static void StopProfiling(int reason)
-		{
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsStopProfiling(reason));
-		}
-
-		/// <summary>
-		/// Enumerates a heap of the current context
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// While the heap is being enumerated, the current context cannot be removed, and all calls to
-		/// modify the state of the context will fail until the heap enumerator is released.
-		/// </para>
-		/// <para>
-		/// Requires an active script context.
-		/// </para>
-		/// </remarks>
-		/// <returns>The heap enumerator</returns>
-		public static IActiveScriptProfilerHeapEnum EnumerateHeap()
-		{
-			IActiveScriptProfilerHeapEnum enumerator;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsEnumerateHeap(out enumerator));
-
-			return enumerator;
 		}
 
 		/// <summary>

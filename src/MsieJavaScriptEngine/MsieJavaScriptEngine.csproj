@@ -25,7 +25,8 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
 		<PackageReleaseNotes>1. Added support of .NET Standard 2.0;
-2. Fixed a error, that occurred in the `Classic` mode during removing the embedded host objects and types.</PackageReleaseNotes>
+2. Fixed a error, that occurred in the `Classic` mode during removing the embedded host objects and types;
+3. Removed a redundant code.</PackageReleaseNotes>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageOutputPath>../../nuget</PackageOutputPath>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

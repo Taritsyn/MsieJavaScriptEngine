@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
-using MsieJavaScriptEngine.ActiveScript.Profiling;
 using MsieJavaScriptEngine.Constants;
 
 namespace MsieJavaScriptEngine.JsRt.Ie
@@ -296,18 +295,5 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsIsRuntimeExecutionDisabled(IeJsRuntime runtime, out bool isDisabled);
-
-		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsStartProfiling(IActiveScriptProfilerCallback callback,
-			ProfilerEventMask eventMask, int context);
-
-		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsStopProfiling(int reason);
-
-		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsEnumerateHeap(out IActiveScriptProfilerHeapEnum enumerator);
-
-		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsIsEnumeratingHeap(out bool isEnumeratingHeap);
 	}
 }

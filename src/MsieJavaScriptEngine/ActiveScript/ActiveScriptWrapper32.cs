@@ -4,7 +4,6 @@ using System;
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
-using MsieJavaScriptEngine.Helpers;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -14,24 +13,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 	internal sealed class ActiveScriptWrapper32 : ActiveScriptWrapperBase
 	{
 		/// <summary>
-		/// Pointer to an instance of 32-bit Active Script parser
-		/// </summary>
-		private IntPtr _pActiveScriptParse32;
-
-		/// <summary>
-		/// Pointer to an instance of 32-bit Active Script debugger
-		/// </summary>
-		private IntPtr _pActiveScriptDebug32;
-
-		/// <summary>
-		/// Pointer to an instance of 32-bit debug stack frame sniffer
-		/// </summary>
-		private IntPtr _pDebugStackFrameSniffer32;
-
-		/// <summary>
 		/// Instance of 32-bit Active Script parser
 		/// </summary>
 		private IActiveScriptParse32 _activeScriptParse32;
+
+		/// <summary>
+		/// Instance of 32-bit Active Script debugger
+		/// </summary>
+		private IActiveScriptDebug32 _activeScriptDebug32;
 
 		/// <summary>
 		/// Instance of 32-bit debug stack frame sniffer
@@ -49,18 +38,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 			bool enableDebugging)
 			: base(clsid, languageVersion, enableDebugging)
 		{
-			_pActiveScriptParse32 = ComHelpers.QueryInterface<IActiveScriptParse32>(_pActiveScript);
 			_activeScriptParse32 = (IActiveScriptParse32)_activeScript;
-
 			if (_enableDebugging)
 			{
-				_pActiveScriptDebug32 = ComHelpers.QueryInterface<IActiveScriptDebug32>(_pActiveScript);
-				_pDebugStackFrameSniffer32 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx32>(
-					_pActiveScript);
-				if (_pDebugStackFrameSniffer32 != IntPtr.Zero)
-				{
-					_debugStackFrameSniffer32 = _activeScript as IDebugStackFrameSnifferEx32;
-				}
+				_activeScriptDebug32 = (IActiveScriptDebug32)_activeScript;
+				_debugStackFrameSniffer32 = _activeScript as IDebugStackFrameSnifferEx32;
 			}
 		}
 
@@ -70,9 +52,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 		protected override uint InnerEnumCodeContextsOfPosition(UIntPtr sourceContext, uint offset,
 			uint length, out IEnumDebugCodeContexts enumContexts)
 		{
-			var del = ComHelpers.GetMethodDelegate<RawEnumCodeContextsOfPosition32>(_pActiveScriptDebug32, 5);
-			uint result = del(_pActiveScriptDebug32, sourceContext.ToUInt32(), offset, length,
-				out enumContexts);
+			uint result = _activeScriptDebug32.EnumCodeContextsOfPosition(sourceContext.ToUInt32(),
+				offset, length, out enumContexts);
 
 			return result;
 		}
@@ -125,11 +106,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 			if (_disposedFlag.Set())
 			{
 				_debugStackFrameSniffer32 = null;
+				_activeScriptDebug32 = null;
 				_activeScriptParse32 = null;
-
-				ComHelpers.ReleaseAndEmpty(ref _pDebugStackFrameSniffer32);
-				ComHelpers.ReleaseAndEmpty(ref _pActiveScriptDebug32);
-				ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse32);
 
 				base.Dispose();
 			}
