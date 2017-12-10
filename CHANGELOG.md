@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## v3.0.0 Alpha 3 - December 10, 2017
+ * Added support of .NET Standard 2.0
+ * Fixed a error, that occurred in the `Classic` mode during removing the embedded host objects and types
+ * Removed a redundant code
+ * In JsRT modes during calling of the `CollectGarbage` method is no longer performed blocking
+
 ## v3.0.0 Alpha 2 - November 17, 2017
  * Fixed a error, that occurred during finding the suitable method overload, that receives numeric values and interfaces as parameters, of the host object
 

@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Product>MSIE JavaScript Engine: Tests for Chakra Edge JsRT Mode</Product>
 		<VersionPrefix>3.0.0</VersionPrefix>
-		<VersionSuffix>alpha2</VersionSuffix>
+		<VersionSuffix>alpha3</VersionSuffix>
 		<TargetFrameworks>net40;net451;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
 		<RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">1.0.8</RuntimeFrameworkVersion>
 		<OutputType>Library</OutputType>
