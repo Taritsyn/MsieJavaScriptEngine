@@ -1191,7 +1191,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		public override void CollectGarbage()
 		{
-			_dispatcher.Invoke(() => _jsRuntime.CollectGarbage());
+			_jsRuntime.CollectGarbage();
 		}
 
 		#endregion

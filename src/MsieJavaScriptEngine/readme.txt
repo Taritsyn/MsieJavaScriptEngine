@@ -24,7 +24,9 @@
    1. Added support of .NET Standard 2.0;
    2. Fixed a error, that occurred in the `Classic` mode during removing the
       embedded host objects and types;
-   3. Removed a redundant code.
+   3. Removed a redundant code;
+   4. In JsRT modes during calling of the `CollectGarbage` method is no longer
+      performed blocking.
 
    ============
    PROJECT SITE
