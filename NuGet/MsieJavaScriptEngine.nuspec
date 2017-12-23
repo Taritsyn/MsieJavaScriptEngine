@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>MsieJavaScriptEngine</id>
-		<version>2.2.4</version>
+		<version>2.2.5</version>
 		<title>MSIE JavaScript Engine for .NET</title>
 		<authors>Andrey Taritsyn</authors>
 		<owners>Andrey Taritsyn</owners>
@@ -12,9 +12,9 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). Project was based on the code of SassAndCoffee.JavaScript (http://github.com/paulcbetts/SassAndCoffee), Chakra Sample Hosts (http://github.com/panopticoncentral/chakra-host) and jsrt-dotnet (http://github.com/robpaveza/jsrt-dotnet).</description>
 		<summary>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine).</summary>
-		<releaseNotes>1. In ActiveScript modes now are uses the short names of error categories;
-2. In `Classic` mode during debugging now script error contains a full stack trace;
-3. In JsRT modes the compilation error messages now contains a information about the error location.</releaseNotes>
+		<releaseNotes>1. Removed a redundant code;
+2. Fixed a error, that occurred in the `Classic` mode during removing the embedded host objects and types;
+3. Fixed a error, that occurred during finding the suitable method overload, that receives numeric values and interfaces as parameters, of the host object.</releaseNotes>
 		<copyright>Copyright (c) 2012-2017 Andrey Taritsyn - http://www.taritsyn.ru</copyright>
 		<language>en-US</language>
 		<tags>JavaScript ECMAScript MSIE IE Edge Chakra</tags>

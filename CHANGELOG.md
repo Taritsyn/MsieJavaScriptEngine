@@ -1,6 +1,11 @@
 Change log
 ==========
 
+## v2.2.5 - December 23, 2017
+ * Removed a redundant code
+ * Fixed a error, that occurred in the `Classic` mode during removing the embedded host objects and types
+ * Fixed a error, that occurred during finding the suitable method overload, that receives numeric values and interfaces as parameters, of the host object
+
 ## v2.2.4 - August 25, 2017
  * In ActiveScript modes now are uses the short names of error categories
  * In `Classic` mode during debugging now script error contains a full stack trace

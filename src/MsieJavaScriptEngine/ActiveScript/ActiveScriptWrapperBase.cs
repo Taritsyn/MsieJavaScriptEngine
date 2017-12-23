@@ -28,7 +28,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Pointer to an instance of Active Script engine
 		/// </summary>
-		protected IntPtr _pActiveScript;
+		private IntPtr _pActiveScript;
 
 		/// <summary>
 		/// Instance of Active Script engine
