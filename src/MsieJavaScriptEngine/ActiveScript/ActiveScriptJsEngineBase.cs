@@ -725,11 +725,25 @@ namespace MsieJavaScriptEngine.ActiveScript
 			{
 				try
 				{
-					InnerSetVariableValue(variableName, null);
-
-					if (_hostItems.ContainsKey(variableName))
+					if (_engineMode == JsEngineMode.Classic)
 					{
-						_hostItems.Remove(variableName);
+						if (_hostItems.ContainsKey(variableName))
+						{
+							_hostItems.Remove(variableName);
+						}
+						else
+						{
+							InnerSetVariableValue(variableName, null);
+						}
+					}
+					else
+					{
+						InnerSetVariableValue(variableName, null);
+
+						if (_hostItems.ContainsKey(variableName))
+						{
+							_hostItems.Remove(variableName);
+						}
 					}
 				}
 				catch (ActiveScriptException e)
