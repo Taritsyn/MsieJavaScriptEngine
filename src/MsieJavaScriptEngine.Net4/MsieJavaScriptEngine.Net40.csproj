@@ -222,12 +222,6 @@
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\ProcessDebugManagerWrapper.cs">
       <Link>ActiveScript\Debugging\ProcessDebugManagerWrapper.cs</Link>
     </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\RawEnumCodeContextsOfPosition32.cs">
-      <Link>ActiveScript\Debugging\RawEnumCodeContextsOfPosition32.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\RawEnumCodeContextsOfPosition64.cs">
-      <Link>ActiveScript\Debugging\RawEnumCodeContextsOfPosition64.cs</Link>
-    </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\Debugging\SourceTextAttrs.cs">
       <Link>ActiveScript\Debugging\SourceTextAttrs.cs</Link>
     </Compile>
@@ -387,15 +381,6 @@
     <Compile Include="..\MsieJavaScriptEngine\JsRt\Edge\EdgeNativeMethods.cs">
       <Link>JsRt\Edge\EdgeNativeMethods.cs</Link>
     </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\IActiveScriptProfilerCallback.cs">
-      <Link>JsRt\IActiveScriptProfilerCallback.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\IActiveScriptProfilerCallback2.cs">
-      <Link>JsRt\IActiveScriptProfilerCallback2.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\IActiveScriptProfilerHeapEnum.cs">
-      <Link>JsRt\IActiveScriptProfilerHeapEnum.cs</Link>
-    </Compile>
     <Compile Include="..\MsieJavaScriptEngine\JsRt\Ie\ChakraIeJsRtJsEngine.cs">
       <Link>JsRt\Ie\ChakraIeJsRtJsEngine.cs</Link>
     </Compile>
@@ -473,12 +458,6 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\JsRt\JsValueType.cs">
       <Link>JsRt\JsValueType.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\ProfilerEventMask.cs">
-      <Link>JsRt\ProfilerEventMask.cs</Link>
-    </Compile>
-    <Compile Include="..\MsieJavaScriptEngine\JsRt\ProfilerScriptType.cs">
-      <Link>JsRt\ProfilerScriptType.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\JsRuntimeException.cs">
       <Link>JsRuntimeException.cs</Link>

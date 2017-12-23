@@ -290,18 +290,5 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsIsRuntimeExecutionDisabled(EdgeJsRuntime runtime, out bool isDisabled);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsStartProfiling(IActiveScriptProfilerCallback callback,
-			ProfilerEventMask eventMask, int context);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsStopProfiling(int reason);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsEnumerateHeap(out IActiveScriptProfilerHeapEnum enumerator);
-
-		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsIsEnumeratingHeap(out bool isEnumeratingHeap);
 	}
 }

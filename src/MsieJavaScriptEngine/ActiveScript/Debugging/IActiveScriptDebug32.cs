@@ -53,7 +53,9 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// <param name="offset">Character offset relative to start of script text</param>
 		/// <param name="length">Number of characters in this context</param>
 		/// <param name="enumContexts">An enumerator of the code contexts in the specified range</param>
-		void EnumCodeContextsOfPosition(
+		/// <returns>The method returns an HRESULT</returns>
+		[PreserveSig]
+		uint EnumCodeContextsOfPosition(
 			[In] uint sourceContext,
 			[In] uint offset,
 			[In] uint length,
