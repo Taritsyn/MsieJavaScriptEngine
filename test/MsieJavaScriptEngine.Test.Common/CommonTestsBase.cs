@@ -9,7 +9,12 @@ namespace MsieJavaScriptEngine.Test.Common
 	[TestFixture]
 	public abstract class CommonTestsBase : FileSystemTestsBase
 	{
-		protected abstract MsieJsEngine CreateJsEngine();
+		protected virtual MsieJsEngine CreateJsEngine()
+		{
+			return CreateJsEngine(false);
+		}
+
+		protected abstract MsieJsEngine CreateJsEngine(bool enableDebugging);
 
 		#region Evaluation of code
 
