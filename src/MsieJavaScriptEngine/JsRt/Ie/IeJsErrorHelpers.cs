@@ -83,18 +83,6 @@
 					#region Script
 
 					case JsErrorCode.ScriptException:
-						{
-							IeJsValue errorObject;
-							JsErrorCode innerError = IeNativeMethods.JsGetAndClearException(out errorObject);
-
-							if (innerError != JsErrorCode.NoError)
-							{
-								throw new JsFatalException(innerError);
-							}
-
-							throw new IeJsScriptException(error, errorObject, "Script threw an exception.");
-						}
-
 					case JsErrorCode.ScriptCompile:
 						{
 							IeJsValue errorObject;
@@ -105,7 +93,10 @@
 								throw new JsFatalException(innerError);
 							}
 
-							throw new IeJsScriptException(error, errorObject, "Compile error.");
+							string message = error == JsErrorCode.ScriptCompile ?
+								"Compile error." : "Script threw an exception.";
+
+							throw new IeJsScriptException(error, errorObject, message);
 						}
 
 					case JsErrorCode.ScriptTerminated:

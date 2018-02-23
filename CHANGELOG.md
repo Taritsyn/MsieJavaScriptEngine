@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v2.2.6 - February 23, 2018
+ * In JsRT modes during calling of the `CollectGarbage` method is no longer performed blocking
+
 ## v2.2.5 - December 23, 2017
  * Removed a redundant code
  * Fixed a error, that occurred in the `Classic` mode during removing the embedded host objects and types
