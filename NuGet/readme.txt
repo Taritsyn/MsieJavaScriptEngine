@@ -5,7 +5,7 @@
 
    --------------------------------------------------------------------------------
 
-           Copyright (c) 2012-2017 Andrey Taritsyn - http://www.taritsyn.ru
+           Copyright (c) 2012-2018 Andrey Taritsyn - http://www.taritsyn.ru
 
 
    ===========
@@ -21,11 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   1. Removed a redundant code;
-   2. Fixed a error, that occurred in the `Classic` mode during removing the
-      embedded host objects and types;
-   3. Fixed a error, that occurred during finding the suitable method overload,
-      that receives numeric values and interfaces as parameters, of the host object.
+   In JsRT modes during calling of the `CollectGarbage` method is no longer
+   performed blocking.
 
    ============
    PROJECT SITE

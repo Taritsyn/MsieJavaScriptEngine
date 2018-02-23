@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MSIE JavaScript Engine: Tests for Chakra IE JsRT Mode")]
-[assembly: AssemblyCopyright("Copyright © 2012-2017 Andrey Taritsyn")]
+[assembly: AssemblyCopyright("Copyright © 2012-2018 Andrey Taritsyn")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
