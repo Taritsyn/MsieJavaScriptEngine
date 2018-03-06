@@ -90,11 +90,43 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "Resource with name '{0}' is null."
+		/// </summary>
+		internal static string Common_ResourceIsNull
+		{
+			get { return GetString("Common_ResourceIsNull"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "Cannot convert null to a value type."
 		/// </summary>
 		internal static string Common_ValueTypeCannotBeNull
 		{
 			get { return GetString("Common_ValueTypeCannotBeNull"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Failed to load a Chakra Edge JsRT JavaScript engine. Try to install the Windows 10 with Edge..."
+		/// </summary>
+		internal static string Engine_EdgeJsEngineNotLoaded
+		{
+			get { return GetString("Engine_EdgeJsEngineNotLoaded"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Failed to load a {0} JavaScript engine. Try to install the Internet Explorer {1} or higher. See more..."
+		/// </summary>
+		internal static string Engine_IeJsEngineNotLoaded
+		{
+			get { return GetString("Engine_IeJsEngineNotLoaded"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Call stack"
+		/// </summary>
+		internal static string ErrorDetails_CallStack
+		{
+			get { return GetString("ErrorDetails_CallStack"); }
 		}
 
 		/// <summary>
@@ -111,6 +143,22 @@ namespace MsieJavaScriptEngine.Resources
 		internal static string ErrorDetails_ColumnNumber
 		{
 			get { return GetString("ErrorDetails_ColumnNumber"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Description"
+		/// </summary>
+		internal static string ErrorDetails_Description
+		{
+			get { return GetString("ErrorDetails_Description"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Document name"
+		/// </summary>
+		internal static string ErrorDetails_DocumentName
+		{
+			get { return GetString("ErrorDetails_DocumentName"); }
 		}
 
 		/// <summary>
@@ -154,35 +202,11 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Resource with name '{0}' is null."
+		/// Looks up a localized string similar to "Type"
 		/// </summary>
-		internal static string Resources_ResourceIsNull
+		internal static string ErrorDetails_Type
 		{
-			get { return GetString("Resources_ResourceIsNull"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Failed to load a Chakra Edge JsRT JavaScript engine. Try to install the Windows 10 with Edge..."
-		/// </summary>
-		internal static string Runtime_EdgeJsEngineNotLoaded
-		{
-			get { return GetString("Runtime_EdgeJsEngineNotLoaded"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "The embedded host object '{0}' has a type `{1}`, which is not supported."
-		/// </summary>
-		internal static string Runtime_EmbeddedHostObjectTypeNotSupported
-		{
-			get { return GetString("Runtime_EmbeddedHostObjectTypeNotSupported"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "The embedded host type `{0}` is not supported."
-		/// </summary>
-		internal static string Runtime_EmbeddedHostTypeNotSupported
-		{
-			get { return GetString("Runtime_EmbeddedHostTypeNotSupported"); }
+			get { return GetString("ErrorDetails_Type"); }
 		}
 
 		/// <summary>
@@ -194,75 +218,11 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "One of the function parameters '{0}' has a type `{1}`, which is not supported."
+		/// Looks up a localized string similar to "The '{0}' line of the script call stack has an incorrect format."
 		/// </summary>
-		internal static string Runtime_FunctionParameterTypeNotSupported
+		internal static string Runtime_InvalidCallStackLineFormat
 		{
-			get { return GetString("Runtime_FunctionParameterTypeNotSupported"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Failed to load a {0} JavaScript engine. Try to install the Internet Explorer {1} or higher. See more..."
-		/// </summary>
-		internal static string Runtime_IeJsEngineNotLoaded
-		{
-			get { return GetString("Runtime_IeJsEngineNotLoaded"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "The function name '{0}' has incorrect format."
-		/// </summary>
-		internal static string Runtime_InvalidFunctionNameFormat
-		{
-			get { return GetString("Runtime_InvalidFunctionNameFormat"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "The script item name '{0}' has incorrect format."
-		/// </summary>
-		internal static string Runtime_InvalidScriptItemNameFormat
-		{
-			get { return GetString("Runtime_InvalidScriptItemNameFormat"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "The variable name '{0}' has incorrect format."
-		/// </summary>
-		internal static string Runtime_InvalidVariableNameFormat
-		{
-			get { return GetString("Runtime_InvalidVariableNameFormat"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Selected '{0}' mode of JavaScript engine is not supported."
-		/// </summary>
-		internal static string Runtime_JsEngineModeNotSupported
-		{
-			get { return GetString("Runtime_JsEngineModeNotSupported"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "It is prohibited to use the {0} and {1} engines in one process."
-		/// </summary>
-		internal static string Runtime_JsEnginesConflictInProcess
-		{
-			get { return GetString("Runtime_JsEnginesConflictInProcess"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "It is prohibited to use the Chakra JsRT and Chakra ActiveScript engines on one machine at a time."
-		/// </summary>
-		internal static string Runtime_JsEnginesConflictOnMachine
-		{
-			get { return GetString("Runtime_JsEnginesConflictOnMachine"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "The type of return value `{0}` is not supported."
-		/// </summary>
-		internal static string Runtime_ReturnValueTypeNotSupported
-		{
-			get { return GetString("Runtime_ReturnValueTypeNotSupported"); }
+			get { return GetString("Runtime_InvalidCallStackLineFormat"); }
 		}
 
 		/// <summary>
@@ -274,11 +234,131 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "Сannot execute a '{0}' file, because it is empty."
+		/// </summary>
+		internal static string Usage_CannotExecuteEmptyFile
+		{
+			get { return GetString("Usage_CannotExecuteEmptyFile"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Сannot execute a '{0}' resource, because it is empty."
+		/// </summary>
+		internal static string Usage_CannotExecuteEmptyResource
+		{
+			get { return GetString("Usage_CannotExecuteEmptyResource"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The embedded host object '{0}' has a type `{1}`, which is not supported."
+		/// </summary>
+		internal static string Usage_EmbeddedHostObjectTypeNotSupported
+		{
+			get { return GetString("Usage_EmbeddedHostObjectTypeNotSupported"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The embedded host type `{0}` is not supported."
+		/// </summary>
+		internal static string Usage_EmbeddedHostTypeNotSupported
+		{
+			get { return GetString("Usage_EmbeddedHostTypeNotSupported"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "One of the function parameters '{0}' has a type `{1}`, which is not supported."
+		/// </summary>
+		internal static string Usage_FunctionParameterTypeNotSupported
+		{
+			get { return GetString("Usage_FunctionParameterTypeNotSupported"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The document name '{0}' has incorrect format."
+		/// </summary>
+		internal static string Usage_InvalidDocumentNameFormat
+		{
+			get { return GetString("Usage_InvalidDocumentNameFormat"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The file name '{0}' has incorrect format."
+		/// </summary>
+		internal static string Usage_InvalidFileNameFormat
+		{
+			get { return GetString("Usage_InvalidFileNameFormat"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The function name '{0}' has incorrect format."
+		/// </summary>
+		internal static string Usage_InvalidFunctionNameFormat
+		{
+			get { return GetString("Usage_InvalidFunctionNameFormat"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The resource name '{0}' has incorrect format."
+		/// </summary>
+		internal static string Usage_InvalidResourceNameFormat
+		{
+			get { return GetString("Usage_InvalidResourceNameFormat"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The script item name '{0}' has incorrect format."
+		/// </summary>
+		internal static string Usage_InvalidScriptItemNameFormat
+		{
+			get { return GetString("Usage_InvalidScriptItemNameFormat"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The variable name '{0}' has incorrect format."
+		/// </summary>
+		internal static string Usage_InvalidVariableNameFormat
+		{
+			get { return GetString("Usage_InvalidVariableNameFormat"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Selected '{0}' mode of JavaScript engine is not supported."
+		/// </summary>
+		internal static string Usage_JsEngineModeNotSupported
+		{
+			get { return GetString("Usage_JsEngineModeNotSupported"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "It is prohibited to use the {0} and {1} engines in one process."
+		/// </summary>
+		internal static string Usage_JsEnginesConflictInProcess
+		{
+			get { return GetString("Usage_JsEnginesConflictInProcess"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "It is prohibited to use the Chakra JsRT and Chakra ActiveScript engines on one machine at a time."
+		/// </summary>
+		internal static string Usage_JsEnginesConflictOnMachine
+		{
+			get { return GetString("Usage_JsEnginesConflictOnMachine"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The type of return value `{0}` is not supported."
+		/// </summary>
+		internal static string Usage_ReturnValueTypeNotSupported
+		{
+			get { return GetString("Usage_ReturnValueTypeNotSupported"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "The variable '{0}' has a type `{1}`, which is not supported."
 		/// </summary>
-		internal static string Runtime_VariableTypeNotSupported
+		internal static string Usage_VariableTypeNotSupported
 		{
-			get { return GetString("Runtime_VariableTypeNotSupported"); }
+			get { return GetString("Usage_VariableTypeNotSupported"); }
 		}
 
 		private static string GetString(string name)

@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Engine_JsEnginesNotFound" xml:space="preserve">
+    <value>Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps you have not installed the Microsoft Edge or Internet Explorer 11 browser.</value>
+  </data>
   <data name="Runtime_HostDelegateInvocationFailed" xml:space="preserve">
     <value>During invocation of the host delegate an error has occurred - “{0}”.</value>
   </data>
@@ -165,16 +168,13 @@
   <data name="Runtime_InvalidThisContextForHostObjectProperty" xml:space="preserve">
     <value>Could not retrieve property '{0}' of the host object, because there was an invalid `this` context.</value>
   </data>
-  <data name="Runtime_JsEngineModeNotCompatibleWithNetCore" xml:space="preserve">
-    <value>The '{0}' mode of JavaScript engine is not compatible with .NET Core.</value>
-  </data>
-  <data name="Runtime_JsEnginesNotFound" xml:space="preserve">
-    <value>Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps you have not installed the Microsoft Edge or Internet Explorer 11 browser.</value>
-  </data>
   <data name="Runtime_SuitableConstructorOfHostTypeNotFound" xml:space="preserve">
     <value>Could not find suitable constructor or not enough arguments to invoke of constructor of the `{0}` host type.</value>
   </data>
   <data name="Runtime_SuitableMethodOfHostObjectNotFound" xml:space="preserve">
     <value>Could not find suitable method or not enough arguments to invoke of '{0}' method of the host object.</value>
+  </data>
+  <data name="Usage_JsEngineModeNotCompatibleWithNetCore" xml:space="preserve">
+    <value>The '{0}' mode of JavaScript engine is not compatible with .NET Core.</value>
   </data>
 </root>

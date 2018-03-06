@@ -38,19 +38,25 @@ namespace MsieJavaScriptEngine.Utilities
 			if (resourceName == null)
 			{
 				throw new ArgumentNullException(
-					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
+					nameof(resourceName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(resourceName))
+				);
 			}
 
 			if (type == null)
 			{
 				throw new ArgumentNullException(
-					"type", string.Format(CommonStrings.Common_ArgumentIsNull, "type"));
+					nameof(type),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(type))
+				);
 			}
 
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(resourceName)),
+					nameof(resourceName)
+				);
 			}
 
 			Assembly assembly = type.GetTypeInfo().Assembly;
@@ -71,19 +77,25 @@ namespace MsieJavaScriptEngine.Utilities
 			if (resourceName == null)
 			{
 				throw new ArgumentNullException(
-					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
+					nameof(resourceName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(resourceName))
+				);
 			}
 
 			if (assembly == null)
 			{
 				throw new ArgumentNullException(
-					"assembly", string.Format(CommonStrings.Common_ArgumentIsNull, "assembly"));
+					nameof(assembly),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(assembly))
+				);
 			}
 
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(resourceName)),
+					nameof(resourceName)
+				);
 			}
 
 			return InnerGetResourceAsString(resourceName, assembly);
@@ -96,7 +108,7 @@ namespace MsieJavaScriptEngine.Utilities
 				if (stream == null)
 				{
 					throw new NullReferenceException(
-						string.Format(CommonStrings.Resources_ResourceIsNull, resourceName));
+						string.Format(CommonStrings.Common_ResourceIsNull, resourceName));
 				}
 
 				using (var reader = new StreamReader(stream))
@@ -117,7 +129,9 @@ namespace MsieJavaScriptEngine.Utilities
 			if (!File.Exists(path))
 			{
 				throw new FileNotFoundException(
-					string.Format(CommonStrings.Common_FileNotExist, path), path);
+					string.Format(CommonStrings.Common_FileNotExist, path),
+					path
+				);
 			}
 
 			string content;

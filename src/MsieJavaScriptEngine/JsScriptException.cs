@@ -1,32 +1,23 @@
-﻿#if !NETSTANDARD
-using System;
+﻿using System;
+#if !NETSTANDARD1_3
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+#endif
 
-namespace MsieJavaScriptEngine.ActiveScript
+namespace MsieJavaScriptEngine
 {
+	/// <summary>
+	/// The exception that is thrown during the script processing
+	/// </summary>
+#if !NETSTANDARD1_3
 	[Serializable]
-	public sealed class ActiveScriptException : Exception
+#endif
+	public class JsScriptException : JsException
 	{
-		/// <summary>
-		/// The HRESULT of the error
-		/// </summary>
-		private int _errorCode;
-
 		/// <summary>
 		/// Type of the script error
 		/// </summary>
 		private string _type = string.Empty;
-
-		/// <summary>
-		/// Category of error
-		/// </summary>
-		private string _category = string.Empty;
-
-		/// <summary>
-		/// Description of error
-		/// </summary>
-		private string _description = string.Empty;
 
 		/// <summary>
 		/// Document name
@@ -34,19 +25,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private string _documentName = string.Empty;
 
 		/// <summary>
-		/// Line number on which the error occurred
+		/// Line number
 		/// </summary>
-		private uint _lineNumber;
+		private int _lineNumber;
 
 		/// <summary>
-		/// Column number on which the error occurred
+		/// Column number
 		/// </summary>
 		private int _columnNumber;
-
-		/// <summary>
-		/// String representation of the script call stack
-		/// </summary>
-		private string _callStack = string.Empty;
 
 		/// <summary>
 		/// Source fragment
@@ -54,39 +40,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private string _sourceFragment = string.Empty;
 
 		/// <summary>
-		/// Gets or sets a HRESULT of the error
-		/// </summary>
-		public int ErrorCode
-		{
-			get { return _errorCode; }
-			set { _errorCode = value; }
-		}
-
-		/// <summary>
 		/// Gets or sets a type of the script error
 		/// </summary>
 		public string Type
 		{
-			get { return _type; }
-			set { _type = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a category of error
-		/// </summary>
-		public string Category
-		{
-			get { return _category; }
-			set { _category = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a description of error
-		/// </summary>
-		public string Description
-		{
-			get { return _description; }
-			set { _description = value; }
+			get;
+			set;
 		}
 
 		/// <summary>
@@ -99,30 +58,21 @@ namespace MsieJavaScriptEngine.ActiveScript
 		}
 
 		/// <summary>
-		/// Gets or sets a line number on which the error occurred
+		/// Gets or sets a line number
 		/// </summary>
-		public uint LineNumber
+		public int LineNumber
 		{
 			get { return _lineNumber; }
 			set { _lineNumber = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets a column number on which the error occurred
+		/// Gets or sets a column number
 		/// </summary>
 		public int ColumnNumber
 		{
 			get { return _columnNumber; }
 			set { _columnNumber = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a string representation of the script call stack
-		/// </summary>
-		public string CallStack
-		{
-			get { return _callStack; }
-			set { _callStack = value; }
 		}
 
 		/// <summary>
@@ -136,48 +86,65 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
+		/// Initializes a new instance of the <see cref="JsScriptException"/> class
 		/// with a specified error message
 		/// </summary>
-		/// <param name="message">The message</param>
-		public ActiveScriptException(string message)
+		/// <param name="message">The message that describes the error</param>
+		public JsScriptException(string message)
 			: base(message)
 		{ }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class
+		/// Initializes a new instance of the <see cref="JsScriptException"/> class
 		/// with a specified error message and a reference to the inner exception
 		/// that is the cause of this exception
 		/// </summary>
-		/// <param name="message">The message</param>
-		/// <param name="innerException">The inner exception</param>
-		public ActiveScriptException(string message, Exception innerException)
+		/// <param name="message">The error message that explains the reason for the exception</param>
+		/// <param name="innerException">The exception that is the cause of the current exception</param>
+		public JsScriptException(string message, Exception innerException)
 			: base(message, innerException)
 		{ }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ActiveScriptException"/> class with serialized data
+		/// Initializes a new instance of the <see cref="JsScriptException"/> class
+		/// </summary>
+		/// <param name="message">The error message that explains the reason for the exception</param>
+		/// <param name="engineMode">Name of JS engine mode</param>
+		public JsScriptException(string message, string engineMode)
+			: base(message, engineMode)
+		{ }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="JsScriptException"/> class
+		/// </summary>
+		/// <param name="message">The error message that explains the reason for the exception</param>
+		/// <param name="engineMode">Name of JS engine mode</param>
+		/// <param name="innerException">The exception that is the cause of the current exception</param>
+		public JsScriptException(string message, string engineMode, Exception innerException)
+			: base(message, engineMode, innerException)
+		{ }
+#if !NETSTANDARD1_3
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="JsScriptException"/> class with serialized data
 		/// </summary>
 		/// <param name="info">The object that holds the serialized data</param>
 		/// <param name="context">The contextual information about the source or destination</param>
-		private ActiveScriptException(SerializationInfo info, StreamingContext context)
+		protected JsScriptException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 			if (info != null)
 			{
-				_errorCode = info.GetInt32("ErrorCode");
 				_type = info.GetString("Type");
-				_category = info.GetString("Category");
-				_description = info.GetString("Description");
 				_documentName = info.GetString("DocumentName");
-				_lineNumber = info.GetUInt32("LineNumber");
+				_lineNumber = info.GetInt32("LineNumber");
 				_columnNumber = info.GetInt32("ColumnNumber");
-				_callStack = info.GetString("CallStack");
 				_sourceFragment = info.GetString("SourceFragment");
 			}
 		}
 
-		#region Exception overrides
+
+		#region JsException overrides
 
 		/// <summary>
 		/// Populates a <see cref="SerializationInfo"/> with the data needed to serialize the target object
@@ -189,22 +156,18 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			if (info == null)
 			{
-				throw new ArgumentNullException("info");
+				throw new ArgumentNullException(nameof(info));
 			}
 
 			base.GetObjectData(info, context);
-			info.AddValue("ErrorCode", _errorCode);
 			info.AddValue("Type", _type);
-			info.AddValue("Category", _category);
-			info.AddValue("Description", _description);
 			info.AddValue("DocumentName", _documentName);
 			info.AddValue("LineNumber", _lineNumber);
 			info.AddValue("ColumnNumber", _columnNumber);
-			info.AddValue("CallStack", _callStack);
 			info.AddValue("SourceFragment", _sourceFragment);
 		}
 
 		#endregion
+#endif
 	}
 }
-#endif

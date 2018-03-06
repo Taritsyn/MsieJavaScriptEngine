@@ -58,6 +58,14 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps..."
+		/// </summary>
+		internal static string Engine_JsEnginesNotFound
+		{
+			get { return GetString("Engine_JsEnginesNotFound"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "During invocation of the host delegate an error has occurred - “{0}”."
 		/// </summary>
 		internal static string Runtime_HostDelegateInvocationFailed
@@ -186,22 +194,6 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "The '{0}' mode of JavaScript engine is not compatible with .NET Core."
-		/// </summary>
-		internal static string Runtime_JsEngineModeNotCompatibleWithNetCore
-		{
-			get { return GetString("Runtime_JsEngineModeNotCompatibleWithNetCore"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps..."
-		/// </summary>
-		internal static string Runtime_JsEnginesNotFound
-		{
-			get { return GetString("Runtime_JsEnginesNotFound"); }
-		}
-
-		/// <summary>
 		/// Looks up a localized string similar to "Could not find suitable constructor or not enough arguments to invoke of constructor of the `{0}`..."
 		/// </summary>
 		internal static string Runtime_SuitableConstructorOfHostTypeNotFound
@@ -215,6 +207,14 @@ namespace MsieJavaScriptEngine.Resources
 		internal static string Runtime_SuitableMethodOfHostObjectNotFound
 		{
 			get { return GetString("Runtime_SuitableMethodOfHostObjectNotFound"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "The '{0}' mode of JavaScript engine is not compatible with .NET Core."
+		/// </summary>
+		internal static string Usage_JsEngineModeNotCompatibleWithNetCore
+		{
+			get { return GetString("Usage_JsEngineModeNotCompatibleWithNetCore"); }
 		}
 
 		private static string GetString(string name)

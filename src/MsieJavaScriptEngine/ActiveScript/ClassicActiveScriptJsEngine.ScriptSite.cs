@@ -1,7 +1,7 @@
 ﻿#if !NETSTANDARD
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
@@ -56,15 +56,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 
 			/// <summary>
-			/// Writes a string representation of the script call stack to the buffer.
-			/// A return value indicates whether the writing succeeded.
+			/// Gets a array of <see cref="CallStackItem"/> instances
 			/// </summary>
-			/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
-			/// <returns>true if the writing was successful; otherwise, false</returns>
-			protected override bool TryWriteStackTrace(StringBuilder buffer)
+			/// <returns>An array of <see cref="CallStackItem"/> instances</returns>
+			protected override CallStackItem[] GetCallStackItems()
 			{
-				bool result = false;
-
+				var callStackItems = new List<CallStackItem>();
 				IEnumDebugStackFrames enumFrames;
 				ActiveScriptWrapper.EnumStackFrames(out enumFrames);
 
@@ -82,13 +79,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 					{
 						IDebugStackFrame stackFrame = descriptor.Frame;
 
-						string description;
-						stackFrame.GetDescriptionString(true, out description);
+						string functionName;
+						stackFrame.GetDescriptionString(true, out functionName);
 
-						if (string.Equals(description, "JScript global code", StringComparison.Ordinal))
-						{
-							description = "Global code";
-						}
+						string shortFunctionName = ActiveScriptJsErrorHelpers.ShortenErrorItemName(
+							functionName, "JScript ");
 
 						IDebugCodeContext codeContext;
 						stackFrame.GetCodeContext(out codeContext);
@@ -96,17 +91,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 						IDebugDocumentContext documentContext;
 						codeContext.GetDocumentContext(out documentContext);
 
-						if (documentContext == null)
-						{
-							JsErrorHelpers.WriteErrorLocation(buffer, description);
-							buffer.AppendLine();
-						}
-						else
+						string documentName = string.Empty;
+						uint lineNumber = 0;
+						uint columnNumber = 0;
+
+						if (documentContext != null)
 						{
 							IDebugDocument document;
 							documentContext.GetDocument(out document);
 
-							string documentName;
 							document.GetName(DocumentNameType.Title, out documentName);
 
 							var documentText = (IDebugDocumentText)document;
@@ -115,16 +108,19 @@ namespace MsieJavaScriptEngine.ActiveScript
 							uint length;
 							documentText.GetPositionOfContext(documentContext, out position, out length);
 
-							uint lineNumber;
 							uint offsetInLine;
 							documentText.GetLineOfPosition(position, out lineNumber, out offsetInLine);
-							uint columnNumber = offsetInLine + 1;
-
-							buffer.AppendFormatLine("   at {0} ({1}:{2}:{3})", description, documentName,
-								lineNumber, columnNumber);
+							columnNumber = offsetInLine + 1;
 						}
 
-						result = true;
+						CallStackItem callStackItem = new CallStackItem
+						{
+							FunctionName = shortFunctionName,
+							DocumentName = documentName,
+							LineNumber = (int)lineNumber,
+							ColumnNumber = (int)columnNumber
+						};
+						callStackItems.Add(callStackItem);
 					}
 					finally
 					{
@@ -135,12 +131,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 					}
 				}
 
-				if (result)
-				{
-					buffer.TrimEnd();
-				}
-
-				return result;
+				return callStackItems.ToArray();
 			}
 
 			#endregion

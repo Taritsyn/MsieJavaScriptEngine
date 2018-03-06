@@ -10,7 +10,7 @@ namespace MsieJavaScriptEngine.Utilities
 		{
 			if (source == null)
 			{
-				throw new ArgumentNullException("source");
+				throw new ArgumentNullException(nameof(source));
 			}
 
 			if (o == null)

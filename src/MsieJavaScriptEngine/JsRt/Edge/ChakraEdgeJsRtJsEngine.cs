@@ -2,7 +2,6 @@
 #if NETSTANDARD
 using System.Collections.Generic;
 #endif
-using System.Globalization;
 using System.Linq;
 #if NETSTANDARD
 using System.Reflection;
@@ -13,11 +12,22 @@ using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
-using HostException = MsieJavaScriptEngine.JsException;
-using HostExtendedException = MsieJavaScriptEngine.JsRuntimeException;
-using HostInterruptedException = MsieJavaScriptEngine.JsScriptInterruptedException;
-using ScriptException = MsieJavaScriptEngine.JsRt.JsException;
-using ScriptExtendedException = MsieJavaScriptEngine.JsRt.Edge.EdgeJsScriptException;
+
+using WrapperCompilationException = MsieJavaScriptEngine.JsCompilationException;
+using WrapperEngineException = MsieJavaScriptEngine.JsEngineException;
+using WrapperEngineLoadException = MsieJavaScriptEngine.JsEngineLoadException;
+using WrapperException = MsieJavaScriptEngine.JsException;
+using WrapperFatalException = MsieJavaScriptEngine.JsFatalException;
+using WrapperInterruptedException = MsieJavaScriptEngine.JsInterruptedException;
+using WrapperRuntimeException = MsieJavaScriptEngine.JsRuntimeException;
+using WrapperScriptException = MsieJavaScriptEngine.JsScriptException;
+using WrapperUsageException = MsieJavaScriptEngine.JsUsageException;
+
+using OriginalEngineException = MsieJavaScriptEngine.JsRt.JsEngineException;
+using OriginalException = MsieJavaScriptEngine.JsRt.JsException;
+using OriginalFatalException = MsieJavaScriptEngine.JsRt.JsFatalException;
+using OriginalScriptException = MsieJavaScriptEngine.JsRt.Edge.EdgeJsScriptException;
+using OriginalUsageException = MsieJavaScriptEngine.JsRt.JsUsageException;
 
 namespace MsieJavaScriptEngine.JsRt.Edge
 {
@@ -69,24 +79,31 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					_jsContext = _jsRuntime.CreateContext();
 					_jsContext.AddRef();
 				}
-				catch (JsUsageException e)
+				catch (DllNotFoundException e)
 				{
-					string errorMessage;
+					if (e.Message.IndexOf("'" + DllName.Chakra + "'", StringComparison.OrdinalIgnoreCase) != -1)
+					{
+						throw new WrapperEngineLoadException(
+							string.Format(CommonStrings.Engine_EdgeJsEngineNotLoaded, e.Message),
+							_engineModeName
+						);
+					}
+
+					throw;
+				}
+				catch (OriginalException e)
+				{
 					if (e.ErrorCode == JsErrorCode.WrongThread)
 					{
-						errorMessage = CommonStrings.Runtime_JsEnginesConflictOnMachine;
+						throw new WrapperUsageException(
+							CommonStrings.Usage_JsEnginesConflictOnMachine,
+							_engineModeName
+						);
 					}
 					else
 					{
-						errorMessage = string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
-
-					throw new JsEngineLoadException(errorMessage, _engineModeName);
-				}
-				catch (Exception e)
-				{
-					throw new JsEngineLoadException(
-						string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message), _engineModeName);
 				}
 			});
 		}
@@ -838,32 +855,72 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		}
 #endif
 
-		private HostException ConvertScriptExceptionToHostException(ScriptException scriptException)
+		private WrapperException ConvertOriginalExceptionToWrapperException(
+			OriginalException originalException)
 		{
-			HostException hostException;
-			string message = scriptException.Message;
-			string category = string.Empty;
-			JsErrorCode errorCode = scriptException.ErrorCode;
+			WrapperException wrapperException;
+			JsErrorCode errorCode = originalException.ErrorCode;
+			string description = originalException.Message;
+			string message = description;
+			string type = string.Empty;
+			string documentName = string.Empty;
+			int lineNumber = 0;
+			int columnNumber = 0;
+			string callStack = string.Empty;
+			string sourceFragment = string.Empty;
 
-			if (errorCode == JsErrorCode.ScriptTerminated)
+			var originalScriptException = originalException as OriginalScriptException;
+			if (originalScriptException != null)
 			{
-				hostException = new HostInterruptedException(CommonStrings.Runtime_ScriptInterrupted,
-					_engineModeName, scriptException);
-			}
-			else
-			{
-				int lineNumber = 0;
-				int columnNumber = 0;
-				string sourceFragment = string.Empty;
+				EdgeJsValue errorValue = originalScriptException.Error;
 
-				var scriptExtendedException = scriptException as ScriptExtendedException;
-				if (scriptExtendedException != null)
+				if (errorValue.IsValid)
 				{
-					category = "Script error";
-					EdgeJsValue errorValue = scriptExtendedException.Error;
+					EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
+					description = messagePropertyValue.ConvertToString().ToString();
 
-					if (errorValue.IsValid)
+					EdgeJsValue namePropertyValue = errorValue.GetProperty("name");
+					type = namePropertyValue.ConvertToString().ToString();
+
+					EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
+					if (errorValue.HasProperty(stackPropertyId))
 					{
+						EdgeJsPropertyId descriptionPropertyId = EdgeJsPropertyId.FromString("description");
+						if (errorValue.HasProperty(descriptionPropertyId))
+						{
+							EdgeJsValue descriptionPropertyValue = errorValue.GetProperty(descriptionPropertyId);
+							description = descriptionPropertyValue.ConvertToString().ToString();
+						}
+
+						EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
+						string messageWithTypeAndCallStack = stackPropertyValue.ConvertToString().ToString();
+						string messageWithType = errorValue.ConvertToString().ToString();
+						string rawCallStack = messageWithTypeAndCallStack
+							.TrimStart(messageWithType)
+							.TrimStart(new char[] { '\n', '\r' })
+							;
+
+						CallStackItem[] callStackItems = JsErrorHelpers.ParseCallStack(rawCallStack);
+						if (callStackItems.Length > 0)
+						{
+							CallStackItem firstCallStackItem = callStackItems[0];
+							documentName = firstCallStackItem.DocumentName;
+							lineNumber = firstCallStackItem.LineNumber;
+							columnNumber = firstCallStackItem.ColumnNumber;
+							callStack = JsErrorHelpers.StringifyCallStackItems(callStackItems);
+						}
+
+						message = JsErrorHelpers.GenerateErrorMessage(type, description, callStack);
+					}
+					else
+					{
+						EdgeJsPropertyId urlPropertyId = EdgeJsPropertyId.FromString("url");
+						if (errorValue.HasProperty(urlPropertyId))
+						{
+							EdgeJsValue urlPropertyValue = errorValue.GetProperty(urlPropertyId);
+							documentName = urlPropertyValue.ConvertToString().ToString();
+						}
+
 						EdgeJsPropertyId linePropertyId = EdgeJsPropertyId.FromString("line");
 						if (errorValue.HasProperty(linePropertyId))
 						{
@@ -878,57 +935,70 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							columnNumber = columnPropertyValue.ConvertToNumber().ToInt32() + 1;
 						}
 
-						EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
-						if (errorValue.HasProperty(stackPropertyId))
-						{
-							EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
-							message = stackPropertyValue.ConvertToString().ToString();
-						}
-						else
-						{
-							EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
-							string scriptMessage = messagePropertyValue.ConvertToString().ToString();
-							message = GenerateErrorMessageWithLocation(message.TrimEnd('.'), scriptMessage,
-								lineNumber, columnNumber);
-						}
-
-						if (lineNumber <= 0 && columnNumber <= 0)
-						{
-							GetErrorCoordinatesFromMessage(message, out lineNumber, out columnNumber);
-						}
-
+						string sourceLine = string.Empty;
 						EdgeJsPropertyId sourcePropertyId = EdgeJsPropertyId.FromString("source");
 						if (errorValue.HasProperty(sourcePropertyId))
 						{
 							EdgeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
-							sourceFragment = sourcePropertyValue.ConvertToString().ToString();
+							sourceLine = sourcePropertyValue.ConvertToString().ToString();
 						}
+
+						sourceFragment = JsErrorHelpers.GetSourceFragment(sourceLine, columnNumber);
+						message = JsErrorHelpers.GenerateErrorMessage(type, description, documentName,
+							lineNumber, columnNumber, sourceFragment);
 					}
 				}
-				else if (scriptException is JsUsageException)
-				{
-					category = "Usage error";
-				}
-				else if (scriptException is JsEngineException)
-				{
-					category = "Engine error";
-				}
-				else if (scriptException is JsFatalException)
-				{
-					category = "Fatal error";
-				}
 
-				hostException = new HostExtendedException(message, _engineModeName, scriptException)
+				WrapperScriptException wrapperScriptException;
+				if (errorCode == JsErrorCode.ScriptCompile)
 				{
-					ErrorCode = ((uint)errorCode).ToString(CultureInfo.InvariantCulture),
-					Category = category,
-					LineNumber = lineNumber,
-					ColumnNumber = columnNumber,
-					SourceFragment = sourceFragment
-				};
+					wrapperScriptException = new WrapperCompilationException(message, _engineModeName,
+						originalScriptException);
+				}
+				else if (errorCode == JsErrorCode.ScriptTerminated)
+				{
+					wrapperScriptException = new WrapperInterruptedException(CommonStrings.Runtime_ScriptInterrupted,
+						_engineModeName, originalScriptException);
+				}
+				else
+				{
+					wrapperScriptException = new WrapperRuntimeException(message, _engineModeName,
+						originalScriptException)
+					{
+						CallStack = callStack
+					};
+				}
+				wrapperScriptException.Type = type;
+				wrapperScriptException.DocumentName = documentName;
+				wrapperScriptException.LineNumber = lineNumber;
+				wrapperScriptException.ColumnNumber = columnNumber;
+				wrapperScriptException.SourceFragment = sourceFragment;
+
+				wrapperException = wrapperScriptException;
+			}
+			else
+			{
+				if (originalException is OriginalUsageException)
+				{
+					wrapperException = new WrapperUsageException(message, _engineModeName, originalException);
+				}
+				else if (originalException is OriginalEngineException)
+				{
+					wrapperException = new WrapperEngineException(message, _engineModeName, originalException);
+				}
+				else if (originalException is OriginalFatalException)
+				{
+					wrapperException = new WrapperFatalException(message, _engineModeName, originalException);
+				}
+				else
+				{
+					wrapperException = new WrapperException(message, _engineModeName, originalException);
+				}
 			}
 
-			return hostException;
+			wrapperException.Description = description;
+
+			return wrapperException;
 		}
 
 		#endregion
@@ -961,9 +1031,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 						return MapToHostType(resultValue);
 					}
-					catch (JsException e)
+					catch (OriginalException e)
 					{
-						throw ConvertScriptExceptionToHostException(e);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
 				}
 			});
@@ -981,9 +1051,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					{
 						EdgeJsContext.RunScript(code, _jsSourceContext++, documentName);
 					}
-					catch (JsException e)
+					catch (OriginalException e)
 					{
-						throw ConvertScriptExceptionToHostException(e);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
 				}
 			});
@@ -1003,8 +1073,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						bool functionExist = globalObj.HasProperty(functionId);
 						if (!functionExist)
 						{
-							throw new JsRuntimeException(
-								string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
+							throw new WrapperRuntimeException(
+								string.Format(CommonStrings.Runtime_FunctionNotExist, functionName),
+								_engineModeName
+							);
 						}
 
 						EdgeJsValue resultValue;
@@ -1037,9 +1109,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 						return MapToHostType(resultValue);
 					}
-					catch (JsException e)
+					catch (OriginalException e)
 					{
-						throw ConvertScriptExceptionToHostException(e);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
 				}
 			});
@@ -1067,9 +1139,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 						return variableExist;
 					}
-					catch (JsException e)
+					catch (OriginalException e)
 					{
-						throw ConvertScriptExceptionToHostException(e);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
 				}
 			});
@@ -1089,9 +1161,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 						return MapToHostType(variableValue);
 					}
-					catch (JsException e)
+					catch (OriginalException e)
 					{
-						throw ConvertScriptExceptionToHostException(e);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
 				}
 			});
@@ -1108,11 +1180,14 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					try
 					{
 						EdgeJsValue inputValue = MapToScriptType(value);
+
+						AddReferenceToValue(inputValue);
 						EdgeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						RemoveReferenceToValue(inputValue);
 					}
-					catch (JsException e)
+					catch (OriginalException e)
 					{
-						throw ConvertScriptExceptionToHostException(e);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
 				}
 			});
@@ -1134,9 +1209,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							globalObj.SetProperty(variableId, EdgeJsValue.Undefined, true);
 						}
 					}
-					catch (JsException e)
+					catch (OriginalException e)
 					{
-						throw ConvertScriptExceptionToHostException(e);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
 				}
 			});
@@ -1153,9 +1228,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						EdgeJsValue processedValue = MapToScriptType(value);
 						EdgeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
 					}
-					catch (JsException e)
+					catch (OriginalException e)
 					{
-						throw ConvertScriptExceptionToHostException(e);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
 				}
 			});
@@ -1176,9 +1251,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 #endif
 						EdgeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
 					}
-					catch (JsException e)
+					catch (OriginalException e)
 					{
-						throw ConvertScriptExceptionToHostException(e);
+						throw ConvertOriginalExceptionToWrapperException(e);
 					}
 				}
 			});

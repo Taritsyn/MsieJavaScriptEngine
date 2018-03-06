@@ -28,7 +28,7 @@ namespace MsieJavaScriptEngine
 		{
 			if (del == null)
 			{
-				throw new ArgumentNullException("del");
+				throw new ArgumentNullException(nameof(del));
 			}
 
 			object[] processedArgs = args;

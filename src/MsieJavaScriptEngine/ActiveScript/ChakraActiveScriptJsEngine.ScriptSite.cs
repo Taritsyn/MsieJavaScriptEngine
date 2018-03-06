@@ -30,11 +30,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 				if (InterruptRequested)
 				{
 					hResult = ComErrorCode.E_ABORT;
-					var activeScriptException = new ActiveScriptException(
-						CommonStrings.Runtime_ScriptInterrupted)
+					string category = JsErrorCategory.Interrupted;
+					string description = CommonStrings.Runtime_ScriptInterrupted;
+					string message = description;
+
+					var activeScriptException = new ActiveScriptException(message)
 					{
 						ErrorCode = hResult,
-						Description = CommonStrings.Runtime_ScriptInterrupted
+						Category = category,
+						Description = description
 					};
 
 					LastException = activeScriptException;

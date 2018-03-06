@@ -60,17 +60,25 @@ namespace MsieJavaScriptEngine.Resources
 		/// <summary>
 		/// Looks up a localized string similar to "ActiveScript dispatcher is not initialized."
 		/// </summary>
-		internal static string Runtime_ActiveScriptDispatcherNotInitialized
+		internal static string Engine_ActiveScriptDispatcherNotInitialized
 		{
-			get { return GetString("Runtime_ActiveScriptDispatcherNotInitialized"); }
+			get { return GetString("Engine_ActiveScriptDispatcherNotInitialized"); }
 		}
 
 		/// <summary>
 		/// Looks up a localized string similar to "Failed to set '{0}' version of script language for the ActiveScript JavaScript engine."
 		/// </summary>
-		internal static string Runtime_ActiveScriptLanguageVersionSelectionFailed
+		internal static string Engine_ActiveScriptLanguageVersionSelectionFailed
 		{
-			get { return GetString("Runtime_ActiveScriptLanguageVersionSelectionFailed"); }
+			get { return GetString("Engine_ActiveScriptLanguageVersionSelectionFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Could not found none of the JavaScript engines. Perhaps you have not installed the Internet Explorer..."
+		/// </summary>
+		internal static string Engine_JsEnginesNotFound
+		{
+			get { return GetString("Engine_JsEnginesNotFound"); }
 		}
 
 		/// <summary>
@@ -79,14 +87,6 @@ namespace MsieJavaScriptEngine.Resources
 		internal static string Runtime_ItemNotFound
 		{
 			get { return GetString("Runtime_ItemNotFound"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "Could not found none of the JavaScript engines. Perhaps you have not installed the Internet Explorer..."
-		/// </summary>
-		internal static string Runtime_JsEnginesNotFound
-		{
-			get { return GetString("Runtime_JsEnginesNotFound"); }
 		}
 
 		/// <summary>

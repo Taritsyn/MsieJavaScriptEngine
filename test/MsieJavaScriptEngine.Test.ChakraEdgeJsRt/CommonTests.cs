@@ -23,20 +23,266 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 			return jsEngine;
 		}
 
-		#region Mapping errors
+		#region Error handling
+
+		#region Mapping of errors
 
 		[Test]
-		public void GenerationOfParseErrorMessageIsCorrect()
+		public void MappingCompilationErrorDuringEvaluationOfExpressionIsCorrect()
+		{
+			// Arrange
+			const string input = @"var $variable1 = 611;
+var _variable2 = 711;
+var @variable3 = 678;
+
+$variable1 + _variable2 - @variable3;";
+
+			JsCompilationException exception = null;
+
+			// Act
+			using (var jsEngine = CreateJsEngine())
+			{
+				try
+				{
+					int result = jsEngine.Evaluate<int>(input, "variables.js");
+				}
+				catch (JsCompilationException e)
+				{
+					exception = e;
+				}
+			}
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.AreEqual("Compilation error", exception.Category);
+			Assert.AreEqual("Invalid character", exception.Description);
+			Assert.AreEqual("SyntaxError", exception.Type);
+			Assert.AreEqual("variables.js", exception.DocumentName);
+			Assert.AreEqual(3, exception.LineNumber);
+			Assert.AreEqual(5, exception.ColumnNumber);
+			Assert.AreEqual("var @variable3 = 678;", exception.SourceFragment);
+		}
+
+		[Test]
+		public void MappingCompilationErrorDuringEvaluationOfExpressionInDebugModeIsCorrect()
+		{
+			// Arrange
+			const string input = @"var $variable1 = 611;
+var _variable2 = 711;
+var @variable3 = 678;
+
+$variable1 + _variable2 - @variable3;";
+
+			JsCompilationException exception = null;
+
+			// Act
+			using (var jsEngine = CreateJsEngine(true))
+			{
+				try
+				{
+					int result = jsEngine.Evaluate<int>(input, "variables.js");
+				}
+				catch (JsCompilationException e)
+				{
+					exception = e;
+				}
+			}
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.AreEqual("Compilation error", exception.Category);
+			Assert.AreEqual("Invalid character", exception.Description);
+			Assert.AreEqual("SyntaxError", exception.Type);
+			Assert.AreEqual("variables.js", exception.DocumentName);
+			Assert.AreEqual(3, exception.LineNumber);
+			Assert.AreEqual(5, exception.ColumnNumber);
+			Assert.AreEqual("var @variable3 = 678;", exception.SourceFragment);
+		}
+
+		[Test]
+		public void MappingRuntimeErrorDuringEvaluationOfExpressionIsCorrect()
+		{
+			// Arrange
+			const string input = @"var $variable1 = 611;
+var _variable2 = 711;
+var variable3 = 678;
+
+$variable1 + -variable2 - variable3;";
+
+			JsRuntimeException exception = null;
+
+			// Act
+			using (var jsEngine = CreateJsEngine())
+			{
+				try
+				{
+					int result = jsEngine.Evaluate<int>(input, "variables.js");
+				}
+				catch (JsRuntimeException e)
+				{
+					exception = e;
+				}
+			}
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.AreEqual("Runtime error", exception.Category);
+			Assert.True(Regex.IsMatch(exception.Description, @"^'variable2' is (un|not )defined$"));
+			Assert.AreEqual("ReferenceError", exception.Type);
+			Assert.AreEqual("variables.js", exception.DocumentName);
+			Assert.AreEqual(5, exception.LineNumber);
+			Assert.AreEqual(1, exception.ColumnNumber);
+			Assert.IsEmpty(exception.SourceFragment);
+			Assert.AreEqual("   at Global code (variables.js:5:1)", exception.CallStack);
+		}
+
+		[Test]
+		public void MappingCompilationErrorDuringExecutionOfCodeIsCorrect()
+		{
+			// Arrange
+			const string input = @"function factorial(value) {
+	if (value <= 0) {
+		throw new Error(""The value must be greater than or equal to zero."");
+	}
+
+	return value !== 1 ? value * factorial(value - 1) : 1;
+}
+
+factorial(5);
+factorial(2%);
+factorial(0);";
+
+			JsCompilationException exception = null;
+
+			// Act
+			using (var jsEngine = CreateJsEngine())
+			{
+				try
+				{
+					jsEngine.Execute(input, "factorial.js");
+				}
+				catch (JsCompilationException e)
+				{
+					exception = e;
+				}
+			}
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.AreEqual("Compilation error", exception.Category);
+			Assert.AreEqual("Syntax error", exception.Description);
+			Assert.AreEqual("SyntaxError", exception.Type);
+			Assert.AreEqual("factorial.js", exception.DocumentName);
+			Assert.AreEqual(10, exception.LineNumber);
+			Assert.AreEqual(13, exception.ColumnNumber);
+			Assert.AreEqual("factorial(2%);", exception.SourceFragment);
+		}
+
+		[Test]
+		public virtual void MappingCompilationErrorDuringExecutionOfCodeInDebugModeIsCorrect()
+		{
+			// Arrange
+			const string input = @"function factorial(value) {
+	if (value <= 0) {
+		throw new Error(""The value must be greater than or equal to zero."");
+	}
+
+	return value !== 1 ? value * factorial(value - 1) : 1;
+}
+
+factorial(5);
+factorial(2%);
+factorial(0);";
+
+			JsCompilationException exception = null;
+
+			// Act
+			using (var jsEngine = CreateJsEngine(true))
+			{
+				try
+				{
+					jsEngine.Execute(input, "factorial.js");
+				}
+				catch (JsCompilationException e)
+				{
+					exception = e;
+				}
+			}
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.AreEqual("Compilation error", exception.Category);
+			Assert.AreEqual("Syntax error", exception.Description);
+			Assert.AreEqual("SyntaxError", exception.Type);
+			Assert.AreEqual("factorial.js", exception.DocumentName);
+			Assert.AreEqual(10, exception.LineNumber);
+			Assert.AreEqual(13, exception.ColumnNumber);
+			Assert.AreEqual("factorial(2%);", exception.SourceFragment);
+		}
+
+		[Test]
+		public void MappingRuntimeErrorDuringExecutionOfCodeIsCorrect()
+		{
+			// Arrange
+			const string input = @"function factorial(value) {
+	if (value <= 0) {
+		throw new Error(""The value must be greater than or equal to zero."");
+	}
+
+	return value !== 1 ? value * factorial(value - 1) : 1;
+}
+
+factorial(5);
+factorial(-1);
+factorial(0);";
+
+			JsRuntimeException exception = null;
+
+			// Act
+			using (var jsEngine = CreateJsEngine())
+			{
+				try
+				{
+					jsEngine.Execute(input, "factorial.js");
+				}
+				catch (JsRuntimeException e)
+				{
+					exception = e;
+				}
+			}
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.AreEqual("Runtime error", exception.Category);
+			Assert.AreEqual("The value must be greater than or equal to zero.", exception.Description);
+			Assert.AreEqual("Error", exception.Type);
+			Assert.AreEqual("factorial.js", exception.DocumentName);
+			Assert.AreEqual(3, exception.LineNumber);
+			Assert.AreEqual(3, exception.ColumnNumber);
+			Assert.IsEmpty(exception.SourceFragment);
+			Assert.AreEqual(
+				"   at factorial (factorial.js:3:3)" + Environment.NewLine +
+				"   at Global code (factorial.js:10:1)",
+				exception.CallStack
+			);
+		}
+
+		#endregion
+
+		#region Generation of error messages
+
+		[Test]
+		public void GenerationOfCompilationErrorMessageIsCorrect()
 		{
 			// Arrange
 			const string input = @"var arr = [];
 var obj = {};
 var foo = 'Browser's bar';";
-			string targetOutput = "Compile error: Expected ';'" + Environment.NewLine +
-				"   at 3:20"
+			string targetOutput = "SyntaxError: Expected ';'" + Environment.NewLine +
+				"   at variables.js:3:20 -> var foo = 'Browser's bar';"
 				;
 
-			JsException exception = null;
+			JsCompilationException exception = null;
 
 			// Act
 			using (var jsEngine = CreateJsEngine())
@@ -45,29 +291,28 @@ var foo = 'Browser's bar';";
 				{
 					jsEngine.Execute(input, "variables.js");
 				}
-				catch (JsRuntimeException e)
+				catch (JsCompilationException e)
 				{
 					exception = e;
 				}
 			}
 
 			Assert.NotNull(exception);
-			Assert.IsNotEmpty(exception.Message);
 			Assert.AreEqual(targetOutput, exception.Message);
 		}
 
 		[Test]
-		public void GenerationOfParseErrorMessageInDebugModeIsCorrect()
+		public void GenerationOfCompilationErrorMessageInDebugModeIsCorrect()
 		{
 			// Arrange
 			const string input = @"var arr = [];
 var obj = {};
 var foo = 'Browser's bar';";
-			string targetOutput = "Compile error: Expected ';'" + Environment.NewLine +
-				"   at 3:20"
+			string targetOutput = "SyntaxError: Expected ';'" + Environment.NewLine +
+				"   at variables.js:3:20 -> var foo = 'Browser's bar';"
 				;
 
-			JsException exception = null;
+			JsCompilationException exception = null;
 
 			// Act
 			using (var jsEngine = CreateJsEngine(true))
@@ -76,14 +321,13 @@ var foo = 'Browser's bar';";
 				{
 					jsEngine.Execute(input, "variables.js");
 				}
-				catch (JsRuntimeException e)
+				catch (JsCompilationException e)
 				{
 					exception = e;
 				}
 			}
 
 			Assert.NotNull(exception);
-			Assert.IsNotEmpty(exception.Message);
 			Assert.AreEqual(targetOutput, exception.Message);
 		}
 
@@ -102,12 +346,12 @@ var a = 8;
 var b = 15;
 
 foo(a, b);";
-			string targetOutputPattern = @"^ReferenceError: 'bar' is (un|not )defined\n" +
-				@"   at foo \(functions.js:4:3\)\n" +
+			string targetOutputPattern = @"^ReferenceError: 'bar' is (un|not )defined" + Environment.NewLine +
+				@"   at foo \(functions.js:4:3\)" + Environment.NewLine +
 				@"   at Global code \(functions.js:11:1\)$"
 				;
 
-			JsException exception = null;
+			JsRuntimeException exception = null;
 
 			// Act
 			using (var jsEngine = CreateJsEngine())
@@ -123,9 +367,10 @@ foo(a, b);";
 			}
 
 			Assert.NotNull(exception);
-			Assert.IsNotEmpty(exception.Message);
 			Assert.True(Regex.IsMatch(exception.Message, targetOutputPattern));
 		}
+
+		#endregion
 
 		#endregion
 	}

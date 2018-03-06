@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Text;
 #if !NETSTANDARD1_3
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 #endif
+
+using MsieJavaScriptEngine.Constants;
+using MsieJavaScriptEngine.Helpers;
+using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine
 {
@@ -20,11 +25,39 @@ namespace MsieJavaScriptEngine
 		private readonly string _engineMode = string.Empty;
 
 		/// <summary>
+		/// Error category
+		/// </summary>
+		private string _category = JsErrorCategory.Unknown;
+
+		/// <summary>
+		/// Description of error
+		/// </summary>
+		private string _description = string.Empty;
+
+		/// <summary>
 		/// Gets a name of JS engine mode
 		/// </summary>
 		public string EngineMode
 		{
 			get { return _engineMode; }
+		}
+
+		/// <summary>
+		/// Gets or sets a error category
+		/// </summary>
+		public string Category
+		{
+			get { return _category; }
+			set { _category = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a description of error
+		/// </summary>
+		public string Description
+		{
+			get { return _description; }
+			set { _description = value; }
 		}
 
 
@@ -81,6 +114,8 @@ namespace MsieJavaScriptEngine
 			if (info != null)
 			{
 				_engineMode = info.GetString("EngineMode");
+				_category = info.GetString("Category");
+				_description = info.GetString("Description");
 			}
 		}
 
@@ -97,14 +132,40 @@ namespace MsieJavaScriptEngine
 		{
 			if (info == null)
 			{
-				throw new ArgumentNullException("info");
+				throw new ArgumentNullException(nameof(info));
 			}
 
 			base.GetObjectData(info, context);
 			info.AddValue("EngineMode", _engineMode);
+			info.AddValue("Category", _category);
+			info.AddValue("Description", _description);
 		}
 
 		#endregion
 #endif
+
+		#region Object overrides
+
+		/// <summary>
+		/// Returns a string that represents the current exception
+		/// </summary>
+		/// <returns>A string that represents the current exception</returns>
+		public override string ToString()
+		{
+			string baseResult = base.ToString();
+			string errorDetails = JsErrorHelpers.GenerateErrorDetails(this, true);
+
+			StringBuilder resultBuilder = StringBuilderPool.GetBuilder();
+			resultBuilder.AppendLine(baseResult);
+			resultBuilder.AppendLine("--- Script error details follow ---");
+			resultBuilder.Append(errorDetails);
+
+			string result = resultBuilder.ToString();
+			StringBuilderPool.ReleaseBuilder(resultBuilder);
+
+			return result;
+		}
+
+		#endregion
 	}
 }

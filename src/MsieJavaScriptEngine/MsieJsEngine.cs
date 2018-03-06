@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 #if !NETSTANDARD
@@ -56,8 +58,8 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Constructs an instance of MSIE JS engine
 		/// </summary>
-		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JS engine.</exception>
-		/// <exception cref="System.NotSupportedException">Selected mode of JS engine is not supported.</exception>
+		/// <exception cref="JsUsageException"/>
+		/// <exception cref="JsEngineLoadException"/>
 		public MsieJsEngine()
 			: this(new JsEngineSettings())
 		{ }
@@ -66,8 +68,8 @@ namespace MsieJavaScriptEngine
 		/// Constructs an instance of MSIE JS engine
 		/// </summary>
 		/// <param name="settings">JS engine settings</param>
-		/// <exception cref="MsieJavaScriptEngine.JsEngineLoadException">Failed to load a JS engine.</exception>
-		/// <exception cref="System.NotSupportedException">Selected mode of JS engine is not supported.</exception>
+		/// <exception cref="JsUsageException"/>
+		/// <exception cref="JsEngineLoadException"/>
 		public MsieJsEngine(JsEngineSettings settings)
 		{
 			JsEngineMode engineMode = settings.EngineMode;
@@ -98,9 +100,9 @@ namespace MsieJavaScriptEngine
 				{
 					throw new JsEngineLoadException(
 #if NETSTANDARD
-						NetCoreStrings.Runtime_JsEnginesNotFound
+						NetCoreStrings.Engine_JsEnginesNotFound
 #else
-						NetFrameworkStrings.Runtime_JsEnginesNotFound
+						NetFrameworkStrings.Engine_JsEnginesNotFound
 #endif
 					);
 				}
@@ -126,9 +128,9 @@ namespace MsieJavaScriptEngine
 						}
 						else if (previousMode == JsEngineMode.ChakraIeJsRt)
 						{
-							throw new JsEngineLoadException(
+							throw new JsUsageException(
 								string.Format(
-									CommonStrings.Runtime_JsEnginesConflictInProcess,
+									CommonStrings.Usage_JsEnginesConflictInProcess,
 									JsEngineModeHelpers.GetModeName(processedEngineMode),
 									JsEngineModeHelpers.GetModeName(previousMode)
 								)
@@ -136,9 +138,9 @@ namespace MsieJavaScriptEngine
 						}
 						else if (previousMode == JsEngineMode.ChakraActiveScript)
 						{
-							throw new JsEngineLoadException(
+							throw new JsUsageException(
 								string.Format(
-									CommonStrings.Runtime_JsEnginesConflictInProcess,
+									CommonStrings.Usage_JsEnginesConflictInProcess,
 									JsEngineModeHelpers.GetModeName(processedEngineMode),
 									JsEngineModeHelpers.GetModeName(previousMode)
 								)
@@ -153,9 +155,9 @@ namespace MsieJavaScriptEngine
 						}
 						else
 						{
-							throw new JsEngineLoadException(
+							throw new JsUsageException(
 								string.Format(
-									CommonStrings.Runtime_JsEnginesConflictInProcess,
+									CommonStrings.Usage_JsEnginesConflictInProcess,
 									JsEngineModeHelpers.GetModeName(processedEngineMode),
 									JsEngineModeHelpers.GetModeName(previousMode)
 								)
@@ -172,9 +174,9 @@ namespace MsieJavaScriptEngine
 						}
 						else
 						{
-							throw new JsEngineLoadException(
+							throw new JsUsageException(
 								string.Format(
-									CommonStrings.Runtime_JsEnginesConflictInProcess,
+									CommonStrings.Usage_JsEnginesConflictInProcess,
 									JsEngineModeHelpers.GetModeName(processedEngineMode),
 									JsEngineModeHelpers.GetModeName(previousMode)
 								)
@@ -183,8 +185,8 @@ namespace MsieJavaScriptEngine
 
 						break;
 #else
-						throw new NotSupportedException(
-								string.Format(NetCoreStrings.Runtime_JsEngineModeNotCompatibleWithNetCore, processedEngineMode));
+						throw new JsUsageException(
+								string.Format(NetCoreStrings.Usage_JsEngineModeNotCompatibleWithNetCore, processedEngineMode));
 #endif
 					case JsEngineMode.Classic:
 #if !NETSTANDARD
@@ -192,12 +194,12 @@ namespace MsieJavaScriptEngine
 
 						break;
 #else
-						throw new NotSupportedException(
-								string.Format(NetCoreStrings.Runtime_JsEngineModeNotCompatibleWithNetCore, processedEngineMode));
+						throw new JsUsageException(
+								string.Format(NetCoreStrings.Usage_JsEngineModeNotCompatibleWithNetCore, processedEngineMode));
 #endif
 					default:
-						throw new NotSupportedException(
-							string.Format(CommonStrings.Runtime_JsEngineModeNotSupported, processedEngineMode));
+						throw new JsUsageException(
+							string.Format(CommonStrings.Usage_JsEngineModeNotSupported, processedEngineMode));
 				}
 
 				_currentMode = processedEngineMode;
@@ -205,6 +207,7 @@ namespace MsieJavaScriptEngine
 		}
 
 
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
 		private void VerifyNotDisposed()
 		{
 			if (_disposedFlag.IsSet())
@@ -218,10 +221,13 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="expression">JS expression</param>
 		/// <returns>Result of the expression</returns>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public object Evaluate(string expression)
 		{
 			return Evaluate(expression, string.Empty);
@@ -233,18 +239,40 @@ namespace MsieJavaScriptEngine
 		/// <param name="expression">JS expression</param>
 		/// <param name="documentName">Document name</param>
 		/// <returns>Result of the expression</returns>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public object Evaluate(string expression, string documentName)
 		{
 			VerifyNotDisposed();
 
+			if (expression == null)
+			{
+				throw new ArgumentNullException(
+					nameof(expression),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(expression))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(expression))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "expression"), "expression");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(expression)),
+					nameof(expression)
+				);
+			}
+
+			if (!string.IsNullOrWhiteSpace(documentName)
+				&& !ValidationHelpers.CheckDocumentNameFormat(documentName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidDocumentNameFormat, documentName),
+					nameof(documentName)
+				);
 			}
 
 			string uniqueDocumentName = _documentNameManager.GetUniqueName(documentName);
@@ -258,12 +286,13 @@ namespace MsieJavaScriptEngine
 		/// <typeparam name="T">Type of result</typeparam>
 		/// <param name="expression">JS expression</param>
 		/// <returns>Result of the expression</returns>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value
-		/// is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public T Evaluate<T>(string expression)
 		{
 			return Evaluate<T>(expression, string.Empty);
@@ -276,27 +305,49 @@ namespace MsieJavaScriptEngine
 		/// <param name="expression">JS expression</param>
 		/// <param name="documentName">Document name</param>
 		/// <returns>Result of the expression</returns>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value
-		/// is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public T Evaluate<T>(string expression, string documentName)
 		{
 			VerifyNotDisposed();
 
+			if (expression == null)
+			{
+				throw new ArgumentNullException(
+					nameof(expression),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(expression))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(expression))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "expression"), "expression");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(expression)),
+					nameof(expression)
+				);
+			}
+
+			if (!string.IsNullOrWhiteSpace(documentName)
+				&& !ValidationHelpers.CheckDocumentNameFormat(documentName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidDocumentNameFormat, documentName),
+					nameof(documentName)
+				);
 			}
 
 			Type returnValueType = typeof(T);
 			if (!ValidationHelpers.IsSupportedType(returnValueType))
 			{
-				throw new NotSupportedTypeException(
-				string.Format(CommonStrings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_ReturnValueTypeNotSupported, returnValueType.FullName),
+					nameof(T)
+				);
 			}
 
 			string uniqueDocumentName = _documentNameManager.GetUniqueName(documentName);
@@ -309,10 +360,13 @@ namespace MsieJavaScriptEngine
 		/// Executes a code
 		/// </summary>
 		/// <param name="code">JS code</param>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public void Execute(string code)
 		{
 			Execute(code, string.Empty);
@@ -323,18 +377,40 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="code">JS code</param>
 		/// <param name="documentName">Document name</param>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public void Execute(string code, string documentName)
 		{
 			VerifyNotDisposed();
 
+			if (code == null)
+			{
+				throw new ArgumentNullException(
+					nameof(code),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(code))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(code))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "code"), "code");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(code)),
+					nameof(code)
+				);
+			}
+
+			if (!string.IsNullOrWhiteSpace(documentName)
+				&& !ValidationHelpers.CheckDocumentNameFormat(documentName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidDocumentNameFormat, documentName),
+					nameof(documentName)
+				);
 			}
 
 			string uniqueDocumentName = _documentNameManager.GetUniqueName(documentName);
@@ -346,11 +422,15 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="path">Path to the JS-file</param>
 		/// <param name="encoding">Text encoding</param>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.IO.FileNotFoundException">Specified JS-file not found.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="FileNotFoundException"/>
+		/// <exception cref="JsUsageException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public void ExecuteFile(string path, Encoding encoding = null)
 		{
 			VerifyNotDisposed();
@@ -358,17 +438,38 @@ namespace MsieJavaScriptEngine
 			if (path == null)
 			{
 				throw new ArgumentNullException(
-					"path", string.Format(CommonStrings.Common_ArgumentIsNull, "path"));
+					nameof(path),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(path))
+				);
 			}
 
 			if (string.IsNullOrWhiteSpace(path))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "path"), "path");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(path)),
+					nameof(path)
+				);
+			}
+
+			if (!ValidationHelpers.CheckDocumentNameFormat(path))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidFileNameFormat, path),
+					nameof(path)
+				);
 			}
 
 			string code = Utils.GetFileTextContent(path, encoding);
-			Execute(code, path);
+			if (string.IsNullOrWhiteSpace(code))
+			{
+				throw new JsUsageException(
+					string.Format(CommonStrings.Usage_CannotExecuteEmptyFile, path),
+					_jsEngine.Mode
+				);
+			}
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(path);
+
+			_jsEngine.Execute(code, uniqueDocumentName);
 		}
 
 		/// <summary>
@@ -377,11 +478,14 @@ namespace MsieJavaScriptEngine
 		/// <param name="resourceName">The case-sensitive resource name without the namespace of the specified type</param>
 		/// <param name="type">The type, that determines the assembly and whose namespace is used to scope
 		/// the resource name</param>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.ArgumentNullException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsUsageException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public void ExecuteResource(string resourceName, Type type)
 		{
 			VerifyNotDisposed();
@@ -389,19 +493,33 @@ namespace MsieJavaScriptEngine
 			if (resourceName == null)
 			{
 				throw new ArgumentNullException(
-					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
+					nameof(resourceName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(resourceName))
+				);
 			}
 
 			if (type == null)
 			{
 				throw new ArgumentNullException(
-					"type", string.Format(CommonStrings.Common_ArgumentIsNull, "type"));
+					nameof(type),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(type))
+				);
 			}
 
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(resourceName)),
+					nameof(resourceName)
+				);
+			}
+
+			if (!ValidationHelpers.CheckDocumentNameFormat(resourceName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidResourceNameFormat, resourceName),
+					nameof(resourceName)
+				);
 			}
 
 			Assembly assembly = type.GetTypeInfo().Assembly;
@@ -409,7 +527,16 @@ namespace MsieJavaScriptEngine
 			string resourceFullName = nameSpace != null ? nameSpace + "." + resourceName : resourceName;
 
 			string code = Utils.GetResourceAsString(resourceFullName, assembly);
-			Execute(code, resourceName);
+			if (string.IsNullOrWhiteSpace(code))
+			{
+				throw new JsUsageException(
+					string.Format(CommonStrings.Usage_CannotExecuteEmptyResource, resourceFullName),
+					_jsEngine.Mode
+				);
+			}
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(resourceFullName);
+
+			_jsEngine.Execute(code, uniqueDocumentName);
 		}
 
 		/// <summary>
@@ -417,11 +544,14 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="resourceName">The case-sensitive resource name</param>
 		/// <param name="assembly">The assembly, which contains the embedded resource</param>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.ArgumentNullException" />
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsUsageException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public void ExecuteResource(string resourceName, Assembly assembly)
 		{
 			VerifyNotDisposed();
@@ -429,23 +559,46 @@ namespace MsieJavaScriptEngine
 			if (resourceName == null)
 			{
 				throw new ArgumentNullException(
-					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
+					nameof(resourceName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(resourceName))
+				);
 			}
 
 			if (assembly == null)
 			{
 				throw new ArgumentNullException(
-					"assembly", string.Format(CommonStrings.Common_ArgumentIsNull, "assembly"));
+					nameof(assembly),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(assembly))
+				);
 			}
 
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(resourceName)),
+					nameof(resourceName)
+				);
+			}
+
+			if (!ValidationHelpers.CheckDocumentNameFormat(resourceName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidResourceNameFormat, resourceName),
+					nameof(resourceName)
+				);
 			}
 
 			string code = Utils.GetResourceAsString(resourceName, assembly);
-			Execute(code, resourceName);
+			if (string.IsNullOrWhiteSpace(code))
+			{
+				throw new JsUsageException(
+					string.Format(CommonStrings.Usage_CannotExecuteEmptyResource, resourceName),
+					_jsEngine.Mode
+				);
+			}
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(resourceName);
+
+			_jsEngine.Execute(code, uniqueDocumentName);
 		}
 
 		/// <summary>
@@ -454,27 +607,38 @@ namespace MsieJavaScriptEngine
 		/// <param name="functionName">Function name</param>
 		/// <param name="args">Function arguments</param>
 		/// <returns>Result of the function execution</returns>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.FormatException">The function name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of one function
-		/// parameter is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public object CallFunction(string functionName, params object[] args)
 		{
 			VerifyNotDisposed();
 
+			if (functionName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(functionName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(functionName))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(functionName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "functionName"), "functionName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(functionName)),
+					nameof(functionName)
+				);
 			}
 
 			if (!ValidationHelpers.CheckNameFormat(functionName))
 			{
-				throw new FormatException(
-					string.Format(CommonStrings.Runtime_InvalidFunctionNameFormat, functionName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidFunctionNameFormat, functionName),
+					nameof(functionName)
+				);
 			}
 
 			int argumentCount = args.Length;
@@ -490,9 +654,11 @@ namespace MsieJavaScriptEngine
 
 						if (!ValidationHelpers.IsSupportedType(argType))
 						{
-							throw new NotSupportedTypeException(
-								string.Format(CommonStrings.Runtime_FunctionParameterTypeNotSupported,
-									functionName, argType.FullName));
+							throw new ArgumentException(
+								string.Format(CommonStrings.Usage_FunctionParameterTypeNotSupported,
+									functionName, argType.FullName),
+								nameof(args)
+							);
 						}
 					}
 				}
@@ -510,34 +676,38 @@ namespace MsieJavaScriptEngine
 		/// <param name="functionName">Function name</param>
 		/// <param name="args">Function arguments</param>
 		/// <returns>Result of the function execution</returns>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.FormatException">The function name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value or
-		/// one function parameter is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public T CallFunction<T>(string functionName, params object[] args)
 		{
 			VerifyNotDisposed();
 
+			if (functionName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(functionName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(functionName))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(functionName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "functionName"), "functionName");
-			}
-
-			Type returnValueType = typeof(T);
-			if (!ValidationHelpers.IsSupportedType(returnValueType))
-			{
-				throw new NotSupportedTypeException(
-				string.Format(CommonStrings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(functionName)),
+					nameof(functionName)
+				);
 			}
 
 			if (!ValidationHelpers.CheckNameFormat(functionName))
 			{
-				throw new FormatException(
-					string.Format(CommonStrings.Runtime_InvalidFunctionNameFormat, functionName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidFunctionNameFormat, functionName),
+					nameof(functionName)
+				);
 			}
 
 			int argumentCount = args.Length;
@@ -553,12 +723,23 @@ namespace MsieJavaScriptEngine
 
 						if (!ValidationHelpers.IsSupportedType(argType))
 						{
-							throw new NotSupportedTypeException(
-								string.Format(CommonStrings.Runtime_FunctionParameterTypeNotSupported,
-									functionName, argType.FullName));
+							throw new ArgumentException(
+								string.Format(CommonStrings.Usage_FunctionParameterTypeNotSupported,
+									functionName, argType.FullName),
+								nameof(args)
+							);
 						}
 					}
 				}
+			}
+
+			Type returnValueType = typeof(T);
+			if (!ValidationHelpers.IsSupportedType(returnValueType))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_ReturnValueTypeNotSupported, returnValueType.FullName),
+					nameof(T)
+				);
 			}
 
 			object result = _jsEngine.CallFunction(functionName, args);
@@ -571,25 +752,37 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Result of check (true - exists; false - not exists</returns>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public bool HasVariable(string variableName)
 		{
 			VerifyNotDisposed();
 
+			if (variableName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(variableName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(variableName))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(variableName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(variableName)),
+					nameof(variableName)
+				);
 			}
 
 			if (!ValidationHelpers.CheckNameFormat(variableName))
 			{
-				throw new FormatException(
-					string.Format(CommonStrings.Runtime_InvalidVariableNameFormat, variableName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidVariableNameFormat, variableName),
+					nameof(variableName)
+				);
 			}
 
 			return _jsEngine.HasVariable(variableName);
@@ -600,25 +793,37 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Value of variable</returns>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public object GetVariableValue(string variableName)
 		{
 			VerifyNotDisposed();
 
+			if (variableName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(variableName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(variableName))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(variableName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(variableName)),
+					nameof(variableName)
+				);
 			}
 
 			if (!ValidationHelpers.CheckNameFormat(variableName))
 			{
-				throw new FormatException(
-					string.Format(CommonStrings.Runtime_InvalidVariableNameFormat, variableName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidVariableNameFormat, variableName),
+					nameof(variableName)
+				);
 			}
 
 			return _jsEngine.GetVariableValue(variableName);
@@ -630,34 +835,46 @@ namespace MsieJavaScriptEngine
 		/// <typeparam name="T">Type of variable</typeparam>
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Value of variable</returns>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of return value
-		/// is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public T GetVariableValue<T>(string variableName)
 		{
 			VerifyNotDisposed();
 
+			if (variableName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(variableName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(variableName))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(variableName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(variableName)),
+					nameof(variableName)
+				);
+			}
+
+			if (!ValidationHelpers.CheckNameFormat(variableName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidVariableNameFormat, variableName),
+					nameof(variableName)
+				);
 			}
 
 			Type returnValueType = typeof(T);
 			if (!ValidationHelpers.IsSupportedType(returnValueType))
 			{
-				throw new NotSupportedTypeException(
-					string.Format(CommonStrings.Runtime_ReturnValueTypeNotSupported, returnValueType.FullName));
-			}
-
-			if (!ValidationHelpers.CheckNameFormat(variableName))
-			{
-				throw new FormatException(
-					string.Format(CommonStrings.Runtime_InvalidVariableNameFormat, variableName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_ReturnValueTypeNotSupported, returnValueType.FullName),
+					nameof(T)
+				);
 			}
 
 			object result = _jsEngine.GetVariableValue(variableName);
@@ -670,27 +887,37 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		/// <param name="value">Value of variable</param>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.NotSupportedTypeException">The type of variable value
-		/// is not supported.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public void SetVariableValue(string variableName, object value)
 		{
 			VerifyNotDisposed();
 
+			if (variableName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(variableName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(variableName))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(variableName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(variableName)),
+					nameof(variableName)
+				);
 			}
 
 			if (!ValidationHelpers.CheckNameFormat(variableName))
 			{
-				throw new FormatException(
-					string.Format(CommonStrings.Runtime_InvalidVariableNameFormat, variableName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidVariableNameFormat, variableName),
+					nameof(variableName)
+				);
 			}
 
 			if (value != null)
@@ -699,9 +926,11 @@ namespace MsieJavaScriptEngine
 
 				if (!ValidationHelpers.IsSupportedType(variableType))
 				{
-					throw new NotSupportedTypeException(
-						string.Format(CommonStrings.Runtime_VariableTypeNotSupported,
-							variableName, variableType.FullName));
+					throw new ArgumentException(
+						string.Format(CommonStrings.Usage_VariableTypeNotSupported,
+							variableName, variableType.FullName),
+						nameof(value)
+					);
 				}
 			}
 
@@ -712,25 +941,37 @@ namespace MsieJavaScriptEngine
 		/// Removes a variable
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
-		/// <exception cref="System.ObjectDisposedException">Operation is performed on a disposed MSIE
-		/// JS engine.</exception>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.FormatException">The variable name has incorrect format.</exception>
-		/// <exception cref="MsieJavaScriptEngine.JsRuntimeException">JS runtime error.</exception>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
 		public void RemoveVariable(string variableName)
 		{
 			VerifyNotDisposed();
 
+			if (variableName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(variableName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(variableName))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(variableName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "variableName"), "variableName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(variableName)),
+					nameof(variableName)
+				);
 			}
 
 			if (!ValidationHelpers.CheckNameFormat(variableName))
 			{
-				throw new FormatException(
-					string.Format(CommonStrings.Runtime_InvalidVariableNameFormat, variableName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidVariableNameFormat, variableName),
+					nameof(variableName)
+				);
 			}
 
 			_jsEngine.RemoveVariable(variableName);
@@ -742,36 +983,55 @@ namespace MsieJavaScriptEngine
 		/// <param name="itemName">The name for the new global variable or function that will represent the object</param>
 		/// <param name="value">The object to expose</param>
 		/// <remarks>Allows to embed instances of simple classes (or structures) and delegates.</remarks>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsException"/>
 		public void EmbedHostObject(string itemName, object value)
 		{
 			VerifyNotDisposed();
 
+			if (itemName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(itemName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(itemName))
+				);
+			}
+
+			if (value == null)
+			{
+				throw new ArgumentNullException(
+					nameof(value),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(value))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(itemName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "itemName"), "itemName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(itemName)),
+					nameof(itemName)
+				);
 			}
 
 			if (!ValidationHelpers.CheckNameFormat(itemName))
 			{
-				throw new FormatException(
-					string.Format(CommonStrings.Runtime_InvalidScriptItemNameFormat, itemName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidScriptItemNameFormat, itemName),
+					nameof(itemName)
+				);
 			}
 
-			if (value != null)
-			{
-				Type itemType = value.GetType();
+			Type itemType = value.GetType();
 
-				if (ValidationHelpers.IsPrimitiveType(itemType)
-					|| itemType == typeof (Undefined))
-				{
-					throw new NotSupportedTypeException(
-						string.Format(CommonStrings.Runtime_EmbeddedHostObjectTypeNotSupported, itemName, itemType.FullName));
-				}
-			}
-			else
+			if (ValidationHelpers.IsPrimitiveType(itemType) || itemType == typeof(Undefined))
 			{
-				throw new ArgumentNullException("value", string.Format(CommonStrings.Common_ArgumentIsNull, "value"));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_EmbeddedHostObjectTypeNotSupported,
+						itemName, itemType.FullName),
+					nameof(value)
+				);
 			}
 
 			_jsEngine.EmbedHostObject(itemName, value);
@@ -786,34 +1046,52 @@ namespace MsieJavaScriptEngine
 		/// Host types are exposed to script code in the form of objects whose properties and
 		/// methods are bound to the type's static members.
 		/// </remarks>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsException"/>
 		public void EmbedHostType(string itemName, Type type)
 		{
 			VerifyNotDisposed();
 
+			if (itemName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(itemName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(itemName))
+				);
+			}
+
+			if (type == null)
+			{
+				throw new ArgumentNullException(
+					nameof(type),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(type))
+				);
+			}
+
 			if (string.IsNullOrWhiteSpace(itemName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "itemName"), "itemName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(itemName)),
+					nameof(itemName)
+				);
 			}
 
 			if (!ValidationHelpers.CheckNameFormat(itemName))
 			{
-				throw new FormatException(
-					string.Format(CommonStrings.Runtime_InvalidScriptItemNameFormat, itemName));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidScriptItemNameFormat, itemName),
+					nameof(itemName)
+				);
 			}
 
-			if (type != null)
+			if (ValidationHelpers.IsPrimitiveType(type) || type == typeof(Undefined))
 			{
-				if (ValidationHelpers.IsPrimitiveType(type)
-					|| type == typeof(Undefined))
-				{
-					throw new NotSupportedTypeException(
-						string.Format(CommonStrings.Runtime_EmbeddedHostTypeNotSupported, type.FullName));
-				}
-			}
-			else
-			{
-				throw new ArgumentNullException("type", string.Format(CommonStrings.Common_ArgumentIsNull, "type"));
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_EmbeddedHostTypeNotSupported, type.FullName),
+					nameof(type)
+				);
 			}
 
 			_jsEngine.EmbedHostType(itemName, type);

@@ -129,14 +129,38 @@
   <data name="Common_FileNotExist" xml:space="preserve">
     <value>Файл "{0}" не существует!</value>
   </data>
+  <data name="Common_ResourceIsNull" xml:space="preserve">
+    <value>Ресурс с именем "{0}" содержит значение равное null!</value>
+  </data>
   <data name="Common_ValueTypeCannotBeNull" xml:space="preserve">
     <value>Невозможно преобразовать null в значимый тип!</value>
+  </data>
+  <data name="Engine_EdgeJsEngineNotLoaded" xml:space="preserve">
+    <value>Не удалось загрузить Chakra Edge JsRT JavaScript-движок! Попробуйте установить  Windows 10 с веб-браузером Edge.
+Смотрите более подробную информацию об ошибке:
+
+{0}</value>
+  </data>
+  <data name="Engine_IeJsEngineNotLoaded" xml:space="preserve">
+    <value>Не удалось загрузить {0} JavaScript-движок! Попробуйте установить  Internet Explorer {1} или выше.
+Смотрите более подробную информацию об ошибке:
+
+{2}</value>
+  </data>
+  <data name="ErrorDetails_CallStack" xml:space="preserve">
+    <value>Стек вызовов</value>
   </data>
   <data name="ErrorDetails_Category" xml:space="preserve">
     <value>Категория</value>
   </data>
   <data name="ErrorDetails_ColumnNumber" xml:space="preserve">
     <value>Номер столбца</value>
+  </data>
+  <data name="ErrorDetails_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="ErrorDetails_DocumentName" xml:space="preserve">
+    <value>Имя документа</value>
   </data>
   <data name="ErrorDetails_EngineMode" xml:space="preserve">
     <value>Режим движка</value>
@@ -153,58 +177,64 @@
   <data name="ErrorDetails_SourceFragment" xml:space="preserve">
     <value>Фрагмент исходного кода</value>
   </data>
-  <data name="Resources_ResourceIsNull" xml:space="preserve">
-    <value>Ресурс с именем "{0}" содержит значение равное null!</value>
-  </data>
-  <data name="Runtime_EdgeJsEngineNotLoaded" xml:space="preserve">
-    <value>Не удалось загрузить Chakra Edge JsRT JavaScript-движок! Попробуйте установить  Windows 10 с веб-браузером Edge.
-Смотрите более подробную информацию об ошибке:
-
-{0}</value>
-  </data>
-  <data name="Runtime_EmbeddedHostObjectTypeNotSupported" xml:space="preserve">
-    <value>Встраиваемый объекта хоста "{0}" имеет тип `{1}`, который не поддерживается!</value>
-  </data>
-  <data name="Runtime_EmbeddedHostTypeNotSupported" xml:space="preserve">
-    <value>Встраиваемый тип хоста `{0}` не поддерживается!</value>
+  <data name="ErrorDetails_Type" xml:space="preserve">
+    <value>Тип</value>
   </data>
   <data name="Runtime_FunctionNotExist" xml:space="preserve">
     <value>Функция с именем "{0}" не существует!</value>
   </data>
-  <data name="Runtime_FunctionParameterTypeNotSupported" xml:space="preserve">
-    <value>Один из параметров функции "{0}" имеет тип `{1}`, который не поддерживается!</value>
-  </data>
-  <data name="Runtime_IeJsEngineNotLoaded" xml:space="preserve">
-    <value>Не удалось загрузить {0} JavaScript-движок! Попробуйте установить  Internet Explorer {1} или выше.
-Смотрите более подробную информацию об ошибке:
-
-{2}</value>
-  </data>
-  <data name="Runtime_InvalidFunctionNameFormat" xml:space="preserve">
-    <value>Имя функции "{0}" имеет некорректный формат!</value>
-  </data>
-  <data name="Runtime_InvalidScriptItemNameFormat" xml:space="preserve">
-    <value>Имя скриптового элемента "{0}" имеет некорректный формат!</value>
-  </data>
-  <data name="Runtime_InvalidVariableNameFormat" xml:space="preserve">
-    <value>Имя переменной "{0}" имеет некорректный формат!</value>
-  </data>
-  <data name="Runtime_JsEngineModeNotSupported" xml:space="preserve">
-    <value>Выбранный вами режим JavaScript-движка "{0}" не поддерживается!</value>
-  </data>
-  <data name="Runtime_JsEnginesConflictInProcess" xml:space="preserve">
-    <value>Нельзя использовать {0} и {1} движки в одном процессе.</value>
-  </data>
-  <data name="Runtime_JsEnginesConflictOnMachine" xml:space="preserve">
-    <value>Нельзя использовать Chakra JsRT и Chakra ActiveScript движки на одном компьютере одновременно.</value>
-  </data>
-  <data name="Runtime_ReturnValueTypeNotSupported" xml:space="preserve">
-    <value>Тип возвращаемого значения `{0}` не поддерживается!</value>
+  <data name="Runtime_InvalidCallStackLineFormat" xml:space="preserve">
+    <value>Строка стека вызовов скрипта "{0}" имеет некорректный формат!</value>
   </data>
   <data name="Runtime_ScriptInterrupted" xml:space="preserve">
     <value>Выполнение скрипта было прервано!</value>
   </data>
-  <data name="Runtime_VariableTypeNotSupported" xml:space="preserve">
+  <data name="Usage_CannotExecuteEmptyFile" xml:space="preserve">
+    <value>Нельзя выполнить файл "{0}", потому что он пустой!</value>
+  </data>
+  <data name="Usage_CannotExecuteEmptyResource" xml:space="preserve">
+    <value>Нельзя выполнить ресурс "{0}", потому что он пустой!</value>
+  </data>
+  <data name="Usage_EmbeddedHostObjectTypeNotSupported" xml:space="preserve">
+    <value>Встраиваемый объекта хоста "{0}" имеет тип `{1}`, который не поддерживается!</value>
+  </data>
+  <data name="Usage_EmbeddedHostTypeNotSupported" xml:space="preserve">
+    <value>Встраиваемый тип хоста `{0}` не поддерживается!</value>
+  </data>
+  <data name="Usage_FunctionParameterTypeNotSupported" xml:space="preserve">
+    <value>Один из параметров функции "{0}" имеет тип `{1}`, который не поддерживается!</value>
+  </data>
+  <data name="Usage_InvalidDocumentNameFormat" xml:space="preserve">
+    <value>Имя документа "{0}" имеет некорректный формат!</value>
+  </data>
+  <data name="Usage_InvalidFileNameFormat" xml:space="preserve">
+    <value>Имя файла "{0}" имеет некорректный формат!</value>
+  </data>
+  <data name="Usage_InvalidFunctionNameFormat" xml:space="preserve">
+    <value>Имя функции "{0}" имеет некорректный формат!</value>
+  </data>
+  <data name="Usage_InvalidResourceNameFormat" xml:space="preserve">
+    <value>Имя ресурса "{0}" имеет некорректный формат!</value>
+  </data>
+  <data name="Usage_InvalidScriptItemNameFormat" xml:space="preserve">
+    <value>Имя скриптового элемента "{0}" имеет некорректный формат!</value>
+  </data>
+  <data name="Usage_InvalidVariableNameFormat" xml:space="preserve">
+    <value>Имя переменной "{0}" имеет некорректный формат!</value>
+  </data>
+  <data name="Usage_JsEngineModeNotSupported" xml:space="preserve">
+    <value>Выбранный вами режим JavaScript-движка "{0}" не поддерживается!</value>
+  </data>
+  <data name="Usage_JsEnginesConflictInProcess" xml:space="preserve">
+    <value>Нельзя использовать {0} и {1} движки в одном процессе.</value>
+  </data>
+  <data name="Usage_JsEnginesConflictOnMachine" xml:space="preserve">
+    <value>Нельзя использовать Chakra JsRT и Chakra ActiveScript движки на одном компьютере одновременно.</value>
+  </data>
+  <data name="Usage_ReturnValueTypeNotSupported" xml:space="preserve">
+    <value>Тип возвращаемого значения `{0}` не поддерживается!</value>
+  </data>
+  <data name="Usage_VariableTypeNotSupported" xml:space="preserve">
     <value>Переменная "{0}" имеет тип `{1}`, который не поддерживается!</value>
   </data>
 </root>

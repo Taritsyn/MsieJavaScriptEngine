@@ -1,5 +1,6 @@
 ﻿#if !NETSTANDARD
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 using MsieJavaScriptEngine.Constants;
@@ -35,6 +36,45 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		private static object _supportSynchronizer = new object();
 
+		/// <summary>
+		/// Mapping of error numbers and types
+		/// </summary>
+		private static readonly Dictionary<int, string> _runtimeErrorTypeMap = new Dictionary<int, string>
+		{
+			{ JScriptRuntimeErrorNumber.OutOfStackSpace, JsErrorType.Common },
+			{ JScriptRuntimeErrorNumber.CannotAssignToThisKeyword, JsErrorType.Reference },
+			{ JScriptRuntimeErrorNumber.NumberExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.FunctionExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.CannotAssignToFunctionResult, JsErrorType.Reference },
+			{ JScriptRuntimeErrorNumber.StringExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.DateObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.ObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.IllegalAssignment, JsErrorType.Reference },
+			{ JScriptRuntimeErrorNumber.UndefinedIdentifier, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.BooleanExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.ObjectMemberExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.VbArrayExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.JavaScriptObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.EnumeratorObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.RegularExpressionObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.SyntaxErrorInRegularExpression, JsErrorType.RegExp },
+			{ JScriptRuntimeErrorNumber.UnexpectedQuantifier, JsErrorType.RegExp },
+			{ JScriptRuntimeErrorNumber.ExpectedRightSquareBracketInRegularExpression, JsErrorType.RegExp },
+			{ JScriptRuntimeErrorNumber.ExpectedRightParenthesisInRegularExpression, JsErrorType.RegExp },
+			{ JScriptRuntimeErrorNumber.InvalidRangeInCharacterSet, JsErrorType.RegExp },
+			{ JScriptRuntimeErrorNumber.ExceptionThrownAndNotCaught, string.Empty },
+			{ JScriptRuntimeErrorNumber.FunctionDoesNotHaveValidPrototypeObject, string.Empty },
+			{ JScriptRuntimeErrorNumber.UriToBeEncodedContainsInvalidCharacter, JsErrorType.URI },
+			{ JScriptRuntimeErrorNumber.UriToBeDecodedIsNotValidEncoding, JsErrorType.URI },
+			{ JScriptRuntimeErrorNumber.NumberOfFractionalDigitsIsOutOfRange, JsErrorType.Range },
+			{ JScriptRuntimeErrorNumber.PrecisionOutOfRange, JsErrorType.Range },
+			{ JScriptRuntimeErrorNumber.ArrayOrArgumentsObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.ArrayLengthMustBeFinitePositiveInteger, JsErrorType.Range },
+			{ JScriptRuntimeErrorNumber.ArrayLengthMustBeAssignedFinitePositiveNumber, JsErrorType.Range },
+			{ JScriptRuntimeErrorNumber.CircularReferenceInValueArgumentNotSupported, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.InvalidReplacerArgument, string.Empty }
+		};
+
 
 		/// <summary>
 		/// Constructs an instance of the Classic Active Script engine
@@ -56,6 +96,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 			bool isSupported = IsSupported(ClassId.Classic, ref _isSupported, ref _supportSynchronizer);
 
 			return isSupported;
+		}
+
+		/// <summary>
+		/// Gets a error type by number
+		/// </summary>
+		/// <param name="errorNumber">Error number</param>
+		/// <returns>Error type</returns>
+		protected override string GetErrorTypeByNumber(int errorNumber)
+		{
+			return ActiveScriptJsErrorHelpers.GetErrorTypeByNumber(errorNumber, _runtimeErrorTypeMap);
 		}
 
 		/// <summary>
@@ -88,19 +138,25 @@ namespace MsieJavaScriptEngine.ActiveScript
 			if (resourceName == null)
 			{
 				throw new ArgumentNullException(
-					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
+					nameof(resourceName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(resourceName))
+				);
 			}
 
 			if (assembly == null)
 			{
 				throw new ArgumentNullException(
-					"assembly", string.Format(CommonStrings.Common_ArgumentIsNull, "assembly"));
+					nameof(assembly),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(assembly))
+				);
 			}
 
 			if (string.IsNullOrWhiteSpace(resourceName))
 			{
 				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(resourceName)),
+					nameof(resourceName)
+				);
 			}
 
 			string code = Utils.GetResourceAsString(resourceName, assembly);

@@ -1,4 +1,6 @@
 ﻿#if !NETSTANDARD
+using System.Collections.Generic;
+
 using MsieJavaScriptEngine.Constants;
 
 namespace MsieJavaScriptEngine.ActiveScript
@@ -17,6 +19,45 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Support synchronizer
 		/// </summary>
 		private static object _supportSynchronizer = new object();
+
+		/// <summary>
+		/// Mapping of error numbers and types
+		/// </summary>
+		private static readonly Dictionary<int, string> _runtimeErrorTypeMap = new Dictionary<int, string>
+		{
+			{ JScriptRuntimeErrorNumber.OutOfStackSpace, JsErrorType.Common },
+			{ JScriptRuntimeErrorNumber.CannotAssignToThisKeyword, JsErrorType.Reference },
+			{ JScriptRuntimeErrorNumber.NumberExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.FunctionExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.CannotAssignToFunctionResult, JsErrorType.Reference },
+			{ JScriptRuntimeErrorNumber.StringExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.DateObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.ObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.IllegalAssignment, string.Empty },
+			{ JScriptRuntimeErrorNumber.UndefinedIdentifier, JsErrorType.Reference },
+			{ JScriptRuntimeErrorNumber.BooleanExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.ObjectMemberExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.VbArrayExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.JavaScriptObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.EnumeratorObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.RegularExpressionObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.SyntaxErrorInRegularExpression, JsErrorType.Syntax },
+			{ JScriptRuntimeErrorNumber.UnexpectedQuantifier, JsErrorType.Syntax },
+			{ JScriptRuntimeErrorNumber.ExpectedRightSquareBracketInRegularExpression, JsErrorType.Syntax },
+			{ JScriptRuntimeErrorNumber.ExpectedRightParenthesisInRegularExpression, JsErrorType.Syntax },
+			{ JScriptRuntimeErrorNumber.InvalidRangeInCharacterSet, JsErrorType.Syntax },
+			{ JScriptRuntimeErrorNumber.ExceptionThrownAndNotCaught, string.Empty },
+			{ JScriptRuntimeErrorNumber.FunctionDoesNotHaveValidPrototypeObject, string.Empty },
+			{ JScriptRuntimeErrorNumber.UriToBeEncodedContainsInvalidCharacter, JsErrorType.URI },
+			{ JScriptRuntimeErrorNumber.UriToBeDecodedIsNotValidEncoding, JsErrorType.URI },
+			{ JScriptRuntimeErrorNumber.NumberOfFractionalDigitsIsOutOfRange, JsErrorType.Range },
+			{ JScriptRuntimeErrorNumber.PrecisionOutOfRange, JsErrorType.Range },
+			{ JScriptRuntimeErrorNumber.ArrayOrArgumentsObjectExpected, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.ArrayLengthMustBeFinitePositiveInteger, JsErrorType.Range },
+			{ JScriptRuntimeErrorNumber.ArrayLengthMustBeAssignedFinitePositiveNumber, JsErrorType.Range },
+			{ JScriptRuntimeErrorNumber.CircularReferenceInValueArgumentNotSupported, JsErrorType.Type },
+			{ JScriptRuntimeErrorNumber.InvalidReplacerArgument, string.Empty }
+		};
 
 
 		/// <summary>
@@ -56,6 +97,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 		protected override void InitScriptContext()
 		{
 			_interruptRequested = false;
+		}
+
+		/// <summary>
+		/// Gets a error type by number
+		/// </summary>
+		/// <param name="errorNumber">Error number</param>
+		/// <returns>Error type</returns>
+		protected override string GetErrorTypeByNumber(int errorNumber)
+		{
+			return ActiveScriptJsErrorHelpers.GetErrorTypeByNumber(errorNumber, _runtimeErrorTypeMap);
 		}
 
 		protected override void InnerRemoveVariable(string variableName)

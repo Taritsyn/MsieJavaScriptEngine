@@ -5,7 +5,7 @@
 
    --------------------------------------------------------------------------------
 
-           Copyright (c) 2012-2017 Andrey Taritsyn - http://www.taritsyn.ru
+           Copyright (c) 2012-2018 Andrey Taritsyn - http://www.taritsyn.ru
 
 
    ===========
@@ -21,12 +21,23 @@
    =============
    RELEASE NOTES
    =============
-   1. Added support of .NET Standard 2.0;
-   2. Fixed a error, that occurred in the `Classic` mode during removing the
-      embedded host objects and types;
-   3. Removed a redundant code;
-   4. In JsRT modes during calling of the `CollectGarbage` method is no longer
-      performed blocking.
+   1. Format of the error messages was unified;
+   2. Created a new exception classes: `JsCompilationException`,
+      `JsEngineException`, `JsFatalException` and `JsUsageException`. These
+      exceptions are responsible for handling errors, some of which were previously
+      handled by the `JsRuntimeException` class;
+   3. In the `JsException` class was added two new properties: `Category` and
+      `Description`;
+   4. From the `JsRuntimeException` class was removed one property - `ErrorCode`;
+   5. In the `JsRuntimeException` class was added three new properties: `Type`,
+      `DocumentName` and `CallStack`;
+   6. `JsScriptInterruptedException` class was renamed to the
+      `JsInterruptedException` class and now is inherited from the
+      `JsRuntimeException` class;
+   7. `JsEngineLoadException` class now is inherited from the `JsEngineException`
+      class;
+   8. `Format` method of the `JsErrorHelpers` class was renamed to the
+      `GenerateErrorDetails`.
 
    ============
    PROJECT SITE

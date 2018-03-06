@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace MsieJavaScriptEngine.JsRt
 {
 	/// <summary>
-	/// The exception that occurred in the workings of the JavaScript engine itself
+	/// The exception that occurred in the workings of the JS engine itself
 	/// </summary>
 #if !NETSTANDARD1_3
 	[Serializable]

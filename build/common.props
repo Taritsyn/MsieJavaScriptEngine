@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<Copyright>Copyright © 2012-2017 Andrey Taritsyn</Copyright>
+		<Copyright>Copyright © 2012-2018 Andrey Taritsyn</Copyright>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'net451' ">

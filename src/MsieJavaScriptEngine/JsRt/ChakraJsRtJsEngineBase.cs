@@ -3,10 +3,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 #endif
-using System.Text;
-using System.Text.RegularExpressions;
-
-using MsieJavaScriptEngine.Helpers;
 
 namespace MsieJavaScriptEngine.JsRt
 {
@@ -15,13 +11,6 @@ namespace MsieJavaScriptEngine.JsRt
 	/// </summary>
 	internal abstract class ChakraJsRtJsEngineBase : InnerJsEngineBase
 	{
-		/// <summary>
-		/// Regular expression for working with the string representation of error
-		/// </summary>
-		private static readonly Regex _errorStringRegex =
-			new Regex(@"[ ]{3,5}at (?:[A-Za-z_\$][0-9A-Za-z_\$ ]* )?" +
-				@"\([^\s*?""<>|][^\t\n\r*?""<>|]*?:(?<lineNumber>\d+):(?<columnNumber>\d+)\)");
-
 		/// <summary>
 		/// JS source context
 		/// </summary>
@@ -62,60 +51,6 @@ namespace MsieJavaScriptEngine.JsRt
 #endif
 		}
 
-
-		/// <summary>
-		/// Generates a error message with location
-		/// </summary>
-		/// <param name="category">Error category</param>
-		/// <param name="message">Error message</param>
-		/// <param name="lineNumber">Line number</param>
-		/// <param name="columnNumber">Column number</param>
-		/// <returns>Error message with location</returns>
-		protected static string GenerateErrorMessageWithLocation(string category, string message,
-			int lineNumber, int columnNumber)
-		{
-			var messageBuilder = new StringBuilder();
-			if (!string.IsNullOrWhiteSpace(category))
-			{
-				messageBuilder.AppendFormat("{0}: ", category);
-			}
-			messageBuilder.Append(message);
-			if (lineNumber > 0)
-			{
-				messageBuilder.AppendLine();
-				JsErrorHelpers.WriteErrorLocation(messageBuilder, lineNumber, columnNumber);
-			}
-
-			string errorMessage = messageBuilder.ToString();
-			messageBuilder.Clear();
-
-			return errorMessage;
-		}
-
-		/// <summary>
-		/// Gets a error coordinates from message
-		/// </summary>
-		/// <param name="message">Error message</param>
-		/// <param name="lineNumber">Line number</param>
-		/// <param name="columnNumber">Column number</param>
-		protected static void GetErrorCoordinatesFromMessage(string message, out int lineNumber,
-			out int columnNumber)
-		{
-			lineNumber = 0;
-			columnNumber = 0;
-
-			if (!string.IsNullOrWhiteSpace(message))
-			{
-				Match errorStringMatch = _errorStringRegex.Match(message);
-				if (errorStringMatch.Success)
-				{
-					GroupCollection errorStringGroups = errorStringMatch.Groups;
-
-					lineNumber = int.Parse(errorStringGroups["lineNumber"].Value);
-					columnNumber = int.Parse(errorStringGroups["columnNumber"].Value);
-				}
-			}
-		}
 
 		/// <summary>
 		/// Starts debugging

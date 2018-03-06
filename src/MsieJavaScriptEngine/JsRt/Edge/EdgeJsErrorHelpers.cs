@@ -83,18 +83,6 @@
 					#region Script
 
 					case JsErrorCode.ScriptException:
-						{
-							EdgeJsValue errorObject;
-							JsErrorCode innerError = EdgeNativeMethods.JsGetAndClearException(out errorObject);
-
-							if (innerError != JsErrorCode.NoError)
-							{
-								throw new JsFatalException(innerError);
-							}
-
-							throw new EdgeJsScriptException(error, errorObject, "Script threw an exception.");
-						}
-
 					case JsErrorCode.ScriptCompile:
 						{
 							EdgeJsValue errorObject;
@@ -105,7 +93,10 @@
 								throw new JsFatalException(innerError);
 							}
 
-							throw new EdgeJsScriptException(error, errorObject, "Compile error.");
+							string message = error == JsErrorCode.ScriptCompile ?
+								"Compile error." : "Script threw an exception.";
+
+							throw new EdgeJsScriptException(error, errorObject, message);
 						}
 
 					case JsErrorCode.ScriptTerminated:

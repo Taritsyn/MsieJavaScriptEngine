@@ -117,17 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Runtime_ActiveScriptDispatcherNotInitialized" xml:space="preserve">
+  <data name="Engine_ActiveScriptDispatcherNotInitialized" xml:space="preserve">
     <value>ActiveScript dispatcher is not initialized.</value>
   </data>
-  <data name="Runtime_ActiveScriptLanguageVersionSelectionFailed" xml:space="preserve">
+  <data name="Engine_ActiveScriptLanguageVersionSelectionFailed" xml:space="preserve">
     <value>Failed to set '{0}' version of script language for the ActiveScript JavaScript engine.</value>
+  </data>
+  <data name="Engine_JsEnginesNotFound" xml:space="preserve">
+    <value>Could not found none of the JavaScript engines. Perhaps you have not installed the Internet Explorer browser.</value>
   </data>
   <data name="Runtime_ItemNotFound" xml:space="preserve">
     <value>Item with name '{0}' not found.</value>
-  </data>
-  <data name="Runtime_JsEnginesNotFound" xml:space="preserve">
-    <value>Could not found none of the JavaScript engines. Perhaps you have not installed the Internet Explorer browser.</value>
   </data>
   <data name="Runtime_VariableNotExist" xml:space="preserve">
     <value>The variable with the name '{0}' does not exist.</value>

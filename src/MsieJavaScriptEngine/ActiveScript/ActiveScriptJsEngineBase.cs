@@ -65,6 +65,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private bool _debuggingStarted;
 
 		/// <summary>
+		/// List of document names
+		/// </summary>
+		private readonly Dictionary<UIntPtr, string> _documentNames =
+			new Dictionary<UIntPtr, string>();
+
+		/// <summary>
 		/// List of debug documents
 		/// </summary>
 		private readonly Dictionary<UIntPtr, DebugDocument> _debugDocuments =
@@ -106,11 +112,18 @@ namespace MsieJavaScriptEngine.ActiveScript
 				{
 					_activeScriptWrapper = CreateActiveScriptWrapper(clsid, languageVersion);
 				}
-				catch (Exception e)
+				catch (COMException e)
 				{
-					throw new JsEngineLoadException(
-						string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
-							_engineModeName, lowerIeVersion, e.Message), _engineModeName);
+					if (e.ErrorCode == ComErrorCode.E_CLASS_NOT_REGISTERED)
+					{
+						throw new JsEngineLoadException(
+							string.Format(CommonStrings.Engine_IeJsEngineNotLoaded,
+								_engineModeName, lowerIeVersion, e.Message),
+							_engineModeName
+						);
+					}
+
+					throw;
 				}
 
 				if (_settings.EnableDebugging)
@@ -199,11 +212,13 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			if (Utils.Is64BitProcess())
 			{
-				activeScriptWrapper = new ActiveScriptWrapper64(clsid, languageVersion, _settings.EnableDebugging);
+				activeScriptWrapper = new ActiveScriptWrapper64(_engineModeName, clsid, languageVersion,
+					_settings.EnableDebugging);
 			}
 			else
 			{
-				activeScriptWrapper = new ActiveScriptWrapper32(clsid, languageVersion, _settings.EnableDebugging);
+				activeScriptWrapper = new ActiveScriptWrapper32(_engineModeName, clsid, languageVersion,
+					_settings.EnableDebugging);
 			}
 
 			return activeScriptWrapper;
@@ -255,7 +270,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			if (dispatch == null)
 			{
-				throw new InvalidOperationException(NetFrameworkStrings.Runtime_ActiveScriptDispatcherNotInitialized);
+				throw new JsEngineLoadException(
+					NetFrameworkStrings.Engine_ActiveScriptDispatcherNotInitialized,
+					_engineModeName
+				);
 			}
 
 			_dispatch = dispatch;
@@ -290,6 +308,13 @@ namespace MsieJavaScriptEngine.ActiveScript
 		}
 
 		/// <summary>
+		/// Gets a error type by number
+		/// </summary>
+		/// <param name="errorNumber">Error number</param>
+		/// <returns>Error type</returns>
+		protected abstract string GetErrorTypeByNumber(int errorNumber);
+
+		/// <summary>
 		/// Executes a script text
 		/// </summary>
 		/// <param name="code">Script text</param>
@@ -300,9 +325,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			object result;
 			DebugDocument debugDocument;
-			UIntPtr sourceContext = CreateDebugDocument(documentName, code, out debugDocument);
+			UIntPtr sourceContext;
 			ScriptTextFlags flags = isExpression ? ScriptTextFlags.IsExpression : ScriptTextFlags.IsVisible;
-			if (sourceContext != UIntPtr.Zero)
+
+			if (TryCreateDebugDocument(documentName, code, out sourceContext, out debugDocument))
 			{
 				flags |= ScriptTextFlags.HostManagesSource;
 			}
@@ -324,30 +350,36 @@ namespace MsieJavaScriptEngine.ActiveScript
 		}
 
 		/// <summary>
-		/// Creates a debug document
+		/// Try create a debug document
 		/// </summary>
 		/// <param name="name">Document name</param>
 		/// <param name="code">Script text</param>
+		/// <param name="sourceContext">Application specific source context</param>
 		/// <param name="document">Debug document</param>
-		/// <returns>Source context</returns>
-		private UIntPtr CreateDebugDocument(string name, string code, out DebugDocument document)
+		/// <returns>Result of creating a debug document (true - is created; false - is not created)</returns>
+		private bool TryCreateDebugDocument(string name, string code, out UIntPtr sourceContext,
+			out DebugDocument document)
 		{
-			UIntPtr sourceContext;
-			if (!_debuggingStarted)
+			bool result;
+			sourceContext = new UIntPtr(_nextSourceContext++);
+			document = null;
+
+			if (_debuggingStarted)
 			{
-				sourceContext = UIntPtr.Zero;
-				document = null;
+				document = new DebugDocument(_activeScriptWrapper, _debugApplicationWrapper, sourceContext,
+					name, code);
+				_debugDocuments[sourceContext] = document;
+
+				result = true;
 			}
 			else
 			{
-				sourceContext = new UIntPtr(_nextSourceContext++);
-				document = new DebugDocument(_activeScriptWrapper, _debugApplicationWrapper, sourceContext,
-					name, code);
-
-				_debugDocuments[sourceContext] = document;
+				result = false;
 			}
 
-			return sourceContext;
+			_documentNames[sourceContext] = name;
+
+			return result;
 		}
 
 		/// <summary>
@@ -511,32 +543,52 @@ namespace MsieJavaScriptEngine.ActiveScript
 			return TypeMappingHelpers.MapToHostType(args);
 		}
 
-		private JsException ConvertScriptExceptionToHostException(
-			ActiveScriptException scriptException)
+		private JsException ConvertOriginalExceptionToWrapperException(
+			ActiveScriptException originalException)
 		{
-			JsException hostException;
-			int hResult = scriptException.ErrorCode;
+			JsException wrapperException;
+			string message = originalException.Message;
+			string category = originalException.Category;
 
-			if (hResult == ComErrorCode.E_ABORT)
+			switch (category)
 			{
-				hostException = new JsScriptInterruptedException(CommonStrings.Runtime_ScriptInterrupted,
-					_engineModeName, scriptException);
-			}
-			else
-			{
-				hostException = new JsRuntimeException(scriptException.Message, _engineModeName,
-					scriptException)
-				{
-					ErrorCode = hResult.ToString(CultureInfo.InvariantCulture),
-					Category = scriptException.Category,
-					LineNumber = (int)scriptException.LineNumber,
-					ColumnNumber = scriptException.ColumnNumber,
-					SourceFragment = scriptException.SourceFragment,
-					HelpLink = scriptException.HelpLink
-				};
+				case JsErrorCategory.Compilation:
+					wrapperException = new JsCompilationException(message, _engineModeName, originalException);
+					break;
+
+				case JsErrorCategory.Runtime:
+					wrapperException = new JsRuntimeException(message, _engineModeName, originalException)
+					{
+						CallStack = originalException.CallStack
+					};
+					break;
+
+				case JsErrorCategory.Interrupted:
+					wrapperException = new JsInterruptedException(message, _engineModeName, originalException);
+					break;
+
+				case JsErrorCategory.Engine:
+					wrapperException = new JsEngineException(message, _engineModeName, originalException);
+					break;
+
+				default:
+					wrapperException = new JsException(message, _engineModeName, originalException);
+					break;
 			}
 
-			return hostException;
+			wrapperException.Description = originalException.Description;
+
+			var wrapperScriptException = wrapperException as JsScriptException;
+			if (wrapperScriptException != null)
+			{
+				wrapperScriptException.Type = originalException.Type;
+				wrapperScriptException.DocumentName = originalException.DocumentName;
+				wrapperScriptException.LineNumber = (int)originalException.LineNumber;
+				wrapperScriptException.ColumnNumber = originalException.ColumnNumber;
+				wrapperScriptException.SourceFragment = originalException.SourceFragment;
+			}
+
+			return wrapperException;
 		}
 
 		/// <summary>
@@ -546,24 +598,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <returns>Short name of error category</returns>
 		private string ShortenErrorCategoryName(string categoryName)
 		{
-			if (categoryName == null)
-			{
-				throw new ArgumentNullException("categoryName");
-			}
-
-			string shortCategoryName = categoryName;
-			if (categoryName.StartsWith(_errorCategoryNamePrefix, StringComparison.Ordinal))
-			{
-				shortCategoryName = categoryName.Substring(_errorCategoryNamePrefix.Length);
-				if (shortCategoryName.Length > 0)
-				{
-					char[] chars = shortCategoryName.ToCharArray();
-					chars[0] = char.ToUpperInvariant(chars[0]);
-					shortCategoryName = new string(chars);
-				}
-			}
-
-			return shortCategoryName;
+			return ActiveScriptJsErrorHelpers.ShortenErrorItemName(categoryName, _errorCategoryNamePrefix);
 		}
 
 		#endregion
@@ -590,7 +625,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertScriptExceptionToHostException(e);
+					throw ConvertOriginalExceptionToWrapperException(e);
 				}
 			});
 
@@ -611,7 +646,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertScriptExceptionToHostException(e);
+					throw ConvertOriginalExceptionToWrapperException(e);
 				}
 			});
 		}
@@ -630,12 +665,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertScriptExceptionToHostException(e);
+					throw ConvertOriginalExceptionToWrapperException(e);
 				}
 				catch (MissingMemberException)
 				{
 					throw new JsRuntimeException(
-						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName));
+						string.Format(CommonStrings.Runtime_FunctionNotExist, functionName),
+						_engineModeName
+					);
 				}
 			});
 
@@ -659,7 +696,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertScriptExceptionToHostException(e);
+					throw ConvertOriginalExceptionToWrapperException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -684,12 +721,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertScriptExceptionToHostException(e);
+					throw ConvertOriginalExceptionToWrapperException(e);
 				}
 				catch (MissingMemberException)
 				{
 					throw new JsRuntimeException(
-						string.Format(NetFrameworkStrings.Runtime_VariableNotExist, variableName));
+						string.Format(NetFrameworkStrings.Runtime_VariableNotExist, variableName),
+						_engineModeName
+					);
 				}
 			});
 
@@ -712,7 +751,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertScriptExceptionToHostException(e);
+					throw ConvertOriginalExceptionToWrapperException(e);
 				}
 			});
 		}
@@ -729,7 +768,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertScriptExceptionToHostException(e);
+					throw ConvertOriginalExceptionToWrapperException(e);
 				}
 			});
 		}
@@ -748,7 +787,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertScriptExceptionToHostException(e);
+					throw ConvertOriginalExceptionToWrapperException(e);
 				}
 			});
 		}
@@ -767,7 +806,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertScriptExceptionToHostException(e);
+					throw ConvertOriginalExceptionToWrapperException(e);
 				}
 			});
 		}
@@ -825,6 +864,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 						}
 
 						_debugDocuments.Clear();
+					}
+
+					if (_documentNames != null)
+					{
+						_documentNames.Clear();
 					}
 
 					if (_processDebugManagerWrapper != null)

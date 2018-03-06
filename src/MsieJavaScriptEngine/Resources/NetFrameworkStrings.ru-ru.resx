@@ -117,17 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Runtime_ActiveScriptDispatcherNotInitialized" xml:space="preserve">
+  <data name="Engine_ActiveScriptDispatcherNotInitialized" xml:space="preserve">
     <value>ActiveScript-диспетчер не инициализирован!</value>
   </data>
-  <data name="Runtime_ActiveScriptLanguageVersionSelectionFailed" xml:space="preserve">
+  <data name="Engine_ActiveScriptLanguageVersionSelectionFailed" xml:space="preserve">
     <value>Не удалось установить "{0}" версию языка сценариев для ActiveScript JavaScript-движка!</value>
+  </data>
+  <data name="Engine_JsEnginesNotFound" xml:space="preserve">
+    <value>Не удалось найти ни один из JavaScript-движков! Возможно, на вашем компьютере не установлен браузер Internet Explorer.</value>
   </data>
   <data name="Runtime_ItemNotFound" xml:space="preserve">
     <value>Элемент с именем "{0}" не найден!</value>
-  </data>
-  <data name="Runtime_JsEnginesNotFound" xml:space="preserve">
-    <value>Не удалось найти ни один из JavaScript-движков! Возможно, на вашем компьютере не установлен браузер Internet Explorer.</value>
   </data>
   <data name="Runtime_VariableNotExist" xml:space="preserve">
     <value>Переменная с именем "{0}" не существует!</value>

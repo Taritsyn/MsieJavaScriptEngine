@@ -1,8 +1,8 @@
 ﻿#if !NETSTANDARD
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Text;
 
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
@@ -10,7 +10,6 @@ using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
-using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -85,54 +84,74 @@ namespace MsieJavaScriptEngine.ActiveScript
 				error.GetExceptionInfo(out exceptionInfo);
 
 				int hResult = exceptionInfo.scode;
-				bool isSyntaxError = IsSyntaxError(hResult);
-				string category;
-				string description;
+				string message = string.Empty;
+				string category = string.Empty;
+				string description = string.Empty;
+				string type = string.Empty;
+				string helpLink = string.Empty;
+				string documentName = string.Empty;
+				uint lineNumber = 0;
+				int columnNumber = 0;
+				string callStack = string.Empty;
+				string sourceFragment = string.Empty;
+
 				if (hResult == ComErrorCode.E_ABORT)
 				{
-					category = string.Empty;
+					category = JsErrorCategory.Interrupted;
 					description = CommonStrings.Runtime_ScriptInterrupted;
+					message = description;
 				}
 				else
 				{
-					category = _jsEngine.ShortenErrorCategoryName(exceptionInfo.bstrSource);
+					int errorNumber = ComHelpers.HResult.GetFacility(hResult) == ComErrorCode.FACILITY_CONTROL ?
+						ComHelpers.HResult.GetCode(hResult) : 0;
+					category = ActiveScriptJsErrorHelpers.IsEngineError(errorNumber) ?
+						JsErrorCategory.Engine : _jsEngine.ShortenErrorCategoryName(exceptionInfo.bstrSource);
 					description = exceptionInfo.bstrDescription;
+					type = _jsEngine.GetErrorTypeByNumber(errorNumber);
+
+					if (!string.IsNullOrWhiteSpace(exceptionInfo.bstrHelpFile))
+					{
+						helpLink = exceptionInfo.dwHelpContext != 0 ?
+							string.Format("{0}: {1}", exceptionInfo.bstrHelpFile, exceptionInfo.dwHelpContext)
+							:
+							exceptionInfo.bstrHelpFile
+							;
+					}
+
+					uint sourceContext = 0;
+					error.GetSourcePosition(out sourceContext, out lineNumber, out columnNumber);
+					++lineNumber;
+					++columnNumber;
+
+					documentName = GetDocumentName(sourceContext);
+
+					if (ActiveScriptJsErrorHelpers.IsCompilationError(errorNumber))
+					{
+						string sourceLine;
+						error.GetSourceLineText(out sourceLine);
+
+						sourceFragment = JsErrorHelpers.GetSourceFragment(sourceLine, columnNumber);
+					}
+					else
+					{
+						callStack = JsErrorHelpers.StringifyCallStackItems(GetCallStackItems());
+					}
+
+					message = JsErrorHelpers.GenerateErrorMessage(type, description, documentName,
+						(int)lineNumber, columnNumber, sourceFragment, callStack);
 				}
-				string helpLink = string.Empty;
-				if (!string.IsNullOrWhiteSpace(exceptionInfo.bstrHelpFile))
-				{
-					helpLink = exceptionInfo.dwHelpContext != 0 ?
-						string.Format("{0}: {1}", exceptionInfo.bstrHelpFile, exceptionInfo.dwHelpContext)
-						:
-						exceptionInfo.bstrHelpFile
-						;
-				}
-
-				uint sourceContext;
-				uint lineNumber;
-				int columnNumber;
-
-				error.GetSourcePosition(out sourceContext, out lineNumber, out columnNumber);
-				++lineNumber;
-				++columnNumber;
-
-				string sourceFragment = string.Empty;
-				if (isSyntaxError)
-				{
-					error.GetSourceLineText(out sourceFragment);
-				}
-
-				string message = GetErrorDetails(category, description, isSyntaxError, sourceContext,
-					lineNumber, columnNumber);
 
 				var activeScriptException = new ActiveScriptException(message)
 				{
 					ErrorCode = hResult,
+					Type = type,
 					Category = category,
 					Description = description,
-					SourceContext = sourceContext,
+					DocumentName = documentName,
 					LineNumber = lineNumber,
 					ColumnNumber = columnNumber,
+					CallStack = callStack,
 					SourceFragment = sourceFragment,
 					HelpLink = helpLink
 				};
@@ -141,132 +160,35 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 
 			/// <summary>
-			/// Checks whether the specified HRESULT value is syntax error
+			/// Gets a document name
 			/// </summary>
-			/// <param name="hResult">The HRESULT value</param>
-			/// <returns>Result of check (true - is syntax error; false - is not syntax error)</returns>
-			private static bool IsSyntaxError(int hResult)
-			{
-				bool isSyntaxError = false;
-
-				if (ComHelpers.HResult.GetFacility(hResult) == ComErrorCode.FACILITY_CONTROL)
-				{
-					int errorNumber = ComHelpers.HResult.GetCode(hResult);
-					isSyntaxError = errorNumber >= (int)JsErrorNumber.SyntaxError
-						&& errorNumber <= (int)JsErrorNumber.ThrowMustBeFollowedByExpressionOnSameSourceLine;
-				}
-
-				return isSyntaxError;
-			}
-
-			/// <summary>
-			/// Gets a error details
-			/// </summary>
-			/// <param name="category">Category of error</param>
-			/// <param name="description">Description of error</param>
-			/// <param name="isSyntaxError">Value indicating whether this exception is syntax error</param>
 			/// <param name="sourceContext">Application specific source context</param>
-			/// <param name="lineNumber">Line number</param>
-			/// <param name="columnNumber">Column number</param>
-			/// <returns>Error details</returns>
-			private string GetErrorDetails(string category, string description, bool isSyntaxError,
-				uint sourceContext, uint lineNumber, int columnNumber)
+			/// <returns>Document name</returns>
+			private string GetDocumentName(uint sourceContext)
 			{
-				var errorBuilder = new StringBuilder();
-				if (!string.IsNullOrWhiteSpace(category))
-				{
-					errorBuilder.AppendFormat("{0}: ", category);
-				}
-				errorBuilder.AppendLine(description);
-
-				if (_jsEngine._processDebugManagerWrapper != null)
-				{
-					bool stackTraceNotEmpty = false;
-					if (!isSyntaxError)
-					{
-						stackTraceNotEmpty = TryWriteStackTrace(errorBuilder);
-					}
-
-					bool fullErrorLocationNotEmpty = false;
-					if (!stackTraceNotEmpty)
-					{
-						fullErrorLocationNotEmpty = TryWriteFullErrorLocation(errorBuilder, sourceContext,
-							lineNumber, columnNumber);
-					}
-
-					if (!stackTraceNotEmpty && !fullErrorLocationNotEmpty)
-					{
-						TryWriteErrorLocation(errorBuilder, lineNumber, columnNumber);
-					}
-				}
-				else
-				{
-					TryWriteErrorLocation(errorBuilder, lineNumber, columnNumber);
-				}
-
-				string errorDetails = errorBuilder.TrimEnd().ToString();
-				errorBuilder.Clear();
-
-				return errorDetails;
-			}
-
-			/// <summary>
-			/// Writes a information about error location to the buffer.
-			/// A return value indicates whether the writing succeeded.
-			/// </summary>
-			/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
-			/// <param name="lineNumber">Line number</param>
-			/// <param name="columnNumber">Column number</param>
-			/// <returns>true if the writing was successful; otherwise, false</returns>
-			private bool TryWriteErrorLocation(StringBuilder buffer, uint lineNumber, int columnNumber)
-			{
-				bool result = false;
-
-				if (lineNumber > 0)
-				{
-					JsErrorHelpers.WriteErrorLocation(buffer, (int)lineNumber, columnNumber);
-					result = true;
-				}
-
-				return result;
-			}
-
-			/// <summary>
-			/// Writes a information about full error location to the buffer.
-			/// A return value indicates whether the writing succeeded.
-			/// </summary>
-			/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
-			/// <param name="sourceContext">Application specific source context</param>
-			/// <param name="lineNumber">Line number</param>
-			/// <param name="columnNumber">Column number</param>
-			/// <returns>true if the writing was successful; otherwise, false</returns>
-			private bool TryWriteFullErrorLocation(StringBuilder buffer, uint sourceContext, uint lineNumber,
-				int columnNumber)
-			{
-				bool result = false;
+				string documentName = string.Empty;
+				var documentKey = new UIntPtr(sourceContext);
 				DebugDocument document;
 
-				if (_jsEngine._debugDocuments.TryGetValue(new UIntPtr(sourceContext), out document))
+				if (_jsEngine._debugDocuments.TryGetValue(documentKey, out document))
 				{
-					string documentName;
 					document.GetName(DocumentNameType.Title, out documentName);
-
-					JsErrorHelpers.WriteErrorLocation(buffer, documentName, (int)lineNumber, columnNumber);
-					result = true;
+				}
+				else if (!_jsEngine._documentNames.TryGetValue(documentKey, out documentName))
+				{
+					documentName = string.Empty;
 				}
 
-				return result;
+				return documentName;
 			}
 
 			/// <summary>
-			/// Writes a string representation of the script call stack to the buffer.
-			/// A return value indicates whether the writing succeeded.
+			/// Gets a array of <see cref="CallStackItem"/> instances
 			/// </summary>
-			/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
-			/// <returns>true if the writing was successful; otherwise, false</returns>
-			protected virtual bool TryWriteStackTrace(StringBuilder buffer)
+			/// <returns>An array of <see cref="CallStackItem"/> instances</returns>
+			protected virtual CallStackItem[] GetCallStackItems()
 			{
-				return false;
+				return new CallStackItem[0];
 			}
 
 			#region IActiveScriptSite implementation
@@ -282,7 +204,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 				if (item == null)
 				{
 					throw new COMException(
-						string.Format(NetFrameworkStrings.Runtime_ItemNotFound, name), ComErrorCode.E_ELEMENT_NOT_FOUND);
+						string.Format(NetFrameworkStrings.Runtime_ItemNotFound, name),
+						ComErrorCode.E_ELEMENT_NOT_FOUND
+					);
 				}
 
 				if (mask.HasFlag(ScriptInfoFlags.IUnknown))

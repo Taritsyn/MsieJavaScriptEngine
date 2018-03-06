@@ -19,7 +19,7 @@ namespace MsieJavaScriptEngine.Utilities
 		{
 			if (source == null)
 			{
-				throw new ArgumentNullException("source");
+				throw new ArgumentNullException(nameof(source));
 			}
 
 			TypeCode typeCode;
@@ -114,7 +114,7 @@ namespace MsieJavaScriptEngine.Utilities
 		{
 			if (source == null)
 			{
-				throw new ArgumentNullException("source");
+				throw new ArgumentNullException(nameof(source));
 			}
 
 			return new TypeInfo(source);

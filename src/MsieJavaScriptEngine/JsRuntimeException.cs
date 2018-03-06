@@ -4,84 +4,30 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 #endif
 
+using MsieJavaScriptEngine.Constants;
+
 namespace MsieJavaScriptEngine
 {
 	/// <summary>
-	/// The exception that is thrown during a execution of code by JS engine
+	/// The exception that is thrown during the script execution
 	/// </summary>
 #if !NETSTANDARD1_3
 	[Serializable]
 #endif
-	public sealed class JsRuntimeException : JsException
+	public class JsRuntimeException : JsScriptException
 	{
 		/// <summary>
-		/// Error code
+		/// String representation of the script call stack
 		/// </summary>
-		private string _errorCode = string.Empty;
+		private string _callStack = string.Empty;
 
 		/// <summary>
-		/// Error category
+		/// Gets or sets a string representation of the script call stack
 		/// </summary>
-		private string _category = string.Empty;
-
-		/// <summary>
-		/// Line number
-		/// </summary>
-		private int _lineNumber;
-
-		/// <summary>
-		/// Column number
-		/// </summary>
-		private int _columnNumber;
-
-		/// <summary>
-		/// Source fragment
-		/// </summary>
-		private string _sourceFragment = string.Empty;
-
-		/// <summary>
-		/// Gets or sets a error code
-		/// </summary>
-		public string ErrorCode
+		public string CallStack
 		{
-			get { return _errorCode; }
-			set { _errorCode = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a error category
-		/// </summary>
-		public string Category
-		{
-			get { return _category; }
-			set { _category = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a line number
-		/// </summary>
-		public int LineNumber
-		{
-			get { return _lineNumber; }
-			set { _lineNumber = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a column number
-		/// </summary>
-		public int ColumnNumber
-		{
-			get { return _columnNumber; }
-			set { _columnNumber = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a source fragment
-		/// </summary>
-		public string SourceFragment
-		{
-			get { return _sourceFragment; }
-			set { _sourceFragment = value; }
+			get { return _callStack; }
+			set { _callStack = value; }
 		}
 
 
@@ -92,7 +38,9 @@ namespace MsieJavaScriptEngine
 		/// <param name="message">The message that describes the error</param>
 		public JsRuntimeException(string message)
 			: base(message)
-		{ }
+		{
+			Category = JsErrorCategory.Runtime;
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JsRuntimeException"/> class
@@ -103,7 +51,9 @@ namespace MsieJavaScriptEngine
 		/// <param name="innerException">The exception that is the cause of the current exception</param>
 		public JsRuntimeException(string message, Exception innerException)
 			: base(message, innerException)
-		{ }
+		{
+			Category = JsErrorCategory.Runtime;
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JsRuntimeException"/> class
@@ -112,7 +62,9 @@ namespace MsieJavaScriptEngine
 		/// <param name="engineMode">Name of JS engine mode</param>
 		public JsRuntimeException(string message, string engineMode)
 			: base(message, engineMode)
-		{ }
+		{
+			Category = JsErrorCategory.Runtime;
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JsRuntimeException"/> class
@@ -122,7 +74,9 @@ namespace MsieJavaScriptEngine
 		/// <param name="innerException">The exception that is the cause of the current exception</param>
 		public JsRuntimeException(string message, string engineMode, Exception innerException)
 			: base(message, engineMode, innerException)
-		{ }
+		{
+			Category = JsErrorCategory.Runtime;
+		}
 #if !NETSTANDARD1_3
 
 		/// <summary>
@@ -130,16 +84,12 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		/// <param name="info">The object that holds the serialized data</param>
 		/// <param name="context">The contextual information about the source or destination</param>
-		private JsRuntimeException(SerializationInfo info, StreamingContext context)
+		protected JsRuntimeException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 			if (info != null)
 			{
-				_errorCode = info.GetString("ErrorCode");
-				_category = info.GetString("Category");
-				_lineNumber = info.GetInt32("LineNumber");
-				_columnNumber = info.GetInt32("ColumnNumber");
-				_sourceFragment = info.GetString("SourceFragment");
+				_callStack = info.GetString("CallStack");
 			}
 		}
 
@@ -156,15 +106,11 @@ namespace MsieJavaScriptEngine
 		{
 			if (info == null)
 			{
-				throw new ArgumentNullException("info");
+				throw new ArgumentNullException(nameof(info));
 			}
 
 			base.GetObjectData(info, context);
-			info.AddValue("ErrorCode", _errorCode);
-			info.AddValue("Category", _category);
-			info.AddValue("LineNumber", _lineNumber);
-			info.AddValue("ColumnNumber", _columnNumber);
-			info.AddValue("SourceFragment", _sourceFragment);
+			info.AddValue("CallStack", _callStack);
 		}
 
 		#endregion

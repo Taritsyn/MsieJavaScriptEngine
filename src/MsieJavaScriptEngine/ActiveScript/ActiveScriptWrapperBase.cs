@@ -46,11 +46,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Constructs an instance of the Active Script wrapper
 		/// </summary>
+		/// <param name="engineModeName">Name of JS engine mode</param>
 		/// <param name="clsid">CLSID of JS engine</param>
 		/// <param name="languageVersion">Version of script language</param>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		protected ActiveScriptWrapperBase(string clsid, ScriptLanguageVersion languageVersion,
-			bool enableDebugging)
+		protected ActiveScriptWrapperBase(string engineModeName, string clsid,
+			ScriptLanguageVersion languageVersion, bool enableDebugging)
 		{
 			_enableDebugging = enableDebugging;
 
@@ -69,7 +70,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 					if (result != ComErrorCode.S_OK)
 					{
 						throw new JsEngineLoadException(
-							string.Format(NetFrameworkStrings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
+							string.Format(NetFrameworkStrings.Engine_ActiveScriptLanguageVersionSelectionFailed, languageVersion),
+							engineModeName
+						);
 					}
 				}
 			}
