@@ -108,7 +108,8 @@ namespace MsieJavaScriptEngine.Utilities
 				if (stream == null)
 				{
 					throw new NullReferenceException(
-						string.Format(CommonStrings.Common_ResourceIsNull, resourceName));
+						string.Format(CommonStrings.Common_ResourceIsNull, resourceName)
+					);
 				}
 
 				using (var reader = new StreamReader(stream))

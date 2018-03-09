@@ -44,8 +44,8 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		public string Type
 		{
-			get;
-			set;
+			get { return _type; }
+			set { _type = value; }
 		}
 
 		/// <summary>

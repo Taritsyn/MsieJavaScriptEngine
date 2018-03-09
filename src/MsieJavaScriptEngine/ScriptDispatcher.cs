@@ -14,7 +14,7 @@ namespace MsieJavaScriptEngine
 	/// </summary>
 	internal sealed class ScriptDispatcher : IDisposable
 	{
-#if !NETSTANDARD
+#if !NETSTANDARD1_3
 		/// <summary>
 		/// The stack size is sufficient to run the code of modern JS libraries in 32-bit process
 		/// </summary>
@@ -57,7 +57,7 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		public ScriptDispatcher()
 		{
-#if NETSTANDARD
+#if NETSTANDARD1_3
 			_thread = new Thread(StartThread)
 #else
 			int sufficientStackSize = Utils.Is64BitProcess() ? STACK_SIZE_64 : STACK_SIZE_32;

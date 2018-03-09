@@ -418,9 +418,9 @@ namespace MsieJavaScriptEngine
 		}
 
 		/// <summary>
-		/// Executes a code from JS-file
+		/// Executes a code from JS file
 		/// </summary>
-		/// <param name="path">Path to the JS-file</param>
+		/// <param name="path">Path to the JS file</param>
 		/// <param name="encoding">Text encoding</param>
 		/// <exception cref="ObjectDisposedException"/>
 		/// <exception cref="ArgumentNullException"/>
@@ -473,7 +473,7 @@ namespace MsieJavaScriptEngine
 		}
 
 		/// <summary>
-		/// Executes a code from embedded JS-resource
+		/// Executes a code from embedded JS resource
 		/// </summary>
 		/// <param name="resourceName">The case-sensitive resource name without the namespace of the specified type</param>
 		/// <param name="type">The type, that determines the assembly and whose namespace is used to scope
@@ -481,6 +481,7 @@ namespace MsieJavaScriptEngine
 		/// <exception cref="ObjectDisposedException"/>
 		/// <exception cref="ArgumentNullException"/>
 		/// <exception cref="ArgumentException"/>
+		/// <exception cref="NullReferenceException"/>
 		/// <exception cref="JsUsageException"/>
 		/// <exception cref="JsCompilationException"/>
 		/// <exception cref="JsInterruptedException"/>
@@ -540,13 +541,14 @@ namespace MsieJavaScriptEngine
 		}
 
 		/// <summary>
-		/// Executes a code from embedded JS-resource
+		/// Executes a code from embedded JS resource
 		/// </summary>
 		/// <param name="resourceName">The case-sensitive resource name</param>
 		/// <param name="assembly">The assembly, which contains the embedded resource</param>
 		/// <exception cref="ObjectDisposedException"/>
 		/// <exception cref="ArgumentNullException"/>
 		/// <exception cref="ArgumentException"/>
+		/// <exception cref="NullReferenceException"/>
 		/// <exception cref="JsUsageException"/>
 		/// <exception cref="JsCompilationException"/>
 		/// <exception cref="JsInterruptedException"/>

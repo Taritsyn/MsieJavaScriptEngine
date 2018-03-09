@@ -11,7 +11,7 @@ using MsieJavaScriptEngine.Utilities;
 namespace MsieJavaScriptEngine.Helpers
 {
 	/// <summary>
-	/// JS engine error helpers
+	/// JS error helpers
 	/// </summary>
 	public static class JsErrorHelpers
 	{
