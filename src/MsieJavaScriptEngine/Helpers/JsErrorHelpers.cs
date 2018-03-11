@@ -76,10 +76,8 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <see cref="CallStackItem"/> instances
 		/// </summary>
 		/// <param name="callStackItems">An array of <see cref="CallStackItem"/> instances</param>
-		/// <param name="omitSourceFragment">Flag for whether to omit source fragment</param>
 		/// <returns>String representation of the script call stack</returns>
-		internal static string StringifyCallStackItems(CallStackItem[] callStackItems,
-			bool omitSourceFragment = false)
+		internal static string StringifyCallStackItems(CallStackItem[] callStackItems)
 		{
 			if (callStackItems == null)
 			{
@@ -103,8 +101,7 @@ namespace MsieJavaScriptEngine.Helpers
 					stackBuilder.AppendLine();
 				}
 				WriteErrorLocation(stackBuilder, stackItem.FunctionName, stackItem.DocumentName,
-					stackItem.LineNumber, stackItem.ColumnNumber,
-					!omitSourceFragment ? stackItem.SourceFragment : string.Empty);
+					stackItem.LineNumber, stackItem.ColumnNumber);
 			}
 
 			string callStack = stackBuilder.ToString();

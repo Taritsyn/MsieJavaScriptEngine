@@ -165,9 +165,6 @@ See more details:
   <data name="ErrorDetails_EngineMode" xml:space="preserve">
     <value>Engine mode</value>
   </data>
-  <data name="ErrorDetails_ErrorCode" xml:space="preserve">
-    <value>Error code</value>
-  </data>
   <data name="ErrorDetails_LineNumber" xml:space="preserve">
     <value>Line number</value>
   </data>

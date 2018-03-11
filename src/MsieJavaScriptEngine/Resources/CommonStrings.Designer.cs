@@ -170,14 +170,6 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Error code"
-		/// </summary>
-		internal static string ErrorDetails_ErrorCode
-		{
-			get { return GetString("ErrorDetails_ErrorCode"); }
-		}
-
-		/// <summary>
 		/// Looks up a localized string similar to "Line number"
 		/// </summary>
 		internal static string ErrorDetails_LineNumber

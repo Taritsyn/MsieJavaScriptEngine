@@ -3,6 +3,7 @@ using System.Collections.Generic;
 #if NET45 || NETSTANDARD
 using System.Runtime.ExceptionServices;
 #endif
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 using MsieJavaScriptEngine.Utilities;
@@ -71,6 +72,7 @@ namespace MsieJavaScriptEngine
 		}
 
 
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
 		private void VerifyNotDisposed()
 		{
 			if (_disposedFlag.IsSet())

@@ -41,15 +41,6 @@
 			set;
 		}
 
-		/// <summary>
-		/// Gets or sets a source fragment
-		/// </summary>
-		public string SourceFragment
-		{
-			get;
-			set;
-		}
-
 
 		/// <summary>
 		/// Constructs an instance of the script call stack item
@@ -60,7 +51,6 @@
 			DocumentName = string.Empty;
 			LineNumber = 0;
 			ColumnNumber = 0;
-			SourceFragment = string.Empty;
 		}
 	}
 }
