@@ -31,13 +31,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Constructs an instance of the 64-bit Active Script wrapper
 		/// </summary>
-		/// <param name="engineModeName">Name of JS engine mode</param>
 		/// <param name="clsid">CLSID of JS engine</param>
 		/// <param name="languageVersion">Version of script language</param>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		public ActiveScriptWrapper64(string engineModeName, string clsid, ScriptLanguageVersion languageVersion,
-			bool enableDebugging)
-			: base(engineModeName, clsid, languageVersion, enableDebugging)
+		public ActiveScriptWrapper64(string clsid, ScriptLanguageVersion languageVersion, bool enableDebugging)
+			: base(clsid, languageVersion, enableDebugging)
 		{
 			_activeScriptParse64 = (IActiveScriptParse64)_activeScript;
 			if (_enableDebugging)

@@ -4,6 +4,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+#if NET40
+using MsieJavaScriptEngine.Polyfills.System;
+#endif
 using MsieJavaScriptEngine.Resources;
 
 namespace MsieJavaScriptEngine.Utilities

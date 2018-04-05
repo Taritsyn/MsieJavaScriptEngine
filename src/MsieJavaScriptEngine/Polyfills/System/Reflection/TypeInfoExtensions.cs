@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace MsieJavaScriptEngine.Utilities
+namespace MsieJavaScriptEngine.Polyfills.System.Reflection
 {
 	internal static class TypeInfoExtensions
 	{

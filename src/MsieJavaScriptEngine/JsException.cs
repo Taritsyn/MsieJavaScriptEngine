@@ -152,13 +152,30 @@ namespace MsieJavaScriptEngine
 		/// <returns>A string that represents the current exception</returns>
 		public override string ToString()
 		{
-			string baseResult = base.ToString();
-			string errorDetails = JsErrorHelpers.GenerateErrorDetails(this, true);
-
 			StringBuilder resultBuilder = StringBuilderPool.GetBuilder();
-			resultBuilder.AppendLine(baseResult);
-			resultBuilder.AppendLine("--- Script error details follow ---");
-			resultBuilder.Append(errorDetails);
+			resultBuilder.Append(this.GetType().FullName);
+			resultBuilder.Append(": ");
+			resultBuilder.Append(this.Message);
+
+			string errorDetails = JsErrorHelpers.GenerateErrorDetails(this, true);
+			if (errorDetails.Length > 0)
+			{
+				resultBuilder.AppendLine();
+				resultBuilder.AppendLine();
+				resultBuilder.Append(errorDetails);
+			}
+
+			if (this.InnerException != null)
+			{
+				resultBuilder.Append(" ---> ");
+				resultBuilder.Append(this.InnerException.ToString());
+			}
+
+			if (this.StackTrace != null)
+			{
+				resultBuilder.AppendLine();
+				resultBuilder.AppendLine(this.StackTrace);
+			}
 
 			string result = resultBuilder.ToString();
 			StringBuilderPool.ReleaseBuilder(resultBuilder);

@@ -98,6 +98,14 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "See the original error message: “{0}”."
+		/// </summary>
+		internal static string Common_SeeOriginalErrorMessage
+		{
+			get { return GetString("Common_SeeOriginalErrorMessage"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "Cannot convert null to a value type."
 		/// </summary>
 		internal static string Common_ValueTypeCannotBeNull
@@ -106,19 +114,35 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Failed to load a Chakra Edge JsRT JavaScript engine. Try to install the Windows 10 with Edge..."
+		/// Looks up a localized string similar to "Most likely it happened, because the '{0}' assembly was not registered in your system."
 		/// </summary>
-		internal static string Engine_EdgeJsEngineNotLoaded
+		internal static string Engine_AssemblyNotRegistered
 		{
-			get { return GetString("Engine_EdgeJsEngineNotLoaded"); }
+			get { return GetString("Engine_AssemblyNotRegistered"); }
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Failed to load a {0} JavaScript engine. Try to install the Internet Explorer {1} or higher. See more..."
+		/// Looks up a localized string similar to "Try to install the Windows 10 with Edge browser."
 		/// </summary>
-		internal static string Engine_IeJsEngineNotLoaded
+		internal static string Engine_EdgeInstallationRequired
 		{
-			get { return GetString("Engine_IeJsEngineNotLoaded"); }
+			get { return GetString("Engine_EdgeInstallationRequired"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Try to install the Internet Explorer {0} or higher."
+		/// </summary>
+		internal static string Engine_IeInstallationRequired
+		{
+			get { return GetString("Engine_IeInstallationRequired"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Failed to create instance of the MsieJsEngine in {0} mode."
+		/// </summary>
+		internal static string Engine_JsEngineNotLoaded
+		{
+			get { return GetString("Engine_JsEngineNotLoaded"); }
 		}
 
 		/// <summary>

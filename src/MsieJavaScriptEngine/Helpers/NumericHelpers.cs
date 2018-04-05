@@ -1,6 +1,6 @@
 ﻿using System;
 
-using MsieJavaScriptEngine.Utilities;
+using MsieJavaScriptEngine.Extensions;
 
 namespace MsieJavaScriptEngine.Helpers
 {

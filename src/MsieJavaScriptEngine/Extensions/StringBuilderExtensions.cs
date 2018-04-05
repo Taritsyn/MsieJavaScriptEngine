@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MsieJavaScriptEngine.Utilities
+namespace MsieJavaScriptEngine.Extensions
 {
 	/// <summary>
 	/// Extensions for StringBuilder
@@ -54,7 +54,6 @@ namespace MsieJavaScriptEngine.Utilities
 
 			return source.AppendLine(format.Replace("{{", "{").Replace("}}", "}"));
 		}
-#if !NETSTANDARD
 
 		/// <summary>
 		/// Removes the all trailing white-space characters from the current <see cref="StringBuilder"/> instance
@@ -79,7 +78,7 @@ namespace MsieJavaScriptEngine.Utilities
 			for (; charIndex >= 0; charIndex--)
 			{
 				char charValue = source[charIndex];
-				if (!charValue.IsWhitespace())
+				if (!char.IsWhiteSpace(charValue))
 				{
 					break;
 				}
@@ -92,6 +91,5 @@ namespace MsieJavaScriptEngine.Utilities
 
 			return source;
 		}
-#endif
 	}
 }

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Expando;
+using System.Text;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
@@ -82,6 +83,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private uint _nextSourceContext = 1;
 
 		/// <summary>
+		/// Lowest supported version of Internet Explorer
+		/// </summary>
+		private readonly string _lowerIeVersion;
+
+		/// <summary>
 		/// Prefix of error category name
 		/// </summary>
 		private readonly string _errorCategoryNamePrefix;
@@ -104,39 +110,62 @@ namespace MsieJavaScriptEngine.ActiveScript
 			ScriptLanguageVersion languageVersion, string lowerIeVersion, string errorCategoryNamePrefix)
 			: base(settings)
 		{
+			_lowerIeVersion = lowerIeVersion;
 			_errorCategoryNamePrefix = errorCategoryNamePrefix;
 
-			_dispatcher.Invoke(() =>
+			try
 			{
-				try
+				_dispatcher.Invoke(() =>
 				{
 					_activeScriptWrapper = CreateActiveScriptWrapper(clsid, languageVersion);
-				}
-				catch (COMException e)
-				{
-					if (e.ErrorCode == ComErrorCode.E_CLASS_NOT_REGISTERED)
+
+					if (_settings.EnableDebugging)
 					{
-						throw new JsEngineLoadException(
-							string.Format(CommonStrings.Engine_IeJsEngineNotLoaded,
-								_engineModeName, lowerIeVersion, e.Message),
-							_engineModeName
-						);
+						StartDebugging();
 					}
 
-					throw;
-				}
+					_activeScriptWrapper.SetScriptSite(CreateScriptSite());
+					_activeScriptWrapper.InitNew();
+					_activeScriptWrapper.SetScriptState(ScriptState.Started);
 
-				if (_settings.EnableDebugging)
+					_dispatch = WrapScriptDispatch(_activeScriptWrapper.GetScriptDispatch());
+				});
+			}
+			catch (COMException e)
+			{
+				throw WrapCOMException(e);
+			}
+			catch (InvalidOperationException e)
+			{
+				string message = string.Format(CommonStrings.Engine_JsEngineNotLoaded, _engineModeName) + " " +
+					e.Message;
+
+				throw new JsEngineLoadException(message, _engineModeName, e);
+			}
+			catch (ActiveScriptException e)
+			{
+				int errorNumber = ComHelpers.HResult.GetFacility(e.ErrorCode) == ComErrorCode.FACILITY_CONTROL ?
+					ComHelpers.HResult.GetCode(e.ErrorCode) : 0;
+				if (ActiveScriptJsErrorHelpers.IsEngineError(errorNumber))
 				{
-					StartDebugging();
+					throw new JsEngineException(e.Message, _engineModeName, e);
 				}
-
-				_activeScriptWrapper.SetScriptSite(CreateScriptSite());
-				_activeScriptWrapper.InitNew();
-				_activeScriptWrapper.SetScriptState(ScriptState.Started);
-
-				InitScriptDispatch();
-			});
+				else
+				{
+					throw WrapActiveScriptException(e);
+				}
+			}
+			catch (Exception e)
+			{
+				throw JsErrorHelpers.WrapUnknownEngineLoadException(e, _engineModeName);
+			}
+			finally
+			{
+				if (_dispatch == null)
+				{
+					Dispose();
+				}
+			}
 		}
 
 		/// <summary>
@@ -212,13 +241,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			if (Utils.Is64BitProcess())
 			{
-				activeScriptWrapper = new ActiveScriptWrapper64(_engineModeName, clsid, languageVersion,
-					_settings.EnableDebugging);
+				activeScriptWrapper = new ActiveScriptWrapper64(clsid, languageVersion, _settings.EnableDebugging);
 			}
 			else
 			{
-				activeScriptWrapper = new ActiveScriptWrapper32(_engineModeName, clsid, languageVersion,
-					_settings.EnableDebugging);
+				activeScriptWrapper = new ActiveScriptWrapper32(clsid, languageVersion, _settings.EnableDebugging);
 			}
 
 			return activeScriptWrapper;
@@ -252,32 +279,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		/// <returns>Instance of the Active Script site</returns>
 		protected abstract ScriptSiteBase CreateScriptSite();
-
-		/// <summary>
-		/// Initializes a script dispatch
-		/// </summary>
-		private void InitScriptDispatch()
-		{
-			IExpando dispatch = null;
-			object obj;
-
-			_activeScriptWrapper.GetScriptDispatch(null, out obj);
-
-			if (obj != null && obj.GetType().IsCOMObject)
-			{
-				dispatch = obj as IExpando;
-			}
-
-			if (dispatch == null)
-			{
-				throw new JsEngineLoadException(
-					NetFrameworkStrings.Engine_ActiveScriptDispatcherNotInitialized,
-					_engineModeName
-				);
-			}
-
-			_dispatch = dispatch;
-		}
 
 		/// <summary>
 		/// Initializes a script context
@@ -543,8 +544,24 @@ namespace MsieJavaScriptEngine.ActiveScript
 			return TypeMappingHelpers.MapToHostType(args);
 		}
 
-		private JsException ConvertOriginalExceptionToWrapperException(
-			ActiveScriptException originalException)
+		private static IExpando WrapScriptDispatch(object dispatch)
+		{
+			IExpando wrappedDispatch = null;
+			if (dispatch != null && dispatch.GetType().IsCOMObject)
+			{
+				wrappedDispatch = dispatch as IExpando;
+			}
+
+			if (wrappedDispatch == null)
+			{
+				throw new InvalidOperationException(
+					NetFrameworkStrings.Engine_ActiveScriptDispatcherNotInitialized);
+			}
+
+			return wrappedDispatch;
+		}
+
+		private JsException WrapActiveScriptException(ActiveScriptException originalException)
 		{
 			JsException wrapperException;
 			string message = originalException.Message;
@@ -567,10 +584,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 					wrapperException = new JsInterruptedException(message, _engineModeName, originalException);
 					break;
 
-				case JsErrorCategory.Engine:
-					wrapperException = new JsEngineException(message, _engineModeName, originalException);
-					break;
-
 				default:
 					wrapperException = new JsException(message, _engineModeName, originalException);
 					break;
@@ -589,6 +602,28 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 
 			return wrapperException;
+		}
+
+		private JsEngineLoadException WrapCOMException(COMException originalComException)
+		{
+			string jsEngineNotLoadedPart = string.Format(CommonStrings.Engine_JsEngineNotLoaded, _engineModeName);
+			string message;
+
+			if (originalComException.ErrorCode == ComErrorCode.E_CLASS_NOT_REGISTERED)
+			{
+				message = jsEngineNotLoadedPart + " " +
+					string.Format(CommonStrings.Engine_AssemblyNotRegistered,
+						_settings.EngineMode == JsEngineMode.Classic ? DllName.JScript : DllName.JScript9) + " " +
+					string.Format(CommonStrings.Engine_IeInstallationRequired, _lowerIeVersion)
+					;
+			}
+			else
+			{
+				message = jsEngineNotLoadedPart + " " +
+					string.Format(CommonStrings.Common_SeeOriginalErrorMessage, originalComException.Message);
+			}
+
+			return new JsEngineLoadException(message, _engineModeName, originalComException);
 		}
 
 		/// <summary>
@@ -625,7 +660,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertOriginalExceptionToWrapperException(e);
+					throw WrapActiveScriptException(e);
 				}
 			});
 
@@ -646,7 +681,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertOriginalExceptionToWrapperException(e);
+					throw WrapActiveScriptException(e);
 				}
 			});
 		}
@@ -665,7 +700,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertOriginalExceptionToWrapperException(e);
+					throw WrapActiveScriptException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -696,7 +731,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertOriginalExceptionToWrapperException(e);
+					throw WrapActiveScriptException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -721,7 +756,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertOriginalExceptionToWrapperException(e);
+					throw WrapActiveScriptException(e);
 				}
 				catch (MissingMemberException)
 				{
@@ -751,7 +786,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertOriginalExceptionToWrapperException(e);
+					throw WrapActiveScriptException(e);
 				}
 			});
 		}
@@ -768,7 +803,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertOriginalExceptionToWrapperException(e);
+					throw WrapActiveScriptException(e);
 				}
 			});
 		}
@@ -787,7 +822,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertOriginalExceptionToWrapperException(e);
+					throw WrapActiveScriptException(e);
 				}
 			});
 		}
@@ -806,7 +841,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				catch (ActiveScriptException e)
 				{
-					throw ConvertOriginalExceptionToWrapperException(e);
+					throw WrapActiveScriptException(e);
 				}
 			});
 		}
@@ -866,21 +901,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 						_debugDocuments.Clear();
 					}
 
-					if (_documentNames != null)
-					{
-						_documentNames.Clear();
-					}
-
 					if (_processDebugManagerWrapper != null)
 					{
 						_processDebugManagerWrapper.RemoveApplication(_debugApplicationCookie);
 						_debugApplicationWrapper.Close();
 					}
 
-					if (_hostItems != null)
-					{
-						_hostItems.Clear();
-					}
+					_documentNames?.Clear();
+					_hostItems?.Clear();
 
 					_lastException = null;
 				}

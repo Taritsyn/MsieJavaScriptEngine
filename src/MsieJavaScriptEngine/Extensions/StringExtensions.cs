@@ -1,13 +1,36 @@
 ﻿using System;
 using System.Linq;
 
-namespace MsieJavaScriptEngine.Utilities
+namespace MsieJavaScriptEngine.Extensions
 {
 	/// <summary>
 	/// Extensions for String
 	/// </summary>
 	internal static class StringExtensions
 	{
+		/// <summary>
+		/// Returns a value indicating whether the specified quoted string occurs within this string
+		/// </summary>
+		/// <param name="source">Instance of <see cref="String"/></param>
+		/// <param name="value">The string without quotes to seek</param>
+		/// <returns>true if the quoted value occurs within this string; otherwise, false</returns>
+		public static bool ContainsQuotedValue(this string source, string value)
+		{
+			if (source == null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			if (value == null)
+			{
+				throw new ArgumentNullException(nameof(value));
+			}
+
+			bool result = source.Contains("'" + value + "'") || source.Contains("\"" + value + "\"");
+
+			return result;
+		}
+
 		/// <summary>
 		/// Removes leading occurrence of the specified string from the current <see cref="String"/> object
 		/// </summary>

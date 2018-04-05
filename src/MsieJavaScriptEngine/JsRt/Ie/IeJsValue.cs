@@ -902,7 +902,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 			if (arguments.Length > ushort.MaxValue)
 			{
-				throw new ArgumentOutOfRangeException("arguments");
+				throw new ArgumentOutOfRangeException(nameof(arguments));
 			}
 
 			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsCallFunction(this, arguments, (ushort)arguments.Length, out returnReference));
@@ -924,7 +924,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 			if (arguments.Length > ushort.MaxValue)
 			{
-				throw new ArgumentOutOfRangeException("arguments");
+				throw new ArgumentOutOfRangeException(nameof(arguments));
 			}
 
 			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsConstructObject(this, arguments, (ushort)arguments.Length, out returnReference));

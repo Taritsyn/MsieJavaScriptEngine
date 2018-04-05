@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Product>MSIE JavaScript Engine: Tests for Classic Mode</Product>
 		<VersionPrefix>3.0.0</VersionPrefix>
-		<VersionSuffix>alpha3</VersionSuffix>
+		<VersionSuffix>beta1</VersionSuffix>
 		<TargetFrameworks>net40;net451</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>

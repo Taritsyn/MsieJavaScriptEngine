@@ -2,8 +2,12 @@
 #if NETSTANDARD1_3
 using System.Reflection;
 #endif
+#if NET40
 
-namespace MsieJavaScriptEngine.Utilities
+using MsieJavaScriptEngine.Polyfills.System.Reflection;
+#endif
+
+namespace MsieJavaScriptEngine.Extensions
 {
 	/// <summary>
 	/// Type extensions
@@ -17,11 +21,6 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <returns>The code of the underlying type</returns>
 		public static TypeCode GetTypeCode(this Type source)
 		{
-			if (source == null)
-			{
-				throw new ArgumentNullException(nameof(source));
-			}
-
 			TypeCode typeCode;
 
 #if NETSTANDARD1_3
@@ -103,22 +102,5 @@ namespace MsieJavaScriptEngine.Utilities
 
 			return typeCode;
 		}
-#if NET40
-
-		/// <summary>
-		/// Returns the <see cref="TypeInfo"/> representation of the specified type
-		/// </summary>
-		/// <param name="source">The type to convert</param>
-		/// <returns>The converted object</returns>
-		public static TypeInfo GetTypeInfo(this Type source)
-		{
-			if (source == null)
-			{
-				throw new ArgumentNullException(nameof(source));
-			}
-
-			return new TypeInfo(source);
-		}
-#endif
 	}
 }

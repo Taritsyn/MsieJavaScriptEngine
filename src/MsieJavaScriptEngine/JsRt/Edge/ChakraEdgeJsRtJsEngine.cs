@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 #endif
 
 using MsieJavaScriptEngine.Constants;
+using MsieJavaScriptEngine.Extensions;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
@@ -71,41 +72,45 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		public ChakraEdgeJsRtJsEngine(JsEngineSettings settings)
 			: base(settings)
 		{
-			_dispatcher.Invoke(() =>
+			try
 			{
-				try
+				_dispatcher.Invoke(() =>
 				{
 					_jsRuntime = CreateJsRuntime();
 					_jsContext = _jsRuntime.CreateContext();
-					_jsContext.AddRef();
-				}
-				catch (DllNotFoundException e)
+					if (_jsContext.IsValid)
+					{
+						_jsContext.AddRef();
+					}
+				});
+			}
+			catch (DllNotFoundException e)
+			{
+				throw WrapTypeLoadException(e);
+			}
+#if NETSTANDARD1_3
+			catch (TypeLoadException e)
+#else
+			catch (EntryPointNotFoundException e)
+#endif
+			{
+				throw WrapTypeLoadException(e);
+			}
+			catch (OriginalException e)
+			{
+				throw WrapJsException(e);
+			}
+			catch (Exception e)
+			{
+				throw JsErrorHelpers.WrapUnknownEngineLoadException(e, _engineModeName);
+			}
+			finally
+			{
+				if (!_jsContext.IsValid)
 				{
-					if (e.Message.IndexOf("'" + DllName.Chakra + "'", StringComparison.OrdinalIgnoreCase) != -1)
-					{
-						throw new WrapperEngineLoadException(
-							string.Format(CommonStrings.Engine_EdgeJsEngineNotLoaded, e.Message),
-							_engineModeName
-						);
-					}
-
-					throw;
+					Dispose();
 				}
-				catch (OriginalException e)
-				{
-					if (e.ErrorCode == JsErrorCode.WrongThread)
-					{
-						throw new WrapperUsageException(
-							CommonStrings.Usage_JsEnginesConflictOnMachine,
-							_engineModeName
-						);
-					}
-					else
-					{
-						throw ConvertOriginalExceptionToWrapperException(e);
-					}
-				}
-			});
+			}
 		}
 
 		/// <summary>
@@ -153,7 +158,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				}
 				catch (DllNotFoundException e)
 				{
-					if (e.Message.IndexOf("'" + DllName.Chakra + "'", StringComparison.OrdinalIgnoreCase) != -1)
+					if (e.Message.ContainsQuotedValue(DllName.Chakra))
 					{
 						_isSupported = false;
 					}
@@ -855,8 +860,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		}
 #endif
 
-		private WrapperException ConvertOriginalExceptionToWrapperException(
-			OriginalException originalException)
+		private WrapperException WrapJsException(OriginalException originalException)
 		{
 			WrapperException wrapperException;
 			JsErrorCode errorCode = originalException.ErrorCode;
@@ -876,76 +880,94 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 				if (errorValue.IsValid)
 				{
-					EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
-					description = messagePropertyValue.ConvertToString().ToString();
+					JsValueType errorValueType = errorValue.ValueType;
 
-					EdgeJsValue namePropertyValue = errorValue.GetProperty("name");
-					type = namePropertyValue.ConvertToString().ToString();
-
-					EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
-					if (errorValue.HasProperty(stackPropertyId))
+					if (errorValueType == JsValueType.Error
+						|| errorValueType == JsValueType.Object)
 					{
-						EdgeJsPropertyId descriptionPropertyId = EdgeJsPropertyId.FromString("description");
-						if (errorValue.HasProperty(descriptionPropertyId))
+						EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
+						description = messagePropertyValue.ConvertToString().ToString();
+
+						EdgeJsValue namePropertyValue = errorValue.GetProperty("name");
+						type = namePropertyValue.ValueType == JsValueType.String ?
+							namePropertyValue.ConvertToString().ToString() : string.Empty;
+
+						EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
+						if (errorValue.HasProperty(stackPropertyId))
 						{
-							EdgeJsValue descriptionPropertyValue = errorValue.GetProperty(descriptionPropertyId);
-							description = descriptionPropertyValue.ConvertToString().ToString();
+							EdgeJsPropertyId descriptionPropertyId = EdgeJsPropertyId.FromString("description");
+							if (errorValue.HasProperty(descriptionPropertyId))
+							{
+								EdgeJsValue descriptionPropertyValue = errorValue.GetProperty(descriptionPropertyId);
+								if (descriptionPropertyValue.ValueType == JsValueType.String
+									&& descriptionPropertyValue.StringLength > 0)
+								{
+									description = descriptionPropertyValue.ConvertToString().ToString();
+								}
+							}
+
+							EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
+							string messageWithTypeAndCallStack = stackPropertyValue.ValueType == JsValueType.String ?
+								stackPropertyValue.ConvertToString().ToString() : string.Empty;
+							string messageWithType = errorValue.ConvertToString().ToString();
+							string rawCallStack = messageWithTypeAndCallStack
+								.TrimStart(messageWithType)
+								.TrimStart("Error")
+								.TrimStart(new char[] { '\n', '\r' })
+								;
+
+							CallStackItem[] callStackItems = JsErrorHelpers.ParseCallStack(rawCallStack);
+							if (callStackItems.Length > 0)
+							{
+								CallStackItem firstCallStackItem = callStackItems[0];
+								documentName = firstCallStackItem.DocumentName;
+								lineNumber = firstCallStackItem.LineNumber;
+								columnNumber = firstCallStackItem.ColumnNumber;
+								callStack = JsErrorHelpers.StringifyCallStackItems(callStackItems);
+							}
+
+							message = JsErrorHelpers.GenerateErrorMessage(type, description, callStack);
 						}
-
-						EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
-						string messageWithTypeAndCallStack = stackPropertyValue.ConvertToString().ToString();
-						string messageWithType = errorValue.ConvertToString().ToString();
-						string rawCallStack = messageWithTypeAndCallStack
-							.TrimStart(messageWithType)
-							.TrimStart(new char[] { '\n', '\r' })
-							;
-
-						CallStackItem[] callStackItems = JsErrorHelpers.ParseCallStack(rawCallStack);
-						if (callStackItems.Length > 0)
+						else
 						{
-							CallStackItem firstCallStackItem = callStackItems[0];
-							documentName = firstCallStackItem.DocumentName;
-							lineNumber = firstCallStackItem.LineNumber;
-							columnNumber = firstCallStackItem.ColumnNumber;
-							callStack = JsErrorHelpers.StringifyCallStackItems(callStackItems);
-						}
+							EdgeJsPropertyId urlPropertyId = EdgeJsPropertyId.FromString("url");
+							if (errorValue.HasProperty(urlPropertyId))
+							{
+								EdgeJsValue urlPropertyValue = errorValue.GetProperty(urlPropertyId);
+								documentName = urlPropertyValue.ConvertToString().ToString();
+							}
 
-						message = JsErrorHelpers.GenerateErrorMessage(type, description, callStack);
+							EdgeJsPropertyId linePropertyId = EdgeJsPropertyId.FromString("line");
+							if (errorValue.HasProperty(linePropertyId))
+							{
+								EdgeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
+								lineNumber = linePropertyValue.ConvertToNumber().ToInt32() + 1;
+							}
+
+							EdgeJsPropertyId columnPropertyId = EdgeJsPropertyId.FromString("column");
+							if (errorValue.HasProperty(columnPropertyId))
+							{
+								EdgeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
+								columnNumber = columnPropertyValue.ConvertToNumber().ToInt32() + 1;
+							}
+
+							string sourceLine = string.Empty;
+							EdgeJsPropertyId sourcePropertyId = EdgeJsPropertyId.FromString("source");
+							if (errorValue.HasProperty(sourcePropertyId))
+							{
+								EdgeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
+								sourceLine = sourcePropertyValue.ConvertToString().ToString();
+							}
+
+							sourceFragment = JsErrorHelpers.GetSourceFragment(sourceLine, columnNumber);
+							message = JsErrorHelpers.GenerateErrorMessage(type, description, documentName,
+								lineNumber, columnNumber, sourceFragment);
+						}
 					}
 					else
 					{
-						EdgeJsPropertyId urlPropertyId = EdgeJsPropertyId.FromString("url");
-						if (errorValue.HasProperty(urlPropertyId))
-						{
-							EdgeJsValue urlPropertyValue = errorValue.GetProperty(urlPropertyId);
-							documentName = urlPropertyValue.ConvertToString().ToString();
-						}
-
-						EdgeJsPropertyId linePropertyId = EdgeJsPropertyId.FromString("line");
-						if (errorValue.HasProperty(linePropertyId))
-						{
-							EdgeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
-							lineNumber = linePropertyValue.ConvertToNumber().ToInt32() + 1;
-						}
-
-						EdgeJsPropertyId columnPropertyId = EdgeJsPropertyId.FromString("column");
-						if (errorValue.HasProperty(columnPropertyId))
-						{
-							EdgeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
-							columnNumber = columnPropertyValue.ConvertToNumber().ToInt32() + 1;
-						}
-
-						string sourceLine = string.Empty;
-						EdgeJsPropertyId sourcePropertyId = EdgeJsPropertyId.FromString("source");
-						if (errorValue.HasProperty(sourcePropertyId))
-						{
-							EdgeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
-							sourceLine = sourcePropertyValue.ConvertToString().ToString();
-						}
-
-						sourceFragment = JsErrorHelpers.GetSourceFragment(sourceLine, columnNumber);
-						message = JsErrorHelpers.GenerateErrorMessage(type, description, documentName,
-							lineNumber, columnNumber, sourceFragment);
+						message = errorValue.ConvertToString().ToString();
+						description = message;
 					}
 				}
 
@@ -1001,6 +1023,29 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			return wrapperException;
 		}
 
+		private WrapperEngineLoadException WrapTypeLoadException(TypeLoadException originalTypeLoadException)
+		{
+			string originalMessage = originalTypeLoadException.Message;
+			string jsEngineNotLoadedPart = string.Format(CommonStrings.Engine_JsEngineNotLoaded, _engineModeName);
+			string message;
+
+			if (originalTypeLoadException is DllNotFoundException
+				&& originalMessage.ContainsQuotedValue(DllName.Chakra))
+			{
+				message = jsEngineNotLoadedPart + " " +
+					string.Format(CommonStrings.Engine_AssemblyNotRegistered, DllName.Chakra) + " " +
+					string.Format(CommonStrings.Engine_EdgeInstallationRequired)
+					;
+			}
+			else
+			{
+				message = jsEngineNotLoadedPart + " " +
+					string.Format(CommonStrings.Common_SeeOriginalErrorMessage, originalMessage);
+			}
+
+			return new WrapperEngineLoadException(message, _engineModeName, originalTypeLoadException);
+		}
+
 		#endregion
 
 		#region ChakraJsRtJsEngineBase overrides
@@ -1033,7 +1078,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (OriginalException e)
 					{
-						throw ConvertOriginalExceptionToWrapperException(e);
+						throw WrapJsException(e);
 					}
 				}
 			});
@@ -1053,7 +1098,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (OriginalException e)
 					{
-						throw ConvertOriginalExceptionToWrapperException(e);
+						throw WrapJsException(e);
 					}
 				}
 			});
@@ -1095,11 +1140,17 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 								.Concat(processedArgs)
 								.ToArray()
 								;
-							resultValue = functionValue.CallFunction(allProcessedArgs);
 
-							foreach (EdgeJsValue processedArg in processedArgs)
+							try
 							{
-								RemoveReferenceToValue(processedArg);
+								resultValue = functionValue.CallFunction(allProcessedArgs);
+							}
+							finally
+							{
+								foreach (EdgeJsValue processedArg in processedArgs)
+								{
+									RemoveReferenceToValue(processedArg);
+								}
 							}
 						}
 						else
@@ -1111,7 +1162,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (OriginalException e)
 					{
-						throw ConvertOriginalExceptionToWrapperException(e);
+						throw WrapJsException(e);
 					}
 				}
 			});
@@ -1141,7 +1192,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (OriginalException e)
 					{
-						throw ConvertOriginalExceptionToWrapperException(e);
+						throw WrapJsException(e);
 					}
 				}
 			});
@@ -1163,7 +1214,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (OriginalException e)
 					{
-						throw ConvertOriginalExceptionToWrapperException(e);
+						throw WrapJsException(e);
 					}
 				}
 			});
@@ -1180,14 +1231,20 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					try
 					{
 						EdgeJsValue inputValue = MapToScriptType(value);
-
 						AddReferenceToValue(inputValue);
-						EdgeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
-						RemoveReferenceToValue(inputValue);
+
+						try
+						{
+							EdgeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						}
+						finally
+						{
+							RemoveReferenceToValue(inputValue);
+						}
 					}
 					catch (OriginalException e)
 					{
-						throw ConvertOriginalExceptionToWrapperException(e);
+						throw WrapJsException(e);
 					}
 				}
 			});
@@ -1211,7 +1268,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (OriginalException e)
 					{
-						throw ConvertOriginalExceptionToWrapperException(e);
+						throw WrapJsException(e);
 					}
 				}
 			});
@@ -1230,7 +1287,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (OriginalException e)
 					{
-						throw ConvertOriginalExceptionToWrapperException(e);
+						throw WrapJsException(e);
 					}
 				}
 			});
@@ -1253,7 +1310,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					}
 					catch (OriginalException e)
 					{
-						throw ConvertOriginalExceptionToWrapperException(e);
+						throw WrapJsException(e);
 					}
 				}
 			});
@@ -1295,7 +1352,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					_dispatcher.Invoke(() =>
 					{
-						_jsContext.Release();
+						if (_jsContext.IsValid)
+						{
+							_jsContext.Release();
+						}
 						_jsRuntime.Dispose();
 					});
 					_dispatcher.Dispose();
@@ -1306,10 +1366,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 				if (disposing)
 				{
-					if (_nativeFunctions != null)
-					{
-						_nativeFunctions.Clear();
-					}
+					_nativeFunctions?.Clear();
 				}
 #endif
 			}

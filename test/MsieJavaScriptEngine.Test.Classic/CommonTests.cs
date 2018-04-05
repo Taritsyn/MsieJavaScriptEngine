@@ -337,10 +337,12 @@ var foo = 'Browser's bar';";
 	}
 }
 
-var a = 8;
-var b = 15;
+(function (foo) {
+	var a = 8;
+	var b = 15;
 
-foo(a, b);";
+	foo(a, b);
+})(foo);";
 			string targetOutput = "TypeError: Object expected" + Environment.NewLine +
 				"   at functions.js:4:3"
 				;

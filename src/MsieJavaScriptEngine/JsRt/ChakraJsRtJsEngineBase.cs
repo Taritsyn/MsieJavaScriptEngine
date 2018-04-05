@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 #endif
 
+using MsieJavaScriptEngine.Utilities;
+
 namespace MsieJavaScriptEngine.JsRt
 {
 	/// <summary>
@@ -100,10 +102,7 @@ namespace MsieJavaScriptEngine.JsRt
 #if NETSTANDARD
 			if (disposing)
 			{
-				if (_externalObjects != null)
-				{
-					_externalObjects.Clear();
-				}
+				_externalObjects?.Clear();
 
 				_externalObjectFinalizeCallback = null;
 			}

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using MsieJavaScriptEngine.Constants;
+#if NET40
+using MsieJavaScriptEngine.Polyfills.System;
+#endif
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
 

@@ -132,20 +132,23 @@
   <data name="Common_ResourceIsNull" xml:space="preserve">
     <value>Ресурс с именем "{0}" содержит значение равное null!</value>
   </data>
+  <data name="Common_SeeOriginalErrorMessage" xml:space="preserve">
+    <value>Смотри оригинальное сообщение об ошибке: «{0}».</value>
+  </data>
   <data name="Common_ValueTypeCannotBeNull" xml:space="preserve">
     <value>Невозможно преобразовать null в значимый тип!</value>
   </data>
-  <data name="Engine_EdgeJsEngineNotLoaded" xml:space="preserve">
-    <value>Не удалось загрузить Chakra Edge JsRT JavaScript-движок! Попробуйте установить  Windows 10 с веб-браузером Edge.
-Смотрите более подробную информацию об ошибке:
-
-{0}</value>
+  <data name="Engine_AssemblyNotRegistered" xml:space="preserve">
+    <value>Скорее всего, это произошло, потому что сборка "{0}" не была зарегистрирована в вашей системе.</value>
   </data>
-  <data name="Engine_IeJsEngineNotLoaded" xml:space="preserve">
-    <value>Не удалось загрузить {0} JavaScript-движок! Попробуйте установить  Internet Explorer {1} или выше.
-Смотрите более подробную информацию об ошибке:
-
-{2}</value>
+  <data name="Engine_EdgeInstallationRequired" xml:space="preserve">
+    <value>Попробуйте установить Windows 10 с веб-браузером Edge.</value>
+  </data>
+  <data name="Engine_IeInstallationRequired" xml:space="preserve">
+    <value>Попробуйте установить Internet Explorer {0} или выше.</value>
+  </data>
+  <data name="Engine_JsEngineNotLoaded" xml:space="preserve">
+    <value>Не удалось создать экземпляр MsieJsEngine в режиме {0}.</value>
   </data>
   <data name="ErrorDetails_CallStack" xml:space="preserve">
     <value>Стек вызовов</value>

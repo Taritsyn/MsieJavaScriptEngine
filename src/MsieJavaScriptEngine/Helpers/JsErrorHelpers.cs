@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using MsieJavaScriptEngine;
+using MsieJavaScriptEngine.Extensions;
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
 
@@ -22,7 +24,7 @@ namespace MsieJavaScriptEngine.Helpers
 		/// </summary>
 		private static readonly Regex _callStackLineRegex =
 			new Regex(@"^[ ]{3}at " +
-				@"(?<functionName>[A-Za-z][A-Za-z ]*|" + CommonRegExps.JsNamePattern + @") " +
+				@"(?<functionName>[\w][\w ]*|" + CommonRegExps.JsFullNamePattern + @") " +
 				@"\((?<documentName>" + CommonRegExps.DocumentNamePattern + @"):" +
 				@"(?<lineNumber>\d+):(?<columnNumber>\d+)\)$");
 
@@ -100,7 +102,7 @@ namespace MsieJavaScriptEngine.Helpers
 				{
 					stackBuilder.AppendLine();
 				}
-				WriteErrorLocation(stackBuilder, stackItem.FunctionName, stackItem.DocumentName,
+				WriteErrorLocationLine(stackBuilder, stackItem.FunctionName, stackItem.DocumentName,
 					stackItem.LineNumber, stackItem.ColumnNumber);
 			}
 
@@ -173,7 +175,8 @@ namespace MsieJavaScriptEngine.Helpers
 			StringBuilder messageBuilder = StringBuilderPool.GetBuilder();
 			if (!string.IsNullOrWhiteSpace(type))
 			{
-				messageBuilder.AppendFormat("{0}: ", type);
+				messageBuilder.Append(type);
+				messageBuilder.Append(": ");
 			}
 			messageBuilder.Append(description);
 
@@ -187,7 +190,7 @@ namespace MsieJavaScriptEngine.Helpers
 				if (!string.IsNullOrWhiteSpace(documentName) || lineNumber > 0)
 				{
 					messageBuilder.AppendLine();
-					WriteErrorLocation(messageBuilder, string.Empty, documentName, lineNumber, columnNumber,
+					WriteErrorLocationLine(messageBuilder, string.Empty, documentName, lineNumber, columnNumber,
 						sourceFragment);
 				}
 			}
@@ -230,6 +233,8 @@ namespace MsieJavaScriptEngine.Helpers
 				}
 			}
 
+			detailsBuilder.TrimEnd();
+
 			string errorDetails = detailsBuilder.ToString();
 			StringBuilderPool.ReleaseBuilder(detailsBuilder);
 
@@ -260,6 +265,8 @@ namespace MsieJavaScriptEngine.Helpers
 				WriteRuntimeErrorDetails(detailsBuilder, jsRuntimeException);
 			}
 
+			detailsBuilder.TrimEnd();
+
 			string errorDetails = detailsBuilder.ToString();
 			StringBuilderPool.ReleaseBuilder(detailsBuilder);
 
@@ -284,6 +291,8 @@ namespace MsieJavaScriptEngine.Helpers
 			WriteCommonErrorDetails(detailsBuilder, jsRuntimeException, omitMessage);
 			WriteScriptErrorDetails(detailsBuilder, jsRuntimeException);
 			WriteRuntimeErrorDetails(detailsBuilder, jsRuntimeException);
+
+			detailsBuilder.TrimEnd();
 
 			string errorDetails = detailsBuilder.ToString();
 			StringBuilderPool.ReleaseBuilder(detailsBuilder);
@@ -375,6 +384,19 @@ namespace MsieJavaScriptEngine.Helpers
 
 		#endregion
 
+		#region Exception wrapping
+
+		public static JsEngineLoadException WrapUnknownEngineLoadException(Exception originalException,
+			string engineModeName)
+		{
+			string message = string.Format(CommonStrings.Engine_JsEngineNotLoaded, engineModeName) + " " +
+				string.Format(CommonStrings.Common_SeeOriginalErrorMessage, originalException.Message);
+
+			return new JsEngineLoadException(message, engineModeName, originalException);
+		}
+
+		#endregion
+
 		#region Misc
 
 		/// <summary>
@@ -442,7 +464,7 @@ namespace MsieJavaScriptEngine.Helpers
 		}
 
 		/// <summary>
-		/// Writes a information about error location to the buffer
+		/// Writes a error location line to the buffer
 		/// </summary>
 		/// <param name="buffer">Instance of <see cref="StringBuilder"/></param>
 		/// <param name="functionName">Function name</param>
@@ -450,7 +472,7 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <param name="lineNumber">Line number</param>
 		/// <param name="columnNumber">Column number</param>
 		/// <param name="sourceFragment">Source fragment</param>
-		internal static void WriteErrorLocation(StringBuilder buffer, string functionName,
+		internal static void WriteErrorLocationLine(StringBuilder buffer, string functionName,
 			string documentName, int lineNumber, int columnNumber, string sourceFragment = "")
 		{
 			bool functionNameNotEmpty = !string.IsNullOrWhiteSpace(functionName);
@@ -482,7 +504,8 @@ namespace MsieJavaScriptEngine.Helpers
 						buffer.Append(lineNumber);
 						if (columnNumber > 0)
 						{
-							buffer.AppendFormat(":{0}", columnNumber);
+							buffer.Append(":");
+							buffer.Append(columnNumber);
 						}
 					}
 					if (functionNameNotEmpty)
@@ -497,6 +520,43 @@ namespace MsieJavaScriptEngine.Helpers
 				}
 			}
 		}
+
+		#region Obsolete methods
+
+		/// <summary>
+		/// Generates a detailed error message
+		/// </summary>
+		/// <param name="jsException">JS exception</param>
+		/// <returns>Detailed error message</returns>
+		[Obsolete("Use a `GenerateErrorDetails` method")]
+		public static string Format(JsException jsException)
+		{
+			return GenerateErrorDetails(jsException);
+		}
+
+		/// <summary>
+		/// Generates a detailed error message
+		/// </summary>
+		/// <param name="jsScriptException">JS script exception</param>
+		/// <returns>Detailed error message</returns>
+		[Obsolete("Use a `GenerateErrorDetails` method")]
+		public static string Format(JsScriptException jsScriptException)
+		{
+			return GenerateErrorDetails(jsScriptException);
+		}
+
+		/// <summary>
+		/// Generates a detailed error message
+		/// </summary>
+		/// <param name="jsRuntimeException">JS runtime exception</param>
+		/// <returns>Detailed error message</returns>
+		[Obsolete("Use a `GenerateErrorDetails` method")]
+		public static string Format(JsRuntimeException jsRuntimeException)
+		{
+			return GenerateErrorDetails(jsRuntimeException);
+		}
+
+		#endregion
 
 		#endregion
 	}

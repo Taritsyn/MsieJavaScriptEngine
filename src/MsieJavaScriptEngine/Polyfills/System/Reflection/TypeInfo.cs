@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace MsieJavaScriptEngine.Utilities
+namespace MsieJavaScriptEngine.Polyfills.System.Reflection
 {
 	/// <summary>
 	/// Represents type declarations for class types, interface types, array types, value types,

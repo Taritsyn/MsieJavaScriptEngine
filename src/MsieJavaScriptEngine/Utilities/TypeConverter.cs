@@ -7,6 +7,13 @@ using System.Reflection;
 #endif
 using OriginalTypeConverter = System.ComponentModel.TypeConverter;
 
+using MsieJavaScriptEngine.Extensions;
+#if NET40
+using MsieJavaScriptEngine.Polyfills.System;
+#endif
+#if NET40 || NETSTANDARD1_3
+using MsieJavaScriptEngine.Polyfills.System.Reflection;
+#endif
 using MsieJavaScriptEngine.Resources;
 
 namespace MsieJavaScriptEngine.Utilities

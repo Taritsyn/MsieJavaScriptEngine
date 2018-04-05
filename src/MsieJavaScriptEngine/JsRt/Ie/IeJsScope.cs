@@ -1,5 +1,7 @@
 ﻿using System;
 
+using MsieJavaScriptEngine.Utilities;
+
 namespace MsieJavaScriptEngine.JsRt.Ie
 {
 	/// <summary>

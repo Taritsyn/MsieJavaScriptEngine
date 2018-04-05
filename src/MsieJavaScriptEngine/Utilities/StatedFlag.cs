@@ -1,4 +1,4 @@
-﻿namespace MsieJavaScriptEngine
+﻿namespace MsieJavaScriptEngine.Utilities
 {
 	internal struct StatedFlag
 	{

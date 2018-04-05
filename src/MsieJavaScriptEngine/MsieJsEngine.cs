@@ -10,6 +10,9 @@ using MsieJavaScriptEngine.ActiveScript;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.JsRt.Edge;
 using MsieJavaScriptEngine.JsRt.Ie;
+#if NET40
+using MsieJavaScriptEngine.Polyfills.System;
+#endif
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
 

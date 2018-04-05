@@ -1,7 +1,6 @@
 ﻿#if !NETSTANDARD
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
@@ -9,6 +8,7 @@ using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -46,12 +46,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Constructs an instance of the Active Script wrapper
 		/// </summary>
-		/// <param name="engineModeName">Name of JS engine mode</param>
 		/// <param name="clsid">CLSID of JS engine</param>
 		/// <param name="languageVersion">Version of script language</param>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		protected ActiveScriptWrapperBase(string engineModeName, string clsid,
-			ScriptLanguageVersion languageVersion, bool enableDebugging)
+		protected ActiveScriptWrapperBase(string clsid, ScriptLanguageVersion languageVersion,
+			bool enableDebugging)
 		{
 			_enableDebugging = enableDebugging;
 
@@ -69,9 +68,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 						IntPtr.Zero, ref scriptLanguageVersion);
 					if (result != ComErrorCode.S_OK)
 					{
-						throw new JsEngineLoadException(
-							string.Format(NetFrameworkStrings.Engine_ActiveScriptLanguageVersionSelectionFailed, languageVersion),
-							engineModeName
+						throw new InvalidOperationException(
+							string.Format(NetFrameworkStrings.Engine_ActiveScriptLanguageVersionSelectionFailed,
+								languageVersion)
 						);
 					}
 				}
@@ -121,19 +120,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 		}
 
 		/// <summary>
-		/// Retrieves the IDispatch interface for the methods and properties associated
-		/// with the currently running script
+		/// Gets a script dispatch
 		/// </summary>
-		/// <param name="itemName">The name of the item for which the caller needs the associated
-		/// dispatch object. If this parameter is null, the dispatch object contains as its members
-		/// all of the global methods and properties defined by the script. Through the
-		/// IDispatch interface and the associated <see cref="ITypeInfo"/> interface, the host can
-		/// invoke script methods or view and modify script variables.</param>
-		/// <param name="dispatch">The object associated with the script's global methods and
-		/// properties. If the scripting engine does not support such an object, null is returned.</param>
-		public void GetScriptDispatch(string itemName, out object dispatch)
+		/// <returns>The object associated with the script's global methods and properties</returns>
+		public object GetScriptDispatch()
 		{
-			_activeScript.GetScriptDispatch(itemName, out dispatch);
+			object dispatch;
+			_activeScript.GetScriptDispatch(null, out dispatch);
+
+			return dispatch;
 		}
 
 		/// <summary>

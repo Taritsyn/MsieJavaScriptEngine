@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace MsieJavaScriptEngine
+namespace MsieJavaScriptEngine.Utilities
 {
 	internal struct InterlockedStatedFlag
 	{

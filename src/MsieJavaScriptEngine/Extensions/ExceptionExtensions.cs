@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace MsieJavaScriptEngine.Utilities
+namespace MsieJavaScriptEngine.Extensions
 {
 	/// <summary>
 	/// Exception extensions

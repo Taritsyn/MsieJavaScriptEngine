@@ -105,8 +105,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				{
 					int errorNumber = ComHelpers.HResult.GetFacility(hResult) == ComErrorCode.FACILITY_CONTROL ?
 						ComHelpers.HResult.GetCode(hResult) : 0;
-					category = ActiveScriptJsErrorHelpers.IsEngineError(errorNumber) ?
-						JsErrorCategory.Engine : _jsEngine.ShortenErrorCategoryName(exceptionInfo.bstrSource);
+					category = _jsEngine.ShortenErrorCategoryName(exceptionInfo.bstrSource);
 					description = exceptionInfo.bstrDescription;
 					type = _jsEngine.GetErrorTypeByNumber(errorNumber);
 

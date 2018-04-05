@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 using MsieJavaScriptEngine.Constants;
 #if NET40
-using MsieJavaScriptEngine.Utilities;
+using MsieJavaScriptEngine.Polyfills.System;
 #endif
 
 namespace MsieJavaScriptEngine.Helpers

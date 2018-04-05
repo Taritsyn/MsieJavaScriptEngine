@@ -342,13 +342,16 @@ var foo = 'Browser's bar';";
 	}
 }
 
-var a = 8;
-var b = 15;
+(function (foo) {
+	var a = 8;
+	var b = 15;
 
-foo(a, b);";
+	foo(a, b);
+})(foo);";
 			string targetOutputPattern = @"^ReferenceError: 'bar' is (un|not )defined" + Environment.NewLine +
 				@"   at foo \(functions.js:4:3\)" + Environment.NewLine +
-				@"   at Global code \(functions.js:11:1\)$"
+				@"   at Anonymous function \(functions.js:12:2\)" + Environment.NewLine +
+				@"   at Global code \(functions.js:8:2\)$"
 				;
 
 			JsRuntimeException exception = null;

@@ -6,6 +6,7 @@ using System.Runtime.ExceptionServices;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
+using MsieJavaScriptEngine.Extensions;
 using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine
@@ -187,7 +188,7 @@ namespace MsieJavaScriptEngine
 
 			if (func == null)
 			{
-				throw new ArgumentNullException("func");
+				throw new ArgumentNullException(nameof(func));
 			}
 
 			return (T)InnnerInvoke(() => func());
@@ -204,7 +205,7 @@ namespace MsieJavaScriptEngine
 
 			if (action == null)
 			{
-				throw new ArgumentNullException("action");
+				throw new ArgumentNullException(nameof(action));
 			}
 
 			InnnerInvoke(() =>

@@ -924,7 +924,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			if (arguments.Length > ushort.MaxValue)
 			{
-				throw new ArgumentOutOfRangeException("arguments");
+				throw new ArgumentOutOfRangeException(nameof(arguments));
 			}
 
 			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsCallFunction(this, arguments, (ushort)arguments.Length, out returnReference));
@@ -946,7 +946,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			if (arguments.Length > ushort.MaxValue)
 			{
-				throw new ArgumentOutOfRangeException("arguments");
+				throw new ArgumentOutOfRangeException(nameof(arguments));
 			}
 
 			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsConstructObject(this, arguments, (ushort)arguments.Length, out returnReference));

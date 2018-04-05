@@ -132,20 +132,23 @@
   <data name="Common_ResourceIsNull" xml:space="preserve">
     <value>Resource with name '{0}' is null.</value>
   </data>
+  <data name="Common_SeeOriginalErrorMessage" xml:space="preserve">
+    <value>See the original error message: “{0}”.</value>
+  </data>
   <data name="Common_ValueTypeCannotBeNull" xml:space="preserve">
     <value>Cannot convert null to a value type.</value>
   </data>
-  <data name="Engine_EdgeJsEngineNotLoaded" xml:space="preserve">
-    <value>Failed to load a Chakra Edge JsRT JavaScript engine. Try to install the Windows 10 with Edge browser.
-See more details:
-
-{0}</value>
+  <data name="Engine_AssemblyNotRegistered" xml:space="preserve">
+    <value>Most likely it happened, because the '{0}' assembly was not registered in your system.</value>
   </data>
-  <data name="Engine_IeJsEngineNotLoaded" xml:space="preserve">
-    <value>Failed to load a {0} JavaScript engine. Try to install the Internet Explorer {1} or higher.
-See more details:
-
-{2}</value>
+  <data name="Engine_EdgeInstallationRequired" xml:space="preserve">
+    <value>Try to install the Windows 10 with Edge browser.</value>
+  </data>
+  <data name="Engine_IeInstallationRequired" xml:space="preserve">
+    <value>Try to install the Internet Explorer {0} or higher.</value>
+  </data>
+  <data name="Engine_JsEngineNotLoaded" xml:space="preserve">
+    <value>Failed to create instance of the MsieJsEngine in {0} mode.</value>
   </data>
   <data name="ErrorDetails_CallStack" xml:space="preserve">
     <value>Call stack</value>

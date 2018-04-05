@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 using MsieJavaScriptEngine.Constants;
-using MsieJavaScriptEngine.Utilities;
+using MsieJavaScriptEngine.Extensions;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
