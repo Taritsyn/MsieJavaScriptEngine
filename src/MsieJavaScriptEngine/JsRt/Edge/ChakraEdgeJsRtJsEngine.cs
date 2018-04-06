@@ -86,23 +86,11 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			}
 			catch (DllNotFoundException e)
 			{
-				throw WrapTypeLoadException(e);
-			}
-#if NETSTANDARD1_3
-			catch (TypeLoadException e)
-#else
-			catch (EntryPointNotFoundException e)
-#endif
-			{
-				throw WrapTypeLoadException(e);
-			}
-			catch (OriginalException e)
-			{
-				throw WrapJsException(e);
+				throw WrapDllNotFoundException(e);
 			}
 			catch (Exception e)
 			{
-				throw JsErrorHelpers.WrapUnknownEngineLoadException(e, _engineModeName);
+				throw JsErrorHelpers.WrapEngineLoadException(e, _engineModeName, true);
 			}
 			finally
 			{
@@ -926,7 +914,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 								callStack = JsErrorHelpers.StringifyCallStackItems(callStackItems);
 							}
 
-							message = JsErrorHelpers.GenerateErrorMessage(type, description, callStack);
+							message = JsErrorHelpers.GenerateScriptErrorMessage(type, description, callStack);
 						}
 						else
 						{
@@ -960,7 +948,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							}
 
 							sourceFragment = JsErrorHelpers.GetSourceFragment(sourceLine, columnNumber);
-							message = JsErrorHelpers.GenerateErrorMessage(type, description, documentName,
+							message = JsErrorHelpers.GenerateScriptErrorMessage(type, description, documentName,
 								lineNumber, columnNumber, sourceFragment);
 						}
 					}
@@ -1023,27 +1011,34 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			return wrapperException;
 		}
 
-		private WrapperEngineLoadException WrapTypeLoadException(TypeLoadException originalTypeLoadException)
+		private WrapperEngineLoadException WrapDllNotFoundException(
+			DllNotFoundException originalDllNotFoundException)
 		{
-			string originalMessage = originalTypeLoadException.Message;
-			string jsEngineNotLoadedPart = string.Format(CommonStrings.Engine_JsEngineNotLoaded, _engineModeName);
+			string originalMessage = originalDllNotFoundException.Message;
+			string description;
 			string message;
 
-			if (originalTypeLoadException is DllNotFoundException
-				&& originalMessage.ContainsQuotedValue(DllName.Chakra))
+			if (originalMessage.ContainsQuotedValue(DllName.Chakra))
 			{
-				message = jsEngineNotLoadedPart + " " +
-					string.Format(CommonStrings.Engine_AssemblyNotRegistered, DllName.Chakra) + " " +
+				description = string.Format(CommonStrings.Engine_AssemblyNotRegistered, DllName.Chakra) +
+					" " +
 					string.Format(CommonStrings.Engine_EdgeInstallationRequired)
 					;
+				message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName);
 			}
 			else
 			{
-				message = jsEngineNotLoadedPart + " " +
-					string.Format(CommonStrings.Common_SeeOriginalErrorMessage, originalMessage);
+				description = originalMessage;
+				message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName, true);
 			}
 
-			return new WrapperEngineLoadException(message, _engineModeName, originalTypeLoadException);
+			var wrapperEngineLoadException = new WrapperEngineLoadException(message, _engineModeName,
+				originalDllNotFoundException)
+			{
+				Description = description
+			};
+
+			return wrapperEngineLoadException;
 		}
 
 		#endregion

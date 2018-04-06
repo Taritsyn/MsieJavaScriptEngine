@@ -103,13 +103,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			{
 				throw WrapTypeLoadException(e);
 			}
-			catch (OriginalException e)
-			{
-				throw WrapJsException(e);
-			}
 			catch (Exception e)
 			{
-				throw JsErrorHelpers.WrapUnknownEngineLoadException(e, _engineModeName);
+				throw JsErrorHelpers.WrapEngineLoadException(e, _engineModeName, true);
 			}
 			finally
 			{
@@ -950,7 +946,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 								callStack = JsErrorHelpers.StringifyCallStackItems(callStackItems);
 							}
 
-							message = JsErrorHelpers.GenerateErrorMessage(type, description, callStack);
+							message = JsErrorHelpers.GenerateScriptErrorMessage(type, description, callStack);
 						}
 						else
 						{
@@ -979,7 +975,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 							}
 
 							sourceFragment = JsErrorHelpers.GetSourceFragment(sourceLine, columnNumber);
-							message = JsErrorHelpers.GenerateErrorMessage(type, description, documentName,
+							message = JsErrorHelpers.GenerateScriptErrorMessage(type, description, documentName,
 								lineNumber, columnNumber, sourceFragment);
 						}
 					}
@@ -1061,32 +1057,38 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			string originalMessage = originalTypeLoadException.Message;
 			bool isDllNotFound = originalTypeLoadException is DllNotFoundException;
-			string jsEngineNotLoadedPart = string.Format(CommonStrings.Engine_JsEngineNotLoaded, _engineModeName);
+			string description;
 			string message;
 
 			if (originalMessage.ContainsQuotedValue(DllName.JScript9)
 				&& (isDllNotFound || originalMessage.ContainsQuotedValue("JsCreateRuntime")))
 			{
-				StringBuilder messageBuilder = StringBuilderPool.GetBuilder();
-				messageBuilder.Append(jsEngineNotLoadedPart);
-				messageBuilder.Append(" ");
+				StringBuilder descriptionBuilder = StringBuilderPool.GetBuilder();
 				if (isDllNotFound)
 				{
-					messageBuilder.AppendFormat(CommonStrings.Engine_AssemblyNotRegistered, DllName.JScript9);
-					messageBuilder.Append(" ");
+					descriptionBuilder.AppendFormat(CommonStrings.Engine_AssemblyNotRegistered, DllName.JScript9);
+					descriptionBuilder.Append(" ");
 				}
-				messageBuilder.AppendFormat(CommonStrings.Engine_IeInstallationRequired, LOWER_IE_VERSION);
+				descriptionBuilder.AppendFormat(CommonStrings.Engine_IeInstallationRequired, LOWER_IE_VERSION);
 
-				message = messageBuilder.ToString();
-				StringBuilderPool.ReleaseBuilder(messageBuilder);
+				description = descriptionBuilder.ToString();
+				StringBuilderPool.ReleaseBuilder(descriptionBuilder);
+
+				message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName);
 			}
 			else
 			{
-				message = jsEngineNotLoadedPart + " " +
-					string.Format(CommonStrings.Common_SeeOriginalErrorMessage, originalMessage);
+				description = originalMessage;
+				message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName, true);
 			}
 
-			return new WrapperEngineLoadException(message, _engineModeName, originalTypeLoadException);
+			var wrapperEngineLoadException = new WrapperEngineLoadException(message, _engineModeName,
+				originalTypeLoadException)
+			{
+				Description = description
+			};
+
+			return wrapperEngineLoadException;
 		}
 
 		#endregion

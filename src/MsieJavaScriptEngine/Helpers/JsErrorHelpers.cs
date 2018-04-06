@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using MsieJavaScriptEngine;
 using MsieJavaScriptEngine.Extensions;
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
@@ -117,7 +116,59 @@ namespace MsieJavaScriptEngine.Helpers
 		#region Generation of error messages
 
 		/// <summary>
-		/// Generates a error message
+		/// Generates a engine load error message
+		/// </summary>
+		/// <param name="description">Description of error</param>
+		/// <param name="engineModeName">Name of JS engine mode</param>
+		/// <param name="quoteDescription">Makes a quote from the description</param>
+		/// <returns>Engine load error message</returns>
+		internal static string GenerateEngineLoadErrorMessage(string description, string engineModeName,
+			bool quoteDescription = false)
+		{
+			if (engineModeName == null)
+			{
+				throw new ArgumentNullException(nameof(engineModeName));
+			}
+
+			if (string.IsNullOrWhiteSpace(engineModeName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(engineModeName)),
+					nameof(engineModeName)
+				);
+			}
+
+			string jsEngineNotLoadedPart = string.Format(CommonStrings.Engine_JsEngineNotLoaded,
+				engineModeName);
+			string message;
+
+			if (!string.IsNullOrWhiteSpace(description))
+			{
+				StringBuilder messageBuilder = StringBuilderPool.GetBuilder();
+				messageBuilder.Append(jsEngineNotLoadedPart);
+				messageBuilder.Append(" ");
+				if (quoteDescription)
+				{
+					messageBuilder.AppendFormat(CommonStrings.Common_SeeOriginalErrorMessage, description);
+				}
+				else
+				{
+					messageBuilder.Append(description);
+				}
+
+				message = messageBuilder.ToString();
+				StringBuilderPool.ReleaseBuilder(messageBuilder);
+			}
+			else
+			{
+				message = jsEngineNotLoadedPart;
+			}
+
+			return message;
+		}
+
+		/// <summary>
+		/// Generates a script error message
 		/// </summary>
 		/// <param name="type">Type of the script error</param>
 		/// <param name="description">Description of error</param>
@@ -125,28 +176,28 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <param name="lineNumber">Line number</param>
 		/// <param name="columnNumber">Column number</param>
 		/// <param name="sourceFragment">Source fragment</param>
-		/// <returns>Error message</returns>
-		internal static string GenerateErrorMessage(string type, string description,
+		/// <returns>Script error message</returns>
+		internal static string GenerateScriptErrorMessage(string type, string description,
 			string documentName, int lineNumber, int columnNumber, string sourceFragment)
 		{
-			return GenerateErrorMessage(type, description, documentName, lineNumber, columnNumber,
+			return GenerateScriptErrorMessage(type, description, documentName, lineNumber, columnNumber,
 				sourceFragment, string.Empty);
 		}
 
 		/// <summary>
-		/// Generates a error message
+		/// Generates a script error message
 		/// </summary>
 		/// <param name="type">Type of the script error</param>
 		/// <param name="description">Description of error</param>
 		/// <param name="callStack">String representation of the script call stack</param>
-		/// <returns>Error message</returns>
-		internal static string GenerateErrorMessage(string type, string description, string callStack)
+		/// <returns>Script error message</returns>
+		internal static string GenerateScriptErrorMessage(string type, string description, string callStack)
 		{
-			return GenerateErrorMessage(type, description, string.Empty, 0, 0, string.Empty, callStack);
+			return GenerateScriptErrorMessage(type, description, string.Empty, 0, 0, string.Empty, callStack);
 		}
 
 		/// <summary>
-		/// Generates a error message
+		/// Generates a script error message
 		/// </summary>
 		/// <param name="type">Type of the script error</param>
 		/// <param name="description">Description of error</param>
@@ -155,8 +206,8 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <param name="columnNumber">Column number</param>
 		/// <param name="sourceFragment">Source fragment</param>
 		/// <param name="callStack">String representation of the script call stack</param>
-		/// <returns>Error message</returns>
-		internal static string GenerateErrorMessage(string type, string description, string documentName,
+		/// <returns>Script error message</returns>
+		internal static string GenerateScriptErrorMessage(string type, string description, string documentName,
 			int lineNumber, int columnNumber, string sourceFragment, string callStack)
 		{
 			if (description == null)
@@ -386,13 +437,18 @@ namespace MsieJavaScriptEngine.Helpers
 
 		#region Exception wrapping
 
-		public static JsEngineLoadException WrapUnknownEngineLoadException(Exception originalException,
-			string engineModeName)
+		public static JsEngineLoadException WrapEngineLoadException(Exception exception,
+			string engineModeName, bool quoteDescription = false)
 		{
-			string message = string.Format(CommonStrings.Engine_JsEngineNotLoaded, engineModeName) + " " +
-				string.Format(CommonStrings.Common_SeeOriginalErrorMessage, originalException.Message);
+			string description = exception.Message;
+			string message = GenerateEngineLoadErrorMessage(description, engineModeName, quoteDescription);
 
-			return new JsEngineLoadException(message, engineModeName, originalException);
+			var jsEngineLoadException = new JsEngineLoadException(message, engineModeName, exception)
+			{
+				Description = description
+			};
+
+			return jsEngineLoadException;
 		}
 
 		#endregion

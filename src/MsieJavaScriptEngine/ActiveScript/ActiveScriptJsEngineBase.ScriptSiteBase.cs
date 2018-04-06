@@ -137,7 +137,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 						callStack = JsErrorHelpers.StringifyCallStackItems(GetCallStackItems());
 					}
 
-					message = JsErrorHelpers.GenerateErrorMessage(type, description, documentName,
+					message = JsErrorHelpers.GenerateScriptErrorMessage(type, description, documentName,
 						(int)lineNumber, columnNumber, sourceFragment, callStack);
 				}
 

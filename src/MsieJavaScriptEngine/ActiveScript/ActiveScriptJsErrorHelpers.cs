@@ -13,19 +13,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 	internal static class ActiveScriptJsErrorHelpers
 	{
 		/// <summary>
-		/// Checks whether the specified error number is engine error
-		/// </summary>
-		/// <param name="errorNumber">Error number</param>
-		/// <returns>Result of check (true - is engine error; false - is not engine error)</returns>
-		public static bool IsEngineError(int errorNumber)
-		{
-			bool result = errorNumber == JScriptSyntaxErrorNumber.OutOfMemory
-				|| errorNumber == JScriptRuntimeErrorNumber.OutOfMemory;
-
-			return result;
-		}
-
-		/// <summary>
 		/// Checks whether the specified error number is compilation error
 		/// </summary>
 		/// <param name="errorNumber">Error number</param>

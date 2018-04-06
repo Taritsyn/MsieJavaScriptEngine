@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Expando;
-using System.Text;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
@@ -135,29 +134,25 @@ namespace MsieJavaScriptEngine.ActiveScript
 			{
 				throw WrapCOMException(e);
 			}
-			catch (InvalidOperationException e)
-			{
-				string message = string.Format(CommonStrings.Engine_JsEngineNotLoaded, _engineModeName) + " " +
-					e.Message;
-
-				throw new JsEngineLoadException(message, _engineModeName, e);
-			}
 			catch (ActiveScriptException e)
 			{
-				int errorNumber = ComHelpers.HResult.GetFacility(e.ErrorCode) == ComErrorCode.FACILITY_CONTROL ?
-					ComHelpers.HResult.GetCode(e.ErrorCode) : 0;
-				if (ActiveScriptJsErrorHelpers.IsEngineError(errorNumber))
+				string description = e.Description;
+				string message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName);
+
+				var wrapperEngineLoadException = new JsEngineLoadException(message, _engineModeName, e)
 				{
-					throw new JsEngineException(e.Message, _engineModeName, e);
-				}
-				else
-				{
-					throw WrapActiveScriptException(e);
-				}
+					Description = description
+				};
+
+				throw wrapperEngineLoadException;
+			}
+			catch (InvalidOperationException e)
+			{
+				throw JsErrorHelpers.WrapEngineLoadException(e, _engineModeName);
 			}
 			catch (Exception e)
 			{
-				throw JsErrorHelpers.WrapUnknownEngineLoadException(e, _engineModeName);
+				throw JsErrorHelpers.WrapEngineLoadException(e, _engineModeName, true);
 			}
 			finally
 			{
@@ -606,24 +601,31 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		private JsEngineLoadException WrapCOMException(COMException originalComException)
 		{
-			string jsEngineNotLoadedPart = string.Format(CommonStrings.Engine_JsEngineNotLoaded, _engineModeName);
+			string description;
 			string message;
 
 			if (originalComException.ErrorCode == ComErrorCode.E_CLASS_NOT_REGISTERED)
 			{
-				message = jsEngineNotLoadedPart + " " +
-					string.Format(CommonStrings.Engine_AssemblyNotRegistered,
-						_settings.EngineMode == JsEngineMode.Classic ? DllName.JScript : DllName.JScript9) + " " +
+				description = string.Format(CommonStrings.Engine_AssemblyNotRegistered,
+						_settings.EngineMode == JsEngineMode.Classic ? DllName.JScript : DllName.JScript9) +
+					" " +
 					string.Format(CommonStrings.Engine_IeInstallationRequired, _lowerIeVersion)
 					;
+				message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName);
 			}
 			else
 			{
-				message = jsEngineNotLoadedPart + " " +
-					string.Format(CommonStrings.Common_SeeOriginalErrorMessage, originalComException.Message);
+				description = originalComException.Message;
+				message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName, true);
 			}
 
-			return new JsEngineLoadException(message, _engineModeName, originalComException);
+			var wrapperEngineLoadException = new JsEngineLoadException(message, _engineModeName,
+				originalComException)
+			{
+				Description = description
+			};
+
+			return wrapperEngineLoadException;
 		}
 
 		/// <summary>
