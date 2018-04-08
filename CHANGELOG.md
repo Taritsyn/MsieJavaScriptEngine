@@ -1,6 +1,16 @@
 Change log
 ==========
 
+## v3.0.0 Beta 1 - April 8, 2018
+ * Format of the error messages was unified
+ * Created a new exception classes: `JsCompilationException`, `JsEngineException`, `JsFatalException` and `JsUsageException`. These exceptions are responsible for handling errors, some of which were previously handled by the `JsRuntimeException` class.
+ * In the `JsException` class was added two new properties: `Category` and `Description`
+ * From the `JsRuntimeException` class was removed one property - `ErrorCode`
+ * In the `JsRuntimeException` class was added three new properties: `Type`, `DocumentName` and `CallStack`
+ * `JsScriptInterruptedException` class was renamed to the `JsInterruptedException` class and now is inherited from the `JsRuntimeException` class
+ * `JsEngineLoadException` class now is inherited from the `JsEngineException` class
+ * `Format` method of the `JsErrorHelpers` class was renamed to the `GenerateErrorDetails`
+
 ## v3.0.0 Alpha 3 - December 10, 2017
  * Added support of .NET Standard 2.0
  * Fixed a error, that occurred in the `Classic` mode during removing the embedded host objects and types

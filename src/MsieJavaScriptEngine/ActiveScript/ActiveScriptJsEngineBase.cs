@@ -137,7 +137,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			catch (ActiveScriptException e)
 			{
 				string description = e.Description;
-				string message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName);
+				string message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName, true);
 
 				var wrapperEngineLoadException = new JsEngineLoadException(message, _engineModeName, e)
 				{
