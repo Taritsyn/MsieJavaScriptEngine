@@ -1,7 +1,6 @@
 ﻿#if !NETSTANDARD1_3
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
@@ -84,7 +83,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 						IntPtr.Zero, ref scriptLanguageVersion);
 					if (result != (uint)ScriptHResult.Ok)
 					{
-						throw new JsEngineLoadException(
+						throw new InvalidOperationException(
 							string.Format(NetFrameworkStrings.Runtime_ActiveScriptLanguageVersionSelectionFailed, languageVersion));
 					}
 				}
@@ -134,19 +133,15 @@ namespace MsieJavaScriptEngine.ActiveScript
 		}
 
 		/// <summary>
-		/// Retrieves the IDispatch interface for the methods and properties associated
-		/// with the currently running script
+		/// Gets a script dispatch
 		/// </summary>
-		/// <param name="itemName">The name of the item for which the caller needs the associated
-		/// dispatch object. If this parameter is null, the dispatch object contains as its members
-		/// all of the global methods and properties defined by the script. Through the
-		/// IDispatch interface and the associated <see cref="ITypeInfo"/> interface, the host can
-		/// invoke script methods or view and modify script variables.</param>
-		/// <param name="dispatch">The object associated with the script's global methods and
-		/// properties. If the scripting engine does not support such an object, null is returned.</param>
-		public void GetScriptDispatch(string itemName, out object dispatch)
+		/// <returns>The object associated with the script's global methods and properties</returns>
+		public object GetScriptDispatch()
 		{
-			_activeScript.GetScriptDispatch(itemName, out dispatch);
+			object dispatch;
+			_activeScript.GetScriptDispatch(null, out dispatch);
+
+			return dispatch;
 		}
 
 		/// <summary>

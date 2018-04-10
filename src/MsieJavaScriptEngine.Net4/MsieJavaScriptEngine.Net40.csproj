@@ -54,6 +54,9 @@
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptJsEngineBase.ScriptSite.cs">
       <Link>ActiveScript\ActiveScriptJsEngineBase.ScriptSite.cs</Link>
     </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptJsErrorHelpers.cs">
+      <Link>ActiveScript\ActiveScriptJsErrorHelpers.cs</Link>
+    </Compile>
     <Compile Include="..\MsieJavaScriptEngine\ActiveScript\ActiveScriptWrapper32.cs">
       <Link>ActiveScript\ActiveScriptWrapper32.cs</Link>
     </Compile>
@@ -497,6 +500,9 @@
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\Utilities\StringBuilderExtensions.cs">
       <Link>Utilities\StringBuilderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Utilities\StringExtensions.cs">
+      <Link>Utilities\StringExtensions.cs</Link>
     </Compile>
     <Compile Include="..\MsieJavaScriptEngine\Utilities\TypeConverter.cs">
       <Link>Utilities\TypeConverter.cs</Link>

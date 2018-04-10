@@ -8,7 +8,7 @@ using MsieJavaScriptEngine.Utilities;
 namespace MsieJavaScriptEngine.Helpers
 {
 	/// <summary>
-	/// JavaScript engine error helpers
+	/// JavaScript error helpers
 	/// </summary>
 	public static class JsErrorHelpers
 	{

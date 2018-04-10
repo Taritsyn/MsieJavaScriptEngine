@@ -56,34 +56,44 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		public ChakraEdgeJsRtJsEngine(bool enableDebugging)
 			: base(JsEngineMode.ChakraEdgeJsRt, enableDebugging)
 		{
-			_dispatcher.Invoke(() =>
+			try
 			{
-				try
+				_dispatcher.Invoke(() =>
 				{
 					_jsRuntime = CreateJsRuntime();
 					_jsContext = _jsRuntime.CreateContext();
-					_jsContext.AddRef();
-				}
-				catch (JsUsageException e)
+					if (_jsContext.IsValid)
+					{
+						_jsContext.AddRef();
+					}
+				});
+			}
+			catch (JsUsageException e)
+			{
+				string errorMessage;
+				if (e.ErrorCode == JsErrorCode.WrongThread)
 				{
-					string errorMessage;
-					if (e.ErrorCode == JsErrorCode.WrongThread)
-					{
-						errorMessage = CommonStrings.Runtime_JsEnginesConflictOnMachine;
-					}
-					else
-					{
-						errorMessage = string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message);
-					}
+					errorMessage = CommonStrings.Runtime_JsEnginesConflictOnMachine;
+				}
+				else
+				{
+					errorMessage = string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message);
+				}
 
-					throw new JsEngineLoadException(errorMessage, _engineModeName);
-				}
-				catch (Exception e)
+				throw new JsEngineLoadException(errorMessage, _engineModeName);
+			}
+			catch (Exception e)
+			{
+				throw new JsEngineLoadException(
+					string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message), _engineModeName);
+			}
+			finally
+			{
+				if (!_jsContext.IsValid)
 				{
-					throw new JsEngineLoadException(
-						string.Format(CommonStrings.Runtime_EdgeJsEngineNotLoaded, e.Message), _engineModeName);
+					Dispose();
 				}
-			});
+			}
 		}
 
 		/// <summary>
@@ -131,7 +141,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				}
 				catch (DllNotFoundException e)
 				{
-					if (e.Message.IndexOf("'" + DllName.Chakra + "'", StringComparison.OrdinalIgnoreCase) != -1)
+					if (e.Message.ContainsQuotedValue(DllName.Chakra))
 					{
 						_isSupported = false;
 					}
@@ -996,11 +1006,17 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 								.Concat(processedArgs)
 								.ToArray()
 								;
-							resultValue = functionValue.CallFunction(allProcessedArgs);
 
-							foreach (EdgeJsValue processedArg in processedArgs)
+							try
 							{
-								RemoveReferenceToValue(processedArg);
+								resultValue = functionValue.CallFunction(allProcessedArgs);
+							}
+							finally
+							{
+								foreach (EdgeJsValue processedArg in processedArgs)
+								{
+									RemoveReferenceToValue(processedArg);
+								}
 							}
 						}
 						else
@@ -1081,7 +1097,16 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					try
 					{
 						EdgeJsValue inputValue = MapToScriptType(value);
-						EdgeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						AddReferenceToValue(inputValue);
+
+						try
+						{
+							EdgeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						}
+						finally
+						{
+							RemoveReferenceToValue(inputValue);
+						}
 					}
 					catch (JsException e)
 					{
@@ -1188,7 +1213,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					_dispatcher.Invoke(() =>
 					{
-						_jsContext.Release();
+						if (_jsContext.IsValid)
+						{
+							_jsContext.Release();
+						}
 						_jsRuntime.Dispose();
 					});
 					_dispatcher.Dispose();

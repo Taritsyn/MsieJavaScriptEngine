@@ -24,7 +24,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
 		public ChakraActiveScriptJsEngine(bool enableDebugging)
-			: base(JsEngineMode.ChakraActiveScript, enableDebugging, false, false)
+			: base(JsEngineMode.ChakraActiveScript, enableDebugging)
 		{ }
 
 

@@ -62,36 +62,46 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		public ChakraIeJsRtJsEngine(bool enableDebugging)
 			: base(JsEngineMode.ChakraIeJsRt, enableDebugging)
 		{
-			_dispatcher.Invoke(() =>
+			try
 			{
-				try
+				_dispatcher.Invoke(() =>
 				{
 					_jsRuntime = CreateJsRuntime();
 					_jsContext = _jsRuntime.CreateContext();
-					_jsContext.AddRef();
-				}
-				catch (JsUsageException e)
+					if (_jsContext.IsValid)
+					{
+						_jsContext.AddRef();
+					}
+				});
+			}
+			catch (JsUsageException e)
+			{
+				string errorMessage;
+				if (e.ErrorCode == JsErrorCode.WrongThread)
 				{
-					string errorMessage;
-					if (e.ErrorCode == JsErrorCode.WrongThread)
-					{
-						errorMessage = CommonStrings.Runtime_JsEnginesConflictOnMachine;
-					}
-					else
-					{
-						errorMessage = string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
-							_engineModeName, LOWER_IE_VERSION, e.Message);
-					}
+					errorMessage = CommonStrings.Runtime_JsEnginesConflictOnMachine;
+				}
+				else
+				{
+					errorMessage = string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
+						_engineModeName, LOWER_IE_VERSION, e.Message);
+				}
 
-					throw new JsEngineLoadException(errorMessage, _engineModeName);
-				}
-				catch (Exception e)
+				throw new JsEngineLoadException(errorMessage, _engineModeName);
+			}
+			catch (Exception e)
+			{
+				throw new JsEngineLoadException(
+					string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
+						_engineModeName, LOWER_IE_VERSION, e.Message), _engineModeName);
+			}
+			finally
+			{
+				if (!_jsContext.IsValid)
 				{
-					throw new JsEngineLoadException(
-						string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
-							_engineModeName, LOWER_IE_VERSION, e.Message), _engineModeName);
+					Dispose();
 				}
-			});
+			}
 		}
 
 		/// <summary>
@@ -139,7 +149,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				}
 				catch (DllNotFoundException e)
 				{
-					if (e.Message.IndexOf("'" + DllName.JScript9 + "'", StringComparison.OrdinalIgnoreCase) != -1)
+					if (e.Message.ContainsQuotedValue(DllName.JScript9))
 					{
 						_isSupported = false;
 					}
@@ -155,8 +165,8 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 #endif
 				{
 					string message = e.Message;
-					if (message.IndexOf("'" + DllName.JScript9 + "'", StringComparison.OrdinalIgnoreCase) != -1
-						&& message.IndexOf("'JsCreateRuntime'", StringComparison.OrdinalIgnoreCase) != -1)
+					if (message.ContainsQuotedValue(DllName.JScript9)
+						&& message.ContainsQuotedValue("JsCreateRuntime"))
 					{
 						_isSupported = false;
 					}
@@ -1034,11 +1044,17 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 								.Concat(processedArgs)
 								.ToArray()
 								;
-							resultValue = functionValue.CallFunction(allProcessedArgs);
 
-							foreach (IeJsValue processedArg in processedArgs)
+							try
 							{
-								RemoveReferenceToValue(processedArg);
+								resultValue = functionValue.CallFunction(allProcessedArgs);
+							}
+							finally
+							{
+								foreach (IeJsValue processedArg in processedArgs)
+								{
+									RemoveReferenceToValue(processedArg);
+								}
 							}
 						}
 						else
@@ -1119,7 +1135,16 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					try
 					{
 						IeJsValue inputValue = MapToScriptType(value);
-						IeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						AddReferenceToValue(inputValue);
+
+						try
+						{
+							IeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						}
+						finally
+						{
+							RemoveReferenceToValue(inputValue);
+						}
 					}
 					catch (JsException e)
 					{
@@ -1226,7 +1251,10 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					_dispatcher.Invoke(() =>
 					{
-						_jsContext.Release();
+						if (_jsContext.IsValid)
+						{
+							_jsContext.Release();
+						}
 						_jsRuntime.Dispose();
 					});
 					_dispatcher.Dispose();

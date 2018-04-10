@@ -20,16 +20,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 	internal abstract partial class ActiveScriptJsEngineBase : InnerJsEngineBase
 	{
 		/// <summary>
-		/// Name of resource, which contains a ECMAScript 5 Polyfill
-		/// </summary>
-		private const string ES5_POLYFILL_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.ES5.min.js";
-
-		/// <summary>
-		/// Name of resource, which contains a JSON2 library
-		/// </summary>
-		private const string JSON2_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.json2.min.js";
-
-		/// <summary>
 		/// Instance of Active Script wrapper
 		/// </summary>
 		private IActiveScriptWrapper _activeScriptWrapper;
@@ -96,10 +86,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		/// <param name="engineMode">JS engine mode</param>
 		/// <param name="enableDebugging">Flag for whether to enable script debugging features</param>
-		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
-		protected ActiveScriptJsEngineBase(JsEngineMode engineMode, bool enableDebugging,
-			bool useEcmaScript5Polyfill, bool useJson2Library)
+		protected ActiveScriptJsEngineBase(JsEngineMode engineMode, bool enableDebugging)
 			: base(engineMode)
 		{
 			string lowerIeVersion;
@@ -119,36 +106,41 @@ namespace MsieJavaScriptEngine.ActiveScript
 				throw new NotSupportedException();
 			}
 
-			_dispatcher.Invoke(() =>
+			try
 			{
-				try
+				_dispatcher.Invoke(() =>
 				{
 					_activeScriptWrapper = Utils.Is64BitProcess() ?
 						(IActiveScriptWrapper)new ActiveScriptWrapper64(engineMode, enableDebugging)
 						:
 						new ActiveScriptWrapper32(engineMode, enableDebugging)
 						;
-				}
-				catch (Exception e)
+
+					if (enableDebugging)
+					{
+						StartDebugging();
+					}
+
+					_activeScriptWrapper.SetScriptSite(new ScriptSite(this));
+					_activeScriptWrapper.InitNew();
+					_activeScriptWrapper.SetScriptState(ScriptState.Started);
+
+					_dispatch = WrapScriptDispatch(_activeScriptWrapper.GetScriptDispatch());
+				});
+			}
+			catch (Exception e)
+			{
+				throw new JsEngineLoadException(
+					string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
+						_engineModeName, lowerIeVersion, e.Message), _engineModeName);
+			}
+			finally
+			{
+				if (_dispatch == null)
 				{
-					throw new JsEngineLoadException(
-						string.Format(CommonStrings.Runtime_IeJsEngineNotLoaded,
-							_engineModeName, lowerIeVersion, e.Message), _engineModeName);
+					Dispose();
 				}
-
-				if (enableDebugging)
-				{
-					StartDebugging();
-				}
-
-				_activeScriptWrapper.SetScriptSite(new ScriptSite(this));
-				_activeScriptWrapper.InitNew();
-				_activeScriptWrapper.SetScriptState(ScriptState.Started);
-
-				InitScriptDispatch();
-			});
-
-			LoadResources(useEcmaScript5Polyfill, useJson2Library);
+			}
 		}
 
 		/// <summary>
@@ -276,24 +268,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <returns>Short name of error category</returns>
 		private string ShortenErrorCategoryName(string categoryName)
 		{
-			if (categoryName == null)
-			{
-				throw new ArgumentNullException("categoryName");
-			}
-
-			string shortCategoryName = categoryName;
-			if (categoryName.StartsWith(_errorCategoryNamePrefix, StringComparison.Ordinal))
-			{
-				shortCategoryName = categoryName.Substring(_errorCategoryNamePrefix.Length);
-				if (shortCategoryName.Length > 0)
-				{
-					char[] chars = shortCategoryName.ToCharArray();
-					chars[0] = char.ToUpperInvariant(chars[0]);
-					shortCategoryName = new string(chars);
-				}
-			}
-
-			return shortCategoryName;
+			return ActiveScriptJsErrorHelpers.ShortenErrorItemName(categoryName, _errorCategoryNamePrefix);
 		}
 
 		/// <summary>
@@ -319,27 +294,21 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 		}
 
-		/// <summary>
-		/// Initializes a script dispatch
-		/// </summary>
-		private void InitScriptDispatch()
+		private static IExpando WrapScriptDispatch(object dispatch)
 		{
-			IExpando dispatch = null;
-			object obj;
-
-			_activeScriptWrapper.GetScriptDispatch(null, out obj);
-
-			if (obj != null && obj.GetType().IsCOMObject)
+			IExpando wrappedDispatch = null;
+			if (dispatch != null && dispatch.GetType().IsCOMObject)
 			{
-				dispatch = obj as IExpando;
+				wrappedDispatch = dispatch as IExpando;
 			}
 
-			if (dispatch == null)
+			if (wrappedDispatch == null)
 			{
-				throw new InvalidOperationException(NetFrameworkStrings.Runtime_ActiveScriptDispatcherNotInitialized);
+				throw new InvalidOperationException(
+					NetFrameworkStrings.Runtime_ActiveScriptDispatcherNotInitialized);
 			}
 
-			_dispatch = dispatch;
+			return wrappedDispatch;
 		}
 
 		/// <summary>
@@ -534,55 +503,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private void InnerCollectGarbage(ScriptGCType type)
 		{
 			_activeScriptWrapper.CollectGarbage(type);
-		}
-
-		/// <summary>
-		/// Loads a resources
-		/// </summary>
-		/// <param name="useEcmaScript5Polyfill">Flag for whether to use the ECMAScript 5 Polyfill</param>
-		/// <param name="useJson2Library">Flag for whether to use the JSON2 library</param>
-		private void LoadResources(bool useEcmaScript5Polyfill, bool useJson2Library)
-		{
-			Assembly assembly = GetType().GetTypeInfo().Assembly;
-
-			if (useEcmaScript5Polyfill)
-			{
-				ExecuteResource(ES5_POLYFILL_RESOURCE_NAME, assembly);
-			}
-
-			if (useJson2Library)
-			{
-				ExecuteResource(JSON2_LIBRARY_RESOURCE_NAME, assembly);
-			}
-		}
-
-		/// <summary>
-		/// Executes a code from embedded JS-resource
-		/// </summary>
-		/// <param name="resourceName">The case-sensitive resource name</param>
-		/// <param name="assembly">The assembly, which contains the embedded resource</param>
-		private void ExecuteResource(string resourceName, Assembly assembly)
-		{
-			if (resourceName == null)
-			{
-				throw new ArgumentNullException(
-					"resourceName", string.Format(CommonStrings.Common_ArgumentIsNull, "resourceName"));
-			}
-
-			if (assembly == null)
-			{
-				throw new ArgumentNullException(
-					"assembly", string.Format(CommonStrings.Common_ArgumentIsNull, "assembly"));
-			}
-
-			if (string.IsNullOrWhiteSpace(resourceName))
-			{
-				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, "resourceName"), "resourceName");
-			}
-
-			string code = Utils.GetResourceAsString(resourceName, assembly);
-			Execute(code, resourceName);
 		}
 
 		#region IInnerJsEngine implementation

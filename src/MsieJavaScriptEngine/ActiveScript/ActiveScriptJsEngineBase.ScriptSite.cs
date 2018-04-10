@@ -52,7 +52,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 				int hResult = exceptionInfo.scode;
 				int errorCode = HResultHelpers.GetCode(hResult);
-				bool isSyntaxError = IsSyntaxError(hResult);
+				bool isSyntaxError = ActiveScriptJsErrorHelpers.IsSyntaxError(hResult);
 				string category = exceptionInfo.bstrSource;
 				string description = exceptionInfo.bstrDescription;
 				string helpLink = string.Empty;
@@ -95,24 +95,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 				};
 
 				return activeScriptException;
-			}
-
-			/// <summary>
-			/// Checks whether the specified HRESULT value is syntax error
-			/// </summary>
-			/// <param name="hResult">The HRESULT value</param>
-			/// <returns>Result of check (true - is syntax error; false - is not syntax error)</returns>
-			private static bool IsSyntaxError(int hResult)
-			{
-				bool isSyntaxError = false;
-
-				if (HResultHelpers.GetFacility(hResult) == HResultHelpers.FACILITY_CONTROL)
-				{
-					int errorCode = HResultHelpers.GetCode(hResult);
-					isSyntaxError = errorCode >= 1002 && errorCode <= 1035;
-				}
-
-				return isSyntaxError;
 			}
 
 			/// <summary>
@@ -241,10 +223,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 						string description;
 						stackFrame.GetDescriptionString(true, out description);
 
-						if (string.Equals(description, "JScript global code", StringComparison.Ordinal))
-						{
-							description = "Global code";
-						}
+						description = ActiveScriptJsErrorHelpers.ShortenErrorItemName(
+							description, "JScript ");
 
 						IDebugCodeContext codeContext;
 						stackFrame.GetCodeContext(out codeContext);

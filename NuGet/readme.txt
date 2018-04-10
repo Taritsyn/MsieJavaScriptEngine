@@ -21,8 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   In JsRT modes during calling of the `CollectGarbage` method is no longer
-   performed blocking.
+   Fixed a minor errors.
 
    ============
    PROJECT SITE
