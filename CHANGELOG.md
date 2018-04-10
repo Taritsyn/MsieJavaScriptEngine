@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v2.2.7 - April 10, 2018
+ * Fixed a minor errors
+
 ## v2.2.6 - February 23, 2018
  * In JsRT modes during calling of the `CollectGarbage` method is no longer performed blocking
 
