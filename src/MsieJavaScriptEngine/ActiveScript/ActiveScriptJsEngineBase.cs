@@ -20,6 +20,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 	internal abstract partial class ActiveScriptJsEngineBase : InnerJsEngineBase
 	{
 		/// <summary>
+		/// Name of resource, which contains a ECMAScript 5 Polyfill
+		/// </summary>
+		private const string ES5_POLYFILL_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.ES5.min.js";
+
+		/// <summary>
+		/// Name of resource, which contains a JSON2 library
+		/// </summary>
+		private const string JSON2_LIBRARY_RESOURCE_NAME = "MsieJavaScriptEngine.Resources.json2.min.js";
+
+		/// <summary>
 		/// Instance of Active Script wrapper
 		/// </summary>
 		protected IActiveScriptWrapper _activeScriptWrapper;
@@ -126,6 +136,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 					_activeScriptWrapper.SetScriptSite(CreateScriptSite());
 					_activeScriptWrapper.InitNew();
 					_activeScriptWrapper.SetScriptState(ScriptState.Started);
+					LoadPolyfills();
 
 					_dispatch = WrapScriptDispatch(_activeScriptWrapper.GetScriptDispatch());
 				});
@@ -311,6 +322,29 @@ namespace MsieJavaScriptEngine.ActiveScript
 		protected abstract string GetErrorTypeByNumber(int errorNumber);
 
 		/// <summary>
+		/// Loads a JS polyfills
+		/// </summary>
+		private void LoadPolyfills()
+		{
+			Assembly assembly = GetType()
+#if !NET40
+				.GetTypeInfo()
+#endif
+				.Assembly
+				;
+
+			if (_settings.UseEcmaScript5Polyfill)
+			{
+				InnerExecuteResource(ES5_POLYFILL_RESOURCE_NAME, assembly);
+			}
+
+			if (_settings.UseJson2Library)
+			{
+				InnerExecuteResource(JSON2_LIBRARY_RESOURCE_NAME, assembly);
+			}
+		}
+
+		/// <summary>
 		/// Executes a script text
 		/// </summary>
 		/// <param name="code">Script text</param>
@@ -343,6 +377,17 @@ namespace MsieJavaScriptEngine.ActiveScript
 			ThrowError();
 
 			return result;
+		}
+
+		/// <summary>
+		/// Executes a code from embedded JS resource
+		/// </summary>
+		/// <param name="resourceName">The case-sensitive resource name</param>
+		/// <param name="assembly">The assembly, which contains the embedded resource</param>
+		private void InnerExecuteResource(string resourceName, Assembly assembly)
+		{
+			string code = Utils.GetResourceAsString(resourceName, assembly);
+			InnerExecute(code, resourceName, false);
 		}
 
 		/// <summary>
