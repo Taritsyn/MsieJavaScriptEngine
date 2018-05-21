@@ -21,7 +21,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			string sourceUrl, out EdgeJsValue result);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsSerializeScript(string script, byte[] buffer, ref ulong bufferSize);
+		internal static extern JsErrorCode JsSerializeScript(string script, byte[] buffer, ref uint bufferSize);
 
 		[DllImport(DllName.Chakra, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsParseSerializedScript(string script, byte[] buffer,

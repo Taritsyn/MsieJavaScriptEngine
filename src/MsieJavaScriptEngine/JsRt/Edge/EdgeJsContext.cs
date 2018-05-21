@@ -304,7 +304,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		public static byte[] SerializeScript(string script)
 		{
 			byte[] buffer = null;
-			ulong bufferSize = 0;
+			uint bufferSize = 0;
 
 			JsErrorCode errorCode = EdgeNativeMethods.JsSerializeScript(script, buffer, ref bufferSize);
 			EdgeJsErrorHelpers.ThrowIfError(errorCode);

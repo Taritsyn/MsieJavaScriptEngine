@@ -22,7 +22,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			string sourceUrl, out IeJsValue result);
 
 		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
-		internal static extern JsErrorCode JsSerializeScript(string script, byte[] buffer, ref ulong bufferSize);
+		internal static extern JsErrorCode JsSerializeScript(string script, byte[] buffer, ref uint bufferSize);
 
 		[DllImport(DllName.JScript9, CharSet = CharSet.Unicode)]
 		internal static extern JsErrorCode JsParseSerializedScript(string script, byte[] buffer,

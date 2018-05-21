@@ -307,7 +307,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		public static byte[] SerializeScript(string script)
 		{
 			byte[] buffer = null;
-			ulong bufferSize = 0;
+			uint bufferSize = 0;
 
 			JsErrorCode errorCode = IeNativeMethods.JsSerializeScript(script, buffer, ref bufferSize);
 			IeJsErrorHelpers.ThrowIfError(errorCode);
