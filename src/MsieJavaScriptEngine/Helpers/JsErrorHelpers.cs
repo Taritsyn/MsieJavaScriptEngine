@@ -464,7 +464,7 @@ namespace MsieJavaScriptEngine.Helpers
 		internal static string GetSourceFragment(string sourceLine, int columnNumber,
 			int maxFragmentLength = 100)
 		{
-			if (string.IsNullOrWhiteSpace(sourceLine))
+			if (string.IsNullOrEmpty(sourceLine))
 			{
 				return string.Empty;
 			}

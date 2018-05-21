@@ -20,7 +20,7 @@ namespace MsieJavaScriptEngine
 	public class JsException : Exception
 	{
 		/// <summary>
-		/// JS engine mode
+		/// Name of JS engine mode
 		/// </summary>
 		private readonly string _engineMode = string.Empty;
 

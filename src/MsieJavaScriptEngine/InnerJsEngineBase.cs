@@ -39,12 +39,21 @@ namespace MsieJavaScriptEngine
 
 		#region IInnerJsEngine implementation
 
-		public abstract string Mode { get; }
+		public string Mode
+		{
+			get { return _engineModeName; }
+		}
 
+		public abstract bool SupportsScriptPrecompilation { get; }
+
+
+		public abstract PrecompiledScript Precompile(string code, string documentName);
 
 		public abstract object Evaluate(string expression, string documentName);
 
 		public abstract void Execute(string code, string documentName);
+
+		public abstract void Execute(PrecompiledScript precompiledScript);
 
 		public abstract object CallFunction(string functionName, params object[] args);
 

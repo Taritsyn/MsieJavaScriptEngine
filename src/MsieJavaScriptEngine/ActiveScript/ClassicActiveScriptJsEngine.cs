@@ -191,6 +191,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		#region IInnerJsEngine implementation
 
+		public override bool SupportsScriptPrecompilation
+		{
+			get { return false; }
+		}
+
+
 		public override void Interrupt()
 		{
 			var exceptionInfo = new EXCEPINFO

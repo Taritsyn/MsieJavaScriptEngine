@@ -144,104 +144,74 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 
 		/// <summary>
-		/// Parses a script and returns a <c>Function</c> representing the script
+		/// Parses a script and returns a function representing the script
 		/// </summary>
 		/// <remarks>
 		/// Requires an active script context.
 		/// </remarks>
 		/// <param name="script">The script to parse</param>
-		/// <param name="sourceContext">The cookie identifying the script that can be used
-		/// by script contexts that have debugging enabled</param>
-		/// <param name="sourceName">The location the script came from</param>
-		/// <returns>The <c>Function</c> representing the script code</returns>
-		public static IeJsValue ParseScript(string script, JsSourceContext sourceContext, string sourceName)
-		{
-			IeJsValue result;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsParseScript(script, sourceContext, sourceName, out result));
-
-			return result;
-		}
-
-		/// <summary>
-		/// Parses a serialized script and returns a <c>Function</c> representing the script
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <param name="script">The script to parse</param>
-		/// <param name="buffer">The serialized script</param>
-		/// <param name="sourceContext">The cookie identifying the script that can be used
-		/// by script contexts that have debugging enabled</param>
-		/// <param name="sourceName">The location the script came from</param>
-		/// <returns>The <c>Function</c> representing the script code</returns>
-		public static IeJsValue ParseScript(string script, byte[] buffer, JsSourceContext sourceContext, string sourceName)
-		{
-			IeJsValue result;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out result));
-
-			return result;
-		}
-
-		/// <summary>
-		/// Parses a script and returns a <c>Function</c> representing the script
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <param name="script">The script to parse</param>
-		/// <returns>The <c>Function</c> representing the script code</returns>
+		/// <returns>A function representing the script code</returns>
 		public static IeJsValue ParseScript(string script)
 		{
 			return ParseScript(script, JsSourceContext.None, string.Empty);
 		}
 
 		/// <summary>
-		/// Parses a serialized script and returns a <c>Function</c> representing the script
+		/// Parses a script and returns a function representing the script
 		/// </summary>
 		/// <remarks>
 		/// Requires an active script context.
 		/// </remarks>
 		/// <param name="script">The script to parse</param>
-		/// <param name="buffer">The serialized script</param>
-		/// <returns>The <c>Function</c> representing the script code</returns>
-		public static IeJsValue ParseScript(string script, byte[] buffer)
-		{
-			return ParseScript(script, buffer, JsSourceContext.None, string.Empty);
-		}
-
-		/// <summary>
-		/// Executes a script
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <param name="script">The script to run</param>
-		/// <param name="sourceContext">The cookie identifying the script that can be used by script contexts that have debugging enabled</param>
+		/// <param name="sourceContext">A cookie identifying the script that can be used
+		/// by script contexts that have debugging enabled</param>
 		/// <param name="sourceName">The location the script came from</param>
-		/// <returns>The result of the script, if any</returns>
-		public static IeJsValue RunScript(string script, JsSourceContext sourceContext, string sourceName)
+		/// <returns>A function representing the script code</returns>
+		public static IeJsValue ParseScript(string script, JsSourceContext sourceContext, string sourceName)
 		{
 			IeJsValue result;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsRunScript(script, sourceContext, sourceName, out result));
+			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsParseScript(script, sourceContext, sourceName,
+				out result));
 
 			return result;
 		}
 
 		/// <summary>
-		/// Runs a serialized script
+		/// Parses a serialized script and returns a function representing the script
 		/// </summary>
 		/// <remarks>
-		/// Requires an active script context.
+		/// <para>Requires an active script context.</para>
+		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.</para>
 		/// </remarks>
-		/// <param name="script">The source code of the serialized script</param>
+		/// <param name="script">The script to parse</param>
 		/// <param name="buffer">The serialized script</param>
-		/// <param name="sourceContext">The cookie identifying the script that can be used by script contexts that have debugging enabled</param>
+		/// <returns>A function representing the script code</returns>
+		public static IeJsValue ParseSerializedScript(string script, byte[] buffer)
+		{
+			return ParseSerializedScript(script, buffer, JsSourceContext.None, string.Empty);
+		}
+
+		/// <summary>
+		/// Parses a serialized script and returns a function representing the script
+		/// </summary>
+		/// <remarks>
+		/// <para>Requires an active script context.</para>
+		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.</para>
+		/// </remarks>
+		/// <param name="script">The script to parse</param>
+		/// <param name="buffer">The serialized script</param>
+		/// <param name="sourceContext">A cookie identifying the script that can be used
+		/// by script contexts that have debugging enabled</param>
 		/// <param name="sourceName">The location the script came from</param>
-		/// <returns>The result of the script, if any</returns>
-		public static IeJsValue RunScript(string script, byte[] buffer, JsSourceContext sourceContext, string sourceName)
+		/// <returns>A function representing the script code</returns>
+		public static IeJsValue ParseSerializedScript(string script, byte[] buffer, JsSourceContext sourceContext,
+			string sourceName)
 		{
 			IeJsValue result;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out result));
+			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsParseSerializedScript(script, buffer, sourceContext,
+				sourceName, out result));
 
 			return result;
 		}
@@ -260,17 +230,63 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 
 		/// <summary>
-		/// Runs a serialized script
+		/// Executes a script
 		/// </summary>
 		/// <remarks>
 		/// Requires an active script context.
 		/// </remarks>
+		/// <param name="script">The script to run</param>
+		/// <param name="sourceContext">A cookie identifying the script that can be used
+		/// by script contexts that have debugging enabled</param>
+		/// <param name="sourceName">The location the script came from</param>
+		/// <returns>The result of the script, if any</returns>
+		public static IeJsValue RunScript(string script, JsSourceContext sourceContext, string sourceName)
+		{
+			IeJsValue result;
+			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsRunScript(script, sourceContext, sourceName,
+				out result));
+
+			return result;
+		}
+
+		/// <summary>
+		/// Runs a serialized script
+		/// </summary>
+		/// <remarks>
+		/// <para>Requires an active script context.</para>
+		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.</para>
+		/// </remarks>
 		/// <param name="script">The source code of the serialized script</param>
 		/// <param name="buffer">The serialized script</param>
 		/// <returns>The result of the script, if any</returns>
-		public static IeJsValue RunScript(string script, byte[] buffer)
+		public static IeJsValue RunSerializedScript(string script, byte[] buffer)
 		{
-			return RunScript(script, buffer, JsSourceContext.None, string.Empty);
+			return RunSerializedScript(script, buffer, JsSourceContext.None, string.Empty);
+		}
+
+		/// <summary>
+		/// Runs a serialized script
+		/// </summary>
+		/// <remarks>
+		/// <para>Requires an active script context.</para>
+		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.</para>
+		/// </remarks>
+		/// <param name="script">The source code of the serialized script</param>
+		/// <param name="buffer">The serialized script</param>
+		/// <param name="sourceContext">A cookie identifying the script that can be used
+		/// by script contexts that have debugging enabled</param>
+		/// <param name="sourceName">The location the script came from</param>
+		/// <returns>The result of the script, if any</returns>
+		public static IeJsValue RunSerializedScript(string script, byte[] buffer, JsSourceContext sourceContext,
+			string sourceName)
+		{
+			IeJsValue result;
+			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsRunSerializedScript(script, buffer, sourceContext,
+				sourceName, out result));
+
+			return result;
 		}
 
 		/// <summary>
@@ -278,7 +294,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// SerializeScript parses a script and then stores the parsed form of the script in a
+		/// <c>SerializeScript</c> parses a script and then stores the parsed form of the script in a
 		/// runtime-independent format. The serialized script then can be deserialized in any
 		/// runtime without requiring the script to be re-parsed.
 		/// </para>
@@ -287,14 +303,21 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// </para>
 		/// </remarks>
 		/// <param name="script">The script to serialize</param>
-		/// <param name="buffer">The buffer to put the serialized script into. Can be null.</param>
-		/// <returns>The size of the buffer, in bytes, required to hold the serialized script</returns>
-		public static ulong SerializeScript(string script, byte[] buffer)
+		/// <returns>The buffer to put the serialized script into</returns>
+		public static byte[] SerializeScript(string script)
 		{
-			var bufferSize = (ulong)buffer.Length;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsSerializeScript(script, buffer, ref bufferSize));
+			byte[] buffer = null;
+			ulong bufferSize = 0;
 
-			return bufferSize;
+			JsErrorCode errorCode = IeNativeMethods.JsSerializeScript(script, buffer, ref bufferSize);
+			IeJsErrorHelpers.ThrowIfError(errorCode);
+
+			buffer = new byte[(int)bufferSize];
+
+			errorCode = IeNativeMethods.JsSerializeScript(script, buffer, ref bufferSize);
+			IeJsErrorHelpers.ThrowIfError(errorCode);
+
+			return buffer;
 		}
 
 		/// <summary>

@@ -21,23 +21,9 @@
    =============
    RELEASE NOTES
    =============
-   1. Format of the error messages was unified;
-   2. Created a new exception classes: `JsCompilationException`,
-      `JsEngineException`, `JsFatalException` and `JsUsageException`. These
-      exceptions are responsible for handling errors, some of which were previously
-      handled by the `JsRuntimeException` class;
-   3. In the `JsException` class was added two new properties: `Category` and
-      `Description`;
-   4. From the `JsRuntimeException` class was removed one property - `ErrorCode`;
-   5. In the `JsRuntimeException` class was added three new properties: `Type`,
-      `DocumentName` and `CallStack`;
-   6. `JsScriptInterruptedException` class was renamed to the
-      `JsInterruptedException` class and now is inherited from the
-      `JsRuntimeException` class;
-   7. `JsEngineLoadException` class now is inherited from the `JsEngineException`
-      class;
-   8. `Format` method of the `JsErrorHelpers` class was renamed to the
-      `GenerateErrorDetails`.
+   1. In `MsieJsEngine` class was added `SupportsScriptPrecompilation` property and
+      three new methods: `Precompile`, `PrecompileFile` and `PrecompileResource`;
+   2. In JsRT modes added a ability to pre-compile scripts.
 
    ============
    PROJECT SITE

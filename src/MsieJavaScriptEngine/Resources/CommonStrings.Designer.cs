@@ -266,6 +266,30 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "Сannot execute a pre-compiled script, because it was created for another mode with name `{0}`."
+		/// </summary>
+		internal static string Usage_CannotExecutePrecompiledScriptForAnotherJsEngineMode
+		{
+			get { return GetString("Usage_CannotExecutePrecompiledScriptForAnotherJsEngineMode"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Сannot pre-compile a '{0}' file, because it is empty."
+		/// </summary>
+		internal static string Usage_CannotPrecompileEmptyFile
+		{
+			get { return GetString("Usage_CannotPrecompileEmptyFile"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Сannot pre-compile a '{0}' resource, because it is empty."
+		/// </summary>
+		internal static string Usage_CannotPrecompileEmptyResource
+		{
+			get { return GetString("Usage_CannotPrecompileEmptyResource"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "The embedded host object '{0}' has a type `{1}`, which is not supported."
 		/// </summary>
 		internal static string Usage_EmbeddedHostObjectTypeNotSupported

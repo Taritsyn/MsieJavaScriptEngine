@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1F9B41F3-5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedFiles", "SharedFiles", "{E3F8640B-91D8-4BBE-B807-D69D1DE0D818}"
 	ProjectSection(SolutionItems) = preProject
+		test\SharedFiles\declinationOfMinutes.js = test\SharedFiles\declinationOfMinutes.js
 		test\SharedFiles\link.txt = test\SharedFiles\link.txt
 		test\SharedFiles\square.js = test\SharedFiles\square.js
 	EndProjectSection
@@ -76,5 +77,8 @@ Global
 		{5864D57D-2EB8-4684-9908-26111127E75B} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
 		{EF54F02A-7ECD-4D3E-9163-33BCA969FD1B} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
 		{72233C70-DF61-449F-8D53-D456284CDA5D} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5035D2B6-B7C8-4A7F-8764-07B60AD66E96}
 	EndGlobalSection
 EndGlobal

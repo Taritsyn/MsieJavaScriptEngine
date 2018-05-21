@@ -644,11 +644,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		#region IInnerJsEngine implementation
 
-		public override string Mode
+		public override PrecompiledScript Precompile(string code, string documentName)
 		{
-			get { return _engineModeName; }
+			throw new NotSupportedException();
 		}
-
 
 		public override object Evaluate(string expression, string documentName)
 		{
@@ -686,6 +685,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 					throw WrapActiveScriptException(e);
 				}
 			});
+		}
+
+		public override void Execute(PrecompiledScript precompiledScript)
+		{
+			throw new NotSupportedException();
 		}
 
 		public override object CallFunction(string functionName, params object[] args)

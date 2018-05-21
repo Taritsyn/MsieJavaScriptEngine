@@ -57,6 +57,14 @@ namespace MsieJavaScriptEngine
 			get { return _jsEngine.Mode; }
 		}
 
+		/// <summary>
+		/// Gets a value that indicates if the JS engine supports script pre-compilation
+		/// </summary>
+		public bool SupportsScriptPrecompilation
+		{
+			get { return _jsEngine.SupportsScriptPrecompilation; }
+		}
+
 
 		/// <summary>
 		/// Constructs an instance of MSIE JS engine
@@ -217,6 +225,249 @@ namespace MsieJavaScriptEngine
 			{
 				throw new ObjectDisposedException(ToString());
 			}
+		}
+
+		/// <summary>
+		/// Creates a pre-compiled script from JS code
+		/// </summary>
+		/// <param name="code">JS code</param>
+		/// <returns>A pre-compiled script that can be executed by different instances of JS engine</returns>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsException"/>
+		public PrecompiledScript Precompile(string code)
+		{
+			return Precompile(code, string.Empty);
+		}
+
+		/// <summary>
+		/// Creates a pre-compiled script from JS code
+		/// </summary>
+		/// <param name="code">JS code</param>
+		/// <param name="documentName">Document name</param>
+		/// <returns>A pre-compiled script that can be executed by different instances of JS engine</returns>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsException"/>
+		public PrecompiledScript Precompile(string code, string documentName)
+		{
+			VerifyNotDisposed();
+
+			if (code == null)
+			{
+				throw new ArgumentNullException(
+					nameof(code),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(code))
+				);
+			}
+
+			if (string.IsNullOrWhiteSpace(code))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(code)),
+					nameof(code)
+				);
+			}
+
+			if (!string.IsNullOrWhiteSpace(documentName)
+				&& !ValidationHelpers.CheckDocumentNameFormat(documentName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidDocumentNameFormat, documentName),
+					nameof(documentName)
+				);
+			}
+
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(documentName);
+
+			return _jsEngine.Precompile(code, uniqueDocumentName);
+		}
+
+		/// <summary>
+		/// Creates a pre-compiled script from JS file
+		/// </summary>
+		/// <param name="path">Path to the JS file</param>
+		/// <param name="encoding">Text encoding</param>
+		/// <returns>A pre-compiled script that can be executed by different instances of JS engine</returns>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="FileNotFoundException"/>
+		/// <exception cref="JsUsageException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsException"/>
+		public PrecompiledScript PrecompileFile(string path, Encoding encoding = null)
+		{
+			VerifyNotDisposed();
+
+			if (path == null)
+			{
+				throw new ArgumentNullException(
+					nameof(path),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(path))
+				);
+			}
+
+			if (string.IsNullOrWhiteSpace(path))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(path)),
+					nameof(path)
+				);
+			}
+
+			if (!ValidationHelpers.CheckDocumentNameFormat(path))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidFileNameFormat, path),
+					nameof(path)
+				);
+			}
+
+			string code = Utils.GetFileTextContent(path, encoding);
+			if (string.IsNullOrWhiteSpace(code))
+			{
+				throw new JsUsageException(
+					string.Format(CommonStrings.Usage_CannotPrecompileEmptyFile, path),
+					_jsEngine.Mode
+				);
+			}
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(path);
+
+			return _jsEngine.Precompile(code, uniqueDocumentName);
+		}
+
+		/// <summary>
+		/// Creates a pre-compiled script from embedded JS resource
+		/// </summary>
+		/// <param name="resourceName">The case-sensitive resource name without the namespace of the specified type</param>
+		/// <param name="type">The type, that determines the assembly and whose namespace is used to scope
+		/// the resource name</param>
+		/// <returns>A pre-compiled script that can be executed by different instances of JS engine</returns>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="NullReferenceException"/>
+		/// <exception cref="JsUsageException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsException"/>
+		public PrecompiledScript PrecompileResource(string resourceName, Type type)
+		{
+			VerifyNotDisposed();
+
+			if (resourceName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(resourceName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(resourceName))
+				);
+			}
+
+			if (type == null)
+			{
+				throw new ArgumentNullException(
+					nameof(type),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(type))
+				);
+			}
+
+			if (string.IsNullOrWhiteSpace(resourceName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(resourceName)),
+					nameof(resourceName)
+				);
+			}
+
+			if (!ValidationHelpers.CheckDocumentNameFormat(resourceName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidResourceNameFormat, resourceName),
+					nameof(resourceName)
+				);
+			}
+
+			Assembly assembly = type.GetTypeInfo().Assembly;
+			string nameSpace = type.Namespace;
+			string resourceFullName = nameSpace != null ? nameSpace + "." + resourceName : resourceName;
+
+			string code = Utils.GetResourceAsString(resourceFullName, assembly);
+			if (string.IsNullOrWhiteSpace(code))
+			{
+				throw new JsUsageException(
+					string.Format(CommonStrings.Usage_CannotPrecompileEmptyResource, resourceFullName),
+					_jsEngine.Mode
+				);
+			}
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(resourceFullName);
+
+			return _jsEngine.Precompile(code, uniqueDocumentName);
+		}
+
+		/// <summary>
+		/// Creates a pre-compiled script from embedded JS resource
+		/// </summary>
+		/// <param name="resourceName">The case-sensitive resource name</param>
+		/// <param name="assembly">The assembly, which contains the embedded resource</param>
+		/// <returns>A pre-compiled script that can be executed by different instances of JS engine</returns>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="NullReferenceException"/>
+		/// <exception cref="JsUsageException"/>
+		/// <exception cref="JsCompilationException"/>
+		/// <exception cref="JsException"/>
+		public PrecompiledScript PrecompileResource(string resourceName, Assembly assembly)
+		{
+			VerifyNotDisposed();
+
+			if (resourceName == null)
+			{
+				throw new ArgumentNullException(
+					nameof(resourceName),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(resourceName))
+				);
+			}
+
+			if (assembly == null)
+			{
+				throw new ArgumentNullException(
+					nameof(assembly),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(assembly))
+				);
+			}
+
+			if (string.IsNullOrWhiteSpace(resourceName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(resourceName)),
+					nameof(resourceName)
+				);
+			}
+
+			if (!ValidationHelpers.CheckDocumentNameFormat(resourceName))
+			{
+				throw new ArgumentException(
+					string.Format(CommonStrings.Usage_InvalidResourceNameFormat, resourceName),
+					nameof(resourceName)
+				);
+			}
+
+			string code = Utils.GetResourceAsString(resourceName, assembly);
+			if (string.IsNullOrWhiteSpace(code))
+			{
+				throw new JsUsageException(
+					string.Format(CommonStrings.Usage_CannotPrecompileEmptyResource, resourceName),
+					_jsEngine.Mode
+				);
+			}
+			string uniqueDocumentName = _documentNameManager.GetUniqueName(resourceName);
+
+			return _jsEngine.Precompile(code, uniqueDocumentName);
 		}
 
 		/// <summary>
@@ -418,6 +669,42 @@ namespace MsieJavaScriptEngine
 
 			string uniqueDocumentName = _documentNameManager.GetUniqueName(documentName);
 			_jsEngine.Execute(code, uniqueDocumentName);
+		}
+
+		/// <summary>
+		/// Executes a pre-compiled script
+		/// </summary>
+		/// <param name="precompiledScript">A pre-compiled script that can be executed by different
+		/// instances of JS engine</param>
+		/// <exception cref="ObjectDisposedException"/>
+		/// <exception cref="ArgumentNullException"/>
+		/// <exception cref="ArgumentException"/>
+		/// <exception cref="JsUsageException"/>
+		/// <exception cref="JsInterruptedException"/>
+		/// <exception cref="JsRuntimeException"/>
+		/// <exception cref="JsException"/>
+		public void Execute(PrecompiledScript precompiledScript)
+		{
+			VerifyNotDisposed();
+
+			if (precompiledScript == null)
+			{
+				throw new ArgumentNullException(
+					nameof(precompiledScript),
+					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(precompiledScript))
+				);
+			}
+
+			if (precompiledScript.EngineMode != Mode)
+			{
+				throw new JsUsageException(
+					string.Format(CommonStrings.Usage_CannotExecutePrecompiledScriptForAnotherJsEngineMode,
+						precompiledScript.EngineMode),
+					_jsEngine.Mode
+				);
+			}
+
+			_jsEngine.Execute(precompiledScript);
 		}
 
 		/// <summary>

@@ -121,6 +121,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		#region IInnerJsEngine implementation
 
+		public override bool SupportsScriptPrecompilation
+		{
+			get { return false; }
+		}
+
+
 		public override void Interrupt()
 		{
 			_interruptRequested = true;

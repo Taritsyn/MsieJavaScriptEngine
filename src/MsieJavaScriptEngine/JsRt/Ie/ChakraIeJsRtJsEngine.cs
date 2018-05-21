@@ -879,14 +879,15 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 #endif
 
-		private WrapperException WrapJsException(OriginalException originalException)
+		private WrapperException WrapJsException(OriginalException originalException,
+			string defaultDocumentName = null)
 		{
 			WrapperException wrapperException;
 			JsErrorCode errorCode = originalException.ErrorCode;
 			string description = originalException.Message;
 			string message = description;
 			string type = string.Empty;
-			string documentName = string.Empty;
+			string documentName = defaultDocumentName ?? string.Empty;
 			int lineNumber = 0;
 			int columnNumber = 0;
 			string callStack = string.Empty;
@@ -940,7 +941,10 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 								FixCallStackItems(callStackItems);
 
 								CallStackItem firstCallStackItem = callStackItems[0];
-								documentName = firstCallStackItem.DocumentName;
+								if (firstCallStackItem.DocumentName.Length > 0)
+								{
+									documentName = firstCallStackItem.DocumentName;
+								}
 								lineNumber = firstCallStackItem.LineNumber;
 								columnNumber = firstCallStackItem.ColumnNumber;
 								callStack = JsErrorHelpers.StringifyCallStackItems(callStackItems);
@@ -1117,11 +1121,33 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		#region IInnerJsEngine implementation
 
-		public override string Mode
+		public override bool SupportsScriptPrecompilation
 		{
-			get { return _engineModeName; }
+			get { return true; }
 		}
 
+
+		public override PrecompiledScript Precompile(string code, string documentName)
+		{
+			PrecompiledScript precompiledScript = _dispatcher.Invoke(() =>
+			{
+				using (CreateJsScope())
+				{
+					try
+					{
+						byte[] cachedBytes = IeJsContext.SerializeScript(code);
+
+						return new PrecompiledScript(_engineModeName, code, cachedBytes, documentName);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e, documentName);
+					}
+				}
+			});
+
+			return precompiledScript;
+		}
 
 		public override object Evaluate(string expression, string documentName)
 		{
@@ -1155,6 +1181,25 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					try
 					{
 						IeJsContext.RunScript(code, _jsSourceContext++, documentName);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
+				}
+			});
+		}
+
+		public override void Execute(PrecompiledScript precompiledScript)
+		{
+			_dispatcher.Invoke(() =>
+			{
+				using (CreateJsScope())
+				{
+					try
+					{
+						IeJsContext.RunSerializedScript(precompiledScript.Code, precompiledScript.CachedBytes,
+							_jsSourceContext++, precompiledScript.DocumentName);
 					}
 					catch (OriginalException e)
 					{

@@ -195,6 +195,15 @@
   <data name="Usage_CannotExecuteEmptyResource" xml:space="preserve">
     <value>Нельзя выполнить ресурс "{0}", потому что он пустой!</value>
   </data>
+  <data name="Usage_CannotExecutePrecompiledScriptForAnotherJsEngineMode" xml:space="preserve">
+    <value>Нельзя выполнить предварительно скомпилированный сценарий, потому что он был создан для другого режима с именем `{0}`!</value>
+  </data>
+  <data name="Usage_CannotPrecompileEmptyFile" xml:space="preserve">
+    <value>Нельзя произвести предварительную компиляцию файла "{0}", потому что он пустой!</value>
+  </data>
+  <data name="Usage_CannotPrecompileEmptyResource" xml:space="preserve">
+    <value>Нельзя произвести предварительную компиляцию ресурса "{0}", потому что он пустой!</value>
+  </data>
   <data name="Usage_EmbeddedHostObjectTypeNotSupported" xml:space="preserve">
     <value>Встраиваемый объекта хоста "{0}" имеет тип `{1}`, который не поддерживается!</value>
   </data>

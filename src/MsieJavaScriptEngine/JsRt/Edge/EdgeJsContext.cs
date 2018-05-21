@@ -130,10 +130,8 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// Requires an active script context.
 		/// </para>
 		/// </remarks>
-		/// <returns>
-		/// The next system tick when there will be more idle work to do. Returns the
-		/// maximum number of ticks if there no upcoming idle work to do.
-		/// </returns>
+		/// <returns>The next system tick when there will be more idle work to do. Returns the
+		/// maximum number of ticks if there no upcoming idle work to do.</returns>
 		public static uint Idle()
 		{
 			uint ticks;
@@ -143,106 +141,74 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		}
 
 		/// <summary>
-		/// Parses a script and returns a <c>Function</c> representing the script
+		/// Parses a script and returns a function representing the script
 		/// </summary>
 		/// <remarks>
 		/// Requires an active script context.
 		/// </remarks>
 		/// <param name="script">The script to parse</param>
-		/// <param name="sourceContext">The cookie identifying the script that can be used
-		/// by script contexts that have debugging enabled</param>
-		/// <param name="sourceName">The location the script came from</param>
-		/// <returns>The <c>Function</c> representing the script code</returns>
-		public static EdgeJsValue ParseScript(string script, JsSourceContext sourceContext, string sourceName)
-		{
-			EdgeJsValue result;
-			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsParseScript(script, sourceContext, sourceName, out result));
-
-			return result;
-		}
-
-		/// <summary>
-		/// Parses a serialized script and returns a <c>Function</c> representing the script
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <param name="script">The script to parse</param>
-		/// <param name="buffer">The serialized script</param>
-		/// <param name="sourceContext">The cookie identifying the script that can be used
-		/// by script contexts that have debugging enabled</param>
-		/// <param name="sourceName">The location the script came from</param>
-		/// <returns>The <c>Function</c> representing the script code</returns>
-		public static EdgeJsValue ParseScript(string script, byte[] buffer, JsSourceContext sourceContext, string sourceName)
-		{
-			EdgeJsValue result;
-			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out result));
-
-			return result;
-		}
-
-		/// <summary>
-		/// Parses a script and returns a <c>Function</c> representing the script
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <param name="script">The script to parse</param>
-		/// <returns>The <c>Function</c> representing the script code</returns>
+		/// <returns>A function representing the script code</returns>
 		public static EdgeJsValue ParseScript(string script)
 		{
 			return ParseScript(script, JsSourceContext.None, string.Empty);
 		}
 
 		/// <summary>
-		/// Parses a serialized script and returns a <c>Function</c> representing the script
+		/// Parses a script and returns a function representing the script
 		/// </summary>
 		/// <remarks>
 		/// Requires an active script context.
 		/// </remarks>
 		/// <param name="script">The script to parse</param>
-		/// <param name="buffer">The serialized script</param>
-		/// <returns>The <c>Function</c> representing the script code</returns>
-		public static EdgeJsValue ParseScript(string script, byte[] buffer)
-		{
-			return ParseScript(script, buffer, JsSourceContext.None, string.Empty);
-		}
-
-		/// <summary>
-		/// Executes a script
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <param name="script">The script to run</param>
-		/// <param name="sourceContext">The cookie identifying the script that can be used
+		/// <param name="sourceContext">A cookie identifying the script that can be used
 		/// by script contexts that have debugging enabled</param>
 		/// <param name="sourceName">The location the script came from</param>
-		/// <returns>The result of the script, if any</returns>
-		public static EdgeJsValue RunScript(string script, JsSourceContext sourceContext, string sourceName)
+		/// <returns>A function representing the script code</returns>
+		public static EdgeJsValue ParseScript(string script, JsSourceContext sourceContext, string sourceName)
 		{
 			EdgeJsValue result;
-			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsRunScript(script, sourceContext, sourceName, out result));
+			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsParseScript(script, sourceContext, sourceName,
+				out result));
 
 			return result;
 		}
 
 		/// <summary>
-		/// Runs a serialized script
+		/// Parses a serialized script and returns a function representing the script
 		/// </summary>
 		/// <remarks>
-		/// Requires an active script context.
+		/// <para>Requires an active script context.</para>
+		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.</para>
 		/// </remarks>
-		/// <param name="script">The source code of the serialized script</param>
+		/// <param name="script">The script to parse</param>
 		/// <param name="buffer">The serialized script</param>
-		/// <param name="sourceContext">The cookie identifying the script that can be used
+		/// <returns>A function representing the script code</returns>
+		public static EdgeJsValue ParseSerializedScript(string script, byte[] buffer)
+		{
+			return ParseSerializedScript(script, buffer, JsSourceContext.None, string.Empty);
+		}
+
+		/// <summary>
+		/// Parses a serialized script and returns a function representing the script
+		/// </summary>
+		/// <remarks>
+		/// <para>Requires an active script context.</para>
+		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.</para>
+		/// </remarks>
+		/// <param name="script">The script to parse</param>
+		/// <param name="buffer">The serialized script</param>
+		/// <param name="sourceContext">A cookie identifying the script that can be used
 		/// by script contexts that have debugging enabled</param>
 		/// <param name="sourceName">The location the script came from</param>
-		/// <returns>The result of the script, if any</returns>
-		public static EdgeJsValue RunScript(string script, byte[] buffer, JsSourceContext sourceContext, string sourceName)
+		/// <returns>A function representing the script code</returns>
+		public static EdgeJsValue ParseSerializedScript(string script, byte[] buffer, JsSourceContext sourceContext,
+			string sourceName)
 		{
 			EdgeJsValue result;
-			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out result));
+			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsParseSerializedScript(script, buffer, sourceContext,
+				sourceName, out result));
 
 			return result;
 		}
@@ -261,17 +227,63 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		}
 
 		/// <summary>
-		/// Runs a serialized script
+		/// Executes a script
 		/// </summary>
 		/// <remarks>
 		/// Requires an active script context.
 		/// </remarks>
+		/// <param name="script">The script to run</param>
+		/// <param name="sourceContext">A cookie identifying the script that can be used
+		/// by script contexts that have debugging enabled</param>
+		/// <param name="sourceName">The location the script came from</param>
+		/// <returns>The result of the script, if any</returns>
+		public static EdgeJsValue RunScript(string script, JsSourceContext sourceContext, string sourceName)
+		{
+			EdgeJsValue result;
+			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsRunScript(script, sourceContext, sourceName,
+				out result));
+
+			return result;
+		}
+
+		/// <summary>
+		/// Runs a serialized script
+		/// </summary>
+		/// <remarks>
+		/// <para>Requires an active script context.</para>
+		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.</para>
+		/// </remarks>
 		/// <param name="script">The source code of the serialized script</param>
 		/// <param name="buffer">The serialized script</param>
 		/// <returns>The result of the script, if any</returns>
-		public static EdgeJsValue RunScript(string script, byte[] buffer)
+		public static EdgeJsValue RunSerializedScript(string script, byte[] buffer)
 		{
-			return RunScript(script, buffer, JsSourceContext.None, string.Empty);
+			return RunSerializedScript(script, buffer, JsSourceContext.None, string.Empty);
+		}
+
+		/// <summary>
+		/// Runs a serialized script
+		/// </summary>
+		/// <remarks>
+		/// <para>Requires an active script context.</para>
+		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.</para>
+		/// </remarks>
+		/// <param name="script">The source code of the serialized script</param>
+		/// <param name="buffer">The serialized script</param>
+		/// <param name="sourceContext">A cookie identifying the script that can be used
+		/// by script contexts that have debugging enabled</param>
+		/// <param name="sourceName">The location the script came from</param>
+		/// <returns>The result of the script, if any</returns>
+		public static EdgeJsValue RunSerializedScript(string script, byte[] buffer, JsSourceContext sourceContext,
+			string sourceName)
+		{
+			EdgeJsValue result;
+			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsRunSerializedScript(script, buffer, sourceContext,
+				sourceName, out result));
+
+			return result;
 		}
 
 		/// <summary>
@@ -279,7 +291,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// SerializeScript parses a script and then stores the parsed form of the script in a
+		/// <c>SerializeScript</c> parses a script and then stores the parsed form of the script in a
 		/// runtime-independent format. The serialized script then can be deserialized in any
 		/// runtime without requiring the script to be re-parsed.
 		/// </para>
@@ -288,14 +300,21 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// </para>
 		/// </remarks>
 		/// <param name="script">The script to serialize</param>
-		/// <param name="buffer">The buffer to put the serialized script into. Can be null.</param>
-		/// <returns>The size of the buffer, in bytes, required to hold the serialized script</returns>
-		public static ulong SerializeScript(string script, byte[] buffer)
+		/// <returns>The buffer to put the serialized script into</returns>
+		public static byte[] SerializeScript(string script)
 		{
-			var bufferSize = (ulong)buffer.Length;
-			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsSerializeScript(script, buffer, ref bufferSize));
+			byte[] buffer = null;
+			ulong bufferSize = 0;
 
-			return bufferSize;
+			JsErrorCode errorCode = EdgeNativeMethods.JsSerializeScript(script, buffer, ref bufferSize);
+			EdgeJsErrorHelpers.ThrowIfError(errorCode);
+
+			buffer = new byte[(int)bufferSize];
+
+			errorCode = EdgeNativeMethods.JsSerializeScript(script, buffer, ref bufferSize);
+			EdgeJsErrorHelpers.ThrowIfError(errorCode);
+
+			return buffer;
 		}
 
 		/// <summary>

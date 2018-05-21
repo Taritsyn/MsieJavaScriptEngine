@@ -17,7 +17,7 @@ namespace MsieJavaScriptEngine.Test.Common
 
 		protected abstract MsieJsEngine CreateJsEngine(bool enableDebugging);
 
-		#region Evaluation of code
+		#region Evaluation of scripts
 
 		[Test]
 		public virtual void EvaluationOfExpressionWithUndefinedResultIsCorrect()
@@ -160,7 +160,7 @@ namespace MsieJavaScriptEngine.Test.Common
 
 		#endregion
 
-		#region Execution of code
+		#region Execution of scripts
 
 		[Test]
 		public virtual void ExecutionOfCodeIsCorrect()

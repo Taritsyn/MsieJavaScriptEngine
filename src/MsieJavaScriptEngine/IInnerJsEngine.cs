@@ -12,6 +12,19 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		string Mode { get; }
 
+		/// <summary>
+		/// Gets a value that indicates if the JS engine supports script pre-compilation
+		/// </summary>
+		bool SupportsScriptPrecompilation { get; }
+
+
+		/// <summary>
+		/// Creates a pre-compiled script from JS code
+		/// </summary>
+		/// <param name="code">JS code</param>
+		/// <param name="documentName">Document name</param>
+		/// <returns>A pre-compiled script that can be executed by different instances of JS engine</returns>
+		PrecompiledScript Precompile(string code, string documentName);
 
 		/// <summary>
 		/// Evaluates an expression
@@ -27,6 +40,13 @@ namespace MsieJavaScriptEngine
 		/// <param name="code">JS code</param>
 		/// <param name="documentName">Document name</param>
 		void Execute(string code, string documentName);
+
+		/// <summary>
+		/// Executes a pre-compiled script
+		/// </summary>
+		/// <param name="precompiledScript">A pre-compiled script that can be executed by different
+		/// instances of JS engine</param>
+		void Execute(PrecompiledScript precompiledScript);
 
 		/// <summary>
 		/// Calls a function

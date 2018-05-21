@@ -54,13 +54,13 @@ namespace MsieJavaScriptEngine.Example.Console
 			{
 				Console.WriteLine("During loading of JavaScript engine an error occurred.");
 				Console.WriteLine();
-				Console.WriteLine(JsErrorHelpers.Format(e));
+				Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
 			}
 			catch (JsRuntimeException e)
 			{
 				Console.WriteLine("During execution of JavaScript code an error occurred.");
 				Console.WriteLine();
-				Console.WriteLine(JsErrorHelpers.Format(e));
+				Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
 			}
 
 			Console.ReadLine();
