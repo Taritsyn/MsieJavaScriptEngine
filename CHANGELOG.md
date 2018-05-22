@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## v3.0.0 Beta 2 - May 22, 2018
+ * In `MsieJsEngine` class was added `SupportsScriptPrecompilation` property and three new methods: `Precompile`, `PrecompileFile` and `PrecompileResource`
+ * In JsRT modes added a ability to pre-compile scripts
+
 ## v3.0.0 Beta 1 - April 8, 2018
  * Format of the error messages was unified
  * Created a new exception classes: `JsCompilationException`, `JsEngineException`, `JsFatalException` and `JsUsageException`. These exceptions are responsible for handling errors, some of which were previously handled by the `JsRuntimeException` class.
