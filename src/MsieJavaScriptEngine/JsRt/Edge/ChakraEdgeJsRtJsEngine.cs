@@ -1211,16 +1211,14 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			{
 				if (_dispatcher != null)
 				{
-					_dispatcher.Invoke(() =>
-					{
-						if (_jsContext.IsValid)
-						{
-							_jsContext.Release();
-						}
-						_jsRuntime.Dispose();
-					});
 					_dispatcher.Dispose();
 				}
+
+				if (_jsContext.IsValid)
+				{
+					_jsContext.Release();
+				}
+				_jsRuntime.Dispose();
 
 				base.Dispose(disposing);
 #if NETSTANDARD1_3

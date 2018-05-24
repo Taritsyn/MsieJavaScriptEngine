@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a minor errors.
+   Fixed a error #18 “Block finalizer solved?”.
 
    ============
    PROJECT SITE
