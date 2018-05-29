@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.0 Beta 3 - May 29, 2018
+ * Fixed a [error #18](https://github.com/Taritsyn/MsieJavaScriptEngine/issues/18) “Block finalizer solved?”
+
 ## v3.0.0 Beta 2 - May 22, 2018
  * In `MsieJsEngine` class was added `SupportsScriptPrecompilation` property and three new methods: `Precompile`, `PrecompileFile` and `PrecompileResource`
  * In JsRT modes added a ability to pre-compile scripts
