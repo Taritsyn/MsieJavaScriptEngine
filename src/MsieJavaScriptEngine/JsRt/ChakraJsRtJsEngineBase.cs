@@ -38,7 +38,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// Script dispatcher
 		/// </summary>
-		protected readonly ScriptDispatcher _dispatcher = new ScriptDispatcher();
+		protected ScriptDispatcher _dispatcher = new ScriptDispatcher();
 
 
 		/// <summary>

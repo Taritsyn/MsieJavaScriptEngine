@@ -21,9 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   1. In `MsieJsEngine` class was added `SupportsScriptPrecompilation` property and
-      three new methods: `Precompile`, `PrecompileFile` and `PrecompileResource`;
-   2. In JsRT modes added a ability to pre-compile scripts.
+   Fixed a error #18 “Block finalizer solved?”.
 
    ============
    PROJECT SITE
