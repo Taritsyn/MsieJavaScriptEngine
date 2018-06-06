@@ -42,7 +42,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// List of host items
 		/// </summary>
-		protected readonly Dictionary<string, object> _hostItems = new Dictionary<string, object>();
+		protected Dictionary<string, object> _hostItems = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Last Active Script exception
@@ -77,14 +77,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// List of document names
 		/// </summary>
-		private readonly Dictionary<UIntPtr, string> _documentNames =
-			new Dictionary<UIntPtr, string>();
+		private Dictionary<UIntPtr, string> _documentNames = new Dictionary<UIntPtr, string>();
 
 		/// <summary>
 		/// List of debug documents
 		/// </summary>
-		private readonly Dictionary<UIntPtr, DebugDocument> _debugDocuments =
-			new Dictionary<UIntPtr, DebugDocument>();
+		private Dictionary<UIntPtr, DebugDocument> _debugDocuments = new Dictionary<UIntPtr, DebugDocument>();
 
 		/// <summary>
 		/// Next source context
@@ -172,14 +170,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 					Dispose();
 				}
 			}
-		}
-
-		/// <summary>
-		/// Destructs an instance of the Active Script engine
-		/// </summary>
-		~ActiveScriptJsEngineBase()
-		{
-			Dispose(false);
 		}
 
 
@@ -911,24 +901,44 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		public override void Dispose()
 		{
-			Dispose(true /* disposing */);
-			GC.SuppressFinalize(this);
-		}
-
-		/// <summary>
-		/// Destroys object
-		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of
-		/// managed objects contained in fields of class</param>
-		private void Dispose(bool disposing)
-		{
 			if (_disposedFlag.Set())
 			{
+				if (_debuggingStarted && _debugDocuments != null)
+				{
+					foreach (UIntPtr debugDocumentKey in _debugDocuments.Keys)
+					{
+						var debugDocumentValue = _debugDocuments[debugDocumentKey];
+						debugDocumentValue.Close();
+					}
+
+					_debugDocuments.Clear();
+					_debugDocuments = null;
+				}
+
+				if (_processDebugManagerWrapper != null)
+				{
+					_processDebugManagerWrapper.RemoveApplication(_debugApplicationCookie);
+
+					if (_debugApplicationWrapper != null)
+					{
+						_debugApplicationWrapper.Close();
+						_debugApplicationWrapper = null;
+					}
+
+					_processDebugManagerWrapper = null;
+				}
+
+				if (_documentNames != null)
+				{
+					_documentNames.Clear();
+					_documentNames = null;
+				}
+
 				_dispatcher.Invoke(() =>
 				{
 					if (_dispatch != null)
 					{
-						ComHelpers.ReleaseComObject(ref _dispatch, !disposing);
+						Marshal.ReleaseComObject(_dispatch);
 						_dispatch = null;
 					}
 
@@ -939,30 +949,13 @@ namespace MsieJavaScriptEngine.ActiveScript
 					}
 				});
 
-				if (disposing)
+				if (_hostItems != null)
 				{
-					if (_debuggingStarted && _debugDocuments != null)
-					{
-						foreach (UIntPtr debugDocumentKey in _debugDocuments.Keys)
-						{
-							var debugDocumentValue = _debugDocuments[debugDocumentKey];
-							debugDocumentValue.Close();
-						}
-
-						_debugDocuments.Clear();
-					}
-
-					if (_processDebugManagerWrapper != null)
-					{
-						_processDebugManagerWrapper.RemoveApplication(_debugApplicationCookie);
-						_debugApplicationWrapper.Close();
-					}
-
-					_documentNames?.Clear();
-					_hostItems?.Clear();
-
-					_lastException = null;
+					_hostItems.Clear();
+					_hostItems = null;
 				}
+
+				_lastException = null;
 			}
 		}
 

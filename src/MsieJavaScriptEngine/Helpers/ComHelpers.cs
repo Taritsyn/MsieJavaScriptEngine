@@ -115,23 +115,6 @@ namespace MsieJavaScriptEngine.Helpers
 			}
 		}
 
-		public static void ReleaseComObject<T>(ref T obj, bool final = false) where T : class
-		{
-			if (obj != null && Marshal.IsComObject(obj))
-			{
-				if (final)
-				{
-					Marshal.FinalReleaseComObject(obj);
-				}
-				else
-				{
-					Marshal.ReleaseComObject(obj);
-				}
-			}
-
-			obj = null;
-		}
-
 		#region Nested type: NativeMethods
 
 		private static class NativeMethods

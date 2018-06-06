@@ -4,6 +4,7 @@ using System;
 using EXCEPINFO = System.Runtime.InteropServices.ComTypes.EXCEPINFO;
 
 using MsieJavaScriptEngine.ActiveScript.Debugging;
+using MsieJavaScriptEngine.Helpers;
 
 namespace MsieJavaScriptEngine.ActiveScript
 {
@@ -12,6 +13,21 @@ namespace MsieJavaScriptEngine.ActiveScript
 	/// </summary>
 	internal sealed class ActiveScriptWrapper32 : ActiveScriptWrapperBase
 	{
+		/// <summary>
+		/// Pointer to an instance of 32-bit Active Script parser
+		/// </summary>
+		private IntPtr _pActiveScriptParse32;
+
+		/// <summary>
+		/// Pointer to an instance of 32-bit Active Script debugger
+		/// </summary>
+		private IntPtr _pActiveScriptDebug32;
+
+		/// <summary>
+		/// Pointer to an instance of 32-bit debug stack frame sniffer
+		/// </summary>
+		private IntPtr _pDebugStackFrameSniffer32;
+
 		/// <summary>
 		/// Instance of 32-bit Active Script parser
 		/// </summary>
@@ -37,12 +53,26 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public ActiveScriptWrapper32(string clsid, ScriptLanguageVersion languageVersion, bool enableDebugging)
 			: base(clsid, languageVersion, enableDebugging)
 		{
+			_pActiveScriptParse32 = ComHelpers.QueryInterface<IActiveScriptParse32>(_pActiveScript);
 			_activeScriptParse32 = (IActiveScriptParse32)_activeScript;
+
 			if (_enableDebugging)
 			{
+				_pActiveScriptDebug32 = ComHelpers.QueryInterface<IActiveScriptDebug32>(_pActiveScript);
 				_activeScriptDebug32 = (IActiveScriptDebug32)_activeScript;
+
+				_pDebugStackFrameSniffer32 = ComHelpers.QueryInterfaceNoThrow<IDebugStackFrameSnifferEx32>(
+					_pActiveScript);
 				_debugStackFrameSniffer32 = _activeScript as IDebugStackFrameSnifferEx32;
 			}
+		}
+
+		/// <summary>
+		/// Destructs an instance of the 32-bit Active Script wrapper
+		/// </summary>
+		~ActiveScriptWrapper32()
+		{
+			Dispose(false);
 		}
 
 
@@ -100,15 +130,36 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		#region IDisposable implementation
 
+		/// <summary>
+		/// Destroys object
+		/// </summary>
 		public override void Dispose()
+		{
+			Dispose(true /* disposing */);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Destroys object
+		/// </summary>
+		/// <param name="disposing">Flag, allowing destruction of
+		/// managed objects contained in fields of class</param>
+		protected override void Dispose(bool disposing)
 		{
 			if (_disposedFlag.Set())
 			{
-				_debugStackFrameSniffer32 = null;
-				_activeScriptDebug32 = null;
-				_activeScriptParse32 = null;
+				if (disposing)
+				{
+					_debugStackFrameSniffer32 = null;
+					_activeScriptDebug32 = null;
+					_activeScriptParse32 = null;
+				}
 
-				base.Dispose();
+				ComHelpers.ReleaseAndEmpty(ref _pDebugStackFrameSniffer32);
+				ComHelpers.ReleaseAndEmpty(ref _pActiveScriptDebug32);
+				ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse32);
+
+				base.Dispose(disposing);
 			}
 		}
 

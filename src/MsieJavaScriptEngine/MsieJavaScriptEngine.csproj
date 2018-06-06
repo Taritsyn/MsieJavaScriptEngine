@@ -24,7 +24,7 @@
 		<RepositoryUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-		<PackageReleaseNotes>Fixed a error #18 “Block finalizer solved?”.</PackageReleaseNotes>
+		<PackageReleaseNotes>Changed a implementation of the `Dispose` method.</PackageReleaseNotes>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageOutputPath>../../nuget</PackageOutputPath>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

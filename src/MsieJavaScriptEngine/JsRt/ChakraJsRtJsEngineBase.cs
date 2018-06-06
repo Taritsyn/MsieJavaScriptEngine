@@ -27,7 +27,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// Set of external objects
 		/// </summary>
-		protected readonly HashSet<object> _externalObjects = new HashSet<object>();
+		protected HashSet<object> _externalObjects = new HashSet<object>();
 
 		/// <summary>
 		/// Callback for finalization of external object
@@ -38,7 +38,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// Script dispatcher
 		/// </summary>
-		protected ScriptDispatcher _dispatcher = new ScriptDispatcher();
+		protected ScriptDispatcher _dispatcher;
 
 
 		/// <summary>
@@ -48,6 +48,7 @@ namespace MsieJavaScriptEngine.JsRt
 		protected ChakraJsRtJsEngineBase(JsEngineSettings settings)
 			: base(settings)
 		{
+			_dispatcher = new ScriptDispatcher();
 #if NETSTANDARD
 			_externalObjectFinalizeCallback = ExternalObjectFinalizeCallback;
 #endif
@@ -78,15 +79,12 @@ namespace MsieJavaScriptEngine.JsRt
 			GCHandle handle = GCHandle.FromIntPtr(data);
 			object obj = handle.Target;
 
-			if (obj == null)
-			{
-				return;
-			}
-
-			if (_externalObjects != null)
+			if (obj != null && _externalObjects != null)
 			{
 				_externalObjects.Remove(obj);
 			}
+
+			handle.Free();
 		}
 #endif
 
@@ -102,7 +100,11 @@ namespace MsieJavaScriptEngine.JsRt
 #if NETSTANDARD
 			if (disposing)
 			{
-				_externalObjects?.Clear();
+				if (_externalObjects != null)
+				{
+					_externalObjects.Clear();
+					_externalObjects = null;
+				}
 
 				_externalObjectFinalizeCallback = null;
 			}
