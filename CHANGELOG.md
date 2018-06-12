@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v2.2.9 - June 12, 2018
+ * Changed a implementation of the `Dispose` method
+
 ## v2.2.8 - May 24, 2018
  * Fixed a [error #18](https://github.com/Taritsyn/MsieJavaScriptEngine/issues/18) “Block finalizer solved?”
 
