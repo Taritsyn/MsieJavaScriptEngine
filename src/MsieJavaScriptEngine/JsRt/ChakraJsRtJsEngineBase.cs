@@ -41,7 +41,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// Set of external objects
 		/// </summary>
-		protected readonly HashSet<object> _externalObjects = new HashSet<object>();
+		protected HashSet<object> _externalObjects = new HashSet<object>();
 
 		/// <summary>
 		/// Callback for finalization of external object
@@ -52,7 +52,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// Script dispatcher
 		/// </summary>
-		protected readonly ScriptDispatcher _dispatcher = new ScriptDispatcher();
+		protected ScriptDispatcher _dispatcher;
 
 
 		/// <summary>
@@ -64,6 +64,7 @@ namespace MsieJavaScriptEngine.JsRt
 			: base(engineMode)
 		{
 			_enableDebugging = enableDebugging;
+			_dispatcher = new ScriptDispatcher();
 #if NETSTANDARD1_3
 			_externalObjectFinalizeCallback = ExternalObjectFinalizeCallback;
 #endif
@@ -148,15 +149,12 @@ namespace MsieJavaScriptEngine.JsRt
 			GCHandle handle = GCHandle.FromIntPtr(data);
 			object obj = handle.Target;
 
-			if (obj == null)
-			{
-				return;
-			}
-
-			if (_externalObjects != null)
+			if (obj != null && _externalObjects != null)
 			{
 				_externalObjects.Remove(obj);
 			}
+
+			handle.Free();
 		}
 #endif
 
@@ -175,6 +173,7 @@ namespace MsieJavaScriptEngine.JsRt
 				if (_externalObjects != null)
 				{
 					_externalObjects.Clear();
+					_externalObjects = null;
 				}
 
 				_externalObjectFinalizeCallback = null;

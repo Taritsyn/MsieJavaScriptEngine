@@ -114,23 +114,6 @@ namespace MsieJavaScriptEngine.Helpers
 			}
 		}
 
-		public static void ReleaseComObject<T>(ref T obj, bool final = false) where T : class
-		{
-			if (obj != null && Marshal.IsComObject(obj))
-			{
-				if (final)
-				{
-					Marshal.FinalReleaseComObject(obj);
-				}
-				else
-				{
-					Marshal.ReleaseComObject(obj);
-				}
-			}
-
-			obj = null;
-		}
-
 		#region Private methods
 
 		private static int UnsignedAsSigned(uint value)

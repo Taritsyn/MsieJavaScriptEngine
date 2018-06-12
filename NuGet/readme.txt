@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a error #18 “Block finalizer solved?”.
+   Changed a implementation of the `Dispose` method.
 
    ============
    PROJECT SITE

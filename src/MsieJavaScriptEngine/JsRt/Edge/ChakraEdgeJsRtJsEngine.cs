@@ -45,7 +45,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <summary>
 		/// List of native function callbacks
 		/// </summary>
-		private readonly HashSet<EdgeJsNativeFunction> _nativeFunctions = new HashSet<EdgeJsNativeFunction>();
+		private HashSet<EdgeJsNativeFunction> _nativeFunctions = new HashSet<EdgeJsNativeFunction>();
 #endif
 
 
@@ -1209,29 +1209,40 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			if (_disposedFlag.Set())
 			{
-				if (_dispatcher != null)
-				{
-					_dispatcher.Dispose();
-				}
-
-				if (_jsContext.IsValid)
-				{
-					_jsContext.Release();
-				}
-				_jsRuntime.Dispose();
-
-				base.Dispose(disposing);
-#if NETSTANDARD1_3
-
 				if (disposing)
 				{
+					if (_dispatcher != null)
+					{
+						_dispatcher.Invoke(DisposeUnmanagedResources);
+
+						_dispatcher.Dispose();
+						_dispatcher = null;
+					}
+#if NETSTANDARD1_3
+
 					if (_nativeFunctions != null)
 					{
 						_nativeFunctions.Clear();
+						_nativeFunctions = null;
 					}
-				}
 #endif
+				}
+				else
+				{
+					DisposeUnmanagedResources();
+				}
+
+				base.Dispose(disposing);
 			}
+		}
+
+		private void DisposeUnmanagedResources()
+		{
+			if (_jsContext.IsValid)
+			{
+				_jsContext.Release();
+			}
+			_jsRuntime.Dispose();
 		}
 
 		#endregion

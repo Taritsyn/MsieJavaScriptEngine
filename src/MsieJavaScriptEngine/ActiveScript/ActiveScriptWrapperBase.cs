@@ -27,7 +27,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Pointer to an instance of Active Script engine
 		/// </summary>
-		private IntPtr _pActiveScript;
+		protected IntPtr _pActiveScript;
+
+		/// <summary>
+		/// Pointer to an instance of Active Script garbage collector
+		/// </summary>
+		private IntPtr _pActiveScriptGarbageCollector;
 
 		/// <summary>
 		/// Instance of Active Script engine
@@ -71,6 +76,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			_pActiveScript = ComHelpers.CreateInstanceByClsid<IActiveScript>(clsid);
 			_activeScript = (IActiveScript)Marshal.GetObjectForIUnknown(_pActiveScript);
+
+			_pActiveScriptGarbageCollector = ComHelpers.QueryInterfaceNoThrow<IActiveScriptGarbageCollector>(
+				_pActiveScript);
 			_activeScriptGarbageCollector = _activeScript as IActiveScriptGarbageCollector;
 
 			if (languageVersion != ScriptLanguageVersion.None)
@@ -225,18 +233,29 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		public virtual void Dispose()
+		public abstract void Dispose();
+
+		/// <summary>
+		/// Destroys object
+		/// </summary>
+		/// <param name="disposing">Flag, allowing destruction of
+		/// managed objects contained in fields of class</param>
+		protected virtual void Dispose(bool disposing)
 		{
-			_activeScriptGarbageCollector = null;
-
-			ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
-
-			if (_activeScript != null)
+			if (disposing)
 			{
-				_activeScript.Close();
-				Marshal.FinalReleaseComObject(_activeScript);
-				_activeScript = null;
+				_activeScriptGarbageCollector = null;
+
+				if (_activeScript != null)
+				{
+					_activeScript.Close();
+					Marshal.FinalReleaseComObject(_activeScript);
+					_activeScript = null;
+				}
 			}
+
+			ComHelpers.ReleaseAndEmpty(ref _pActiveScriptGarbageCollector);
+			ComHelpers.ReleaseAndEmpty(ref _pActiveScript);
 		}
 
 		#endregion
