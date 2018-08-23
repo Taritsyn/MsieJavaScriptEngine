@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Changed a implementation of the `Dispose` method.
+   Fixed a error, that occurred during the generation of error message.
 
    ============
    PROJECT SITE

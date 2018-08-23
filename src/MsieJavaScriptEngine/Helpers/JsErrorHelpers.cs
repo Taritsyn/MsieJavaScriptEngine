@@ -461,7 +461,7 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <param name="sourceLine">Content of the source line</param>
 		/// <param name="columnNumber">Column number</param>
 		/// <param name="maxFragmentLength">Maximum length of the source fragment</param>
-		internal static string GetSourceFragment(string sourceLine, int columnNumber,
+		public static string GetSourceFragmentFromLine(string sourceLine, int columnNumber,
 			int maxFragmentLength = 100)
 		{
 			if (string.IsNullOrEmpty(sourceLine))
@@ -480,7 +480,14 @@ namespace MsieJavaScriptEngine.Helpers
 
 				var leftOffset = (int)Math.Floor((double)maxFragmentLength / 2);
 				int fragmentStartPosition = columnNumber - leftOffset - 1;
-				if (fragmentStartPosition < 0)
+				if (fragmentStartPosition > 0)
+				{
+					if (lineLength - fragmentStartPosition < maxFragmentLength)
+					{
+						fragmentStartPosition = lineLength - maxFragmentLength;
+					}
+				}
+				else
 				{
 					fragmentStartPosition = 0;
 				}
@@ -489,12 +496,10 @@ namespace MsieJavaScriptEngine.Helpers
 				if (fragmentStartPosition > 0)
 				{
 					startPart = ellipsisSymbol;
-					fragmentLength--;
 				}
-				if (fragmentStartPosition + maxFragmentLength < lineLength)
+				if (fragmentStartPosition + fragmentLength < lineLength)
 				{
 					endPart = ellipsisSymbol;
-					fragmentLength--;
 				}
 
 				StringBuilder fragmentBuilder = StringBuilderPool.GetBuilder();
