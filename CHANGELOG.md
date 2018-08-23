@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.0 Beta 5 - August 23, 2018
+ * Fixed a error, that occurred during the generation of error message
+
 ## v3.0.0 Beta 4 - June 6, 2018
  * Changed a implementation of the `Dispose` method
 
