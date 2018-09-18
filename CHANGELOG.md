@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## v3.0.0 RC 1 - September 18, 2018
+ * In JavaScript engine settings was added one new property - `MaxStackSize` (default `492` or `984` KB)
+ * JSON2 library was updated to version of June 12, 2017
+
 ## v3.0.0 Beta 5 - August 23, 2018
  * Fixed a error, that occurred during the generation of error message
 
