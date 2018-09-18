@@ -50,11 +50,6 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private ActiveScriptException _lastException;
 
 		/// <summary>
-		/// Instance of script dispatcher
-		/// </summary>
-		private static readonly ScriptDispatcher _dispatcher = new ScriptDispatcher();
-
-		/// <summary>
 		/// Instance of process debug manager wrapper
 		/// </summary>
 		private ProcessDebugManagerWrapper _processDebugManagerWrapper;
@@ -104,6 +99,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		protected bool _interruptRequested;
 
+		/// <summary>
+		/// Instance of script dispatcher
+		/// </summary>
+		private static ScriptDispatcher _dispatcher;
+
+		/// <summary>
+		/// Synchronizer of script dispatcher initialization
+		/// </summary>
+		private static readonly object _dispatcherSynchronizer = new object();
+
 
 		/// <summary>
 		/// Constructs an instance of the Active Script engine
@@ -117,6 +122,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 			ScriptLanguageVersion languageVersion, string lowerIeVersion, string errorCategoryNamePrefix)
 			: base(settings)
 		{
+			InitScriptDispatcher(_settings.MaxStackSize);
+
 			_lowerIeVersion = lowerIeVersion;
 			_errorCategoryNamePrefix = errorCategoryNamePrefix;
 
@@ -172,6 +179,29 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 		}
 
+
+		/// <summary>
+		/// Initializes a script dispatcher
+		/// </summary>
+		/// <param name="maxStackSize">The maximum stack size, in bytes, to be used by the thread,
+		/// or 0 to use the default maximum stack size specified in the header for the executable.</param>
+		private static void InitScriptDispatcher(int maxStackSize)
+		{
+			if (_dispatcher != null)
+			{
+				return;
+			}
+
+			lock (_dispatcherSynchronizer)
+			{
+				if (_dispatcher != null)
+				{
+					return;
+				}
+
+				_dispatcher = new ScriptDispatcher(maxStackSize);
+			}
+		}
 
 		/// <summary>
 		/// Checks a support of the JS engine on the machine

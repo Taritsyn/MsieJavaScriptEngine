@@ -48,7 +48,11 @@ namespace MsieJavaScriptEngine.JsRt
 		protected ChakraJsRtJsEngineBase(JsEngineSettings settings)
 			: base(settings)
 		{
+#if NETSTANDARD1_3
 			_dispatcher = new ScriptDispatcher();
+#else
+			_dispatcher = new ScriptDispatcher(settings.MaxStackSize);
+#endif
 #if NETSTANDARD
 			_externalObjectFinalizeCallback = ExternalObjectFinalizeCallback;
 #endif

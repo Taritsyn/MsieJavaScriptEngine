@@ -1,10 +1,32 @@
-﻿namespace MsieJavaScriptEngine
+﻿using System;
+
+using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
+
+namespace MsieJavaScriptEngine
 {
 	/// <summary>
 	/// JS engine settings
 	/// </summary>
 	public sealed class JsEngineSettings
 	{
+#if !NETSTANDARD1_3
+		/// <summary>
+		/// The stack size is sufficient to run the code of modern JavaScript libraries in 32-bit process
+		/// </summary>
+		const int STACK_SIZE_32 = 492 * 1024; // like 32-bit Node.js
+
+		/// <summary>
+		/// The stack size is sufficient to run the code of modern JavaScript libraries in 64-bit process
+		/// </summary>
+		const int STACK_SIZE_64 = 984 * 1024; // like 64-bit Node.js
+
+		/// <summary>
+		/// The maximum stack size in bytes
+		/// </summary>
+		private int _maxStackSize;
+
+#endif
 		/// <summary>
 		/// Gets or sets a flag for whether to enable script debugging features
 		/// </summary>
@@ -22,6 +44,33 @@
 			get;
 			set;
 		}
+#if !NETSTANDARD1_3
+
+		/// <summary>
+		/// Gets or sets a maximum stack size in bytes
+		/// </summary>
+		/// <remarks>
+		/// <para>Set a <code>0</code> to use the default maximum stack size specified in the header
+		/// for the executable.
+		/// </para>
+		/// </remarks>
+		public int MaxStackSize
+		{
+			get { return _maxStackSize; }
+			set
+			{
+				if (value < 0)
+				{
+					throw new ArgumentOutOfRangeException(
+						nameof(value),
+						CommonStrings.Engine_MaxStackSizeMustBeNonNegative
+					);
+				}
+
+				_maxStackSize = value;
+			}
+		}
+#endif
 
 		/// <summary>
 		/// Gets or sets a flag for whether to use the ECMAScript 5 Polyfill
@@ -49,6 +98,9 @@
 		{
 			EnableDebugging = false;
 			EngineMode = JsEngineMode.Auto;
+#if !NETSTANDARD1_3
+			MaxStackSize = Utils.Is64BitProcess() ? STACK_SIZE_64 : STACK_SIZE_32;
+#endif
 			UseEcmaScript5Polyfill = false;
 			UseJson2Library = false;
 		}

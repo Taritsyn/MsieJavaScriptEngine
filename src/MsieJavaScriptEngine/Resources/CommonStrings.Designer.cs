@@ -146,6 +146,14 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "Maximum stack size must be non-negative."
+		/// </summary>
+		internal static string Engine_MaxStackSizeMustBeNonNegative
+		{
+			get { return GetString("Engine_MaxStackSizeMustBeNonNegative"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "Call stack"
 		/// </summary>
 		internal static string ErrorDetails_CallStack

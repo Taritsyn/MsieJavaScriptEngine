@@ -150,6 +150,9 @@
   <data name="Engine_JsEngineNotLoaded" xml:space="preserve">
     <value>Failed to create instance of the MsieJsEngine in {0} mode.</value>
   </data>
+  <data name="Engine_MaxStackSizeMustBeNonNegative" xml:space="preserve">
+    <value>Maximum stack size must be non-negative.</value>
+  </data>
   <data name="ErrorDetails_CallStack" xml:space="preserve">
     <value>Call stack</value>
   </data>

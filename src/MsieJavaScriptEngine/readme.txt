@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a error, that occurred during the generation of error message.
+   In JavaScript engine settings was added one new property - `MaxStackSize`
+   (default `492` or `984` KB).
 
    ============
    PROJECT SITE
