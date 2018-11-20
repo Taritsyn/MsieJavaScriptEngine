@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## v2.2.10 - November 20, 2018
+ * Improved performance of debugging in ActiveScript modes
+ * JSON2 library was updated to version of June 12, 2017
+
 ## v2.2.9 - June 12, 2018
  * Changed a implementation of the `Dispose` method
 
