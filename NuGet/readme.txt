@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Improved performance of debugging in ActiveScript modes.
+   1. Improved performance of debugging in ActiveScript modes;
+   2. JSON2 library was updated to version of June 12, 2017.
 
    ============
    PROJECT SITE
