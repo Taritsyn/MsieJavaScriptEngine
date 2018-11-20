@@ -312,6 +312,9 @@
     <Compile Include="..\MsieJavaScriptEngine\Helpers\NumericHelpers.cs">
       <Link>Helpers\NumericHelpers.cs</Link>
     </Compile>
+    <Compile Include="..\MsieJavaScriptEngine\Helpers\TextHelpers.cs">
+      <Link>Helpers\TextHelpers.cs</Link>
+    </Compile>
     <Compile Include="..\MsieJavaScriptEngine\Helpers\TypeMappingHelpers.cs">
       <Link>Helpers\TypeMappingHelpers.cs</Link>
     </Compile>

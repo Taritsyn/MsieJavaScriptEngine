@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+
+using MsieJavaScriptEngine.Helpers;
 
 namespace MsieJavaScriptEngine.ActiveScript.Debugging
 {
@@ -13,11 +14,6 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 	internal sealed class DebugDocument : IDebugDocumentInfo, IDebugDocumentProvider, IDebugDocument,
 		IDebugDocumentText
 	{
-		/// <summary>
-		/// Regular expression for working with a line break
-		/// </summary>
-		private static readonly Regex _lineBreakRegex = new Regex("\r\n|\n|\r");
-
 		/// <summary>
 		/// Active Script wrapper
 		/// </summary>
@@ -85,31 +81,6 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 
 
 		/// <summary>
-		/// Finds a line break
-		/// </summary>
-		/// <param name="sourceCode">Source code</param>
-		/// <param name="startPosition">Position in the input string that defines the leftmost
-		/// position to be searched</param>
-		/// <param name="length">Number of characters in the substring to include in the search</param>
-		/// <param name="lineBreakPosition">Position of line break</param>
-		/// <param name="lineBreakLength">Length of line break</param>
-		private static void FindLineBreak(string sourceCode, int startPosition, int length,
-			out int lineBreakPosition, out int lineBreakLength)
-		{
-			Match lineBreakMatch = _lineBreakRegex.Match(sourceCode, startPosition, length);
-			if (lineBreakMatch.Success)
-			{
-				lineBreakPosition = lineBreakMatch.Index;
-				lineBreakLength = lineBreakMatch.Length;
-			}
-			else
-			{
-				lineBreakPosition = -1;
-				lineBreakLength = 0;
-			}
-		}
-
-		/// <summary>
 		/// Initializes a debug document
 		/// </summary>
 		private void Initialize()
@@ -126,7 +97,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 					documentStartPosition : lineBreakPosition + lineBreakLength;
 				int remainderLength = documentEndPosition - linePosition + 1;
 
-				FindLineBreak(_code, linePosition, remainderLength,
+				TextHelpers.FindNextLineBreak(_code, linePosition, remainderLength,
 					out lineBreakPosition, out lineBreakLength);
 
 				int lineLength = lineBreakPosition != -1 ? lineBreakPosition - linePosition : 0;

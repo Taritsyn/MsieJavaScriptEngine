@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Changed a implementation of the `Dispose` method.
+   Improved performance of debugging in ActiveScript modes.
 
    ============
    PROJECT SITE
