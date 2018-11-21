@@ -978,7 +978,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 								sourceLine = sourcePropertyValue.ConvertToString().ToString();
 							}
 
-							sourceFragment = JsErrorHelpers.GetSourceFragmentFromLine(sourceLine, columnNumber);
+							sourceFragment = TextHelpers.GetTextFragmentFromLine(sourceLine, columnNumber);
 							message = JsErrorHelpers.GenerateScriptErrorMessage(type, description, documentName,
 								lineNumber, columnNumber, sourceFragment);
 						}

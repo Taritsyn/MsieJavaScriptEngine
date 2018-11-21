@@ -130,7 +130,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 						string sourceLine;
 						error.GetSourceLineText(out sourceLine);
 
-						sourceFragment = JsErrorHelpers.GetSourceFragmentFromLine(sourceLine, columnNumber);
+						sourceFragment = TextHelpers.GetTextFragmentFromLine(sourceLine, columnNumber);
 					}
 					else
 					{
