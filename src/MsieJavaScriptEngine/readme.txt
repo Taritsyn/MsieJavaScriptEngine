@@ -23,7 +23,9 @@
    =============
    1. Improved performance of debugging in ActiveScript modes;
    2. `GetSourceFragmentFromLine` method of `JsErrorHelpers` class has been
-      replaced by the `GetTextFragmentFromLine` method of `TextHelpers` class.
+      replaced by the `GetTextFragmentFromLine` method of `TextHelpers` class;
+   3. One part of the auxiliary code was removed, and other part moved to an
+      external library - AdvancedStringBuilder.
 
    ============
    PROJECT SITE

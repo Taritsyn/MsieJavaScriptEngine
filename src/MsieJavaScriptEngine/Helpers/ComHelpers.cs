@@ -1,14 +1,8 @@
 ﻿#if !NETSTANDARD
 using System;
-#if NET45
-using System.Reflection;
-#endif
 using System.Runtime.InteropServices;
 
 using MsieJavaScriptEngine.Constants;
-#if NET40
-using MsieJavaScriptEngine.Polyfills.System;
-#endif
 
 namespace MsieJavaScriptEngine.Helpers
 {
@@ -27,7 +21,7 @@ namespace MsieJavaScriptEngine.Helpers
 		public static IntPtr CreateInstanceByClsid<T>(Guid clsid)
 		{
 			IntPtr pInterface;
-			Guid iid = typeof(T).GetTypeInfo().GUID;
+			Guid iid = typeof(T).GUID;
 			HResult.Check(NativeMethods.CoCreateInstance(ref clsid, IntPtr.Zero, 1, ref iid, out pInterface));
 
 			return pInterface;
@@ -82,7 +76,7 @@ namespace MsieJavaScriptEngine.Helpers
 		public static IntPtr QueryInterface<T>(IntPtr pUnknown)
 		{
 			IntPtr pInterface;
-			Guid iid = typeof(T).GetTypeInfo().GUID;
+			Guid iid = typeof(T).GUID;
 
 			HResult.Check(Marshal.QueryInterface(pUnknown, ref iid, out pInterface));
 
@@ -92,7 +86,7 @@ namespace MsieJavaScriptEngine.Helpers
 		public static IntPtr QueryInterfaceNoThrow<T>(IntPtr pUnknown)
 		{
 			IntPtr pInterface;
-			Guid iid = typeof(T).GetTypeInfo().GUID;
+			Guid iid = typeof(T).GUID;
 			int result = Marshal.QueryInterface(pUnknown, ref iid, out pInterface);
 
 			return result == ComErrorCode.S_OK ? pInterface : IntPtr.Zero;

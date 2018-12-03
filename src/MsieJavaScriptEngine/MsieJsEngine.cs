@@ -10,9 +10,6 @@ using MsieJavaScriptEngine.ActiveScript;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.JsRt.Edge;
 using MsieJavaScriptEngine.JsRt.Ie;
-#if NET40
-using MsieJavaScriptEngine.Polyfills.System;
-#endif
 using MsieJavaScriptEngine.Resources;
 using MsieJavaScriptEngine.Utilities;
 
@@ -391,7 +388,11 @@ namespace MsieJavaScriptEngine
 				);
 			}
 
+#if NET40
+			Assembly assembly = type.Assembly;
+#else
 			Assembly assembly = type.GetTypeInfo().Assembly;
+#endif
 			string nameSpace = type.Namespace;
 			string resourceFullName = nameSpace != null ? nameSpace + "." + resourceName : resourceName;
 
@@ -813,7 +814,11 @@ namespace MsieJavaScriptEngine
 				);
 			}
 
+#if NET40
+			Assembly assembly = type.Assembly;
+#else
 			Assembly assembly = type.GetTypeInfo().Assembly;
+#endif
 			string nameSpace = type.Namespace;
 			string resourceFullName = nameSpace != null ? nameSpace + "." + resourceName : resourceName;
 

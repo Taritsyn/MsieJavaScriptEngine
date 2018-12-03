@@ -7,7 +7,7 @@ namespace MsieJavaScriptEngine.Extensions
 	/// <summary>
 	/// Exception extensions
 	/// </summary>
-	public static class ExceptionExtensions
+	internal static class ExceptionExtensions
 	{
 		/// <summary>
 		/// Preserves a stack trace of exception

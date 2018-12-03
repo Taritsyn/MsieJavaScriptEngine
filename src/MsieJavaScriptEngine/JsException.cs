@@ -5,9 +5,10 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 #endif
 
+using AdvancedStringBuilder;
+
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
-using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine
 {
@@ -152,12 +153,14 @@ namespace MsieJavaScriptEngine
 		/// <returns>A string that represents the current exception</returns>
 		public override string ToString()
 		{
-			StringBuilder resultBuilder = StringBuilderPool.GetBuilder();
+			string errorDetails = JsErrorHelpers.GenerateErrorDetails(this, true);
+
+			var stringBuilderPool = StringBuilderPool.Shared;
+			StringBuilder resultBuilder = stringBuilderPool.Rent();
 			resultBuilder.Append(this.GetType().FullName);
 			resultBuilder.Append(": ");
 			resultBuilder.Append(this.Message);
 
-			string errorDetails = JsErrorHelpers.GenerateErrorDetails(this, true);
 			if (errorDetails.Length > 0)
 			{
 				resultBuilder.AppendLine();
@@ -178,7 +181,7 @@ namespace MsieJavaScriptEngine
 			}
 
 			string result = resultBuilder.ToString();
-			StringBuilderPool.ReleaseBuilder(resultBuilder);
+			stringBuilderPool.Return(resultBuilder);
 
 			return result;
 		}

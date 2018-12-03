@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text;
 
+using AdvancedStringBuilder;
+
 using MsieJavaScriptEngine.Extensions;
-using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.Helpers
 {
@@ -64,7 +65,8 @@ namespace MsieJavaScriptEngine.Helpers
 					endPart = ellipsisSymbol;
 				}
 
-				StringBuilder fragmentBuilder = StringBuilderPool.GetBuilder();
+				var stringBuilderPool = StringBuilderPool.Shared;
+				StringBuilder fragmentBuilder = stringBuilderPool.Rent();
 				if (startPart.Length > 0)
 				{
 					fragmentBuilder.Append(startPart);
@@ -76,7 +78,7 @@ namespace MsieJavaScriptEngine.Helpers
 				}
 
 				fragment = fragmentBuilder.ToString();
-				StringBuilderPool.ReleaseBuilder(fragmentBuilder);
+				stringBuilderPool.Return(fragmentBuilder);
 			}
 			else
 			{

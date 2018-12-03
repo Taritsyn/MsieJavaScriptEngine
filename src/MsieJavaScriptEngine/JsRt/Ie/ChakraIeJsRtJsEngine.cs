@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 #endif
 using System.Text;
 
+using AdvancedStringBuilder;
+
 using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Extensions;
@@ -1067,7 +1069,8 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			if (originalMessage.ContainsQuotedValue(DllName.JScript9)
 				&& (isDllNotFound || originalMessage.ContainsQuotedValue("JsCreateRuntime")))
 			{
-				StringBuilder descriptionBuilder = StringBuilderPool.GetBuilder();
+				var stringBuilderPool = StringBuilderPool.Shared;
+				StringBuilder descriptionBuilder = stringBuilderPool.Rent();
 				if (isDllNotFound)
 				{
 					descriptionBuilder.AppendFormat(CommonStrings.Engine_AssemblyNotRegistered, DllName.JScript9);
@@ -1076,7 +1079,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				descriptionBuilder.AppendFormat(CommonStrings.Engine_IeInstallationRequired, LOWER_IE_VERSION);
 
 				description = descriptionBuilder.ToString();
-				StringBuilderPool.ReleaseBuilder(descriptionBuilder);
+				stringBuilderPool.Return(descriptionBuilder);
 
 				message = JsErrorHelpers.GenerateEngineLoadErrorMessage(description, _engineModeName);
 			}

@@ -8,10 +8,7 @@ using System.Reflection;
 using OriginalTypeConverter = System.ComponentModel.TypeConverter;
 
 using MsieJavaScriptEngine.Extensions;
-#if NET40
-using MsieJavaScriptEngine.Polyfills.System;
-#endif
-#if NET40 || NETSTANDARD1_3
+#if NETSTANDARD1_3
 using MsieJavaScriptEngine.Polyfills.System.Reflection;
 #endif
 using MsieJavaScriptEngine.Resources;
@@ -193,7 +190,11 @@ namespace MsieJavaScriptEngine.Utilities
 				}
 			}
 
+#if NET40
+			if (type.IsInstanceOfType(obj))
+#else
 			if (type.GetTypeInfo().IsInstanceOfType(obj))
+#endif
 			{
 				convertedObject = obj;
 				return true;
@@ -217,7 +218,11 @@ namespace MsieJavaScriptEngine.Utilities
 				return false;
 			}
 
+#if NET40
+			Type typeInfo = type;
+#else
 			TypeInfo typeInfo = type.GetTypeInfo();
+#endif
 			if (!typeInfo.IsValueType)
 			{
 				return false;

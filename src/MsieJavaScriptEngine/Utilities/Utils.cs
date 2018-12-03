@@ -4,9 +4,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-#if NET40
-using MsieJavaScriptEngine.Polyfills.System;
-#endif
 using MsieJavaScriptEngine.Resources;
 
 namespace MsieJavaScriptEngine.Utilities
@@ -62,7 +59,11 @@ namespace MsieJavaScriptEngine.Utilities
 				);
 			}
 
+#if NET40
+			Assembly assembly = type.Assembly;
+#else
 			Assembly assembly = type.GetTypeInfo().Assembly;
+#endif
 			string nameSpace = type.Namespace;
 			string resourceFullName = nameSpace != null ? nameSpace + "." + resourceName : resourceName;
 
