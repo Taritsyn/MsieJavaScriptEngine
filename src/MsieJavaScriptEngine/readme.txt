@@ -25,7 +25,10 @@
    2. `GetSourceFragmentFromLine` method of `JsErrorHelpers` class has been
       replaced by the `GetTextFragmentFromLine` method of `TextHelpers` class;
    3. One part of the auxiliary code was removed, and other part moved to an
-      external library - AdvancedStringBuilder.
+      external library - AdvancedStringBuilder;
+   4. In the `IeNativeMethods` and `EdgeNativeMethods` classes for the
+      `netstandard` targets was changed a calling convention from `StdCall` to
+      `Cdecl`.
 
    ============
    PROJECT SITE
