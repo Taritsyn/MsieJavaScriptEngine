@@ -10,7 +10,7 @@ namespace MsieJavaScriptEngine.Helpers
 	/// <summary>
 	/// Text helpers
 	/// </summary>
-	public static class TextHelpers
+	internal static class TextHelpers
 	{
 		/// <summary>
 		/// Array of characters used to find the next line break
@@ -24,7 +24,7 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <param name="textLine">Content of the text line</param>
 		/// <param name="columnNumber">Column number</param>
 		/// <param name="maxFragmentLength">Maximum length of the text fragment</param>
-		public static string GetTextFragmentFromLine(string textLine, int columnNumber,
+		internal static string GetTextFragmentFromLine(string textLine, int columnNumber,
 			int maxFragmentLength = 100)
 		{
 			if (string.IsNullOrEmpty(textLine))

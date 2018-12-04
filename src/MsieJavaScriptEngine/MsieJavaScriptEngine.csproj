@@ -8,9 +8,6 @@
 		<NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.0</NetStandardImplicitPackageVersion>
 		<OutputType>Library</OutputType>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<AssemblyOriginatorKeyFile>../../build/Key.snk</AssemblyOriginatorKeyFile>
-		<SignAssembly>true</SignAssembly>
-		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
 		<NoWarn>$(NoWarn);CS1591;NU5125</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<DisableDefaultResxToCsConversionTarget>true</DisableDefaultResxToCsConversionTarget>
@@ -37,6 +34,7 @@
 
 	<Import Project="../../build/common.props" />
 	<Import Project="../../build/net40-client-target.props" />
+	<Import Project="../../build/strong-name-signing.props" />
 
 	<ItemGroup>
 		<PackageReference Include="AdvancedStringBuilder" Version="0.1.0" />

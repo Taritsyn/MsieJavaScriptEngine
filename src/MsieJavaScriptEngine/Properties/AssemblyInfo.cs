@@ -1,0 +1,8 @@
+﻿using System.Runtime.CompilerServices;
+
+// Unit tests need access to internal members
+[assembly: InternalsVisibleTo("MsieJavaScriptEngine.Test.Common, PublicKey=002400000480000094000000060200000024000052534131000400000100010031605c3b70d76b" +
+"bb7e2afeccded26c52f66c4c7047c7a5b6a88301f54f1e91d5e5a08a9e36b0ad18a403f7894eda" +
+"d58b014576963d6c6073e3df92eebadd1e9c6bc6c8fb3ad8b95e6358a0948a2fc5df0fa76553b5" +
+"63c7584fc6fa22952bd24965f64877622d14559a3603879f8a746eaed0f2cb009dec5537770d94" +
+"83e629a9")]

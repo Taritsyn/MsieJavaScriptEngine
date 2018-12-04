@@ -12,6 +12,7 @@
 	</PropertyGroup>
 
 	<Import Project="../../build/common.props" />
+	<Import Project="../../build/strong-name-signing.props" />
 
 	<ItemGroup>
 		<PackageReference Include="NUnit" Version="3.10.1" />
