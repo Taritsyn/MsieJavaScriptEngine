@@ -82,13 +82,13 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		internal static extern JsErrorCode JsSetRuntimeBeforeCollectCallback(IeJsRuntime runtime,
 			IntPtr callbackState, JsBeforeCollectCallback beforeCollectCallback);
 
-		[DllImport(DllName.JScript9, CallingConvention = DefaultCallingConvention, EntryPoint = "JsAddRef")]
+		[DllImport(DllName.JScript9, EntryPoint = "JsAddRef", CallingConvention = DefaultCallingConvention)]
 		internal static extern JsErrorCode JsContextAddRef(IeJsContext reference, out uint count);
 
 		[DllImport(DllName.JScript9, CallingConvention = DefaultCallingConvention)]
 		internal static extern JsErrorCode JsAddRef(IeJsValue reference, out uint count);
 
-		[DllImport(DllName.JScript9, CallingConvention = DefaultCallingConvention, EntryPoint = "JsRelease")]
+		[DllImport(DllName.JScript9, EntryPoint = "JsRelease", CallingConvention = DefaultCallingConvention)]
 		internal static extern JsErrorCode JsContextRelease(IeJsContext reference, out uint count);
 
 		[DllImport(DllName.JScript9, CallingConvention = DefaultCallingConvention)]

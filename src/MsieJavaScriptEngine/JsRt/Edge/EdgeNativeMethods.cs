@@ -81,13 +81,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		internal static extern JsErrorCode JsSetRuntimeBeforeCollectCallback(EdgeJsRuntime runtime,
 			IntPtr callbackState, JsBeforeCollectCallback beforeCollectCallback);
 
-		[DllImport(DllName.Chakra, CallingConvention = DefaultCallingConvention, EntryPoint = "JsAddRef")]
+		[DllImport(DllName.Chakra, EntryPoint = "JsAddRef", CallingConvention = DefaultCallingConvention)]
 		internal static extern JsErrorCode JsContextAddRef(EdgeJsContext reference, out uint count);
 
 		[DllImport(DllName.Chakra, CallingConvention = DefaultCallingConvention)]
 		internal static extern JsErrorCode JsAddRef(EdgeJsValue reference, out uint count);
 
-		[DllImport(DllName.Chakra, CallingConvention = DefaultCallingConvention, EntryPoint = "JsRelease")]
+		[DllImport(DllName.Chakra, EntryPoint = "JsRelease", CallingConvention = DefaultCallingConvention)]
 		internal static extern JsErrorCode JsContextRelease(EdgeJsContext reference, out uint count);
 
 		[DllImport(DllName.Chakra, CallingConvention = DefaultCallingConvention)]
