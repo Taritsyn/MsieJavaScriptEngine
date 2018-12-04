@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## v3.0.0 RC 2 - December 4, 2018
+ * Improved performance of debugging in ActiveScript modes
+ * `GetSourceFragmentFromLine` method of `JsErrorHelpers` class has been replaced by the `GetTextFragmentFromLine` method of `TextHelpers` class
+ * One part of the auxiliary code was removed, and other part moved to an external library - AdvancedStringBuilder
+ * In the `IeNativeMethods` and `EdgeNativeMethods` classes for the `netstandard` targets was changed a calling convention from `StdCall` to `Cdecl`
+
 ## v3.0.0 RC 1 - September 18, 2018
  * In JavaScript engine settings was added one new property - `MaxStackSize` (default `492` or `984` KB)
  * JSON2 library was updated to version of June 12, 2017
