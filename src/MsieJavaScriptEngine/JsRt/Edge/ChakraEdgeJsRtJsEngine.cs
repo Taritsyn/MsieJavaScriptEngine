@@ -1140,6 +1140,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					{
 						throw WrapJsException(e);
 					}
+					finally
+					{
+						GC.KeepAlive(precompiledScript);
+					}
 				}
 			});
 		}

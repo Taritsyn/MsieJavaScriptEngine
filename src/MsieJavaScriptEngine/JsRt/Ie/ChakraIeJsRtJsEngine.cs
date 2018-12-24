@@ -1208,6 +1208,10 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					{
 						throw WrapJsException(e);
 					}
+					finally
+					{
+						GC.KeepAlive(precompiledScript);
+					}
 				}
 			});
 		}

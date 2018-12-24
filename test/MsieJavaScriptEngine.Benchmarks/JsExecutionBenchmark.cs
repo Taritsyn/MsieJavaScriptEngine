@@ -172,7 +172,7 @@ namespace MsieJavaScriptEngine.Benchmarks
 			}
 
 			// Assert
-			for (int itemIndex = 1; itemIndex < ItemCount; itemIndex++)
+			for (int itemIndex = 0; itemIndex < ItemCount; itemIndex++)
 			{
 				Assert.Equal(_targetOutputStrings[itemIndex], outputStrings[itemIndex]);
 			}
