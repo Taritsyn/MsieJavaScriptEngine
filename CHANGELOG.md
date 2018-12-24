@@ -1,10 +1,25 @@
 Change log
 ==========
 
+## v3.0.0 - December 24, 2018
+ * Format of the error messages was unified
+ * Created a new exception classes: `JsCompilationException`, `JsEngineException`, `JsFatalException`, `JsInterruptedException`, `JsScriptException` and `JsUsageException`. These exceptions are responsible for handling errors, some of which were previously handled by the `JsRuntimeException` class.
+ * In the `JsException` class was added two new properties: `Category` and `Description`
+ * From the `JsRuntimeException` class was removed one property - `ErrorCode`
+ * In the `JsRuntimeException` class was added three new properties: `Type`, `DocumentName` and `CallStack`
+ * `JsEngineLoadException` class now is inherited from the `JsEngineException` class
+ * `Format` method of the `JsErrorHelpers` class was renamed to the `GenerateErrorDetails`
+ * One part of the auxiliary code was removed, and other part moved to an external library - [AdvancedStringBuilder](https://github.com/Taritsyn/AdvancedStringBuilder)
+ * Added a ability to interrupt execution of the script
+ * In JsRT modes added a ability to pre-compile scripts
+ * In `MsieJsEngine` class was added `SupportsScriptPrecompilation` property and four new methods: `Interrupt`, `Precompile`, `PrecompileFile` and `PrecompileResource`
+ * In JavaScript engine settings was added one new property - `MaxStackSize` (default `492` or `984` KB)
+ * Added support of .NET Standard 2.0 (only supported `ChakraIeJsRt` and `ChakraEdgeJsRt` modes)
+
 ## v3.0.0 RC 2 - December 4, 2018
  * Improved performance of debugging in ActiveScript modes
  * `GetSourceFragmentFromLine` method of `JsErrorHelpers` class has been replaced by the `GetTextFragmentFromLine` method of `TextHelpers` class
- * One part of the auxiliary code was removed, and other part moved to an external library - AdvancedStringBuilder
+ * One part of the auxiliary code was removed, and other part moved to an external library - [AdvancedStringBuilder](https://github.com/Taritsyn/AdvancedStringBuilder)
  * In the `IeNativeMethods` and `EdgeNativeMethods` classes for the `netstandard` targets was changed a calling convention from `StdCall` to `Cdecl`
 
 ## v3.0.0 RC 1 - September 18, 2018

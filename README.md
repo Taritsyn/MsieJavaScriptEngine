@@ -29,13 +29,13 @@ This library can be installed through NuGet - [http://nuget.org/packages/MsieJav
 Consider a simple example of usage of the MSIE JavaScript Engine:
 
 ```csharp
+using System;
+
+using MsieJavaScriptEngine;
+using MsieJavaScriptEngine.Helpers;
+
 namespace MsieJavaScriptEngine.Example.Console
 {
-	using System;
-
-	using MsieJavaScriptEngine;
-	using MsieJavaScriptEngine.Helpers;
-
 	class Program
 	{
 		static void Main(string[] args)
@@ -56,9 +56,15 @@ namespace MsieJavaScriptEngine.Example.Console
 				Console.WriteLine();
 				Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
 			}
-			catch (JsRuntimeException e)
+			catch (JsScriptException e)
 			{
-				Console.WriteLine("During execution of JavaScript code an error occurred.");
+				Console.WriteLine("During processing of JavaScript code an error occurred.");
+				Console.WriteLine();
+				Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
+			}
+			catch (JsException e)
+			{
+				Console.WriteLine("During working of JavaScript engine an unknown error occurred.");
 				Console.WriteLine();
 				Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
 			}
@@ -71,7 +77,18 @@ namespace MsieJavaScriptEngine.Example.Console
 
 First we create an instance of the <code title="MsieJavaScriptEngine.MsieJsEngine">MsieJsEngine</code> class.
 Then we evaluate a JavaScript expression by using of the `Evaluate` method and output its result to the console.
-In addition, we provide handling of the following exception types: <code title="MsieJavaScriptEngine.JsEngineLoadException">JsEngineLoadException</code> and <code title="MsieJavaScriptEngine.JsRuntimeException">JsRuntimeException</code>.
+In addition, we provide handling of the following exception types: <code title="MsieJavaScriptEngine.JsEngineLoadException">JsEngineLoadException</code>, <code title="MsieJavaScriptEngine.JsScriptException">JsScriptException</code> and <code title="MsieJavaScriptEngine.JsException">JsException</code>.
+In the MSIE JavaScript Engine, exceptions have the following hierarchy:
+
+  * <code title="MsieJavaScriptEngine.JsException">JsException</code>
+    * <code title="MsieJavaScriptEngine.JsEngineException">JsEngineException</code>
+      * <code title="MsieJavaScriptEngine.JsEngineLoadException">JsEngineLoadException</code>
+    * <code title="MsieJavaScriptEngine.JsFatalException">JsFatalException</code>
+    * <code title="MsieJavaScriptEngine.JsScriptException">JsScriptException</code>
+      * <code title="MsieJavaScriptEngine.JsCompilationException">JsCompilationException</code>
+      * <code title="MsieJavaScriptEngine.JsRuntimeException">JsRuntimeException</code>
+         * <code title="MsieJavaScriptEngine.JsInterruptedException">JsInterruptedException</code>
+    * <code title="MsieJavaScriptEngine.JsUsageException">JsUsageException</code>
 
 Also, when you create an instance of the <code title="MsieJavaScriptEngine.MsieJsEngine">MsieJsEngine</code> class, then you can pass the JavaScript engine settings via the constructor.
 Consider in detail properties of the <code title="MsieJavaScriptEngine.JsEngineSettings">JsEngineSettings</code> class:
@@ -97,6 +114,15 @@ Consider in detail properties of the <code title="MsieJavaScriptEngine.JsEngineS
 			<td><code title="MsieJavaScriptEngine.JsEngineMode">JsEngineMode</code> enumeration</td>
 			<td><code>Auto</code></td>
 			<td>JavaScript engine mode.</td>
+		</tr>
+		<tr valign="top">
+			<td><code>MaxStackSize</code></td>
+			<td><code title="System.Int32">Int32</code></td>
+			<td><code>503 808</code> or <code>1 007 616</code></td>
+			<td>
+				<p>Maximum stack size in bytes.</p>
+				<p>Set a <code>0</code> to use the default maximum stack size specified in the header for the executable.</p>
+			</td>
 		</tr>
 		<tr valign="top">
 			<td><code>UseEcmaScript5Polyfill</code></td>
