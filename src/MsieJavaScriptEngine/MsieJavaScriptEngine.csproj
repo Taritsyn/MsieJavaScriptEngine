@@ -47,7 +47,7 @@
 	<ItemGroup>
 		<PackageReference Include="AdvancedStringBuilder" Version="0.1.0" />
 		<PackageReference Include="BuildBundlerMinifier" Version="2.4.337" PrivateAssets="All" />
-		<PackageReference Include="ResxToCs.MSBuild" Version="1.0.0-alpha5" PrivateAssets="All" />
+		<PackageReference Include="ResxToCs.MSBuild" Version="1.0.0-alpha6" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net45' ">
