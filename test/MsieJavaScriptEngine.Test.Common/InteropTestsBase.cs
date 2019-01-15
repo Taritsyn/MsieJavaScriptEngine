@@ -5,6 +5,7 @@ using System.Drawing;
 #endif
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using NUnit.Framework;
 
@@ -538,6 +539,52 @@ smileDay.GetDayOfYear();";
 
 			// Assert
 			Assert.AreEqual(targetOutput, output);
+		}
+
+		[Test]
+		public virtual void EmbeddingOfInstanceOfDelegateWithoutResultIsCorrect()
+		{
+			// Arrange
+			var logBuilder = new StringBuilder();
+			Action<string> log = (string value) =>
+			{
+				logBuilder.AppendLine(value);
+			};
+
+			const string input = @"(function(log, undefined) {
+	var num = 2, count = 0;
+
+	log('-= Start code execution =-');
+
+	while (num != Infinity) {
+		num = num * num;
+		count++;
+	}
+
+	log('-= End of code execution =-');
+
+	return count;
+}(log));";
+			const int targetOutput = 10;
+			string targetLogOutput = "-= Start code execution =-" + Environment.NewLine +
+				"-= End of code execution =-" + Environment.NewLine;
+
+			// Act
+			int output;
+			string logOutput;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.EmbedHostObject("log", log);
+				output = jsEngine.Evaluate<int>(input);
+
+				logOutput = logBuilder.ToString();
+				logBuilder.Clear();
+			}
+
+			// Assert
+			Assert.AreEqual(targetOutput, output);
+			Assert.AreEqual(targetLogOutput, logOutput);
 		}
 
 		#endregion

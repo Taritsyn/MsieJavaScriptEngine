@@ -33,7 +33,8 @@ namespace MsieJavaScriptEngine
 
 			object[] processedArgs = args;
 
-			if (_engineMode == JsEngineMode.Classic && processedArgs.Length > 0)
+			if (_engineMode == JsEngineMode.Classic && processedArgs.Length > 0
+				&& del.Method.ReturnType != typeof(void))
 			{
 				processedArgs = processedArgs.Skip(1).ToArray();
 			}
