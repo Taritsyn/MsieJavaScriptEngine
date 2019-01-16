@@ -87,6 +87,7 @@ namespace MsieJavaScriptEngine
 		{
 			BindingFlags processedInvokeAttr = invokeAttr;
 			if ((processedInvokeAttr.HasFlag(BindingFlags.GetProperty)
+				|| processedInvokeAttr.HasFlag(BindingFlags.SetProperty)
 				|| processedInvokeAttr.HasFlag(BindingFlags.PutDispProperty))
 				&& !_properties.Any(p => p.Name == name)
 				&& _fields.Any(p => p.Name == name))
@@ -95,6 +96,11 @@ namespace MsieJavaScriptEngine
 				{
 					processedInvokeAttr &= ~BindingFlags.GetProperty;
 					processedInvokeAttr |= BindingFlags.GetField;
+				}
+				else if (processedInvokeAttr.HasFlag(BindingFlags.SetProperty))
+				{
+					processedInvokeAttr &= ~BindingFlags.SetProperty;
+					processedInvokeAttr |= BindingFlags.SetField;
 				}
 				else if (processedInvokeAttr.HasFlag(BindingFlags.PutDispProperty))
 				{

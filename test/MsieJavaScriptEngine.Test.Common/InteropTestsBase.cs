@@ -14,6 +14,7 @@ using MsieJavaScriptEngine.Test.Common.Interop.Animals;
 #if NETCOREAPP1_0
 using MsieJavaScriptEngine.Test.Common.Interop.Drawing;
 #endif
+using MsieJavaScriptEngine.Test.Common.Interop.Logging;
 
 namespace MsieJavaScriptEngine.Test.Common
 {
@@ -934,17 +935,22 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		public virtual void EmbeddingOfCustomReferenceTypeWithFieldIsCorrect()
 		{
 			// Arrange
-			Type simpleSingletonType = typeof(SimpleSingleton);
+			Type defaultLoggerType = typeof(DefaultLogger);
+			Type throwExceptionLoggerType = typeof(ThrowExceptionLogger);
+			const string updateCode = "DefaultLogger.Current = new ThrowExceptionLogger();";
 
-			const string input = "SimpleSingleton.Instance.ToString()";
-			const string targetOutput = "[simple singleton]";
+			const string input = "DefaultLogger.Current.ToString()";
+			const string targetOutput = "[throw exception logger]";
 
 			// Act
 			string output;
 
 			using (var jsEngine = CreateJsEngine())
 			{
-				jsEngine.EmbedHostType("SimpleSingleton", simpleSingletonType);
+				jsEngine.EmbedHostType("DefaultLogger", defaultLoggerType);
+				jsEngine.EmbedHostType("ThrowExceptionLogger", throwExceptionLoggerType);
+				jsEngine.Execute(updateCode);
+
 				output = jsEngine.Evaluate<string>(input);
 			}
 

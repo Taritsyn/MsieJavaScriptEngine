@@ -21,8 +21,10 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a error, that occurred in the `Classic` mode during calling an embedded
-   delegate, which does not return a result.
+   1. Fixed a error, that occurred in the `Classic` mode during calling an embedded
+      delegate, which does not return a result;
+   2. Fixed a error, that occurred during setting a value to field of embedded
+      type.
 
    ============
    PROJECT SITE
