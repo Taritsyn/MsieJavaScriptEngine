@@ -1,18 +1,10 @@
 ﻿using System;
-#if NETSTANDARD
-using System.Collections.Generic;
-#endif
 using System.Linq;
-#if NETSTANDARD
-using System.Reflection;
-using System.Runtime.InteropServices;
-#endif
 
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Extensions;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
-using MsieJavaScriptEngine.Utilities;
 
 using WrapperCompilationException = MsieJavaScriptEngine.JsCompilationException;
 using WrapperEngineException = MsieJavaScriptEngine.JsEngineException;
@@ -48,6 +40,11 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		private EdgeJsContext _jsContext;
 
 		/// <summary>
+		/// Type mapper
+		/// </summary>
+		private EdgeTypeMapper _typeMapper;
+
+		/// <summary>
 		/// Flag indicating whether this JS engine is supported
 		/// </summary>
 		private static bool? _isSupported;
@@ -56,13 +53,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// Support synchronizer
 		/// </summary>
 		private static readonly object _supportSynchronizer = new object();
-#if NETSTANDARD
-
-		/// <summary>
-		/// List of native function callbacks
-		/// </summary>
-		private HashSet<EdgeJsNativeFunction> _nativeFunctions = new HashSet<EdgeJsNativeFunction>();
-#endif
 
 
 		/// <summary>
@@ -72,6 +62,8 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		public ChakraEdgeJsRtJsEngine(JsEngineSettings settings)
 			: base(settings)
 		{
+			_typeMapper = new EdgeTypeMapper();
+
 			try
 			{
 				_dispatcher.Invoke(() =>
@@ -230,623 +222,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		}
 
 		#region Mapping
-
-		/// <summary>
-		/// Makes a mapping of value from the host type to a script type
-		/// </summary>
-		/// <param name="value">The source value</param>
-		/// <returns>The mapped value</returns>
-		private EdgeJsValue MapToScriptType(object value)
-		{
-			if (value == null)
-			{
-				return EdgeJsValue.Null;
-			}
-
-			if (value is Undefined)
-			{
-				return EdgeJsValue.Undefined;
-			}
-
-			var typeCode = value.GetType().GetTypeCode();
-
-			switch (typeCode)
-			{
-				case TypeCode.Boolean:
-					return (bool)value ? EdgeJsValue.True : EdgeJsValue.False;
-
-				case TypeCode.SByte:
-				case TypeCode.Byte:
-				case TypeCode.Int16:
-				case TypeCode.UInt16:
-				case TypeCode.Int32:
-				case TypeCode.UInt32:
-				case TypeCode.Int64:
-				case TypeCode.UInt64:
-					return EdgeJsValue.FromInt32(Convert.ToInt32(value));
-
-				case TypeCode.Single:
-				case TypeCode.Double:
-				case TypeCode.Decimal:
-					return EdgeJsValue.FromDouble(Convert.ToDouble(value));
-
-				case TypeCode.Char:
-				case TypeCode.String:
-					return EdgeJsValue.FromString((string)value);
-
-				default:
-#if NETSTANDARD
-					return FromObject(value);
-#else
-					object processedValue = !TypeConverter.IsPrimitiveType(typeCode) ?
-						new HostObject(value, _settings.EngineMode) : value;
-					return EdgeJsValue.FromObject(processedValue);
-#endif
-			}
-		}
-
-		/// <summary>
-		/// Makes a mapping of array items from the host type to a script type
-		/// </summary>
-		/// <param name="args">The source array</param>
-		/// <returns>The mapped array</returns>
-		private EdgeJsValue[] MapToScriptType(object[] args)
-		{
-			return args.Select(MapToScriptType).ToArray();
-		}
-
-		/// <summary>
-		/// Makes a mapping of value from the script type to a host type
-		/// </summary>
-		/// <param name="value">The source value</param>
-		/// <returns>The mapped value</returns>
-		private object MapToHostType(EdgeJsValue value)
-		{
-			JsValueType valueType = value.ValueType;
-			EdgeJsValue processedValue;
-			object result;
-
-			switch (valueType)
-			{
-				case JsValueType.Null:
-					result = null;
-					break;
-				case JsValueType.Undefined:
-					result = Undefined.Value;
-					break;
-				case JsValueType.Boolean:
-					processedValue = value.ConvertToBoolean();
-					result = processedValue.ToBoolean();
-					break;
-				case JsValueType.Number:
-					processedValue = value.ConvertToNumber();
-					result = NumericHelpers.CastDoubleValueToCorrectType(processedValue.ToDouble());
-					break;
-				case JsValueType.String:
-					processedValue = value.ConvertToString();
-					result = processedValue.ToString();
-					break;
-				case JsValueType.Object:
-				case JsValueType.Function:
-				case JsValueType.Error:
-				case JsValueType.Array:
-#if NETSTANDARD
-					result = ToObject(value);
-#else
-					processedValue = value.ConvertToObject();
-					object obj = processedValue.ToObject();
-
-					if (!TypeConverter.IsPrimitiveType(obj.GetType()))
-					{
-						var hostObj = obj as HostObject;
-						result = hostObj != null ? hostObj.Target : obj;
-					}
-					else
-					{
-						result = obj;
-					}
-#endif
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Makes a mapping of array items from the script type to a host type
-		/// </summary>
-		/// <param name="args">The source array</param>
-		/// <returns>The mapped array</returns>
-		private object[] MapToHostType(EdgeJsValue[] args)
-		{
-			return args.Select(MapToHostType).ToArray();
-		}
-#if NETSTANDARD
-
-		private EdgeJsValue FromObject(object value)
-		{
-			var del = value as Delegate;
-			EdgeJsValue objValue = del != null ? CreateFunctionFromDelegate(del) : CreateExternalObjectFromObject(value);
-
-			return objValue;
-		}
-
-		private object ToObject(EdgeJsValue value)
-		{
-			object result = value.HasExternalData ?
-				GCHandle.FromIntPtr(value.ExternalData).Target : value.ConvertToObject();
-
-			return result;
-		}
-
-		private EdgeJsValue CreateExternalObjectFromObject(object value)
-		{
-			GCHandle handle = GCHandle.Alloc(value);
-			_externalObjects.Add(value);
-
-			EdgeJsValue objValue = EdgeJsValue.CreateExternalObject(
-				GCHandle.ToIntPtr(handle), _externalObjectFinalizeCallback);
-			Type type = value.GetType();
-
-			ProjectFields(objValue, type, true);
-			ProjectProperties(objValue, type, true);
-			ProjectMethods(objValue, type, true);
-			FreezeObject(objValue);
-
-			return objValue;
-		}
-
-		private EdgeJsValue CreateObjectFromType(Type type)
-		{
-			EdgeJsValue typeValue = CreateConstructor(type);
-
-			ProjectFields(typeValue, type, false);
-			ProjectProperties(typeValue, type, false);
-			ProjectMethods(typeValue, type, false);
-			FreezeObject(typeValue);
-
-			return typeValue;
-		}
-
-		private void FreezeObject(EdgeJsValue objValue)
-		{
-			EdgeJsValue freezeMethodValue = EdgeJsValue.GlobalObject
-				.GetProperty("Object")
-				.GetProperty("freeze")
-				;
-			freezeMethodValue.CallFunction(objValue);
-		}
-
-		private EdgeJsValue CreateFunctionFromDelegate(Delegate value)
-		{
-			EdgeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-			{
-				object[] processedArgs = MapToHostType(args.Skip(1).ToArray());
-				ParameterInfo[] parameters = value.GetMethodInfo().GetParameters();
-				EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
-
-				ReflectionHelpers.FixArgumentTypes(ref processedArgs, parameters);
-
-				object result;
-
-				try
-				{
-					result = value.DynamicInvoke(processedArgs);
-				}
-				catch (Exception e)
-				{
-					EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(
-						string.Format(NetCoreStrings.Runtime_HostDelegateInvocationFailed, e.Message));
-					EdgeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
-				}
-
-				EdgeJsValue resultValue = MapToScriptType(result);
-
-				return resultValue;
-			};
-			_nativeFunctions.Add(nativeFunction);
-
-			EdgeJsValue functionValue = EdgeJsValue.CreateFunction(nativeFunction);
-
-			return functionValue;
-		}
-
-		private EdgeJsValue CreateConstructor(Type type)
-		{
-			TypeInfo typeInfo = type.GetTypeInfo();
-			string typeName = type.FullName;
-			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(true);
-			ConstructorInfo[] constructors = type.GetConstructors(defaultBindingFlags);
-
-			EdgeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-			{
-				EdgeJsValue resultValue;
-				EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
-
-				object[] processedArgs = MapToHostType(args.Skip(1).ToArray());
-				object result;
-
-				if (processedArgs.Length == 0 && typeInfo.IsValueType)
-				{
-					result = Activator.CreateInstance(type);
-					resultValue = MapToScriptType(result);
-
-					return resultValue;
-				}
-
-				if (constructors.Length == 0)
-				{
-					EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(
-						string.Format(NetCoreStrings.Runtime_HostTypeConstructorNotFound, typeName));
-					EdgeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
-				}
-
-				var bestFitConstructor = (ConstructorInfo)ReflectionHelpers.GetBestFitMethod(
-					constructors, processedArgs);
-				if (bestFitConstructor == null)
-				{
-					EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateReferenceError(
-						string.Format(NetCoreStrings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
-					EdgeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
-				}
-
-				ReflectionHelpers.FixArgumentTypes(ref processedArgs, bestFitConstructor.GetParameters());
-
-				try
-				{
-					result = bestFitConstructor.Invoke(processedArgs);
-				}
-				catch (Exception e)
-				{
-					EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(
-						string.Format(NetCoreStrings.Runtime_HostTypeConstructorInvocationFailed, typeName, e.Message));
-					EdgeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
-				}
-
-				resultValue = MapToScriptType(result);
-
-				return resultValue;
-			};
-			_nativeFunctions.Add(nativeFunction);
-
-			EdgeJsValue constructorValue = EdgeJsValue.CreateFunction(nativeFunction);
-
-			return constructorValue;
-		}
-
-		private void ProjectFields(EdgeJsValue target, Type type, bool instance)
-		{
-			string typeName = type.FullName;
-			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
-			FieldInfo[] fields = type.GetFields(defaultBindingFlags);
-
-			foreach (FieldInfo field in fields)
-			{
-				string fieldName = field.Name;
-
-				EdgeJsValue descriptorValue = EdgeJsValue.CreateObject();
-				descriptorValue.SetProperty("enumerable", EdgeJsValue.True, true);
-
-				EdgeJsNativeFunction nativeGetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-				{
-					EdgeJsValue thisValue = args[0];
-					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
-
-					object thisObj = null;
-
-					if (instance)
-					{
-						if (!thisValue.HasExternalData)
-						{
-							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-							EdgeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						thisObj = MapToHostType(thisValue);
-					}
-
-					object result;
-
-					try
-					{
-						result = field.GetValue(thisObj);
-					}
-					catch (Exception e)
-					{
-						string errorMessage = instance ?
-							string.Format(NetCoreStrings.Runtime_HostObjectFieldGettingFailed, fieldName, e.Message)
-							:
-							string.Format(NetCoreStrings.Runtime_HostTypeFieldGettingFailed, fieldName, typeName, e.Message)
-							;
-
-						EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
-						EdgeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
-					}
-
-					EdgeJsValue resultValue = MapToScriptType(result);
-
-					return resultValue;
-				};
-				_nativeFunctions.Add(nativeGetFunction);
-
-				EdgeJsValue getMethodValue = EdgeJsValue.CreateFunction(nativeGetFunction);
-				descriptorValue.SetProperty("get", getMethodValue, true);
-
-				EdgeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-				{
-					EdgeJsValue thisValue = args[0];
-					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
-
-					object thisObj = null;
-
-					if (instance)
-					{
-						if (!thisValue.HasExternalData)
-						{
-							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-							EdgeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						thisObj = MapToHostType(thisValue);
-					}
-
-					object value = MapToHostType(args.Skip(1).First());
-					ReflectionHelpers.FixFieldValueType(ref value, field);
-
-					try
-					{
-						field.SetValue(thisObj, value);
-					}
-					catch (Exception e)
-					{
-						string errorMessage = instance ?
-							string.Format(NetCoreStrings.Runtime_HostObjectFieldSettingFailed, fieldName, e.Message)
-							:
-							string.Format(NetCoreStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName, e.Message)
-							;
-
-						EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
-						EdgeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
-					}
-
-					return undefinedValue;
-				};
-				_nativeFunctions.Add(nativeSetFunction);
-
-				EdgeJsValue setMethodValue = EdgeJsValue.CreateFunction(nativeSetFunction);
-				descriptorValue.SetProperty("set", setMethodValue, true);
-
-				target.DefineProperty(fieldName, descriptorValue);
-			}
-		}
-
-		private void ProjectProperties(EdgeJsValue target, Type type, bool instance)
-		{
-			string typeName = type.FullName;
-			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
-			PropertyInfo[] properties = type.GetProperties(defaultBindingFlags);
-
-			foreach (PropertyInfo property in properties)
-			{
-				string propertyName = property.Name;
-
-				EdgeJsValue descriptorValue = EdgeJsValue.CreateObject();
-				descriptorValue.SetProperty("enumerable", EdgeJsValue.True, true);
-
-				if (property.GetGetMethod() != null)
-				{
-					EdgeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-					{
-						EdgeJsValue thisValue = args[0];
-						EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
-
-						object thisObj = null;
-
-						if (instance)
-						{
-							if (!thisValue.HasExternalData)
-							{
-								EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-									string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
-								EdgeJsErrorHelpers.SetException(errorValue);
-
-								return undefinedValue;
-							}
-
-							thisObj = MapToHostType(thisValue);
-						}
-
-						object result;
-
-						try
-						{
-							result = property.GetValue(thisObj, new object[0]);
-						}
-						catch (Exception e)
-						{
-							string errorMessage = instance ?
-								string.Format(
-									NetCoreStrings.Runtime_HostObjectPropertyGettingFailed, propertyName, e.Message)
-								:
-								string.Format(
-									NetCoreStrings.Runtime_HostTypePropertyGettingFailed, propertyName, typeName, e.Message)
-								;
-
-							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
-							EdgeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						EdgeJsValue resultValue = MapToScriptType(result);
-
-						return resultValue;
-					};
-					_nativeFunctions.Add(nativeFunction);
-
-					EdgeJsValue getMethodValue = EdgeJsValue.CreateFunction(nativeFunction);
-					descriptorValue.SetProperty("get", getMethodValue, true);
-				}
-
-				if (property.GetSetMethod() != null)
-				{
-					EdgeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-					{
-						EdgeJsValue thisValue = args[0];
-						EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
-
-						object thisObj = null;
-
-						if (instance)
-						{
-							if (!thisValue.HasExternalData)
-							{
-								EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-									string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
-								EdgeJsErrorHelpers.SetException(errorValue);
-
-								return undefinedValue;
-							}
-
-							thisObj = MapToHostType(thisValue);
-						}
-
-						object value = MapToHostType(args.Skip(1).First());
-						ReflectionHelpers.FixPropertyValueType(ref value, property);
-
-						try
-						{
-							property.SetValue(thisObj, value, new object[0]);
-						}
-						catch (Exception e)
-						{
-							string errorMessage = instance ?
-								string.Format(
-									NetCoreStrings.Runtime_HostObjectPropertySettingFailed, propertyName, e.Message)
-								:
-								string.Format(
-									NetCoreStrings.Runtime_HostTypePropertySettingFailed, propertyName, typeName, e.Message)
-								;
-
-							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
-							EdgeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						return undefinedValue;
-					};
-					_nativeFunctions.Add(nativeFunction);
-
-					EdgeJsValue setMethodValue = EdgeJsValue.CreateFunction(nativeFunction);
-					descriptorValue.SetProperty("set", setMethodValue, true);
-				}
-
-				target.DefineProperty(propertyName, descriptorValue);
-			}
-		}
-
-		private void ProjectMethods(EdgeJsValue target, Type type, bool instance)
-		{
-			string typeName = type.FullName;
-			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
-			MethodInfo[] methods = type.GetMethods(defaultBindingFlags);
-			IEnumerable<IGrouping<string, MethodInfo>> methodGroups = methods.GroupBy(m => m.Name);
-
-			foreach (IGrouping<string, MethodInfo> methodGroup in methodGroups)
-			{
-				string methodName = methodGroup.Key;
-				MethodInfo[] methodCandidates = methodGroup.ToArray();
-
-				EdgeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-				{
-					EdgeJsValue thisValue = args[0];
-					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
-
-					object thisObj = null;
-
-					if (instance)
-					{
-						if (!thisValue.HasExternalData)
-						{
-							EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(
-								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
-							EdgeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						thisObj = MapToHostType(thisValue);
-					}
-
-					object[] processedArgs = MapToHostType(args.Skip(1).ToArray());
-
-					var bestFitMethod = (MethodInfo)ReflectionHelpers.GetBestFitMethod(
-						methodCandidates, processedArgs);
-					if (bestFitMethod == null)
-					{
-						EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateReferenceError(
-							string.Format(NetCoreStrings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
-						EdgeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
-					}
-
-					ReflectionHelpers.FixArgumentTypes(ref processedArgs, bestFitMethod.GetParameters());
-
-					object result;
-
-					try
-					{
-						result = bestFitMethod.Invoke(thisObj, processedArgs);
-					}
-					catch (Exception e)
-					{
-						string errorMessage = instance ?
-							string.Format(
-								NetCoreStrings.Runtime_HostObjectMethodInvocationFailed, methodName, e.Message)
-							:
-							string.Format(
-								NetCoreStrings.Runtime_HostTypeMethodInvocationFailed, methodName, typeName, e.Message)
-							;
-
-						EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
-						EdgeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
-					}
-
-					EdgeJsValue resultValue = MapToScriptType(result);
-
-					return resultValue;
-				};
-				_nativeFunctions.Add(nativeFunction);
-
-				EdgeJsValue methodValue = EdgeJsValue.CreateFunction(nativeFunction);
-				target.SetProperty(methodName, methodValue, true);
-			}
-		}
-#endif
 
 		private WrapperException WrapJsException(OriginalException originalException,
 			string defaultDocumentName = null)
@@ -1095,7 +470,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						EdgeJsValue resultValue = EdgeJsContext.RunScript(expression, _jsSourceContext++,
 							documentName);
 
-						return MapToHostType(resultValue);
+						return _typeMapper.MapToHostType(resultValue);
 					}
 					catch (OriginalException e)
 					{
@@ -1173,7 +548,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 						if (args.Length > 0)
 						{
-							EdgeJsValue[] processedArgs = MapToScriptType(args);
+							EdgeJsValue[] processedArgs = _typeMapper.MapToScriptType(args);
 
 							foreach (EdgeJsValue processedArg in processedArgs)
 							{
@@ -1202,7 +577,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							resultValue = functionValue.CallFunction(globalObj);
 						}
 
-						return MapToHostType(resultValue);
+						return _typeMapper.MapToHostType(resultValue);
 					}
 					catch (OriginalException e)
 					{
@@ -1254,7 +629,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					{
 						EdgeJsValue variableValue = EdgeJsValue.GlobalObject.GetProperty(variableName);
 
-						return MapToHostType(variableValue);
+						return _typeMapper.MapToHostType(variableValue);
 					}
 					catch (OriginalException e)
 					{
@@ -1274,7 +649,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					try
 					{
-						EdgeJsValue inputValue = MapToScriptType(value);
+						EdgeJsValue inputValue = _typeMapper.MapToScriptType(value);
 						AddReferenceToValue(inputValue);
 
 						try
@@ -1326,7 +701,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					try
 					{
-						EdgeJsValue processedValue = MapToScriptType(value);
+						EdgeJsValue processedValue = _typeMapper.GetOrCreateScriptObject(value);
 						EdgeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
 					}
 					catch (OriginalException e)
@@ -1345,11 +720,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					try
 					{
-#if NETSTANDARD
-						EdgeJsValue typeValue = CreateObjectFromType(type);
-#else
-						EdgeJsValue typeValue = EdgeJsValue.FromObject(new HostType(type, _settings.EngineMode));
-#endif
+						EdgeJsValue typeValue = _typeMapper.GetOrCreateScriptType(type);
 						EdgeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
 					}
 					catch (OriginalException e)
@@ -1388,7 +759,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// </summary>
 		/// <param name="disposing">Flag, allowing destruction of
 		/// managed objects contained in fields of class</param>
-		protected override void Dispose(bool disposing)
+		private void Dispose(bool disposing)
 		{
 			if (_disposedFlag.Set())
 			{
@@ -1401,21 +772,17 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						_dispatcher.Dispose();
 						_dispatcher = null;
 					}
-#if NETSTANDARD
 
-					if (_nativeFunctions != null)
+					if (_typeMapper != null)
 					{
-						_nativeFunctions.Clear();
-						_nativeFunctions = null;
+						_typeMapper.Dispose();
+						_typeMapper = null;
 					}
-#endif
 				}
 				else
 				{
 					DisposeUnmanagedResources();
 				}
-
-				base.Dispose(disposing);
 			}
 		}
 

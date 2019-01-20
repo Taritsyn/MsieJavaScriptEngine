@@ -347,7 +347,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <param name="data">External data that the object will represent. May be null.</param>
 		/// <param name="finalizer">A callback for when the object is finalized. May be null.</param>
 		/// <returns>The new <c>Object</c></returns>
-		public static IeJsValue CreateExternalObject(IntPtr data, JsObjectFinalizeCallback finalizer)
+		public static IeJsValue CreateExternalObject(IntPtr data, JsFinalizeCallback finalizer)
 		{
 			IeJsValue reference;
 			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsCreateExternalObject(data, finalizer, out reference));

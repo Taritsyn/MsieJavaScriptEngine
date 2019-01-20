@@ -1,12 +1,5 @@
 ﻿using System;
-#if NETSTANDARD
-using System.Collections.Generic;
-#endif
 using System.Linq;
-#if NETSTANDARD
-using System.Reflection;
-using System.Runtime.InteropServices;
-#endif
 using System.Text;
 
 using AdvancedStringBuilder;
@@ -57,6 +50,11 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		private IeJsContext _jsContext;
 
 		/// <summary>
+		/// Type mapper
+		/// </summary>
+		private IeTypeMapper _typeMapper;
+
+		/// <summary>
 		/// Flag indicating whether this JS engine is supported
 		/// </summary>
 		private static bool? _isSupported;
@@ -65,13 +63,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// Support synchronizer
 		/// </summary>
 		private static readonly object _supportSynchronizer = new object();
-#if NETSTANDARD
-
-		/// <summary>
-		/// List of native function callbacks
-		/// </summary>
-		private HashSet<IeJsNativeFunction> _nativeFunctions = new HashSet<IeJsNativeFunction>();
-#endif
 
 
 		/// <summary>
@@ -81,6 +72,8 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		public ChakraIeJsRtJsEngine(JsEngineSettings settings)
 			: base(settings)
 		{
+			_typeMapper = new IeTypeMapper();
+
 			try
 			{
 				_dispatcher.Invoke(() =>
@@ -264,622 +257,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 
 		#region Mapping
-
-		/// <summary>
-		/// Makes a mapping of value from the host type to a script type
-		/// </summary>
-		/// <param name="value">The source value</param>
-		/// <returns>The mapped value</returns>
-		private IeJsValue MapToScriptType(object value)
-		{
-			if (value == null)
-			{
-				return IeJsValue.Null;
-			}
-
-			if (value is Undefined)
-			{
-				return IeJsValue.Undefined;
-			}
-
-			var typeCode = value.GetType().GetTypeCode();
-
-			switch (typeCode)
-			{
-				case TypeCode.Boolean:
-					return (bool)value ? IeJsValue.True : IeJsValue.False;
-
-				case TypeCode.SByte:
-				case TypeCode.Byte:
-				case TypeCode.Int16:
-				case TypeCode.UInt16:
-				case TypeCode.Int32:
-				case TypeCode.UInt32:
-				case TypeCode.Int64:
-				case TypeCode.UInt64:
-					return IeJsValue.FromInt32(Convert.ToInt32(value));
-
-				case TypeCode.Single:
-				case TypeCode.Double:
-				case TypeCode.Decimal:
-					return IeJsValue.FromDouble(Convert.ToDouble(value));
-
-				case TypeCode.Char:
-				case TypeCode.String:
-					return IeJsValue.FromString((string)value);
-
-				default:
-#if NETSTANDARD
-					return FromObject(value);
-#else
-					object processedValue = !TypeConverter.IsPrimitiveType(typeCode) ?
-						new HostObject(value, _settings.EngineMode) : value;
-					return IeJsValue.FromObject(processedValue);
-#endif
-			}
-		}
-
-		/// <summary>
-		/// Makes a mapping of array items from the host type to a script type
-		/// </summary>
-		/// <param name="args">The source array</param>
-		/// <returns>The mapped array</returns>
-		private IeJsValue[] MapToScriptType(object[] args)
-		{
-			return args.Select(MapToScriptType).ToArray();
-		}
-
-		/// <summary>
-		/// Makes a mapping of value from the script type to a host type
-		/// </summary>
-		/// <param name="value">The source value</param>
-		/// <returns>The mapped value</returns>
-		private object MapToHostType(IeJsValue value)
-		{
-			JsValueType valueType = value.ValueType;
-			IeJsValue processedValue;
-			object result;
-
-			switch (valueType)
-			{
-				case JsValueType.Null:
-					result = null;
-					break;
-				case JsValueType.Undefined:
-					result = Undefined.Value;
-					break;
-				case JsValueType.Boolean:
-					processedValue = value.ConvertToBoolean();
-					result = processedValue.ToBoolean();
-					break;
-				case JsValueType.Number:
-					processedValue = value.ConvertToNumber();
-					result = NumericHelpers.CastDoubleValueToCorrectType(processedValue.ToDouble());
-					break;
-				case JsValueType.String:
-					processedValue = value.ConvertToString();
-					result = processedValue.ToString();
-					break;
-				case JsValueType.Object:
-				case JsValueType.Function:
-				case JsValueType.Error:
-				case JsValueType.Array:
-#if NETSTANDARD
-					result = ToObject(value);
-#else
-					processedValue = value.ConvertToObject();
-					object obj = processedValue.ToObject();
-
-					if (!TypeConverter.IsPrimitiveType(obj.GetType()))
-					{
-						var hostObj = obj as HostObject;
-						result = hostObj != null ? hostObj.Target : obj;
-					}
-					else
-					{
-						result = obj;
-					}
-#endif
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Makes a mapping of array itemp from the script type to a host type
-		/// </summary>
-		/// <param name="args">The source array</param>
-		/// <returns>The mapped array</returns>
-		private object[] MapToHostType(IeJsValue[] args)
-		{
-			return args.Select(MapToHostType).ToArray();
-		}
-#if NETSTANDARD
-
-		private IeJsValue FromObject(object value)
-		{
-			var del = value as Delegate;
-			IeJsValue objValue = del != null ? CreateFunctionFromDelegate(del) : CreateExternalObjectFromObject(value);
-
-			return objValue;
-		}
-
-		private object ToObject(IeJsValue value)
-		{
-			object result = value.HasExternalData ?
-				GCHandle.FromIntPtr(value.ExternalData).Target : value.ConvertToObject();
-
-			return result;
-		}
-
-		private IeJsValue CreateExternalObjectFromObject(object value)
-		{
-			GCHandle handle = GCHandle.Alloc(value);
-			_externalObjects.Add(value);
-
-			IeJsValue objValue = IeJsValue.CreateExternalObject(
-				GCHandle.ToIntPtr(handle), _externalObjectFinalizeCallback);
-			Type type = value.GetType();
-
-			ProjectFields(objValue, type, true);
-			ProjectProperties(objValue, type, true);
-			ProjectMethods(objValue, type, true);
-			FreezeObject(objValue);
-
-			return objValue;
-		}
-
-		private IeJsValue CreateObjectFromType(Type type)
-		{
-			IeJsValue typeValue = CreateConstructor(type);
-
-			ProjectFields(typeValue, type, false);
-			ProjectProperties(typeValue, type, false);
-			ProjectMethods(typeValue, type, false);
-			FreezeObject(typeValue);
-
-			return typeValue;
-		}
-
-		private void FreezeObject(IeJsValue objValue)
-		{
-			IeJsValue objectValue = IeJsValue.GlobalObject.GetProperty("Object");
-			IeJsValue freezeMethodValue = objectValue.GetProperty("freeze");
-
-			freezeMethodValue.CallFunction(objectValue, objValue);
-		}
-
-		private IeJsValue CreateFunctionFromDelegate(Delegate value)
-		{
-			IeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-			{
-				object[] processedArgs = MapToHostType(args.Skip(1).ToArray());
-				ParameterInfo[] parameters = value.GetMethodInfo().GetParameters();
-				IeJsValue undefinedValue = IeJsValue.Undefined;
-
-				ReflectionHelpers.FixArgumentTypes(ref processedArgs, parameters);
-
-				object result;
-
-				try
-				{
-					result = value.DynamicInvoke(processedArgs);
-				}
-				catch (Exception e)
-				{
-					IeJsValue errorValue = IeJsErrorHelpers.CreateError(
-						string.Format(NetCoreStrings.Runtime_HostDelegateInvocationFailed, e.Message));
-					IeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
-				}
-
-				IeJsValue resultValue = MapToScriptType(result);
-
-				return resultValue;
-			};
-			_nativeFunctions.Add(nativeFunction);
-
-			IeJsValue functionValue = IeJsValue.CreateFunction(nativeFunction);
-
-			return functionValue;
-		}
-
-		private IeJsValue CreateConstructor(Type type)
-		{
-			TypeInfo typeInfo = type.GetTypeInfo();
-			string typeName = type.FullName;
-			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(true);
-			ConstructorInfo[] constructors = type.GetConstructors(defaultBindingFlags);
-
-			IeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-			{
-				IeJsValue resultValue;
-				IeJsValue undefinedValue = IeJsValue.Undefined;
-
-				object[] processedArgs = MapToHostType(args.Skip(1).ToArray());
-				object result;
-
-				if (processedArgs.Length == 0 && typeInfo.IsValueType)
-				{
-					result = Activator.CreateInstance(type);
-					resultValue = MapToScriptType(result);
-
-					return resultValue;
-				}
-
-				if (constructors.Length == 0)
-				{
-					IeJsValue errorValue = IeJsErrorHelpers.CreateError(
-						string.Format(NetCoreStrings.Runtime_HostTypeConstructorNotFound, typeName));
-					IeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
-				}
-
-				var bestFitConstructor = (ConstructorInfo)ReflectionHelpers.GetBestFitMethod(
-					constructors, processedArgs);
-				if (bestFitConstructor == null)
-				{
-					IeJsValue errorValue = IeJsErrorHelpers.CreateReferenceError(
-						string.Format(NetCoreStrings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
-					IeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
-				}
-
-				ReflectionHelpers.FixArgumentTypes(ref processedArgs, bestFitConstructor.GetParameters());
-
-				try
-				{
-					result = bestFitConstructor.Invoke(processedArgs);
-				}
-				catch (Exception e)
-				{
-					IeJsValue errorValue = IeJsErrorHelpers.CreateError(
-						string.Format(NetCoreStrings.Runtime_HostTypeConstructorInvocationFailed, typeName, e.Message));
-					IeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
-				}
-
-				resultValue = MapToScriptType(result);
-
-				return resultValue;
-			};
-			_nativeFunctions.Add(nativeFunction);
-
-			IeJsValue constructorValue = IeJsValue.CreateFunction(nativeFunction);
-
-			return constructorValue;
-		}
-
-		private void ProjectFields(IeJsValue target, Type type, bool instance)
-		{
-			string typeName = type.FullName;
-			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
-			FieldInfo[] fields = type.GetFields(defaultBindingFlags);
-
-			foreach (FieldInfo field in fields)
-			{
-				string fieldName = field.Name;
-
-				IeJsValue descriptorValue = IeJsValue.CreateObject();
-				descriptorValue.SetProperty("enumerable", IeJsValue.True, true);
-
-				IeJsNativeFunction nativeGetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-				{
-					IeJsValue thisValue = args[0];
-					IeJsValue undefinedValue = IeJsValue.Undefined;
-
-					object thisObj = null;
-
-					if (instance)
-					{
-						if (!thisValue.HasExternalData)
-						{
-							IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-							IeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						thisObj = MapToHostType(thisValue);
-					}
-
-					object result;
-
-					try
-					{
-						result = field.GetValue(thisObj);
-					}
-					catch (Exception e)
-					{
-						string errorMessage = instance ?
-							string.Format(NetCoreStrings.Runtime_HostObjectFieldGettingFailed, fieldName, e.Message)
-							:
-							string.Format(NetCoreStrings.Runtime_HostTypeFieldGettingFailed, fieldName, typeName, e.Message)
-							;
-
-						IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
-						IeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
-					}
-
-					IeJsValue resultValue = MapToScriptType(result);
-
-					return resultValue;
-				};
-				_nativeFunctions.Add(nativeGetFunction);
-
-				IeJsValue getMethodValue = IeJsValue.CreateFunction(nativeGetFunction);
-				descriptorValue.SetProperty("get", getMethodValue, true);
-
-				IeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-				{
-					IeJsValue thisValue = args[0];
-					IeJsValue undefinedValue = IeJsValue.Undefined;
-
-					object thisObj = null;
-
-					if (instance)
-					{
-						if (!thisValue.HasExternalData)
-						{
-							IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-							IeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						thisObj = MapToHostType(thisValue);
-					}
-
-					object value = MapToHostType(args.Skip(1).First());
-					ReflectionHelpers.FixFieldValueType(ref value, field);
-
-					try
-					{
-						field.SetValue(thisObj, value);
-					}
-					catch (Exception e)
-					{
-						string errorMessage = instance ?
-							string.Format(NetCoreStrings.Runtime_HostObjectFieldSettingFailed, fieldName, e.Message)
-							:
-							string.Format(NetCoreStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName, e.Message)
-							;
-
-						IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
-						IeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
-					}
-
-					return undefinedValue;
-				};
-				_nativeFunctions.Add(nativeSetFunction);
-
-				IeJsValue setMethodValue = IeJsValue.CreateFunction(nativeSetFunction);
-				descriptorValue.SetProperty("set", setMethodValue, true);
-
-				target.DefineProperty(fieldName, descriptorValue);
-			}
-		}
-
-		private void ProjectProperties(IeJsValue target, Type type, bool instance)
-		{
-			string typeName = type.FullName;
-			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
-			PropertyInfo[] properties = type.GetProperties(defaultBindingFlags);
-
-			foreach (PropertyInfo property in properties)
-			{
-				string propertyName = property.Name;
-
-				IeJsValue descriptorValue = IeJsValue.CreateObject();
-				descriptorValue.SetProperty("enumerable", IeJsValue.True, true);
-
-				if (property.GetGetMethod() != null)
-				{
-					IeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-					{
-						IeJsValue thisValue = args[0];
-						IeJsValue undefinedValue = IeJsValue.Undefined;
-
-						object thisObj = null;
-
-						if (instance)
-						{
-							if (!thisValue.HasExternalData)
-							{
-								IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-									string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
-								IeJsErrorHelpers.SetException(errorValue);
-
-								return undefinedValue;
-							}
-
-							thisObj = MapToHostType(thisValue);
-						}
-
-						object result;
-
-						try
-						{
-							result = property.GetValue(thisObj, new object[0]);
-						}
-						catch (Exception e)
-						{
-							string errorMessage = instance ?
-								string.Format(
-									NetCoreStrings.Runtime_HostObjectPropertyGettingFailed, propertyName, e.Message)
-								:
-								string.Format(
-									NetCoreStrings.Runtime_HostTypePropertyGettingFailed, propertyName, typeName, e.Message)
-								;
-
-							IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
-							IeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						IeJsValue resultValue = MapToScriptType(result);
-
-						return resultValue;
-					};
-					_nativeFunctions.Add(nativeFunction);
-
-					IeJsValue getMethodValue = IeJsValue.CreateFunction(nativeFunction);
-					descriptorValue.SetProperty("get", getMethodValue, true);
-				}
-
-				if (property.GetSetMethod() != null)
-				{
-					IeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-					{
-						IeJsValue thisValue = args[0];
-						IeJsValue undefinedValue = IeJsValue.Undefined;
-
-						object thisObj = null;
-
-						if (instance)
-						{
-							if (!thisValue.HasExternalData)
-							{
-								IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-									string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
-								IeJsErrorHelpers.SetException(errorValue);
-
-								return undefinedValue;
-							}
-
-							thisObj = MapToHostType(thisValue);
-						}
-
-						object value = MapToHostType(args.Skip(1).First());
-						ReflectionHelpers.FixPropertyValueType(ref value, property);
-
-						try
-						{
-							property.SetValue(thisObj, value, new object[0]);
-						}
-						catch (Exception e)
-						{
-							string errorMessage = instance ?
-								string.Format(
-									NetCoreStrings.Runtime_HostObjectPropertySettingFailed, propertyName, e.Message)
-								:
-								string.Format(
-									NetCoreStrings.Runtime_HostTypePropertySettingFailed, propertyName, typeName, e.Message)
-								;
-
-							IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
-							IeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						return undefinedValue;
-					};
-					_nativeFunctions.Add(nativeFunction);
-
-					IeJsValue setMethodValue = IeJsValue.CreateFunction(nativeFunction);
-					descriptorValue.SetProperty("set", setMethodValue, true);
-				}
-
-				target.DefineProperty(propertyName, descriptorValue);
-			}
-		}
-
-		private void ProjectMethods(IeJsValue target, Type type, bool instance)
-		{
-			string typeName = type.FullName;
-			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
-			MethodInfo[] methods = type.GetMethods(defaultBindingFlags);
-			IEnumerable<IGrouping<string, MethodInfo>> methodGroups = methods.GroupBy(m => m.Name);
-
-			foreach (IGrouping<string, MethodInfo> methodGroup in methodGroups)
-			{
-				string methodName = methodGroup.Key;
-				MethodInfo[] methodCandidates = methodGroup.ToArray();
-
-				IeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
-				{
-					IeJsValue thisValue = args[0];
-					IeJsValue undefinedValue = IeJsValue.Undefined;
-
-					object thisObj = null;
-
-					if (instance)
-					{
-						if (!thisValue.HasExternalData)
-						{
-							IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
-							IeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
-						}
-
-						thisObj = MapToHostType(thisValue);
-					}
-
-					object[] processedArgs = MapToHostType(args.Skip(1).ToArray());
-
-					var bestFitMethod = (MethodInfo)ReflectionHelpers.GetBestFitMethod(
-						methodCandidates, processedArgs);
-					if (bestFitMethod == null)
-					{
-						IeJsValue errorValue = IeJsErrorHelpers.CreateReferenceError(
-							string.Format(NetCoreStrings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
-						IeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
-					}
-
-					ReflectionHelpers.FixArgumentTypes(ref processedArgs, bestFitMethod.GetParameters());
-
-					object result;
-
-					try
-					{
-						result = bestFitMethod.Invoke(thisObj, processedArgs);
-					}
-					catch (Exception e)
-					{
-						string errorMessage = instance ?
-							string.Format(
-								NetCoreStrings.Runtime_HostObjectMethodInvocationFailed, methodName, e.Message)
-							:
-							string.Format(
-								NetCoreStrings.Runtime_HostTypeMethodInvocationFailed, methodName, typeName, e.Message)
-							;
-
-						IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
-						IeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
-					}
-
-					IeJsValue resultValue = MapToScriptType(result);
-
-					return resultValue;
-				};
-				_nativeFunctions.Add(nativeFunction);
-
-				IeJsValue methodValue = IeJsValue.CreateFunction(nativeFunction);
-				target.SetProperty(methodName, methodValue, true);
-			}
-		}
-#endif
 
 		private WrapperException WrapJsException(OriginalException originalException,
 			string defaultDocumentName = null)
@@ -1163,7 +540,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						IeJsValue resultValue = IeJsContext.RunScript(expression, _jsSourceContext++,
 							documentName);
 
-						return MapToHostType(resultValue);
+						return _typeMapper.MapToHostType(resultValue);
 					}
 					catch (OriginalException e)
 					{
@@ -1241,7 +618,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 						if (args.Length > 0)
 						{
-							IeJsValue[] processedArgs = MapToScriptType(args);
+							IeJsValue[] processedArgs = _typeMapper.MapToScriptType(args);
 
 							foreach (IeJsValue processedArg in processedArgs)
 							{
@@ -1270,7 +647,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 							resultValue = functionValue.CallFunction(globalObj);
 						}
 
-						return MapToHostType(resultValue);
+						return _typeMapper.MapToHostType(resultValue);
 					}
 					catch (OriginalException e)
 					{
@@ -1322,7 +699,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					{
 						IeJsValue variableValue = IeJsValue.GlobalObject.GetProperty(variableName);
 
-						return MapToHostType(variableValue);
+						return _typeMapper.MapToHostType(variableValue);
 					}
 					catch (OriginalException e)
 					{
@@ -1342,7 +719,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					try
 					{
-						IeJsValue inputValue = MapToScriptType(value);
+						IeJsValue inputValue = _typeMapper.MapToScriptType(value);
 						AddReferenceToValue(inputValue);
 
 						try
@@ -1394,7 +771,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					try
 					{
-						IeJsValue processedValue = MapToScriptType(value);
+						IeJsValue processedValue = _typeMapper.GetOrCreateScriptObject(value);
 						IeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
 					}
 					catch (OriginalException e)
@@ -1413,11 +790,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					try
 					{
-#if NETSTANDARD
-						IeJsValue typeValue = CreateObjectFromType(type);
-#else
-						IeJsValue typeValue = IeJsValue.FromObject(new HostType(type, _settings.EngineMode));
-#endif
+						IeJsValue typeValue = _typeMapper.GetOrCreateScriptType(type);
 						IeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
 					}
 					catch (OriginalException e)
@@ -1456,7 +829,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// </summary>
 		/// <param name="disposing">Flag, allowing destruction of
 		/// managed objects contained in fields of class</param>
-		protected override void Dispose(bool disposing)
+		private void Dispose(bool disposing)
 		{
 			if (_disposedFlag.Set())
 			{
@@ -1469,21 +842,17 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						_dispatcher.Dispose();
 						_dispatcher = null;
 					}
-#if NETSTANDARD
 
-					if (_nativeFunctions != null)
+					if (_typeMapper != null)
 					{
-						_nativeFunctions.Clear();
-						_nativeFunctions = null;
+						_typeMapper.Dispose();
+						_typeMapper = null;
 					}
-#endif
 				}
 				else
 				{
 					DisposeUnmanagedResources();
 				}
-
-				base.Dispose(disposing);
 			}
 		}
 

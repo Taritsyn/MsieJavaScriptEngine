@@ -347,7 +347,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <param name="data">External data that the object will represent. May be null</param>
 		/// <param name="finalizer">The callback for when the object is finalized. May be null.</param>
 		/// <returns>The new <c>Object</c></returns>
-		public static EdgeJsValue CreateExternalObject(IntPtr data, JsObjectFinalizeCallback finalizer)
+		public static EdgeJsValue CreateExternalObject(IntPtr data, JsFinalizeCallback finalizer)
 		{
 			EdgeJsValue reference;
 			EdgeJsErrorHelpers.ThrowIfError(EdgeNativeMethods.JsCreateExternalObject(data, finalizer, out reference));

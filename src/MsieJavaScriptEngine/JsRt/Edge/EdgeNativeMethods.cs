@@ -167,7 +167,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		[DllImport(DllName.Chakra)]
 		internal static extern JsErrorCode JsCreateExternalObject(IntPtr data,
-			JsObjectFinalizeCallback finalizeCallback, out EdgeJsValue obj);
+			JsFinalizeCallback finalizeCallback, out EdgeJsValue obj);
 
 		[DllImport(DllName.Chakra)]
 		internal static extern JsErrorCode JsConvertValueToObject(EdgeJsValue value, out EdgeJsValue obj);

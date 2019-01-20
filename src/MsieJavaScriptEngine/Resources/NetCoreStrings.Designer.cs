@@ -58,6 +58,14 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "The parameter '{0}' must have a `{1}` type."
+		/// </summary>
+		internal static string Common_ArgumentHasIncorrectType
+		{
+			get { return GetString("Common_ArgumentHasIncorrectType"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps..."
 		/// </summary>
 		internal static string Engine_JsEnginesNotFound

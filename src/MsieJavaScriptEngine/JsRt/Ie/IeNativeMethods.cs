@@ -173,7 +173,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		[DllImport(DllName.JScript9)]
 		internal static extern JsErrorCode JsCreateExternalObject(IntPtr data,
-			JsObjectFinalizeCallback finalizeCallback, out IeJsValue obj);
+			JsFinalizeCallback finalizeCallback, out IeJsValue obj);
 
 		[DllImport(DllName.JScript9)]
 		internal static extern JsErrorCode JsConvertValueToObject(IeJsValue value, out IeJsValue obj);

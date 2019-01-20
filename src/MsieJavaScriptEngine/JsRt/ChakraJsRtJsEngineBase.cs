@@ -1,8 +1,4 @@
 ﻿using System;
-#if NETSTANDARD
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-#endif
 
 using MsieJavaScriptEngine.Utilities;
 
@@ -22,18 +18,6 @@ namespace MsieJavaScriptEngine.JsRt
 		/// Flag indicating whether debugging started
 		/// </summary>
 		private StatedFlag _debuggingStartedFlag;
-#if NETSTANDARD
-
-		/// <summary>
-		/// Set of external objects
-		/// </summary>
-		protected HashSet<object> _externalObjects = new HashSet<object>();
-
-		/// <summary>
-		/// Callback for finalization of external object
-		/// </summary>
-		protected JsObjectFinalizeCallback _externalObjectFinalizeCallback;
-#endif
 
 		/// <summary>
 		/// Script dispatcher
@@ -53,9 +37,6 @@ namespace MsieJavaScriptEngine.JsRt
 #else
 			_dispatcher = new ScriptDispatcher(settings.MaxStackSize);
 #endif
-#if NETSTANDARD
-			_externalObjectFinalizeCallback = ExternalObjectFinalizeCallback;
-#endif
 		}
 
 
@@ -71,50 +52,5 @@ namespace MsieJavaScriptEngine.JsRt
 		}
 
 		protected abstract void InnerStartDebugging();
-#if NETSTANDARD
-
-		private void ExternalObjectFinalizeCallback(IntPtr data)
-		{
-			if (data == IntPtr.Zero)
-			{
-				return;
-			}
-
-			GCHandle handle = GCHandle.FromIntPtr(data);
-			object obj = handle.Target;
-
-			if (obj != null && _externalObjects != null)
-			{
-				_externalObjects.Remove(obj);
-			}
-
-			handle.Free();
-		}
-#endif
-
-		#region IDisposable implementation
-
-		/// <summary>
-		/// Destroys object
-		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of
-		/// managed objects contained in fields of class</param>
-		protected virtual void Dispose(bool disposing)
-		{
-#if NETSTANDARD
-			if (disposing)
-			{
-				if (_externalObjects != null)
-				{
-					_externalObjects.Clear();
-					_externalObjects = null;
-				}
-
-				_externalObjectFinalizeCallback = null;
-			}
-#endif
-		}
-
-		#endregion
 	}
 }
