@@ -1,8 +1,9 @@
 ﻿#if !NETSTANDARD
 using System;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
+
+using MsieJavaScriptEngine.Helpers;
 
 namespace MsieJavaScriptEngine
 {
@@ -22,7 +23,7 @@ namespace MsieJavaScriptEngine
 		protected readonly object _target;
 
 		/// <summary>
-		/// JavaScript engine mode
+		/// JS engine mode
 		/// </summary>
 		protected readonly JsEngineMode _engineMode;
 
@@ -30,6 +31,11 @@ namespace MsieJavaScriptEngine
 		/// List of fields
 		/// </summary>
 		private readonly FieldInfo[] _fields;
+
+		/// <summary>
+		/// List of field names
+		/// </summary>
+		private string[] _fieldNames;
 
 		/// <summary>
 		/// List of properties
@@ -63,19 +69,18 @@ namespace MsieJavaScriptEngine
 			_target = target;
 			_engineMode = engineMode;
 
-			BindingFlags bindingFlags = BindingFlags.Public;
-			if (instance)
-			{
-				bindingFlags |= BindingFlags.Instance;
-			}
-			else
-			{
-				bindingFlags |= BindingFlags.Static;
-			}
+			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
+			FieldInfo[] fields = _type.GetFields(defaultBindingFlags);
+			string[] fieldNames = fields.Length > 0 ? Array.ConvertAll(fields, f => f.Name) : new string[0];
+			PropertyInfo[] properties = _type.GetProperties(defaultBindingFlags);
+			MethodInfo[] methods = _type.GetMethods(defaultBindingFlags);
+			MethodInfo[] fullyFledgedMethods = methods.Length > 0 ?
+				Array.FindAll(methods, ReflectionHelpers.IsFullyFledgedMethod) : methods;
 
-			_fields = _type.GetFields(bindingFlags);
-			_properties = _type.GetProperties(bindingFlags);
-			_methods = _type.GetMethods(bindingFlags);
+			_fields = fields;
+			_fieldNames = fieldNames;
+			_properties = properties;
+			_methods = fullyFledgedMethods;
 		}
 
 
@@ -89,8 +94,7 @@ namespace MsieJavaScriptEngine
 			if ((processedInvokeAttr.HasFlag(BindingFlags.GetProperty)
 				|| processedInvokeAttr.HasFlag(BindingFlags.SetProperty)
 				|| processedInvokeAttr.HasFlag(BindingFlags.PutDispProperty))
-				&& !_properties.Any(p => p.Name == name)
-				&& _fields.Any(p => p.Name == name))
+				&& Array.IndexOf(_fieldNames, name) != -1)
 			{
 				if (processedInvokeAttr.HasFlag(BindingFlags.GetProperty))
 				{
@@ -125,9 +129,7 @@ namespace MsieJavaScriptEngine
 
 		FieldInfo IReflect.GetField(string name, BindingFlags bindingAttr)
 		{
-			FieldInfo field = _fields.SingleOrDefault(f => f.Name == name);
-
-			return field;
+			throw new NotImplementedException();
 		}
 
 		FieldInfo[] IReflect.GetFields(BindingFlags bindingAttr)
@@ -147,9 +149,7 @@ namespace MsieJavaScriptEngine
 
 		MethodInfo IReflect.GetMethod(string name, BindingFlags bindingAttr)
 		{
-			MethodInfo method = _methods.SingleOrDefault(m => m.Name == name);
-
-			return method;
+			throw new NotImplementedException();
 		}
 
 		MethodInfo IReflect.GetMethod(string name, BindingFlags bindingAttr, Binder binder, Type[] types, ParameterModifier[] modifiers)
@@ -169,9 +169,7 @@ namespace MsieJavaScriptEngine
 
 		PropertyInfo IReflect.GetProperty(string name, BindingFlags bindingAttr)
 		{
-			PropertyInfo property = _properties.SingleOrDefault(p => p.Name == name);
-
-			return property;
+			throw new NotImplementedException();
 		}
 
 		PropertyInfo IReflect.GetProperty(string name, BindingFlags bindingAttr, Binder binder,

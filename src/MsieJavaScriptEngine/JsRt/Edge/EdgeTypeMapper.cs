@@ -556,9 +556,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			string typeName = type.FullName;
 			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
 			IEnumerable<MethodInfo> methods = type.GetMethods(defaultBindingFlags)
-				.Where(m => !(m.Attributes.HasFlag(MethodAttributes.SpecialName)
-					&& (m.Name.StartsWith("get_") || m.Name.StartsWith("set_"))))
-				;
+				.Where(ReflectionHelpers.IsFullyFledgedMethod);
 			IEnumerable<IGrouping<string, MethodInfo>> methodGroups = methods.GroupBy(m => m.Name);
 
 			foreach (IGrouping<string, MethodInfo> methodGroup in methodGroups)

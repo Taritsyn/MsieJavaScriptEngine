@@ -15,34 +15,29 @@ namespace MsieJavaScriptEngine
 	internal sealed class HostObject : HostItemBase
 	{
 		/// <summary>
+		/// Number of delegate parameters
+		/// </summary>
+		private int _delegateParameterCount = int.MinValue;
+
+
+		/// <summary>
 		/// Constructs an instance of the wrapper for object, that implements <see cref="IReflect"/> interface
 		/// </summary>
 		/// <param name="target">Target object</param>
 		/// <param name="engineMode">JS engine mode</param>
 		public HostObject(object target, JsEngineMode engineMode)
 			: base(target.GetType(), target, engineMode, true)
-		{ }
-
-
-		private object InvokeDelegate(Delegate del, object[] args)
 		{
-			if (del == null)
+			if (_engineMode == JsEngineMode.Classic)
 			{
-				throw new ArgumentNullException(nameof(del));
+				var del = _target as Delegate;
+				if (del != null)
+				{
+					_delegateParameterCount = del.Method.GetParameters().Length;
+				}
 			}
-
-			object[] processedArgs = args;
-
-			if (_engineMode == JsEngineMode.Classic && processedArgs.Length > 0
-				&& del.Method.ReturnType != typeof(void))
-			{
-				processedArgs = processedArgs.Skip(1).ToArray();
-			}
-
-			object result = del.DynamicInvoke(processedArgs);
-
-			return result;
 		}
+
 
 		#region HostItemBase overrides
 
@@ -51,15 +46,26 @@ namespace MsieJavaScriptEngine
 		{
 			object result;
 			object processedTarget = TypeMappingHelpers.MapToHostType(target);
-			object[] processedArgs = TypeMappingHelpers.MapToHostType(args);
 
 			if (name == SpecialMemberName.Default && processedTarget is Delegate)
 			{
 				var del = (Delegate)processedTarget;
-				result = InvokeDelegate(del, processedArgs);
+				object[] processedArgs = args;
+
+				if (_engineMode == JsEngineMode.Classic
+					&& processedArgs.Length > 0
+					&& (processedArgs.Length - _delegateParameterCount) == 1)
+				{
+					processedArgs = processedArgs.Skip(1).ToArray();
+				}
+				processedArgs = TypeMappingHelpers.MapToHostType(processedArgs);
+
+				result = del.DynamicInvoke(processedArgs);
 			}
 			else
 			{
+				object[] processedArgs = TypeMappingHelpers.MapToHostType(args);
+
 				result = InvokeStandardMember(name, invokeAttr, binder, processedTarget,
 					processedArgs, modifiers, culture, namedParameters);
 			}

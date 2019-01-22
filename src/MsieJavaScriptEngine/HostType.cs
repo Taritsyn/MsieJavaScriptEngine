@@ -29,20 +29,24 @@ namespace MsieJavaScriptEngine
 		protected override object InnerInvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target,
 			object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)
 		{
-			object[] processedArgs = TypeMappingHelpers.MapToHostType(args);
 			object result;
 
 			if (name == SpecialMemberName.Default && invokeAttr.HasFlag(BindingFlags.CreateInstance))
 			{
+				object[] processedArgs = args;
+
 				if (_engineMode != JsEngineMode.Classic && processedArgs.Length > 0)
 				{
 					processedArgs = processedArgs.Skip(1).ToArray();
 				}
+				processedArgs = TypeMappingHelpers.MapToHostType(processedArgs);
 
 				result = Activator.CreateInstance(_type, processedArgs);
 			}
 			else
 			{
+				object[] processedArgs = TypeMappingHelpers.MapToHostType(args);
+
 				result = InvokeStandardMember(name, invokeAttr, binder, target,
 					processedArgs, modifiers, culture, namedParameters);
 			}

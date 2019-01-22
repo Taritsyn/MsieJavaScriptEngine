@@ -1,10 +1,13 @@
-﻿#if NETSTANDARD
-using System;
+﻿using System;
+#if NETSTANDARD
 using System.Collections.Generic;
 using System.Linq;
+#endif
 using System.Reflection;
+#if NETSTANDARD
 
 using MsieJavaScriptEngine.Utilities;
+#endif
 
 namespace MsieJavaScriptEngine.Helpers
 {
@@ -27,6 +30,21 @@ namespace MsieJavaScriptEngine.Helpers
 
 			return bindingFlags;
 		}
+
+		public static bool IsFullyFledgedMethod(MethodInfo method)
+		{
+			if (!method.Attributes.HasFlag(MethodAttributes.SpecialName))
+			{
+				return true;
+			}
+
+			string name = method.Name;
+			bool isFullyFledged = !(name.StartsWith("get_", StringComparison.Ordinal)
+				|| name.StartsWith("set_", StringComparison.Ordinal));
+
+			return isFullyFledged;
+		}
+#if NETSTANDARD
 
 		public static void FixFieldValueType(ref object value, FieldInfo field)
 		{
@@ -208,6 +226,6 @@ namespace MsieJavaScriptEngine.Helpers
 				set;
 			}
 		}
+#endif
 	}
 }
-#endif
