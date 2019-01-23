@@ -123,7 +123,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		public override object MapToHostType(EdgeJsValue value)
 		{
 			JsValueType valueType = value.ValueType;
-			EdgeJsValue processedValue;
 			object result;
 
 			switch (valueType)
@@ -135,16 +134,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					result = Undefined.Value;
 					break;
 				case JsValueType.Boolean:
-					processedValue = value.ConvertToBoolean();
-					result = processedValue.ToBoolean();
+					result = value.ToBoolean();
 					break;
 				case JsValueType.Number:
-					processedValue = value.ConvertToNumber();
-					result = NumericHelpers.CastDoubleValueToCorrectType(processedValue.ToDouble());
+					result = NumericHelpers.CastDoubleValueToCorrectType(value.ToDouble());
 					break;
 				case JsValueType.String:
-					processedValue = value.ConvertToString();
-					result = processedValue.ToString();
+					result = value.ToString();
 					break;
 				case JsValueType.Object:
 				case JsValueType.Function:
@@ -154,7 +150,8 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					result = value.HasExternalData ?
 						GCHandle.FromIntPtr(value.ExternalData).Target : value.ConvertToObject();
 #else
-					processedValue = value.ConvertToObject();
+					EdgeJsValue processedValue = valueType != JsValueType.Object ?
+						value.ConvertToObject() : value;
 					object obj = processedValue.ToObject();
 					var hostObj = obj as HostObject;
 					result = hostObj != null ? hostObj.Target : obj;

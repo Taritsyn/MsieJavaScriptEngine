@@ -120,7 +120,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		public override object MapToHostType(IeJsValue value)
 		{
 			JsValueType valueType = value.ValueType;
-			IeJsValue processedValue;
 			object result;
 
 			switch (valueType)
@@ -132,16 +131,13 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					result = Undefined.Value;
 					break;
 				case JsValueType.Boolean:
-					processedValue = value.ConvertToBoolean();
-					result = processedValue.ToBoolean();
+					result = value.ToBoolean();
 					break;
 				case JsValueType.Number:
-					processedValue = value.ConvertToNumber();
-					result = NumericHelpers.CastDoubleValueToCorrectType(processedValue.ToDouble());
+					result = NumericHelpers.CastDoubleValueToCorrectType(value.ToDouble());
 					break;
 				case JsValueType.String:
-					processedValue = value.ConvertToString();
-					result = processedValue.ToString();
+					result = value.ToString();
 					break;
 				case JsValueType.Object:
 				case JsValueType.Function:
@@ -151,7 +147,8 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					result = value.HasExternalData ?
 						GCHandle.FromIntPtr(value.ExternalData).Target : value.ConvertToObject();
 #else
-					processedValue = value.ConvertToObject();
+					IeJsValue processedValue = valueType != JsValueType.Object ?
+						value.ConvertToObject() : value;
 					object obj = processedValue.ToObject();
 					var hostObj = obj as HostObject;
 					result = hostObj != null ? hostObj.Target : obj;
