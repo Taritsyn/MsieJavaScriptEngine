@@ -17,9 +17,9 @@ using MsieJavaScriptEngine.Resources;
 namespace MsieJavaScriptEngine.JsRt.Ie
 {
 #if NETSTANDARD
+	using IeEmbeddedItem = EmbeddedItem<IeJsValue, IeJsNativeFunction>;
 	using IeEmbeddedObject = EmbeddedObject<IeJsValue, IeJsNativeFunction>;
 	using IeEmbeddedType = EmbeddedType<IeJsValue, IeJsNativeFunction>;
-	using IeEmbeddedItem = EmbeddedItem<IeJsValue, IeJsNativeFunction>;
 
 #endif
 	/// <summary>
@@ -45,7 +45,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <returns>JavaScript value created from an host object</returns>
 		public override IeJsValue GetOrCreateScriptObject(object obj)
 		{
-			var wrappedObj  = new HostObject(obj, _engineMode);
+			var wrappedObj = new HostObject(obj, _engineMode);
 			IeJsValue objValue = IeJsValue.FromObject(wrappedObj);
 
 			return objValue;

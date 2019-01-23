@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## v3.0.1 - January 23, 2019
+ * Fixed a error, that occurred in the `Classic` mode during calling an embedded delegate, which does not return a result
+ * Fixed a error, that occurred during setting a value to field of embedded type
+ * Improved a performance of the embedding of objects and types
+ * Accelerated a conversion of script types to host types
+
 ## v3.0.0 - December 24, 2018
  * Format of the error messages was unified
  * Created a new exception classes: `JsCompilationException`, `JsEngineException`, `JsFatalException`, `JsInterruptedException`, `JsScriptException` and `JsUsageException`. These exceptions are responsible for handling errors, some of which were previously handled by the `JsRuntimeException` class.
