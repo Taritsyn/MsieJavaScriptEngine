@@ -33,11 +33,6 @@ namespace MsieJavaScriptEngine
 		private readonly FieldInfo[] _fields;
 
 		/// <summary>
-		/// List of field names
-		/// </summary>
-		private string[] _fieldNames;
-
-		/// <summary>
 		/// List of properties
 		/// </summary>
 		private readonly PropertyInfo[] _properties;
@@ -71,18 +66,36 @@ namespace MsieJavaScriptEngine
 
 			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
 			FieldInfo[] fields = _type.GetFields(defaultBindingFlags);
-			string[] fieldNames = fields.Length > 0 ? Array.ConvertAll(fields, f => f.Name) : new string[0];
 			PropertyInfo[] properties = _type.GetProperties(defaultBindingFlags);
 			MethodInfo[] methods = _type.GetMethods(defaultBindingFlags);
-			MethodInfo[] fullyFledgedMethods = methods.Length > 0 ?
-				Array.FindAll(methods, ReflectionHelpers.IsFullyFledgedMethod) : methods;
+			if (methods.Length > 0 && properties.Length > 0)
+			{
+				methods = ReflectionHelpers.GetFullyFledgedMethods(methods);
+			}
 
 			_fields = fields;
-			_fieldNames = fieldNames;
 			_properties = properties;
-			_methods = fullyFledgedMethods;
+			_methods = methods;
 		}
 
+
+		private bool IsField(string name)
+		{
+			bool isField = false;
+			FieldInfo[] fields = _fields;
+			int fieldCount = fields.Length;
+
+			for (int fieldIndex = 0; fieldIndex < fieldCount; fieldIndex++)
+			{
+				if (fields[fieldIndex].Name.Equals(name, StringComparison.Ordinal))
+				{
+					isField = true;
+					break;
+				}
+			}
+
+			return isField;
+		}
 
 		protected abstract object InnerInvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target,
 			object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters);
@@ -94,7 +107,7 @@ namespace MsieJavaScriptEngine
 			if ((processedInvokeAttr.HasFlag(BindingFlags.GetProperty)
 				|| processedInvokeAttr.HasFlag(BindingFlags.SetProperty)
 				|| processedInvokeAttr.HasFlag(BindingFlags.PutDispProperty))
-				&& Array.IndexOf(_fieldNames, name) != -1)
+				&& IsField(name))
 			{
 				if (processedInvokeAttr.HasFlag(BindingFlags.GetProperty))
 				{

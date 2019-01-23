@@ -44,7 +44,29 @@ namespace MsieJavaScriptEngine.Helpers
 
 			return isFullyFledged;
 		}
-#if NETSTANDARD
+#if !NETSTANDARD
+
+		public static MethodInfo[] GetFullyFledgedMethods(MethodInfo[] methods)
+		{
+			int methodCount = methods.Length;
+			var fullyFledgedMethods = new MethodInfo[methodCount];
+			int fullyFledgedMethodIndex = 0;
+
+			for (int methodIndex = 0; methodIndex < methodCount; methodIndex++)
+			{
+				MethodInfo method = methods[methodIndex];
+				if (IsFullyFledgedMethod(method))
+				{
+					fullyFledgedMethods[fullyFledgedMethodIndex] = method;
+					fullyFledgedMethodIndex++;
+				}
+			}
+
+			Array.Resize(ref fullyFledgedMethods, fullyFledgedMethodIndex);
+
+			return fullyFledgedMethods;
+		}
+#else
 
 		public static void FixFieldValueType(ref object value, FieldInfo field)
 		{
