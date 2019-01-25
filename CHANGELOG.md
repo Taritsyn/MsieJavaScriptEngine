@@ -28,6 +28,10 @@ Change log
  * One part of the auxiliary code was removed, and other part moved to an external library - [AdvancedStringBuilder](https://github.com/Taritsyn/AdvancedStringBuilder)
  * In the `IeNativeMethods` and `EdgeNativeMethods` classes for the `netstandard` targets was changed a calling convention from `StdCall` to `Cdecl`
 
+## v2.2.10 - November 20, 2018
+ * Improved performance of debugging in ActiveScript modes
+ * JSON2 library was updated to version of June 12, 2017
+
 ## v3.0.0 RC 1 - September 18, 2018
  * In JavaScript engine settings was added one new property - `MaxStackSize` (default `492` or `984` KB)
  * JSON2 library was updated to version of June 12, 2017
@@ -35,15 +39,24 @@ Change log
 ## v3.0.0 Beta 5 - August 23, 2018
  * Fixed a error, that occurred during the generation of error message
 
+## v2.2.9 - June 12, 2018
+ * Changed a implementation of the `Dispose` method
+
 ## v3.0.0 Beta 4 - June 6, 2018
  * Changed a implementation of the `Dispose` method
 
 ## v3.0.0 Beta 3 - May 29, 2018
  * Fixed a [error #18](https://github.com/Taritsyn/MsieJavaScriptEngine/issues/18) “Block finalizer solved?”
 
+## v2.2.8 - May 24, 2018
+ * Fixed a [error #18](https://github.com/Taritsyn/MsieJavaScriptEngine/issues/18) “Block finalizer solved?”
+
 ## v3.0.0 Beta 2 - May 22, 2018
  * In `MsieJsEngine` class was added `SupportsScriptPrecompilation` property and three new methods: `Precompile`, `PrecompileFile` and `PrecompileResource`
  * In JsRT modes added a ability to pre-compile scripts
+
+## v2.2.7 - April 10, 2018
+ * Fixed a minor errors
 
 ## v3.0.0 Beta 1 - April 8, 2018
  * Format of the error messages was unified
@@ -54,6 +67,14 @@ Change log
  * `JsScriptInterruptedException` class was renamed to the `JsInterruptedException` class and now is inherited from the `JsRuntimeException` class
  * `JsEngineLoadException` class now is inherited from the `JsEngineException` class
  * `Format` method of the `JsErrorHelpers` class was renamed to the `GenerateErrorDetails`
+
+## v2.2.6 - February 23, 2018
+ * In JsRT modes during calling of the `CollectGarbage` method is no longer performed blocking
+
+## v2.2.5 - December 23, 2017
+ * Removed a redundant code
+ * Fixed a error, that occurred in the `Classic` mode during removing the embedded host objects and types
+ * Fixed a error, that occurred during finding the suitable method overload, that receives numeric values and interfaces as parameters, of the host object
 
 ## v3.0.0 Alpha 3 - December 10, 2017
  * Added support of .NET Standard 2.0
