@@ -25,7 +25,7 @@ namespace MsieJavaScriptEngine.Benchmarks
 		/// <summary>
 		/// Number of transliterated items
 		/// </summary>
-		private const int ItemCount = 6;
+		private const int ItemCount = 7;
 
 		/// <summary>
 		/// Code of library for transliteration of Russian
@@ -74,7 +74,8 @@ namespace MsieJavaScriptEngine.Benchmarks
 
 			_inputTypes = new string[ItemCount]
 			{
-				"basic", "letters-numbers", "gost-16876-71", "gost-7-79-2000", "police", "foreign-passport"
+				"basic", "letters-numbers", "gost-16876-71", "gost-7-79-2000", "police", "foreign-passport",
+				"yandex-friendly-url"
 			};
 			_inputStrings = new string[ItemCount]
 			{
@@ -95,7 +96,9 @@ namespace MsieJavaScriptEngine.Benchmarks
 				"«много интерфейсов, специально предназначенных для клиентов, лучше, чем один интерфейс общего назначения.»",
 
 				"Принцип инверсии зависимостей (The Dependency Inversion Principle). " +
-				"«Зависимость на Абстракциях. Нет зависимости на что-то конкретное.»"
+				"«Зависимость на Абстракциях. Нет зависимости на что-то конкретное.»",
+
+				"SOLID (объектно-ориентированное программирование)"
 			};
 			_targetOutputStrings = new string[ItemCount]
 			{
@@ -118,7 +121,9 @@ namespace MsieJavaScriptEngine.Benchmarks
 				"naznacheniia.»",
 
 				"Printcip inversii zavisimostei (The Dependency Inversion Principle). " +
-				"«Zavisimost na Abstraktciiakh. Net zavisimosti na chto-to konkretnoe.»"
+				"«Zavisimost na Abstraktciiakh. Net zavisimosti na chto-to konkretnoe.»",
+
+				"solid-obektno-orientirovannoe-programmirovanie"
 			};
 		}
 
