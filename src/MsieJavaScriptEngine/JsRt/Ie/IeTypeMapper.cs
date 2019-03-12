@@ -120,7 +120,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		public override object MapToHostType(IeJsValue value)
 		{
 			JsValueType valueType = value.ValueType;
-			object result;
+			object result = null;
 
 			switch (valueType)
 			{
@@ -139,8 +139,23 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				case JsValueType.String:
 					result = value.ToString();
 					break;
-				case JsValueType.Object:
+#if NETSTANDARD
 				case JsValueType.Function:
+					IeJsPropertyId externalObjectPropertyId = IeJsPropertyId.FromString(ExternalObjectPropertyName);
+					if (value.HasProperty(externalObjectPropertyId))
+					{
+						IeJsValue externalObjectValue = value.GetProperty(externalObjectPropertyId);
+						result = externalObjectValue.HasExternalData ?
+							GCHandle.FromIntPtr(externalObjectValue.ExternalData).Target : null;
+					}
+
+					result = result ?? value.ConvertToObject();
+					break;
+#endif
+				case JsValueType.Object:
+#if !NETSTANDARD
+				case JsValueType.Function:
+#endif
 				case JsValueType.Error:
 				case JsValueType.Array:
 #if NETSTANDARD
@@ -222,10 +237,10 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 			GCHandle delHandle = GCHandle.Alloc(del);
 			IntPtr delPtr = GCHandle.ToIntPtr(delHandle);
-			IeJsValue prototypeValue = IeJsValue.CreateExternalObject(delPtr, _embeddedObjectFinalizeCallback);
+			IeJsValue objValue = IeJsValue.CreateExternalObject(delPtr, _embeddedObjectFinalizeCallback);
 
 			IeJsValue functionValue = IeJsValue.CreateFunction(nativeFunction);
-			functionValue.Prototype = prototypeValue;
+			SetNonEnumerableProperty(functionValue, ExternalObjectPropertyName, objValue);
 
 			var embeddedObject = new IeEmbeddedObject(del, functionValue,
 				new List<IeJsNativeFunction> { nativeFunction });
@@ -297,14 +312,13 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				return resultValue;
 			};
 
-			string embeddedTypeKey = type.AssemblyQualifiedName;
-			GCHandle embeddedTypeKeyHandle = GCHandle.Alloc(embeddedTypeKey);
-			IntPtr embeddedTypeKeyPtr = GCHandle.ToIntPtr(embeddedTypeKeyHandle);
-			IeJsValue prototypeValue = IeJsValue.CreateExternalObject(embeddedTypeKeyPtr,
+			GCHandle embeddedTypeHandle = GCHandle.Alloc(type);
+			IntPtr embeddedTypePtr = GCHandle.ToIntPtr(embeddedTypeHandle);
+			IeJsValue objValue = IeJsValue.CreateExternalObject(embeddedTypePtr,
 				_embeddedTypeFinalizeCallback);
 
 			IeJsValue typeValue = IeJsValue.CreateFunction(nativeConstructorFunction);
-			typeValue.Prototype = prototypeValue;
+			SetNonEnumerableProperty(typeValue, ExternalObjectPropertyName, objValue);
 
 			var embeddedType = new IeEmbeddedType(type, typeValue,
 				new List<IeJsNativeFunction> { nativeConstructorFunction });
@@ -621,12 +635,24 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 
 		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
-		private void FreezeObject(IeJsValue objValue)
+		private static void FreezeObject(IeJsValue objValue)
 		{
 			IeJsValue objectValue = IeJsValue.GlobalObject.GetProperty("Object");
 			IeJsValue freezeMethodValue = objectValue.GetProperty("freeze");
 
 			freezeMethodValue.CallFunction(objectValue, objValue);
+		}
+
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
+		private static void SetNonEnumerableProperty(IeJsValue objValue, string name, IeJsValue value)
+		{
+			IeJsValue descriptorValue = IeJsValue.CreateObject();
+			descriptorValue.SetProperty("enumerable", IeJsValue.False, true);
+			descriptorValue.SetProperty("writable", IeJsValue.True, true);
+
+			IeJsPropertyId id = IeJsPropertyId.FromString(name);
+			objValue.DefineProperty(id, descriptorValue);
+			objValue.SetProperty(id, value, true);
 		}
 #endif
 	}

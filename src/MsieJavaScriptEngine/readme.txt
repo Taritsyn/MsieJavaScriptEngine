@@ -21,12 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   1. Fixed a error, that occurred in the `Classic` mode during calling an embedded
-      delegate, which does not return a result;
-   2. Fixed a error, that occurred during setting a value to field of embedded
-      type;
-   3. Improved a performance of the embedding of objects and types;
-   4. Accelerated a conversion of script types to host types.
+   In version for .NET Core improved a embedding of delegates and types.
 
    ============
    PROJECT SITE

@@ -123,7 +123,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		public override object MapToHostType(EdgeJsValue value)
 		{
 			JsValueType valueType = value.ValueType;
-			object result;
+			object result = null;
 
 			switch (valueType)
 			{
@@ -142,8 +142,23 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				case JsValueType.String:
 					result = value.ToString();
 					break;
-				case JsValueType.Object:
+#if NETSTANDARD
 				case JsValueType.Function:
+					EdgeJsPropertyId externalObjectPropertyId = EdgeJsPropertyId.FromString(ExternalObjectPropertyName);
+					if (value.HasProperty(externalObjectPropertyId))
+					{
+						EdgeJsValue externalObjectValue = value.GetProperty(externalObjectPropertyId);
+						result = externalObjectValue.HasExternalData ?
+							GCHandle.FromIntPtr(externalObjectValue.ExternalData).Target : null;
+					}
+
+					result = result ?? value.ConvertToObject();
+					break;
+#endif
+				case JsValueType.Object:
+#if !NETSTANDARD
+				case JsValueType.Function:
+#endif
 				case JsValueType.Error:
 				case JsValueType.Array:
 #if NETSTANDARD
@@ -225,10 +240,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			GCHandle delHandle = GCHandle.Alloc(del);
 			IntPtr delPtr = GCHandle.ToIntPtr(delHandle);
-			EdgeJsValue prototypeValue = EdgeJsValue.CreateExternalObject(delPtr, _embeddedObjectFinalizeCallback);
+			EdgeJsValue objValue = EdgeJsValue.CreateExternalObject(delPtr, _embeddedObjectFinalizeCallback);
 
 			EdgeJsValue functionValue = EdgeJsValue.CreateFunction(nativeFunction);
-			functionValue.Prototype = prototypeValue;
+			SetNonEnumerableProperty(functionValue, ExternalObjectPropertyName, objValue);
 
 			var embeddedObject = new EdgeEmbeddedObject(del, functionValue,
 				new List<EdgeJsNativeFunction> { nativeFunction });
@@ -300,14 +315,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				return resultValue;
 			};
 
-			string embeddedTypeKey = type.AssemblyQualifiedName;
-			GCHandle embeddedTypeKeyHandle = GCHandle.Alloc(embeddedTypeKey);
-			IntPtr embeddedTypeKeyPtr = GCHandle.ToIntPtr(embeddedTypeKeyHandle);
-			EdgeJsValue prototypeValue = EdgeJsValue.CreateExternalObject(embeddedTypeKeyPtr,
+			GCHandle embeddedTypeHandle = GCHandle.Alloc(type);
+			IntPtr embeddedTypePtr = GCHandle.ToIntPtr(embeddedTypeHandle);
+			EdgeJsValue objValue = EdgeJsValue.CreateExternalObject(embeddedTypePtr,
 				_embeddedTypeFinalizeCallback);
 
 			EdgeJsValue typeValue = EdgeJsValue.CreateFunction(nativeConstructorFunction);
-			typeValue.Prototype = prototypeValue;
+			SetNonEnumerableProperty(typeValue, ExternalObjectPropertyName, objValue);
 
 			var embeddedType = new EdgeEmbeddedType(type, typeValue,
 				new List<EdgeJsNativeFunction> { nativeConstructorFunction });
@@ -624,13 +638,25 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		}
 
 		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
-		private void FreezeObject(EdgeJsValue objValue)
+		private static void FreezeObject(EdgeJsValue objValue)
 		{
 			EdgeJsValue freezeMethodValue = EdgeJsValue.GlobalObject
 				.GetProperty("Object")
 				.GetProperty("freeze")
 				;
 			freezeMethodValue.CallFunction(objValue);
+		}
+
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
+		private static void SetNonEnumerableProperty(EdgeJsValue objValue, string name, EdgeJsValue value)
+		{
+			EdgeJsValue descriptorValue = EdgeJsValue.CreateObject();
+			descriptorValue.SetProperty("enumerable", EdgeJsValue.False, true);
+			descriptorValue.SetProperty("writable", EdgeJsValue.True, true);
+
+			EdgeJsPropertyId id = EdgeJsPropertyId.FromString(name);
+			objValue.DefineProperty(id, descriptorValue);
+			objValue.SetProperty(id, value, true);
 		}
 #endif
 	}

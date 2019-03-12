@@ -26,6 +26,11 @@ namespace MsieJavaScriptEngine.JsRt
 	{
 #if NETSTANDARD
 		/// <summary>
+		/// Name of property to store the external object
+		/// </summary>
+		protected const string ExternalObjectPropertyName = "_MsieJavaScriptEngine_externalObject";
+
+		/// <summary>
 		/// Storage for lazy-initialized embedded objects
 		/// </summary>
 		private ConcurrentDictionary<EmbeddedObjectKey, Lazy<EmbeddedObject<TValue, TFunction>>> _lazyEmbeddedObjects;
@@ -229,8 +234,9 @@ namespace MsieJavaScriptEngine.JsRt
 				return;
 			}
 
-			GCHandle embeddedTypeKeyHandle = GCHandle.FromIntPtr(ptr);
-			var embeddedTypeKey = (string)embeddedTypeKeyHandle.Target;
+			GCHandle embeddedTypeHandle = GCHandle.FromIntPtr(ptr);
+			var type = (Type)embeddedTypeHandle.Target;
+			string embeddedTypeKey = type.AssemblyQualifiedName;
 			var lazyEmbeddedTypes = _lazyEmbeddedTypes;
 
 			if (!string.IsNullOrEmpty(embeddedTypeKey) && lazyEmbeddedTypes != null)
@@ -243,7 +249,7 @@ namespace MsieJavaScriptEngine.JsRt
 				}
 			}
 
-			embeddedTypeKeyHandle.Free();
+			embeddedTypeHandle.Free();
 		}
 
 		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
