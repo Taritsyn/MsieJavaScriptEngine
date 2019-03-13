@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.2 - March 13, 2019
+ * In version for .NET Core improved a embedding of delegates and types
+
 ## v3.0.1 - January 23, 2019
  * Fixed a error, that occurred in the `Classic` mode during calling an embedded delegate, which does not return a result
  * Fixed a error, that occurred during setting a value to field of embedded type
