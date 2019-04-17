@@ -21,8 +21,6 @@ namespace MsieJavaScriptEngine.Test.Common
 	[TestFixture]
 	public abstract class InteropTestsBase : FileSystemTestsBase
 	{
-		protected abstract MsieJsEngine CreateJsEngine();
-
 		#region Embedding of objects
 
 		#region Objects with fields

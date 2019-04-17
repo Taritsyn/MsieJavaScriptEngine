@@ -5,10 +5,8 @@ using NUnit.Framework;
 namespace MsieJavaScriptEngine.Test.Common
 {
 	[TestFixture]
-	public abstract class Es5TestsBase
+	public abstract class Es5TestsBase : TestsBase
 	{
-		protected abstract MsieJsEngine CreateJsEngine();
-
 		#region Array methods
 
 		[Test]

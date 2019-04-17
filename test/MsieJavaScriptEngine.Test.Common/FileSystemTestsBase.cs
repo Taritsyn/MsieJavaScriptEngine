@@ -10,7 +10,7 @@ using System.IO;
 
 namespace MsieJavaScriptEngine.Test.Common
 {
-	public abstract class FileSystemTestsBase
+	public abstract class FileSystemTestsBase : TestsBase
 	{
 #if NET40
 		/// <summary>

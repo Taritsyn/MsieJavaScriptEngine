@@ -11,18 +11,9 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 	[TestFixture]
 	public class InteropTests : InteropTestsBase
 	{
-		protected override MsieJsEngine CreateJsEngine()
-		{
-			var jsEngine = new MsieJsEngine(new JsEngineSettings
-			{
-				EngineMode = JsEngineMode.ChakraEdgeJsRt,
-				UseEcmaScript5Polyfill = false,
-				UseJson2Library = false
-			});
-
-			return jsEngine;
-		}
+		protected override JsEngineMode EngineMode => JsEngineMode.ChakraEdgeJsRt;
 #if NETCOREAPP
+
 
 		[Test]
 		public void EmbeddedInstanceOfDelegateHasFunctionPrototype()

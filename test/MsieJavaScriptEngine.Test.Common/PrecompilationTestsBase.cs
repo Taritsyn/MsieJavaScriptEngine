@@ -1,5 +1,7 @@
 ﻿using System.IO;
+#if !NET40
 using System.Reflection;
+#endif
 using System.Threading.Tasks;
 
 using NUnit.Framework;
@@ -9,13 +11,6 @@ namespace MsieJavaScriptEngine.Test.Common
 	[TestFixture]
 	public abstract class PrecompilationTestsBase : FileSystemTestsBase
 	{
-		protected virtual MsieJsEngine CreateJsEngine()
-		{
-			return CreateJsEngine(false);
-		}
-
-		protected abstract MsieJsEngine CreateJsEngine(bool enableDebugging);
-
 		#region Execution of precompiled scripts
 
 		[Test]

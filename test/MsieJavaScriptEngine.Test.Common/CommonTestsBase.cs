@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+#if !NET40
 using System.Reflection;
+#endif
 using System.Threading;
 
 using NUnit.Framework;
@@ -10,13 +12,6 @@ namespace MsieJavaScriptEngine.Test.Common
 	[TestFixture]
 	public abstract class CommonTestsBase : FileSystemTestsBase
 	{
-		protected virtual MsieJsEngine CreateJsEngine()
-		{
-			return CreateJsEngine(false);
-		}
-
-		protected abstract MsieJsEngine CreateJsEngine(bool enableDebugging);
-
 		#region Evaluation of scripts
 
 		[Test]

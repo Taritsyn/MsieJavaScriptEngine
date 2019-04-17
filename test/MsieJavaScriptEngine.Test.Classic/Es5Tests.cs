@@ -7,17 +7,10 @@ namespace MsieJavaScriptEngine.Test.Classic
 	[TestFixture]
 	public class Es5Tests : Es5TestsBase
 	{
-		protected override MsieJsEngine CreateJsEngine()
-		{
-			var jsEngine = new MsieJsEngine(new JsEngineSettings
-			{
-				EngineMode = JsEngineMode.Classic,
-				UseEcmaScript5Polyfill = true,
-				UseJson2Library = true
-			});
+		protected override JsEngineMode EngineMode => JsEngineMode.Classic;
+		protected override bool UseEcmaScript5Polyfill => true;
+		protected override bool UseJson2Library => true;
 
-			return jsEngine;
-		}
 
 		#region Object methods
 

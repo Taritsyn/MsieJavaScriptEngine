@@ -9,18 +9,8 @@ namespace MsieJavaScriptEngine.Test.ChakraIeJsRt
 	[TestFixture]
 	public class PrecompilationTests : PrecompilationTestsBase
 	{
-		protected override MsieJsEngine CreateJsEngine(bool enableDebugging)
-		{
-			var jsEngine = new MsieJsEngine(new JsEngineSettings
-			{
-				EnableDebugging = enableDebugging,
-				EngineMode = JsEngineMode.ChakraIeJsRt,
-				UseEcmaScript5Polyfill = false,
-				UseJson2Library = false
-			});
+		protected override JsEngineMode EngineMode => JsEngineMode.ChakraIeJsRt;
 
-			return jsEngine;
-		}
 
 		#region Error handling
 
