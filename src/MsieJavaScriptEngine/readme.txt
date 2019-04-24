@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   In version for .NET Core improved a embedding of delegates and types.
+   In version for .NET Core was fixed a error that occurred during the recursive
+   execution and evaluation of JS files.
 
    ============
    PROJECT SITE

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace MsieJavaScriptEngine.JsRt.Ie
@@ -564,6 +565,27 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			double value;
 			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsNumberToDouble(this, out value));
+
+			return value;
+		}
+
+		/// <summary>
+		/// Retrieves a <c>int</c> value of a <c>Number</c> value
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This function retrieves the value of a Number value. It will fail with
+		/// <c>InvalidArgument</c> if the type of the value is not <c>Number</c>.
+		/// </para>
+		/// <para>
+		/// Requires an active script context.
+		/// </para>
+		/// </remarks>
+		/// <returns>The <c>int</c> value</returns>
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
+		public int ToInt32()
+		{
+			int value = (int)ToDouble();
 
 			return value;
 		}

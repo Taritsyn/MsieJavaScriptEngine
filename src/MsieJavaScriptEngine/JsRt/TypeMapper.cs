@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 #endif
 using System.Linq;
 #if NETSTANDARD
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #endif
@@ -259,6 +260,23 @@ namespace MsieJavaScriptEngine.JsRt
 				MapToHostType(args.Skip(1).ToArray()) : new object[0];
 
 			return processedArgs;
+		}
+
+		protected static Exception UnwrapException(Exception exception)
+		{
+			Exception originalException = exception;
+			var targetInvocationException = exception as TargetInvocationException;
+
+			if (targetInvocationException != null)
+			{
+				Exception innerException = targetInvocationException.InnerException;
+				if (innerException != null)
+				{
+					originalException = innerException;
+				}
+			}
+
+			return originalException;
 		}
 #endif
 

@@ -89,7 +89,7 @@ function declinationOfSeconds(number) {
 		public virtual void ExecutionOfPrecompiledFileIsCorrect()
 		{
 			// Arrange
-			string filePath = Path.GetFullPath(Path.Combine(_baseDirectoryPath, "SharedFiles/declinationOfMinutes.js"));
+			string filePath = GetAbsolutePath("SharedFiles/declinationOfMinutes.js");
 			const string functionName = "declinationOfMinutes";
 			const int itemCount = 4;
 

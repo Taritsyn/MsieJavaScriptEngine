@@ -19,7 +19,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		private readonly Regex _binDirRegex = new Regex(@"\\bin\\(?:Debug|Release)\\?$", RegexOptions.IgnoreCase);
 
 #endif
-		protected string _baseDirectoryPath;
+		private string _baseDirectoryPath;
 
 
 		protected FileSystemTestsBase()
@@ -38,6 +38,14 @@ namespace MsieJavaScriptEngine.Test.Common
 #else
 #error No implementation for this target
 #endif
+		}
+
+
+		protected string GetAbsolutePath(string relativePath)
+		{
+			string absolutePath = Path.GetFullPath(Path.Combine(_baseDirectoryPath, relativePath));
+
+			return absolutePath;
 		}
 	}
 }

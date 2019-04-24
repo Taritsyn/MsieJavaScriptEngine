@@ -403,7 +403,7 @@ smileDay.GetDayOfYear();";
 		{
 			// Arrange
 			var fileManager = new FileManager();
-			string filePath = Path.GetFullPath(Path.Combine(_baseDirectoryPath, "SharedFiles/link.txt"));
+			string filePath = GetAbsolutePath("SharedFiles/link.txt");
 
 			string input = string.Format("fileManager.ReadFile('{0}')", filePath.Replace(@"\", @"\\"));
 			const string targetOutput = "http://www.panopticoncentral.net/2015/09/09/the-two-faces-of-jsrt-in-windows-10/";
@@ -638,6 +638,67 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		#endregion
+#if NETCOREAPP
+
+		#region Recursive calls
+
+		[Test]
+		public virtual void RecursiveEvaluationOfFilesIsCorrect()
+		{
+			// Arrange
+			string directoryPath = GetAbsolutePath("SharedFiles/recursiveEvaluation/noError");
+			const string input = "require('index').calculateResult();";
+			const double targetOutput = 132.14;
+
+			// Act
+			double output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				Func<string, object> loadModule = path => {
+					string absolutePath = Path.Combine(directoryPath, $"{path}.js");
+					string code = File.ReadAllText(absolutePath);
+					object result = jsEngine.Evaluate(code, absolutePath);
+
+					return result;
+				};
+
+				jsEngine.EmbedHostObject("require", loadModule);
+				output = jsEngine.Evaluate<double>(input);
+			}
+
+			// Assert
+			Assert.AreEqual(targetOutput, output);
+		}
+
+		[Test]
+		public virtual void RecursiveExecutionOfFilesIsCorrect()
+		{
+			// Arrange
+			string directoryPath = GetAbsolutePath("SharedFiles/recursiveExecution/noError");
+			const string variableName = "num";
+			const int targetOutput = 12;
+
+			// Act
+			int output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				Action<string> executeFile = path => jsEngine.ExecuteFile(path);
+
+				jsEngine.SetVariableValue("directoryPath", directoryPath);
+				jsEngine.EmbedHostObject("executeFile", executeFile);
+				jsEngine.ExecuteFile(Path.Combine(directoryPath, "mainFile.js"));
+
+				output = jsEngine.GetVariableValue<int>(variableName);
+			}
+
+			// Assert
+			Assert.AreEqual(targetOutput, output);
+		}
+
+		#endregion
+#endif
 
 		#region Removal
 

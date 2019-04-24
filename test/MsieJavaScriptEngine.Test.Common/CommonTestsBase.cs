@@ -184,7 +184,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		public virtual void ExecutionOfFileIsCorrect()
 		{
 			// Arrange
-			string filePath = Path.GetFullPath(Path.Combine(_baseDirectoryPath, "SharedFiles/square.js"));
+			string filePath = GetAbsolutePath("SharedFiles/square.js");
 			const string input = "square(6);";
 			const int targetOutput = 36;
 

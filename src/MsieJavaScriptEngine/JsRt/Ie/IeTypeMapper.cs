@@ -12,6 +12,10 @@ using MsieJavaScriptEngine.Helpers;
 #if NETSTANDARD
 using MsieJavaScriptEngine.JsRt.Embedding;
 using MsieJavaScriptEngine.Resources;
+
+using WrapperException = MsieJavaScriptEngine.JsException;
+using WrapperRuntimeException = MsieJavaScriptEngine.JsRuntimeException;
+using WrapperScriptException = MsieJavaScriptEngine.JsScriptException;
 #endif
 
 namespace MsieJavaScriptEngine.JsRt.Ie
@@ -108,7 +112,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					return IeJsValue.FromString((string)value);
 
 				default:
-					return GetOrCreateScriptObject(value);
+					return value is IeJsValue ? (IeJsValue)value : GetOrCreateScriptObject(value);
 			}
 		}
 
@@ -222,12 +226,17 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				}
 				catch (Exception e)
 				{
-					IeJsValue undefinedValue = IeJsValue.Undefined;
-					IeJsValue errorValue = IeJsErrorHelpers.CreateError(
-						string.Format(NetCoreStrings.Runtime_HostDelegateInvocationFailed, e.Message));
+					Exception exception = UnwrapException(e);
+					var wrapperException = exception as WrapperException;
+					IeJsValue errorValue = wrapperException != null ?
+						CreateErrorFromWrapperException(wrapperException)
+						:
+						IeJsErrorHelpers.CreateError(string.Format(
+							NetCoreStrings.Runtime_HostDelegateInvocationFailed, exception.Message))
+						;
 					IeJsErrorHelpers.SetException(errorValue);
 
-					return undefinedValue;
+					return IeJsValue.Undefined;
 				}
 
 				IeJsValue resultValue = MapToScriptType(result);
@@ -271,24 +280,17 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 				if (constructors.Length == 0)
 				{
-					IeJsValue undefinedValue = IeJsValue.Undefined;
-					IeJsValue errorValue = IeJsErrorHelpers.CreateError(
-						string.Format(NetCoreStrings.Runtime_HostTypeConstructorNotFound, typeName));
-					IeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
+					CreateAndSetError(string.Format(NetCoreStrings.Runtime_HostTypeConstructorNotFound, typeName));
+					return IeJsValue.Undefined;
 				}
 
 				var bestFitConstructor = (ConstructorInfo)ReflectionHelpers.GetBestFitMethod(
 					constructors, processedArgs);
 				if (bestFitConstructor == null)
 				{
-					IeJsValue undefinedValue = IeJsValue.Undefined;
-					IeJsValue errorValue = IeJsErrorHelpers.CreateReferenceError(
-						string.Format(NetCoreStrings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
-					IeJsErrorHelpers.SetException(errorValue);
-
-					return undefinedValue;
+					CreateAndSetReferenceError(string.Format(
+						NetCoreStrings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
+					return IeJsValue.Undefined;
 				}
 
 				ReflectionHelpers.FixArgumentTypes(ref processedArgs, bestFitConstructor.GetParameters());
@@ -299,12 +301,17 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				}
 				catch (Exception e)
 				{
-					IeJsValue undefinedValue = IeJsValue.Undefined;
-					IeJsValue errorValue = IeJsErrorHelpers.CreateError(
-						string.Format(NetCoreStrings.Runtime_HostTypeConstructorInvocationFailed, typeName, e.Message));
+					Exception exception = UnwrapException(e);
+					var wrapperException = exception as WrapperException;
+					IeJsValue errorValue = wrapperException != null ?
+						CreateErrorFromWrapperException(wrapperException)
+						:
+						IeJsErrorHelpers.CreateError(string.Format(
+							NetCoreStrings.Runtime_HostTypeConstructorInvocationFailed, typeName, exception.Message))
+						;
 					IeJsErrorHelpers.SetException(errorValue);
 
-					return undefinedValue;
+					return IeJsValue.Undefined;
 				}
 
 				resultValue = MapToScriptType(result);
@@ -354,12 +361,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					if (instance && obj == null)
 					{
-						IeJsValue undefinedValue = IeJsValue.Undefined;
-						IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-							string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-						IeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
+						CreateAndSetTypeError(string.Format(
+							NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
+						return IeJsValue.Undefined;
 					}
 
 					object result;
@@ -370,17 +374,28 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (Exception e)
 					{
-						string errorMessage = instance ?
-							string.Format(NetCoreStrings.Runtime_HostObjectFieldGettingFailed, fieldName, e.Message)
-							:
-							string.Format(NetCoreStrings.Runtime_HostTypeFieldGettingFailed, fieldName, typeName, e.Message)
-							;
+						Exception exception = UnwrapException(e);
+						var wrapperException = exception as WrapperException;
+						IeJsValue errorValue;
 
-						IeJsValue undefinedValue = IeJsValue.Undefined;
-						IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+						if (wrapperException != null)
+						{
+							errorValue = CreateErrorFromWrapperException(wrapperException);
+						}
+						else
+						{
+							string errorMessage = instance ?
+								string.Format(NetCoreStrings.Runtime_HostObjectFieldGettingFailed, fieldName,
+									exception.Message)
+								:
+								string.Format(NetCoreStrings.Runtime_HostTypeFieldGettingFailed, fieldName, typeName,
+									exception.Message)
+								;
+							errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+						}
 						IeJsErrorHelpers.SetException(errorValue);
 
-						return undefinedValue;
+						return IeJsValue.Undefined;
 					}
 
 					IeJsValue resultValue = MapToScriptType(result);
@@ -396,12 +411,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					if (instance && obj == null)
 					{
-						IeJsValue undefinedValue = IeJsValue.Undefined;
-						IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-							string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-						IeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
+						CreateAndSetTypeError(string.Format(
+							NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
+						return IeJsValue.Undefined;
 					}
 
 					object value = MapToHostType(args[1]);
@@ -413,17 +425,28 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (Exception e)
 					{
-						string errorMessage = instance ?
-							string.Format(NetCoreStrings.Runtime_HostObjectFieldSettingFailed, fieldName, e.Message)
-							:
-							string.Format(NetCoreStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName, e.Message)
-							;
+						Exception exception = UnwrapException(e);
+						var wrapperException = exception as WrapperException;
+						IeJsValue errorValue;
 
-						IeJsValue undefinedValue = IeJsValue.Undefined;
-						IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+						if (wrapperException != null)
+						{
+							errorValue = CreateErrorFromWrapperException(wrapperException);
+						}
+						else
+						{
+							string errorMessage = instance ?
+								string.Format(NetCoreStrings.Runtime_HostObjectFieldSettingFailed, fieldName,
+									exception.Message)
+								:
+								string.Format(NetCoreStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName,
+									exception.Message)
+								;
+							errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+						}
 						IeJsErrorHelpers.SetException(errorValue);
 
-						return undefinedValue;
+						return IeJsValue.Undefined;
 					}
 
 					return IeJsValue.Undefined;
@@ -462,12 +485,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					{
 						if (instance && obj == null)
 						{
-							IeJsValue undefinedValue = IeJsValue.Undefined;
-							IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
-							IeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
+							CreateAndSetTypeError(string.Format(
+								NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
+							return IeJsValue.Undefined;
 						}
 
 						object result;
@@ -478,19 +498,28 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						}
 						catch (Exception e)
 						{
-							string errorMessage = instance ?
-								string.Format(
-									NetCoreStrings.Runtime_HostObjectPropertyGettingFailed, propertyName, e.Message)
-								:
-								string.Format(
-									NetCoreStrings.Runtime_HostTypePropertyGettingFailed, propertyName, typeName, e.Message)
-								;
+							Exception exception = UnwrapException(e);
+							var wrapperException = exception as WrapperException;
+							IeJsValue errorValue;
 
-							IeJsValue undefinedValue = IeJsValue.Undefined;
-							IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+							if (wrapperException != null)
+							{
+								errorValue = CreateErrorFromWrapperException(wrapperException);
+							}
+							else
+							{
+								string errorMessage = instance ?
+									string.Format(NetCoreStrings.Runtime_HostObjectPropertyGettingFailed, propertyName,
+										exception.Message)
+									:
+									string.Format(NetCoreStrings.Runtime_HostTypePropertyGettingFailed, propertyName,
+										typeName, exception.Message)
+									;
+								errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+							}
 							IeJsErrorHelpers.SetException(errorValue);
 
-							return undefinedValue;
+							return IeJsValue.Undefined;
 						}
 
 						IeJsValue resultValue = MapToScriptType(result);
@@ -509,12 +538,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					{
 						if (instance && obj == null)
 						{
-							IeJsValue undefinedValue = IeJsValue.Undefined;
-							IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-								string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
-							IeJsErrorHelpers.SetException(errorValue);
-
-							return undefinedValue;
+							CreateAndSetTypeError(string.Format(
+								NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
+							return IeJsValue.Undefined;
 						}
 
 						object value = MapToHostType(args[1]);
@@ -526,19 +552,28 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						}
 						catch (Exception e)
 						{
-							string errorMessage = instance ?
-								string.Format(
-									NetCoreStrings.Runtime_HostObjectPropertySettingFailed, propertyName, e.Message)
-								:
-								string.Format(
-									NetCoreStrings.Runtime_HostTypePropertySettingFailed, propertyName, typeName, e.Message)
-								;
+							Exception exception = UnwrapException(e);
+							var wrapperException = exception as WrapperException;
+							IeJsValue errorValue;
 
-							IeJsValue undefinedValue = IeJsValue.Undefined;
-							IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+							if (wrapperException != null)
+							{
+								errorValue = CreateErrorFromWrapperException(wrapperException);
+							}
+							else
+							{
+								string errorMessage = instance ?
+									string.Format(NetCoreStrings.Runtime_HostObjectPropertySettingFailed, propertyName,
+										exception.Message)
+									:
+									string.Format(NetCoreStrings.Runtime_HostTypePropertySettingFailed, propertyName,
+										typeName, exception.Message)
+									;
+								errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+							}
 							IeJsErrorHelpers.SetException(errorValue);
 
-							return undefinedValue;
+							return IeJsValue.Undefined;
 						}
 
 						return IeJsValue.Undefined;
@@ -576,12 +611,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					if (instance && obj == null)
 					{
-						IeJsValue undefinedValue = IeJsValue.Undefined;
-						IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(
-							string.Format(NetCoreStrings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
-						IeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
+						CreateAndSetTypeError(string.Format(
+							NetCoreStrings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
+						return IeJsValue.Undefined;
 					}
 
 					object[] processedArgs = GetHostItemMemberArguments(args);
@@ -590,12 +622,9 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						methodCandidates, processedArgs);
 					if (bestFitMethod == null)
 					{
-						IeJsValue undefinedValue = IeJsValue.Undefined;
-						IeJsValue errorValue = IeJsErrorHelpers.CreateReferenceError(
-							string.Format(NetCoreStrings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
-						IeJsErrorHelpers.SetException(errorValue);
-
-						return undefinedValue;
+						CreateAndSetReferenceError(string.Format(
+							NetCoreStrings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
+						return IeJsValue.Undefined;
 					}
 
 					ReflectionHelpers.FixArgumentTypes(ref processedArgs, bestFitMethod.GetParameters());
@@ -608,19 +637,28 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					}
 					catch (Exception e)
 					{
-						string errorMessage = instance ?
-							string.Format(
-								NetCoreStrings.Runtime_HostObjectMethodInvocationFailed, methodName, e.Message)
-							:
-							string.Format(
-								NetCoreStrings.Runtime_HostTypeMethodInvocationFailed, methodName, typeName, e.Message)
-							;
+						Exception exception = UnwrapException(e);
+						var wrapperException = exception as WrapperException;
+						IeJsValue errorValue;
 
-						IeJsValue undefinedValue = IeJsValue.Undefined;
-						IeJsValue errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+						if (wrapperException != null)
+						{
+							errorValue = CreateErrorFromWrapperException(wrapperException);
+						}
+						else
+						{
+							string errorMessage = instance ?
+								string.Format(NetCoreStrings.Runtime_HostObjectMethodInvocationFailed, methodName,
+									exception.Message)
+								:
+								string.Format(NetCoreStrings.Runtime_HostTypeMethodInvocationFailed, methodName,
+									typeName, exception.Message)
+								;
+							errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+						}
 						IeJsErrorHelpers.SetException(errorValue);
 
-						return undefinedValue;
+						return IeJsValue.Undefined;
 					}
 
 					IeJsValue resultValue = MapToScriptType(result);
@@ -653,6 +691,40 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			IeJsPropertyId id = IeJsPropertyId.FromString(name);
 			objValue.DefineProperty(id, descriptorValue);
 			objValue.SetProperty(id, value, true);
+		}
+
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
+		private static void CreateAndSetError(string message)
+		{
+			IeJsValue errorValue = IeJsErrorHelpers.CreateError(message);
+			IeJsErrorHelpers.SetException(errorValue);
+		}
+
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
+		private static void CreateAndSetReferenceError(string message)
+		{
+			IeJsValue errorValue = IeJsErrorHelpers.CreateReferenceError(message);
+			IeJsErrorHelpers.SetException(errorValue);
+		}
+
+		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
+		private static void CreateAndSetTypeError(string message)
+		{
+			IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(message);
+			IeJsErrorHelpers.SetException(errorValue);
+		}
+
+		private static IeJsValue CreateErrorFromWrapperException(WrapperException exception)
+		{
+			var originalException = exception.InnerException as JsException;
+			var originalScriptException = originalException as IeJsScriptException;
+			IeJsValue errorValue = originalScriptException != null ?
+				originalScriptException.Error
+				:
+				IeJsErrorHelpers.CreateError(exception.Description)
+				;
+
+			return errorValue;
 		}
 #endif
 	}

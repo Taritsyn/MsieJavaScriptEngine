@@ -250,29 +250,49 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						|| errorValueType == JsValueType.Object)
 					{
 						EdgeJsValue messagePropertyValue = errorValue.GetProperty("message");
-						description = messagePropertyValue.ConvertToString().ToString();
+						string localDescription = messagePropertyValue.ConvertToString().ToString();
+						if (!string.IsNullOrWhiteSpace(localDescription))
+						{
+							description = localDescription;
+						}
 
 						EdgeJsValue namePropertyValue = errorValue.GetProperty("name");
 						type = namePropertyValue.ValueType == JsValueType.String ?
-							namePropertyValue.ConvertToString().ToString() : string.Empty;
+							namePropertyValue.ToString() : string.Empty;
+
+						EdgeJsPropertyId descriptionPropertyId = EdgeJsPropertyId.FromString("description");
+						if (errorValue.HasProperty(descriptionPropertyId))
+						{
+							EdgeJsValue descriptionPropertyValue = errorValue.GetProperty(descriptionPropertyId);
+							localDescription = descriptionPropertyValue.ConvertToString().ToString();
+							if (!string.IsNullOrWhiteSpace(localDescription))
+							{
+								description = localDescription;
+							}
+						}
+
+						if (type == JsErrorType.Syntax)
+						{
+							errorCode = JsErrorCode.ScriptCompile;
+						}
+						else
+						{
+							EdgeJsPropertyId numberPropertyId = EdgeJsPropertyId.FromString("number");
+							if (errorValue.HasProperty(numberPropertyId))
+							{
+								EdgeJsValue numberPropertyValue = errorValue.GetProperty(numberPropertyId);
+								int errorNumber = numberPropertyValue.ValueType == JsValueType.Number ?
+									numberPropertyValue.ToInt32() : 0;
+								errorCode = (JsErrorCode)errorNumber;
+							}
+						}
 
 						EdgeJsPropertyId stackPropertyId = EdgeJsPropertyId.FromString("stack");
 						if (errorValue.HasProperty(stackPropertyId))
 						{
-							EdgeJsPropertyId descriptionPropertyId = EdgeJsPropertyId.FromString("description");
-							if (errorValue.HasProperty(descriptionPropertyId))
-							{
-								EdgeJsValue descriptionPropertyValue = errorValue.GetProperty(descriptionPropertyId);
-								if (descriptionPropertyValue.ValueType == JsValueType.String
-									&& descriptionPropertyValue.StringLength > 0)
-								{
-									description = descriptionPropertyValue.ConvertToString().ToString();
-								}
-							}
-
 							EdgeJsValue stackPropertyValue = errorValue.GetProperty(stackPropertyId);
 							string messageWithTypeAndCallStack = stackPropertyValue.ValueType == JsValueType.String ?
-								stackPropertyValue.ConvertToString().ToString() : string.Empty;
+								stackPropertyValue.ToString() : string.Empty;
 							string messageWithType = errorValue.ConvertToString().ToString();
 							string rawCallStack = messageWithTypeAndCallStack
 								.TrimStart(messageWithType)
@@ -301,21 +321,24 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							if (errorValue.HasProperty(urlPropertyId))
 							{
 								EdgeJsValue urlPropertyValue = errorValue.GetProperty(urlPropertyId);
-								documentName = urlPropertyValue.ConvertToString().ToString();
+								documentName = urlPropertyValue.ValueType == JsValueType.String ?
+									urlPropertyValue.ToString() : string.Empty;
 							}
 
 							EdgeJsPropertyId linePropertyId = EdgeJsPropertyId.FromString("line");
 							if (errorValue.HasProperty(linePropertyId))
 							{
 								EdgeJsValue linePropertyValue = errorValue.GetProperty(linePropertyId);
-								lineNumber = linePropertyValue.ConvertToNumber().ToInt32() + 1;
+								lineNumber = linePropertyValue.ValueType == JsValueType.Number ?
+									linePropertyValue.ToInt32() + 1 : 0;
 							}
 
 							EdgeJsPropertyId columnPropertyId = EdgeJsPropertyId.FromString("column");
 							if (errorValue.HasProperty(columnPropertyId))
 							{
 								EdgeJsValue columnPropertyValue = errorValue.GetProperty(columnPropertyId);
-								columnNumber = columnPropertyValue.ConvertToNumber().ToInt32() + 1;
+								columnNumber = columnPropertyValue.ValueType == JsValueType.Number ?
+									columnPropertyValue.ToInt32() + 1 : 0;
 							}
 
 							string sourceLine = string.Empty;
@@ -323,13 +346,19 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							if (errorValue.HasProperty(sourcePropertyId))
 							{
 								EdgeJsValue sourcePropertyValue = errorValue.GetProperty(sourcePropertyId);
-								sourceLine = sourcePropertyValue.ConvertToString().ToString();
+								sourceLine = sourcePropertyValue.ValueType == JsValueType.String ?
+									sourcePropertyValue.ToString() : string.Empty; ;
 							}
 
 							sourceFragment = TextHelpers.GetTextFragmentFromLine(sourceLine, columnNumber);
 							message = JsErrorHelpers.GenerateScriptErrorMessage(type, description, documentName,
 								lineNumber, columnNumber, sourceFragment);
 						}
+					}
+					else if (errorValueType == JsValueType.String)
+					{
+						message = errorValue.ToString();
+						description = message;
 					}
 					else
 					{
