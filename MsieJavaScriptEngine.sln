@@ -16,9 +16,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedFiles", "SharedFiles"
 		test\SharedFiles\square.js = test\SharedFiles\square.js
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "recursiveEvaluation", "recursiveEvaluation", "{BEEE3756-112D-4D3B-AE72-8F973ABC9522}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "noError", "noError", "{A2F0B579-9EA7-4DB3-AC75-746D84A067C1}"
+	ProjectSection(SolutionItems) = preProject
+		test\SharedFiles\recursiveEvaluation\noError\index.js = test\SharedFiles\recursiveEvaluation\noError\index.js
+		test\SharedFiles\recursiveEvaluation\noError\math.js = test\SharedFiles\recursiveEvaluation\noError\math.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "runtimeError", "runtimeError", "{DE2AB601-AA34-4451-8729-EAE16B737673}"
+	ProjectSection(SolutionItems) = preProject
+		test\SharedFiles\recursiveEvaluation\runtimeError\index.js = test\SharedFiles\recursiveEvaluation\runtimeError\index.js
+		test\SharedFiles\recursiveEvaluation\runtimeError\math.js = test\SharedFiles\recursiveEvaluation\runtimeError\math.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "recursiveExecution", "recursiveExecution", "{6A8412E2-4DF8-4248-BB54-DC823BB11906}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "noError", "noError", "{06BFE84E-3448-4A01-94F1-4F496D8B3AAB}"
+	ProjectSection(SolutionItems) = preProject
+		test\SharedFiles\recursiveExecution\noError\firstFile.js = test\SharedFiles\recursiveExecution\noError\firstFile.js
+		test\SharedFiles\recursiveExecution\noError\mainFile.js = test\SharedFiles\recursiveExecution\noError\mainFile.js
+		test\SharedFiles\recursiveExecution\noError\secondFile.js = test\SharedFiles\recursiveExecution\noError\secondFile.js
+	EndProjectSection
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsieJavaScriptEngine", "src\MsieJavaScriptEngine\MsieJavaScriptEngine.csproj", "{3C9CD486-50AD-476E-9515-3F85EBAFCC38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsieJavaScriptEngine.Benchmarks", "test\MsieJavaScriptEngine.Benchmarks\MsieJavaScriptEngine.Benchmarks.csproj", "{A304B8BE-B946-453B-B2B5-D21305A299F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsieJavaScriptEngine.Benchmarks", "test\MsieJavaScriptEngine.Benchmarks\MsieJavaScriptEngine.Benchmarks.csproj", "{A304B8BE-B946-453B-B2B5-D21305A299F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsieJavaScriptEngine.Test.Common", "test\MsieJavaScriptEngine.Test.Common\MsieJavaScriptEngine.Test.Common.csproj", "{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB}"
 EndProject
@@ -32,6 +55,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsieJavaScriptEngine.Test.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsieJavaScriptEngine.Test.Classic", "test\MsieJavaScriptEngine.Test.Classic\MsieJavaScriptEngine.Test.Classic.csproj", "{72233C70-DF61-449F-8D53-D456284CDA5D}"
 EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +66,10 @@ Global
 		{3C9CD486-50AD-476E-9515-3F85EBAFCC38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C9CD486-50AD-476E-9515-3F85EBAFCC38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C9CD486-50AD-476E-9515-3F85EBAFCC38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A304B8BE-B946-453B-B2B5-D21305A299F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A304B8BE-B946-453B-B2B5-D21305A299F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A304B8BE-B946-453B-B2B5-D21305A299F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A304B8BE-B946-453B-B2B5-D21305A299F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,10 +94,6 @@ Global
 		{72233C70-DF61-449F-8D53-D456284CDA5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72233C70-DF61-449F-8D53-D456284CDA5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72233C70-DF61-449F-8D53-D456284CDA5D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A304B8BE-B946-453B-B2B5-D21305A299F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A304B8BE-B946-453B-B2B5-D21305A299F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A304B8BE-B946-453B-B2B5-D21305A299F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A304B8BE-B946-453B-B2B5-D21305A299F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,13 +101,18 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E3F8640B-91D8-4BBE-B807-D69D1DE0D818} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
 		{3C9CD486-50AD-476E-9515-3F85EBAFCC38} = {262F5A48-E8AC-41F1-9FC6-4DA3785CCD93}
+		{A304B8BE-B946-453B-B2B5-D21305A299F8} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
 		{6E4AF7B9-3257-4D35-8F5C-CBA1A7158CAB} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
 		{3DD423C5-DC32-42D4-9924-B5D8C2F23195} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
 		{56218CBF-F251-4A3A-A50F-7C3FCC9258F6} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
 		{5864D57D-2EB8-4684-9908-26111127E75B} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
 		{EF54F02A-7ECD-4D3E-9163-33BCA969FD1B} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
 		{72233C70-DF61-449F-8D53-D456284CDA5D} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
-		{A304B8BE-B946-453B-B2B5-D21305A299F8} = {1F9B41F3-53ED-4254-98B7-F4309EA0D53E}
+		{BEEE3756-112D-4D3B-AE72-8F973ABC9522} = {E3F8640B-91D8-4BBE-B807-D69D1DE0D818}
+		{A2F0B579-9EA7-4DB3-AC75-746D84A067C1} = {BEEE3756-112D-4D3B-AE72-8F973ABC9522}
+		{DE2AB601-AA34-4451-8729-EAE16B737673} = {BEEE3756-112D-4D3B-AE72-8F973ABC9522}
+		{6A8412E2-4DF8-4248-BB54-DC823BB11906} = {E3F8640B-91D8-4BBE-B807-D69D1DE0D818}
+		{06BFE84E-3448-4A01-94F1-4F496D8B3AAB} = {6A8412E2-4DF8-4248-BB54-DC823BB11906}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5035D2B6-B7C8-4A7F-8764-07B60AD66E96}

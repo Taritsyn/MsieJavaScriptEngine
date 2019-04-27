@@ -182,7 +182,7 @@ namespace MsieJavaScriptEngine.Benchmarks
 				Assert.Equal(_targetOutputStrings[itemIndex], outputStrings[itemIndex]);
 			}
 		}
-#if NET46
+#if NET461
 
 		[Benchmark]
 		public void Classic()

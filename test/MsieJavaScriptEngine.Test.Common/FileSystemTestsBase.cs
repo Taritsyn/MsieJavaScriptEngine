@@ -29,12 +29,7 @@ namespace MsieJavaScriptEngine.Test.Common
 			_baseDirectoryPath = Path.Combine(appEnv.ApplicationBasePath, "../../../../");
 #elif NET40
 			string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
-			if (_binDirRegex.IsMatch(baseDirectoryPath))
-			{
-				baseDirectoryPath = Path.Combine(baseDirectoryPath, "../../../");
-			}
-
-			_baseDirectoryPath = baseDirectoryPath;
+			_baseDirectoryPath = Path.Combine(baseDirectoryPath, "../../../../");
 #else
 #error No implementation for this target
 #endif

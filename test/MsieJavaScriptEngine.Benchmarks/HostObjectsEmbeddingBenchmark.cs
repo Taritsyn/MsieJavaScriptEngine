@@ -89,7 +89,7 @@ namespace MsieJavaScriptEngine.Benchmarks
 			Assert.Equal(targetOutput, output);
 			Assert.Equal(targetLogOutput, logOutput);
 		}
-#if NET46
+#if NET461
 
 		[Benchmark]
 		public void Classic()

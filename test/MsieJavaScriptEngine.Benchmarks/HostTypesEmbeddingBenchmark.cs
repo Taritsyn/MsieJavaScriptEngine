@@ -69,7 +69,7 @@ namespace MsieJavaScriptEngine.Benchmarks
 			// Assert
 			Assert.Equal(targetOutput, output);
 		}
-#if NET46
+#if NET461
 
 		[Benchmark]
 		public void Classic()
