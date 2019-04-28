@@ -638,7 +638,6 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		#endregion
-#if NETCOREAPP
 
 		#region Recursive calls
 
@@ -698,7 +697,6 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		#endregion
-#endif
 
 		#region Removal
 

@@ -1,8 +1,6 @@
-﻿#if NETCOREAPP
-using System;
+﻿using System;
 using System.IO;
 
-#endif
 using NUnit.Framework;
 
 using MsieJavaScriptEngine.Test.Common;
@@ -13,10 +11,10 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 	public class InteropTests : InteropTestsBase
 	{
 		protected override JsEngineMode EngineMode => JsEngineMode.ChakraEdgeJsRt;
-#if NETCOREAPP
 
 
 		#region Embedding of objects
+#if NETCOREAPP
 
 		#region Delegates
 
@@ -42,6 +40,7 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 		}
 
 		#endregion
+#endif
 
 		#region Recursive calls
 
@@ -100,6 +99,5 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 		#endregion
 
 		#endregion
-#endif
 	}
 }

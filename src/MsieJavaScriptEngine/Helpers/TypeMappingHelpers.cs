@@ -29,7 +29,8 @@ namespace MsieJavaScriptEngine.Helpers
 				return null;
 			}
 
-			if (TypeConverter.IsPrimitiveType(value.GetType()))
+			Type type = value.GetType();
+			if (TypeConverter.IsPrimitiveType(type) || type.FullName == "System.__ComObject")
 			{
 				return value;
 			}
