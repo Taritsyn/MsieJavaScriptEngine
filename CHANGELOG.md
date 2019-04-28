@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.3 - April 28, 2019
+ * Fixed a error that occurred during the recursive execution and evaluation of JS files (while without correct handling of host exception)
+
 ## v3.0.2 - March 13, 2019
  * In version for .NET Core improved a embedding of delegates and types
 
