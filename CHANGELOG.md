@@ -1,6 +1,11 @@
 Change log
 ==========
 
+## v3.0.4 - October 9, 2019
+ * Slightly improved performance
+ * In JsRT modes the `CollectGarbage` method is called synchronously again
+ * Enabled a SourceLink in NuGet package
+
 ## v3.0.3 - April 28, 2019
  * Fixed a error that occurred during the recursive execution and evaluation of JS files (while without correct handling of host exception)
 

@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<Product>MSIE JavaScript Engine: Tests for Chakra ActiveScript Mode</Product>
-		<VersionPrefix>3.0.3</VersionPrefix>
+		<VersionPrefix>3.0.4</VersionPrefix>
 		<TargetFrameworks>net40;net451</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
