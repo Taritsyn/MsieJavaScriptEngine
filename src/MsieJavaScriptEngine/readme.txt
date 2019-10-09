@@ -22,7 +22,8 @@
    RELEASE NOTES
    =============
    1. Slightly improved performance;
-   2. In JsRT modes the `CollectGarbage` method is called synchronously again.
+   2. In JsRT modes the `CollectGarbage` method is called synchronously again;
+   3. Enabled a SourceLink in NuGet package.
 
    ============
    PROJECT SITE
