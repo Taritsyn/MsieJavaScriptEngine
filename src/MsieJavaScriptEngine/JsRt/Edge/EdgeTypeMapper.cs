@@ -239,7 +239,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						EdgeJsErrorHelpers.CreateError(string.Format(
 							NetCoreStrings.Runtime_HostDelegateInvocationFailed, exception.Message))
 						;
-					EdgeJsErrorHelpers.SetException(errorValue);
+					EdgeJsContext.SetException(errorValue);
 
 					return EdgeJsValue.Undefined;
 				}
@@ -314,7 +314,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						EdgeJsErrorHelpers.CreateError(string.Format(
 							NetCoreStrings.Runtime_HostTypeConstructorInvocationFailed, typeName, exception.Message))
 						;
-					EdgeJsErrorHelpers.SetException(errorValue);
+					EdgeJsContext.SetException(errorValue);
 
 					return EdgeJsValue.Undefined;
 				}
@@ -398,7 +398,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 								;
 							errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
 						}
-						EdgeJsErrorHelpers.SetException(errorValue);
+						EdgeJsContext.SetException(errorValue);
 
 						return EdgeJsValue.Undefined;
 					}
@@ -449,7 +449,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 								;
 							errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
 						}
-						EdgeJsErrorHelpers.SetException(errorValue);
+						EdgeJsContext.SetException(errorValue);
 
 						return EdgeJsValue.Undefined;
 					}
@@ -522,7 +522,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 									;
 								errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
 							}
-							EdgeJsErrorHelpers.SetException(errorValue);
+							EdgeJsContext.SetException(errorValue);
 
 							return EdgeJsValue.Undefined;
 						}
@@ -576,7 +576,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 									;
 								errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
 							}
-							EdgeJsErrorHelpers.SetException(errorValue);
+							EdgeJsContext.SetException(errorValue);
 
 							return EdgeJsValue.Undefined;
 						}
@@ -661,7 +661,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 								;
 							errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
 						}
-						EdgeJsErrorHelpers.SetException(errorValue);
+						EdgeJsContext.SetException(errorValue);
 
 						return EdgeJsValue.Undefined;
 					}
@@ -703,21 +703,21 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		private static void CreateAndSetError(string message)
 		{
 			EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateError(message);
-			EdgeJsErrorHelpers.SetException(errorValue);
+			EdgeJsContext.SetException(errorValue);
 		}
 
 		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
 		private static void CreateAndSetReferenceError(string message)
 		{
 			EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateReferenceError(message);
-			EdgeJsErrorHelpers.SetException(errorValue);
+			EdgeJsContext.SetException(errorValue);
 		}
 
 		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
 		private static void CreateAndSetTypeError(string message)
 		{
 			EdgeJsValue errorValue = EdgeJsErrorHelpers.CreateTypeError(message);
-			EdgeJsErrorHelpers.SetException(errorValue);
+			EdgeJsContext.SetException(errorValue);
 		}
 
 		private static EdgeJsValue CreateErrorFromWrapperException(WrapperException exception)

@@ -21,7 +21,8 @@
 		<RepositoryUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-		<PackageReleaseNotes>Fixed a error that occurred during the recursive execution and evaluation of JS files (while without correct handling of host exceptions).</PackageReleaseNotes>
+		<PackageReleaseNotes>1. Slightly improved performance;
+2. In JsRT modes the `CollectGarbage` method is called synchronously again.</PackageReleaseNotes>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageOutputPath>../../nuget</PackageOutputPath>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

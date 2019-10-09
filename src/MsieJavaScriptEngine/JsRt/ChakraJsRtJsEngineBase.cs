@@ -1,7 +1,5 @@
 ﻿using System;
 
-using MsieJavaScriptEngine.Utilities;
-
 namespace MsieJavaScriptEngine.JsRt
 {
 	/// <summary>
@@ -13,11 +11,6 @@ namespace MsieJavaScriptEngine.JsRt
 		/// JS source context
 		/// </summary>
 		protected JsSourceContext _jsSourceContext = JsSourceContext.FromIntPtr(IntPtr.Zero);
-
-		/// <summary>
-		/// Flag indicating whether debugging started
-		/// </summary>
-		private StatedFlag _debuggingStartedFlag;
 
 		/// <summary>
 		/// Script dispatcher
@@ -38,19 +31,5 @@ namespace MsieJavaScriptEngine.JsRt
 			_dispatcher = new ScriptDispatcher(settings.MaxStackSize);
 #endif
 		}
-
-
-		/// <summary>
-		/// Starts debugging
-		/// </summary>
-		protected void StartDebugging()
-		{
-			if (_debuggingStartedFlag.Set())
-			{
-				InnerStartDebugging();
-			}
-		}
-
-		protected abstract void InnerStartDebugging();
 	}
 }

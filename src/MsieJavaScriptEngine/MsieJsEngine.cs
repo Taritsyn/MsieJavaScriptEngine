@@ -38,8 +38,7 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Unique document name manager
 		/// </summary>
-		private readonly UniqueDocumentNameManager _documentNameManager =
-			new UniqueDocumentNameManager("Script Document");
+		private UniqueDocumentNameManager _documentNameManager = new UniqueDocumentNameManager("Script Document");
 
 		/// <summary>
 		/// Flag that object is destroyed
@@ -1428,6 +1427,8 @@ namespace MsieJavaScriptEngine
 					_jsEngine.Dispose();
 					_jsEngine = null;
 				}
+
+				_documentNameManager = null;
 			}
 		}
 

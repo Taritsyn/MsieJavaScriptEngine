@@ -8,75 +8,75 @@
 		/// <summary>
 		/// Throws if a native method returns an error code
 		/// </summary>
-		/// <param name="error">The error</param>
-		public static void ThrowIfError(JsErrorCode error)
+		/// <param name="errorCode">The error code</param>
+		public static void ThrowIfError(JsErrorCode errorCode)
 		{
-			if (error != JsErrorCode.NoError)
+			if (errorCode != JsErrorCode.NoError)
 			{
-				switch (error)
+				switch (errorCode)
 				{
 					#region Usage
 
 					case JsErrorCode.InvalidArgument:
-						throw new JsUsageException(error, "Invalid argument.");
+						throw new JsUsageException(errorCode, "Invalid argument.");
 
 					case JsErrorCode.NullArgument:
-						throw new JsUsageException(error, "Null argument.");
+						throw new JsUsageException(errorCode, "Null argument.");
 
 					case JsErrorCode.NoCurrentContext:
-						throw new JsUsageException(error, "No current context.");
+						throw new JsUsageException(errorCode, "No current context.");
 
 					case JsErrorCode.InExceptionState:
-						throw new JsUsageException(error, "Runtime is in exception state.");
+						throw new JsUsageException(errorCode, "Runtime is in exception state.");
 
 					case JsErrorCode.NotImplemented:
-						throw new JsUsageException(error, "Method is not implemented.");
+						throw new JsUsageException(errorCode, "Method is not implemented.");
 
 					case JsErrorCode.WrongThread:
-						throw new JsUsageException(error, "Runtime is active on another thread.");
+						throw new JsUsageException(errorCode, "Runtime is active on another thread.");
 
 					case JsErrorCode.RuntimeInUse:
-						throw new JsUsageException(error, "Runtime is in use.");
+						throw new JsUsageException(errorCode, "Runtime is in use.");
 
 					case JsErrorCode.BadSerializedScript:
-						throw new JsUsageException(error, "Bad serialized script.");
+						throw new JsUsageException(errorCode, "Bad serialized script.");
 
 					case JsErrorCode.InDisabledState:
-						throw new JsUsageException(error, "Runtime is disabled.");
+						throw new JsUsageException(errorCode, "Runtime is disabled.");
 
 					case JsErrorCode.CannotDisableExecution:
-						throw new JsUsageException(error, "Cannot disable execution.");
+						throw new JsUsageException(errorCode, "Cannot disable execution.");
 
 					case JsErrorCode.HeapEnumInProgress:
-						throw new JsUsageException(error, "Heap enumeration is in progress.");
+						throw new JsUsageException(errorCode, "Heap enumeration is in progress.");
 
 					case JsErrorCode.ArgumentNotObject:
-						throw new JsUsageException(error, "Argument is not an object.");
+						throw new JsUsageException(errorCode, "Argument is not an object.");
 
 					case JsErrorCode.InProfileCallback:
-						throw new JsUsageException(error, "In a profile callback.");
+						throw new JsUsageException(errorCode, "In a profile callback.");
 
 					case JsErrorCode.InThreadServiceCallback:
-						throw new JsUsageException(error, "In a thread service callback.");
+						throw new JsUsageException(errorCode, "In a thread service callback.");
 
 					case JsErrorCode.CannotSerializeDebugScript:
-						throw new JsUsageException(error, "Cannot serialize a debug script.");
+						throw new JsUsageException(errorCode, "Cannot serialize a debug script.");
 
 					case JsErrorCode.AlreadyDebuggingContext:
-						throw new JsUsageException(error, "Context is already in debug mode.");
+						throw new JsUsageException(errorCode, "Context is already in debug mode.");
 
 					case JsErrorCode.AlreadyProfilingContext:
-						throw new JsUsageException(error, "Already profiling this context.");
+						throw new JsUsageException(errorCode, "Already profiling this context.");
 
 					case JsErrorCode.IdleNotEnabled:
-						throw new JsUsageException(error, "Idle is not enabled.");
+						throw new JsUsageException(errorCode, "Idle is not enabled.");
 
 					#endregion
 
 					#region Engine
 
 					case JsErrorCode.OutOfMemory:
-						throw new JsEngineException(error, "Out of memory.");
+						throw new JsEngineException(errorCode, "Out of memory.");
 
 					#endregion
 
@@ -86,36 +86,36 @@
 					case JsErrorCode.ScriptCompile:
 						{
 							IeJsValue errorObject;
-							JsErrorCode innerError = IeNativeMethods.JsGetAndClearException(out errorObject);
+							JsErrorCode innerErrorCode = IeNativeMethods.JsGetAndClearException(out errorObject);
 
-							if (innerError != JsErrorCode.NoError)
+							if (innerErrorCode != JsErrorCode.NoError)
 							{
-								throw new JsFatalException(innerError);
+								throw new JsFatalException(innerErrorCode);
 							}
 
-							string message = error == JsErrorCode.ScriptCompile ?
+							string message = errorCode == JsErrorCode.ScriptCompile ?
 								"Compile error." : "Script threw an exception.";
 
-							throw new IeJsScriptException(error, errorObject, message);
+							throw new IeJsScriptException(errorCode, errorObject, message);
 						}
 
 					case JsErrorCode.ScriptTerminated:
-						throw new IeJsScriptException(error, IeJsValue.Invalid, "Script was terminated.");
+						throw new IeJsScriptException(errorCode, IeJsValue.Invalid, "Script was terminated.");
 
 					case JsErrorCode.ScriptEvalDisabled:
-						throw new IeJsScriptException(error, IeJsValue.Invalid, "Eval of strings is disabled in this runtime.");
+						throw new IeJsScriptException(errorCode, IeJsValue.Invalid, "Eval of strings is disabled in this runtime.");
 
 					#endregion
 
 					#region Fatal
 
 					case JsErrorCode.Fatal:
-						throw new JsFatalException(error);
+						throw new JsFatalException(errorCode);
 
 					#endregion
 
 					default:
-						throw new JsFatalException(error);
+						throw new JsFatalException(errorCode);
 				}
 			}
 		}
@@ -215,22 +215,6 @@
 			IeJsValue errorValue = IeJsValue.CreateUriError(messageValue);
 
 			return errorValue;
-		}
-
-		/// <summary>
-		/// Sets a exception
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <param name="exception">The error object</param>
-		public static void SetException(IeJsValue exception)
-		{
-			JsErrorCode innerError = IeNativeMethods.JsSetException(exception);
-			if (innerError != JsErrorCode.NoError)
-			{
-				throw new JsFatalException(innerError);
-			}
 		}
 	}
 }

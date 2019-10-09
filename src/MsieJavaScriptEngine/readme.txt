@@ -21,8 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a error that occurred during the recursive execution and evaluation of JS
-   files (while without correct handling of host exceptions).
+   1. Slightly improved performance;
+   2. In JsRT modes the `CollectGarbage` method is called synchronously again.
 
    ============
    PROJECT SITE

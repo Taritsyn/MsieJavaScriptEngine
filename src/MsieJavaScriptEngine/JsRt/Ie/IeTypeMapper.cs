@@ -234,7 +234,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						IeJsErrorHelpers.CreateError(string.Format(
 							NetCoreStrings.Runtime_HostDelegateInvocationFailed, exception.Message))
 						;
-					IeJsErrorHelpers.SetException(errorValue);
+					IeJsContext.SetException(errorValue);
 
 					return IeJsValue.Undefined;
 				}
@@ -309,7 +309,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						IeJsErrorHelpers.CreateError(string.Format(
 							NetCoreStrings.Runtime_HostTypeConstructorInvocationFailed, typeName, exception.Message))
 						;
-					IeJsErrorHelpers.SetException(errorValue);
+					IeJsContext.SetException(errorValue);
 
 					return IeJsValue.Undefined;
 				}
@@ -393,7 +393,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 								;
 							errorValue = IeJsErrorHelpers.CreateError(errorMessage);
 						}
-						IeJsErrorHelpers.SetException(errorValue);
+						IeJsContext.SetException(errorValue);
 
 						return IeJsValue.Undefined;
 					}
@@ -444,7 +444,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 								;
 							errorValue = IeJsErrorHelpers.CreateError(errorMessage);
 						}
-						IeJsErrorHelpers.SetException(errorValue);
+						IeJsContext.SetException(errorValue);
 
 						return IeJsValue.Undefined;
 					}
@@ -517,7 +517,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 									;
 								errorValue = IeJsErrorHelpers.CreateError(errorMessage);
 							}
-							IeJsErrorHelpers.SetException(errorValue);
+							IeJsContext.SetException(errorValue);
 
 							return IeJsValue.Undefined;
 						}
@@ -571,7 +571,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 									;
 								errorValue = IeJsErrorHelpers.CreateError(errorMessage);
 							}
-							IeJsErrorHelpers.SetException(errorValue);
+							IeJsContext.SetException(errorValue);
 
 							return IeJsValue.Undefined;
 						}
@@ -656,7 +656,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 								;
 							errorValue = IeJsErrorHelpers.CreateError(errorMessage);
 						}
-						IeJsErrorHelpers.SetException(errorValue);
+						IeJsContext.SetException(errorValue);
 
 						return IeJsValue.Undefined;
 					}
@@ -697,21 +697,21 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		private static void CreateAndSetError(string message)
 		{
 			IeJsValue errorValue = IeJsErrorHelpers.CreateError(message);
-			IeJsErrorHelpers.SetException(errorValue);
+			IeJsContext.SetException(errorValue);
 		}
 
 		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
 		private static void CreateAndSetReferenceError(string message)
 		{
 			IeJsValue errorValue = IeJsErrorHelpers.CreateReferenceError(message);
-			IeJsErrorHelpers.SetException(errorValue);
+			IeJsContext.SetException(errorValue);
 		}
 
 		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
 		private static void CreateAndSetTypeError(string message)
 		{
 			IeJsValue errorValue = IeJsErrorHelpers.CreateTypeError(message);
-			IeJsErrorHelpers.SetException(errorValue);
+			IeJsContext.SetException(errorValue);
 		}
 
 		private static IeJsValue CreateErrorFromWrapperException(WrapperException exception)

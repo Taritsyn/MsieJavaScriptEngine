@@ -40,7 +40,6 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 		}
 
 		#endregion
-#endif
 
 		#region Recursive calls
 
@@ -98,6 +97,7 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 
 		#endregion
 
+#endif
 		#endregion
 	}
 }
