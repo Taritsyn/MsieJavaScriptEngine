@@ -17,7 +17,7 @@
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageProjectUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</PackageProjectUrl>
-		<PackageIconUrl>http://i.imgur.com/cbiHK.png</PackageIconUrl>
+		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
@@ -56,19 +56,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="readme.txt">
-			<PackagePath>readme.txt</PackagePath>
+		<None Include="../../images/MsieJavaScriptEngine_Logo_128x128.png">
+			<PackagePath>$(PackageIcon)</PackagePath>
 			<Pack>true</Pack>
-		</Content>
-		<Content Include="../../LICENSE.txt">
+			<Visible>false</Visible>
+		</None>
+		<None Include="../../LICENSE.txt">
 			<PackagePath>$(PackageLicenseFile)</PackagePath>
 			<Pack>true</Pack>
 			<Visible>false</Visible>
-		</Content>
-		<Content Include="../../Licenses/*.txt">
+		</None>
+		<None Include="../../Licenses/*.txt">
 			<PackagePath>/</PackagePath>
 			<Pack>true</Pack>
 			<Visible>false</Visible>
+		</None>
+
+		<Content Include="readme.txt">
+			<PackagePath>readme.txt</PackagePath>
+			<Pack>true</Pack>
 		</Content>
 	</ItemGroup>
 
