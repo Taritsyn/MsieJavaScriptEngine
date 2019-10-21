@@ -72,10 +72,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					if (_jsContext.IsValid)
 					{
 						_jsContext.AddRef();
-						EdgeJsContext.Current = _jsContext;
+
 						if (_settings.EnableDebugging)
 						{
-							EdgeJsContext.StartDebugging();
+							using (new EdgeJsScope(_jsContext))
+							{
+								EdgeJsContext.StartDebugging();
+							}
 						}
 					}
 				});
@@ -452,15 +455,18 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			PrecompiledScript precompiledScript = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					byte[] cachedBytes = EdgeJsContext.SerializeScript(code);
+					try
+					{
+						byte[] cachedBytes = EdgeJsContext.SerializeScript(code);
 
-					return new PrecompiledScript(_engineModeName, code, cachedBytes, documentName);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e, documentName);
+						return new PrecompiledScript(_engineModeName, code, cachedBytes, documentName);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e, documentName);
+					}
 				}
 			});
 
@@ -471,16 +477,19 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			object result = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsValue resultValue = EdgeJsContext.RunScript(expression, _jsSourceContext++,
-						documentName);
+					try
+					{
+						EdgeJsValue resultValue = EdgeJsContext.RunScript(expression, _jsSourceContext++,
+							documentName);
 
-					return _typeMapper.MapToHostType(resultValue);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+						return _typeMapper.MapToHostType(resultValue);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 
@@ -491,13 +500,16 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsContext.RunScript(code, _jsSourceContext++, documentName);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+					try
+					{
+						EdgeJsContext.RunScript(code, _jsSourceContext++, documentName);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 		}
@@ -506,18 +518,21 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsContext.RunSerializedScript(precompiledScript.Code, precompiledScript.CachedBytes,
-						_jsSourceContext++, precompiledScript.DocumentName);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
-				}
-				finally
-				{
-					GC.KeepAlive(precompiledScript);
+					try
+					{
+						EdgeJsContext.RunSerializedScript(precompiledScript.Code, precompiledScript.CachedBytes,
+							_jsSourceContext++, precompiledScript.DocumentName);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
+					finally
+					{
+						GC.KeepAlive(precompiledScript);
+					}
 				}
 			});
 		}
@@ -526,60 +541,63 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			object result = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
-					EdgeJsPropertyId functionId = EdgeJsPropertyId.FromString(functionName);
-
-					bool functionExist = globalObj.HasProperty(functionId);
-					if (!functionExist)
+					try
 					{
-						throw new WrapperRuntimeException(
-							string.Format(CommonStrings.Runtime_FunctionNotExist, functionName),
-							_engineModeName
-						);
-					}
+						EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
+						EdgeJsPropertyId functionId = EdgeJsPropertyId.FromString(functionName);
 
-					EdgeJsValue resultValue;
-					EdgeJsValue functionValue = globalObj.GetProperty(functionId);
-
-					int argCount = args.Length;
-					if (argCount > 0)
-					{
-						int processedArgCount = argCount + 1;
-						var processedArgs = new EdgeJsValue[processedArgCount];
-						processedArgs[0] = globalObj;
-
-						for (int argIndex = 0; argIndex < argCount; argIndex++)
+						bool functionExist = globalObj.HasProperty(functionId);
+						if (!functionExist)
 						{
-							EdgeJsValue processedArg = _typeMapper.MapToScriptType(args[argIndex]);
-							AddReferenceToValue(processedArg);
-
-							processedArgs[argIndex + 1] = processedArg;
+							throw new WrapperRuntimeException(
+								string.Format(CommonStrings.Runtime_FunctionNotExist, functionName),
+								_engineModeName
+							);
 						}
 
-						try
+						EdgeJsValue resultValue;
+						EdgeJsValue functionValue = globalObj.GetProperty(functionId);
+
+						int argCount = args.Length;
+						if (argCount > 0)
 						{
-							resultValue = functionValue.CallFunction(processedArgs);
-						}
-						finally
-						{
-							for (int argIndex = 1; argIndex < processedArgCount; argIndex++)
+							int processedArgCount = argCount + 1;
+							var processedArgs = new EdgeJsValue[processedArgCount];
+							processedArgs[0] = globalObj;
+
+							for (int argIndex = 0; argIndex < argCount; argIndex++)
 							{
-								RemoveReferenceToValue(processedArgs[argIndex]);
+								EdgeJsValue processedArg = _typeMapper.MapToScriptType(args[argIndex]);
+								AddReferenceToValue(processedArg);
+
+								processedArgs[argIndex + 1] = processedArg;
+							}
+
+							try
+							{
+								resultValue = functionValue.CallFunction(processedArgs);
+							}
+							finally
+							{
+								for (int argIndex = 1; argIndex < processedArgCount; argIndex++)
+								{
+									RemoveReferenceToValue(processedArgs[argIndex]);
+								}
 							}
 						}
-					}
-					else
-					{
-						resultValue = functionValue.CallFunction(globalObj);
-					}
+						else
+						{
+							resultValue = functionValue.CallFunction(globalObj);
+						}
 
-					return _typeMapper.MapToHostType(resultValue);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+						return _typeMapper.MapToHostType(resultValue);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 
@@ -590,23 +608,26 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			bool result = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
-					EdgeJsPropertyId variableId = EdgeJsPropertyId.FromString(variableName);
-					bool variableExist = globalObj.HasProperty(variableId);
-
-					if (variableExist)
+					try
 					{
-						EdgeJsValue variableValue = globalObj.GetProperty(variableId);
-						variableExist = variableValue.ValueType != JsValueType.Undefined;
-					}
+						EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
+						EdgeJsPropertyId variableId = EdgeJsPropertyId.FromString(variableName);
+						bool variableExist = globalObj.HasProperty(variableId);
 
-					return variableExist;
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+						if (variableExist)
+						{
+							EdgeJsValue variableValue = globalObj.GetProperty(variableId);
+							variableExist = variableValue.ValueType != JsValueType.Undefined;
+						}
+
+						return variableExist;
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 
@@ -617,15 +638,18 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			object result = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsValue variableValue = EdgeJsValue.GlobalObject.GetProperty(variableName);
+					try
+					{
+						EdgeJsValue variableValue = EdgeJsValue.GlobalObject.GetProperty(variableName);
 
-					return _typeMapper.MapToHostType(variableValue);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+						return _typeMapper.MapToHostType(variableValue);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 
@@ -636,23 +660,26 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsValue inputValue = _typeMapper.MapToScriptType(value);
-					AddReferenceToValue(inputValue);
-
 					try
 					{
-						EdgeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						EdgeJsValue inputValue = _typeMapper.MapToScriptType(value);
+						AddReferenceToValue(inputValue);
+
+						try
+						{
+							EdgeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						}
+						finally
+						{
+							RemoveReferenceToValue(inputValue);
+						}
 					}
-					finally
+					catch (OriginalException e)
 					{
-						RemoveReferenceToValue(inputValue);
+						throw WrapJsException(e);
 					}
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
 				}
 			});
 		}
@@ -661,19 +688,22 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
-					EdgeJsPropertyId variableId = EdgeJsPropertyId.FromString(variableName);
-
-					if (globalObj.HasProperty(variableId))
+					try
 					{
-						globalObj.SetProperty(variableId, EdgeJsValue.Undefined, true);
+						EdgeJsValue globalObj = EdgeJsValue.GlobalObject;
+						EdgeJsPropertyId variableId = EdgeJsPropertyId.FromString(variableName);
+
+						if (globalObj.HasProperty(variableId))
+						{
+							globalObj.SetProperty(variableId, EdgeJsValue.Undefined, true);
+						}
 					}
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 		}
@@ -682,14 +712,17 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsValue processedValue = _typeMapper.GetOrCreateScriptObject(value);
-					EdgeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+					try
+					{
+						EdgeJsValue processedValue = _typeMapper.GetOrCreateScriptObject(value);
+						EdgeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 		}
@@ -698,14 +731,17 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new EdgeJsScope(_jsContext))
 				{
-					EdgeJsValue typeValue = _typeMapper.GetOrCreateScriptType(type);
-					EdgeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+					try
+					{
+						EdgeJsValue typeValue = _typeMapper.GetOrCreateScriptType(type);
+						EdgeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 		}
@@ -717,7 +753,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		public override void CollectGarbage()
 		{
-			_dispatcher.Invoke(_jsRuntime.CollectGarbage);
+			_jsRuntime.CollectGarbage();
 		}
 
 		#endregion
@@ -769,7 +805,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			if (_jsContext.IsValid)
 			{
-				EdgeJsContext.Current = EdgeJsContext.Invalid;
 				_jsContext.Release();
 			}
 			_jsRuntime.Dispose();

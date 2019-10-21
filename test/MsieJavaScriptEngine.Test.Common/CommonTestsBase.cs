@@ -12,6 +12,17 @@ namespace MsieJavaScriptEngine.Test.Common
 	[TestFixture]
 	public abstract class CommonTestsBase : FileSystemTestsBase
 	{
+		#region Creation of engines
+
+		[Test]
+		public virtual void CreationOfEngineWithoutDisposingIsCorrect()
+		{
+			MsieJsEngine jsEngine = CreateJsEngine();
+			jsEngine.Execute("var a = 1 + 1;");
+		}
+
+		#endregion
+
 		#region Evaluation of scripts
 
 		[Test]

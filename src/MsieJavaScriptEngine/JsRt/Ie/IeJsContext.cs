@@ -334,6 +334,29 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		}
 
 		/// <summary>
+		/// Starts debugging in the context
+		/// </summary>
+		public static void StartDebugging()
+		{
+			if (Utils.Is64BitProcess())
+			{
+				var processDebugManager64 = (IProcessDebugManager64)new ProcessDebugManager();
+				IDebugApplication64 debugApplication64;
+				processDebugManager64.GetDefaultApplication(out debugApplication64);
+
+				IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsStartDebugging(debugApplication64));
+			}
+			else
+			{
+				var processDebugManager32 = (IProcessDebugManager32)new ProcessDebugManager();
+				IDebugApplication32 debugApplication32;
+				processDebugManager32.GetDefaultApplication(out debugApplication32);
+
+				IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsStartDebugging(debugApplication32));
+			}
+		}
+
+		/// <summary>
 		/// Adds a reference to a script context
 		/// </summary>
 		/// <remarks>

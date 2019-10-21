@@ -3,12 +3,10 @@ using System.Text;
 
 using AdvancedStringBuilder;
 
-using MsieJavaScriptEngine.ActiveScript.Debugging;
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Extensions;
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Resources;
-using MsieJavaScriptEngine.Utilities;
 
 using WrapperCompilationException = MsieJavaScriptEngine.JsCompilationException;
 using WrapperEngineException = MsieJavaScriptEngine.JsEngineException;
@@ -82,24 +80,12 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					if (_jsContext.IsValid)
 					{
 						_jsContext.AddRef();
-						IeJsContext.Current = _jsContext;
+
 						if (_settings.EnableDebugging)
 						{
-							if (Utils.Is64BitProcess())
+							using (new IeJsScope(_jsContext))
 							{
-								var processDebugManager64 = (IProcessDebugManager64)new ProcessDebugManager();
-								IDebugApplication64 debugApplication64;
-								processDebugManager64.GetDefaultApplication(out debugApplication64);
-
-								IeJsContext.StartDebugging(debugApplication64);
-							}
-							else
-							{
-								var processDebugManager32 = (IProcessDebugManager32)new ProcessDebugManager();
-								IDebugApplication32 debugApplication32;
-								processDebugManager32.GetDefaultApplication(out debugApplication32);
-
-								IeJsContext.StartDebugging(debugApplication32);
+								IeJsContext.StartDebugging();
 							}
 						}
 					}
@@ -523,15 +509,18 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			PrecompiledScript precompiledScript = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					byte[] cachedBytes = IeJsContext.SerializeScript(code);
+					try
+					{
+						byte[] cachedBytes = IeJsContext.SerializeScript(code);
 
-					return new PrecompiledScript(_engineModeName, code, cachedBytes, documentName);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e, documentName);
+						return new PrecompiledScript(_engineModeName, code, cachedBytes, documentName);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e, documentName);
+					}
 				}
 			});
 
@@ -542,16 +531,19 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			object result = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsValue resultValue = IeJsContext.RunScript(expression, _jsSourceContext++,
-						documentName);
+					try
+					{
+						IeJsValue resultValue = IeJsContext.RunScript(expression, _jsSourceContext++,
+							documentName);
 
-					return _typeMapper.MapToHostType(resultValue);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+						return _typeMapper.MapToHostType(resultValue);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 
@@ -562,13 +554,16 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsContext.RunScript(code, _jsSourceContext++, documentName);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+					try
+					{
+						IeJsContext.RunScript(code, _jsSourceContext++, documentName);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 		}
@@ -577,18 +572,21 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsContext.RunSerializedScript(precompiledScript.Code, precompiledScript.CachedBytes,
-						_jsSourceContext++, precompiledScript.DocumentName);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
-				}
-				finally
-				{
-					GC.KeepAlive(precompiledScript);
+					try
+					{
+						IeJsContext.RunSerializedScript(precompiledScript.Code, precompiledScript.CachedBytes,
+							_jsSourceContext++, precompiledScript.DocumentName);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
+					finally
+					{
+						GC.KeepAlive(precompiledScript);
+					}
 				}
 			});
 		}
@@ -597,60 +595,63 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			object result = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsValue globalObj = IeJsValue.GlobalObject;
-					IeJsPropertyId functionId = IeJsPropertyId.FromString(functionName);
-
-					bool functionExist = globalObj.HasProperty(functionId);
-					if (!functionExist)
+					try
 					{
-						throw new WrapperRuntimeException(
-							string.Format(CommonStrings.Runtime_FunctionNotExist, functionName),
-							_engineModeName
-						);
-					}
+						IeJsValue globalObj = IeJsValue.GlobalObject;
+						IeJsPropertyId functionId = IeJsPropertyId.FromString(functionName);
 
-					IeJsValue resultValue;
-					IeJsValue functionValue = globalObj.GetProperty(functionId);
-
-					int argCount = args.Length;
-					if (argCount > 0)
-					{
-						int processedArgCount = argCount + 1;
-						var processedArgs = new IeJsValue[processedArgCount];
-						processedArgs[0] = globalObj;
-
-						for (int argIndex = 0; argIndex < argCount; argIndex++)
+						bool functionExist = globalObj.HasProperty(functionId);
+						if (!functionExist)
 						{
-							IeJsValue processedArg = _typeMapper.MapToScriptType(args[argIndex]);
-							AddReferenceToValue(processedArg);
-
-							processedArgs[argIndex + 1] = processedArg;
+							throw new WrapperRuntimeException(
+								string.Format(CommonStrings.Runtime_FunctionNotExist, functionName),
+								_engineModeName
+							);
 						}
 
-						try
+						IeJsValue resultValue;
+						IeJsValue functionValue = globalObj.GetProperty(functionId);
+
+						int argCount = args.Length;
+						if (argCount > 0)
 						{
-							resultValue = functionValue.CallFunction(processedArgs);
-						}
-						finally
-						{
-							for (int argIndex = 1; argIndex < processedArgCount; argIndex++)
+							int processedArgCount = argCount + 1;
+							var processedArgs = new IeJsValue[processedArgCount];
+							processedArgs[0] = globalObj;
+
+							for (int argIndex = 0; argIndex < argCount; argIndex++)
 							{
-								RemoveReferenceToValue(processedArgs[argIndex]);
+								IeJsValue processedArg = _typeMapper.MapToScriptType(args[argIndex]);
+								AddReferenceToValue(processedArg);
+
+								processedArgs[argIndex + 1] = processedArg;
+							}
+
+							try
+							{
+								resultValue = functionValue.CallFunction(processedArgs);
+							}
+							finally
+							{
+								for (int argIndex = 1; argIndex < processedArgCount; argIndex++)
+								{
+									RemoveReferenceToValue(processedArgs[argIndex]);
+								}
 							}
 						}
-					}
-					else
-					{
-						resultValue = functionValue.CallFunction(globalObj);
-					}
+						else
+						{
+							resultValue = functionValue.CallFunction(globalObj);
+						}
 
-					return _typeMapper.MapToHostType(resultValue);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+						return _typeMapper.MapToHostType(resultValue);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 
@@ -661,23 +662,26 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			bool result = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsValue globalObj = IeJsValue.GlobalObject;
-					IeJsPropertyId variableId = IeJsPropertyId.FromString(variableName);
-					bool variableExist = globalObj.HasProperty(variableId);
-
-					if (variableExist)
+					try
 					{
-						IeJsValue variableValue = globalObj.GetProperty(variableId);
-						variableExist = variableValue.ValueType != JsValueType.Undefined;
-					}
+						IeJsValue globalObj = IeJsValue.GlobalObject;
+						IeJsPropertyId variableId = IeJsPropertyId.FromString(variableName);
+						bool variableExist = globalObj.HasProperty(variableId);
 
-					return variableExist;
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+						if (variableExist)
+						{
+							IeJsValue variableValue = globalObj.GetProperty(variableId);
+							variableExist = variableValue.ValueType != JsValueType.Undefined;
+						}
+
+						return variableExist;
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 
@@ -688,15 +692,18 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			object result = _dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsValue variableValue = IeJsValue.GlobalObject.GetProperty(variableName);
+					try
+					{
+						IeJsValue variableValue = IeJsValue.GlobalObject.GetProperty(variableName);
 
-					return _typeMapper.MapToHostType(variableValue);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+						return _typeMapper.MapToHostType(variableValue);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 
@@ -707,23 +714,26 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsValue inputValue = _typeMapper.MapToScriptType(value);
-					AddReferenceToValue(inputValue);
-
 					try
 					{
-						IeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						IeJsValue inputValue = _typeMapper.MapToScriptType(value);
+						AddReferenceToValue(inputValue);
+
+						try
+						{
+							IeJsValue.GlobalObject.SetProperty(variableName, inputValue, true);
+						}
+						finally
+						{
+							RemoveReferenceToValue(inputValue);
+						}
 					}
-					finally
+					catch (OriginalException e)
 					{
-						RemoveReferenceToValue(inputValue);
+						throw WrapJsException(e);
 					}
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
 				}
 			});
 		}
@@ -732,19 +742,22 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsValue globalObj = IeJsValue.GlobalObject;
-					IeJsPropertyId variableId = IeJsPropertyId.FromString(variableName);
-
-					if (globalObj.HasProperty(variableId))
+					try
 					{
-						globalObj.SetProperty(variableId, IeJsValue.Undefined, true);
+						IeJsValue globalObj = IeJsValue.GlobalObject;
+						IeJsPropertyId variableId = IeJsPropertyId.FromString(variableName);
+
+						if (globalObj.HasProperty(variableId))
+						{
+							globalObj.SetProperty(variableId, IeJsValue.Undefined, true);
+						}
 					}
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 		}
@@ -753,14 +766,17 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsValue processedValue = _typeMapper.GetOrCreateScriptObject(value);
-					IeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+					try
+					{
+						IeJsValue processedValue = _typeMapper.GetOrCreateScriptObject(value);
+						IeJsValue.GlobalObject.SetProperty(itemName, processedValue, true);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 		}
@@ -769,14 +785,17 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			_dispatcher.Invoke(() =>
 			{
-				try
+				using (new IeJsScope(_jsContext))
 				{
-					IeJsValue typeValue = _typeMapper.GetOrCreateScriptType(type);
-					IeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
-				}
-				catch (OriginalException e)
-				{
-					throw WrapJsException(e);
+					try
+					{
+						IeJsValue typeValue = _typeMapper.GetOrCreateScriptType(type);
+						IeJsValue.GlobalObject.SetProperty(itemName, typeValue, true);
+					}
+					catch (OriginalException e)
+					{
+						throw WrapJsException(e);
+					}
 				}
 			});
 		}
@@ -788,7 +807,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		public override void CollectGarbage()
 		{
-			_dispatcher.Invoke(_jsRuntime.CollectGarbage);
+			_jsRuntime.CollectGarbage();
 		}
 
 		#endregion
@@ -840,7 +859,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			if (_jsContext.IsValid)
 			{
-				IeJsContext.Current = IeJsContext.Invalid;
 				_jsContext.Release();
 			}
 			_jsRuntime.Dispose();

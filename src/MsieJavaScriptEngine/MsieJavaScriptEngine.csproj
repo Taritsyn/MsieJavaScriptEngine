@@ -24,9 +24,8 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-		<PackageReleaseNotes>1. Slightly improved performance;
-2. In JsRT modes the `CollectGarbage` method is called synchronously again;
-3. Enabled a SourceLink in NuGet package.</PackageReleaseNotes>
+		<PackageReleaseNotes>1. Fixed a error that caused a crash during finalization;
+2. In JsRT modes during calling of the `CollectGarbage` method is again not performed blocking.</PackageReleaseNotes>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageOutputPath>../../nuget</PackageOutputPath>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
