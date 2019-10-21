@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## v3.0.5 - October 21, 2019
+ * Fixed a error that caused a crash during finalization
+ * In JsRT modes during calling of the `CollectGarbage` method is again not performed blocking
+
 ## v3.0.4 - October 9, 2019
  * Slightly improved performance
  * In JsRT modes the `CollectGarbage` method is called synchronously again
