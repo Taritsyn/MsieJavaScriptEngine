@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.6 - December 16, 2019
+ * Fixed a errors leading to null reference exceptions in the `ReflectionHelpers` class. Special thanks to [Vanjoge](https://github.com/vanjoge).
+
 ## v3.0.5 - October 21, 2019
  * Fixed a error that caused a crash during finalization
  * In JsRT modes during calling of the `CollectGarbage` method is again not performed blocking
