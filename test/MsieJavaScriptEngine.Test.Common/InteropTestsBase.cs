@@ -69,20 +69,26 @@ namespace MsieJavaScriptEngine.Test.Common
 			var product = new Product
 			{
 				Name = "Red T-shirt",
+				Description = string.Empty,
 				Price = 995.00
 			};
 
-			const string updateCode = "product.Price *= 1.15;";
+			const string updateCode = @"product.Description = null;
+product.Price *= 1.15;";
 
 			const string input1 = "product.Name";
 			const string targetOutput1 = "Red T-shirt";
 
-			const string input2 = "product.Price";
-			const double targetOutput2 = 1144.25;
+			const string input2 = "product.Description";
+			const string targetOutput2 = null;
+
+			const string input3 = "product.Price";
+			const double targetOutput3 = 1144.25;
 
 			// Act
 			string output1;
-			double output2;
+			string output2;
+			double output3;
 
 			using (var jsEngine = CreateJsEngine())
 			{
@@ -90,12 +96,14 @@ namespace MsieJavaScriptEngine.Test.Common
 				jsEngine.Execute(updateCode);
 
 				output1 = jsEngine.Evaluate<string>(input1);
-				output2 = jsEngine.Evaluate<double>(input2);
+				output2 = jsEngine.Evaluate<string>(input2);
+				output3 = jsEngine.Evaluate<double>(input3);
 			}
 
 			// Assert
 			Assert.AreEqual(targetOutput1, output1);
 			Assert.AreEqual(targetOutput2, output2);
+			Assert.AreEqual(targetOutput3, output3);
 		}
 
 		#endregion
@@ -218,7 +226,8 @@ namespace MsieJavaScriptEngine.Test.Common
 		{
 			// Arrange
 			var person = new Person("Vanya", "Ivanov");
-			const string updateCode = "person.LastName = person.LastName.substr(0, 5) + 'ff';";
+			const string updateCode = @"person.LastName = person.LastName.substr(0, 5) + 'ff';
+person.Patronymic = null;";
 
 			const string input1 = "person.FirstName";
 			const string targetOutput1 = "Vanya";
@@ -226,9 +235,13 @@ namespace MsieJavaScriptEngine.Test.Common
 			const string input2 = "person.LastName";
 			const string targetOutput2 = "Ivanoff";
 
+			const string input3 = "person.Patronymic";
+			const string targetOutput3 = null;
+
 			// Act
 			string output1;
 			string output2;
+			string output3;
 
 			using (var jsEngine = CreateJsEngine())
 			{
@@ -237,11 +250,13 @@ namespace MsieJavaScriptEngine.Test.Common
 
 				output1 = jsEngine.Evaluate<string>(input1);
 				output2 = jsEngine.Evaluate<string>(input2);
+				output3 = jsEngine.Evaluate<string>(input3);
 			}
 
 			// Assert
 			Assert.AreEqual(targetOutput1, output1);
 			Assert.AreEqual(targetOutput2, output2);
+			Assert.AreEqual(targetOutput3, output3);
 		}
 
 		[Test]
@@ -405,7 +420,7 @@ smileDay.GetDayOfYear();";
 			var fileManager = new FileManager();
 			string filePath = GetAbsolutePath("SharedFiles/link.txt");
 
-			string input = string.Format("fileManager.ReadFile('{0}')", filePath.Replace(@"\", @"\\"));
+			string input = string.Format("fileManager.ReadFile('{0}', null)", filePath.Replace(@"\", @"\\"));
 			const string targetOutput = "http://www.panopticoncentral.net/2015/09/09/the-two-faces-of-jsrt-in-windows-10/";
 
 			// Act

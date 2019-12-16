@@ -21,9 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   1. Fixed a error that caused a crash during finalization;
-   2. In JsRT modes during calling of the `CollectGarbage` method is again not
-      performed blocking.
+   Fixed a errors leading to null reference exceptions in the `ReflectionHelpers`
+   class. Special thanks to Vanjoge.
 
    ============
    PROJECT SITE
