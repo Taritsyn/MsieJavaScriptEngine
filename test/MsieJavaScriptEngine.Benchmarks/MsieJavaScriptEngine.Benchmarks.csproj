@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Product>MSIE JavaScript Engine: Benchmarks</Product>
 		<VersionPrefix>3.0.6</VersionPrefix>
-		<TargetFrameworks>net461;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+		<TargetFrameworks>net461;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<IsPackable>false</IsPackable>

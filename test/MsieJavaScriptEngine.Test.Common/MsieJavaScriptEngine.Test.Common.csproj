@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Product>MSIE JavaScript Engine: Common Tests</Product>
 		<VersionPrefix>3.0.6</VersionPrefix>
-		<TargetFrameworks>net40;net451;netcoreapp1.0;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+		<TargetFrameworks>net40;net451;netcoreapp1.0;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
 		<RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">1.0.16</RuntimeFrameworkVersion>
 		<OutputType>Library</OutputType>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
