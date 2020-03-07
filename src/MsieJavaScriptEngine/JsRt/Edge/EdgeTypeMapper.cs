@@ -217,9 +217,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			EdgeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 			{
-				object[] processedArgs = GetHostItemMemberArguments(args);
 				MethodInfo method = del.GetMethodInfo();
 				ParameterInfo[] parameters = method.GetParameters();
+				object[] processedArgs = GetHostItemMemberArguments(args, parameters.Length);
 
 				ReflectionHelpers.FixArgumentTypes(ref processedArgs, parameters);
 
@@ -231,6 +231,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				}
 				catch (Exception e)
 				{
+					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
 					Exception exception = UnwrapException(e);
 					var wrapperException = exception as WrapperException;
 					EdgeJsValue errorValue = wrapperException != null ?
@@ -241,7 +242,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						;
 					EdgeJsContext.SetException(errorValue);
 
-					return EdgeJsValue.Undefined;
+					return undefinedValue;
 				}
 
 				EdgeJsValue resultValue = MapToScriptType(result);
@@ -283,10 +284,12 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					return resultValue;
 				}
 
+				EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
+
 				if (constructors.Length == 0)
 				{
 					CreateAndSetError(string.Format(NetCoreStrings.Runtime_HostTypeConstructorNotFound, typeName));
-					return EdgeJsValue.Undefined;
+					return undefinedValue;
 				}
 
 				var bestFitConstructor = (ConstructorInfo)ReflectionHelpers.GetBestFitMethod(
@@ -295,7 +298,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					CreateAndSetReferenceError(string.Format(
 						NetCoreStrings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
-					return EdgeJsValue.Undefined;
+					return undefinedValue;
 				}
 
 				ReflectionHelpers.FixArgumentTypes(ref processedArgs, bestFitConstructor.GetParameters());
@@ -316,7 +319,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						;
 					EdgeJsContext.SetException(errorValue);
 
-					return EdgeJsValue.Undefined;
+					return undefinedValue;
 				}
 
 				resultValue = MapToScriptType(result);
@@ -364,11 +367,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 				EdgeJsNativeFunction nativeGetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 				{
+					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
+
 					if (instance && obj == null)
 					{
 						CreateAndSetTypeError(string.Format(
 							NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-						return EdgeJsValue.Undefined;
+						return undefinedValue;
 					}
 
 					object result;
@@ -400,7 +405,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						}
 						EdgeJsContext.SetException(errorValue);
 
-						return EdgeJsValue.Undefined;
+						return undefinedValue;
 					}
 
 					EdgeJsValue resultValue = MapToScriptType(result);
@@ -414,11 +419,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 				EdgeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 				{
+					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
+
 					if (instance && obj == null)
 					{
 						CreateAndSetTypeError(string.Format(
 							NetCoreStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-						return EdgeJsValue.Undefined;
+						return undefinedValue;
 					}
 
 					object value = MapToHostType(args[1]);
@@ -451,10 +458,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						}
 						EdgeJsContext.SetException(errorValue);
 
-						return EdgeJsValue.Undefined;
+						return undefinedValue;
 					}
 
-					return EdgeJsValue.Undefined;
+					return undefinedValue;
 				};
 				nativeFunctions.Add(nativeSetFunction);
 
@@ -488,11 +495,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					EdgeJsNativeFunction nativeGetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
+						EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
+
 						if (instance && obj == null)
 						{
 							CreateAndSetTypeError(string.Format(
 								NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
-							return EdgeJsValue.Undefined;
+							return undefinedValue;
 						}
 
 						object result;
@@ -524,7 +533,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							}
 							EdgeJsContext.SetException(errorValue);
 
-							return EdgeJsValue.Undefined;
+							return undefinedValue;
 						}
 
 						EdgeJsValue resultValue = MapToScriptType(result);
@@ -541,11 +550,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					EdgeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
+						EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
+
 						if (instance && obj == null)
 						{
 							CreateAndSetTypeError(string.Format(
 								NetCoreStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
-							return EdgeJsValue.Undefined;
+							return undefinedValue;
 						}
 
 						object value = MapToHostType(args[1]);
@@ -578,10 +589,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							}
 							EdgeJsContext.SetException(errorValue);
 
-							return EdgeJsValue.Undefined;
+							return undefinedValue;
 						}
 
-						return EdgeJsValue.Undefined;
+						return undefinedValue;
 					};
 					nativeFunctions.Add(nativeSetFunction);
 
@@ -614,11 +625,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 				EdgeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 				{
+					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
+
 					if (instance && obj == null)
 					{
 						CreateAndSetTypeError(string.Format(
 							NetCoreStrings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
-						return EdgeJsValue.Undefined;
+						return undefinedValue;
 					}
 
 					object[] processedArgs = GetHostItemMemberArguments(args);
@@ -629,7 +642,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					{
 						CreateAndSetReferenceError(string.Format(
 							NetCoreStrings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
-						return EdgeJsValue.Undefined;
+						return undefinedValue;
 					}
 
 					ReflectionHelpers.FixArgumentTypes(ref processedArgs, bestFitMethod.GetParameters());
@@ -663,7 +676,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						}
 						EdgeJsContext.SetException(errorValue);
 
-						return EdgeJsValue.Undefined;
+						return undefinedValue;
 					}
 
 					EdgeJsValue resultValue = MapToScriptType(result);

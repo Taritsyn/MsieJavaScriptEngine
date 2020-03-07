@@ -21,8 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a errors leading to null reference exceptions in the `ReflectionHelpers`
-   class. Special thanks to Vanjoge.
+   Fixed a error “Program crash after function call with too much parameters”.
 
    ============
    PROJECT SITE

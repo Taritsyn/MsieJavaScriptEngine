@@ -601,6 +601,56 @@ smileDay.GetDayOfYear();";
 			Assert.AreEqual(targetLogOutput, logOutput);
 		}
 
+		[Test]
+		public virtual void CallingOfEmbeddedDelegateWithMissingParameter()
+		{
+			// Arrange
+			var sumFunc = new Func<int, int, int>((a, b) => a + b);
+
+			const string input = "sum(678)";
+			JsRuntimeException exception = null;
+
+			// Act
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.EmbedHostObject("sum", sumFunc);
+
+				try
+				{
+					int result = jsEngine.Evaluate<int>(input);
+				}
+				catch (JsRuntimeException e)
+				{
+					exception = e;
+				}
+			}
+
+			// Assert
+			Assert.NotNull(exception);
+		}
+
+		[Test]
+		public virtual void CallingOfEmbeddedDelegateWithExtraParameter()
+		{
+			// Arrange
+			var sumFunc = new Func<int, int, int>((a, b) => a + b);
+
+			const string input = "sum(678, 711, 611)";
+			const int targetOutput = 1389;
+
+			// Act
+			int output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.EmbedHostObject("sum", sumFunc);
+				output = jsEngine.Evaluate<int>(input);
+			}
+
+			// Assert
+			Assert.AreEqual(targetOutput, output);
+		}
+
 		#endregion
 
 		#region Integration

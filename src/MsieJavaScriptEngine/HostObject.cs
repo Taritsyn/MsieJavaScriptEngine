@@ -28,13 +28,10 @@ namespace MsieJavaScriptEngine
 		public HostObject(object target, JsEngineMode engineMode)
 			: base(target.GetType(), target, engineMode, true)
 		{
-			if (_engineMode == JsEngineMode.Classic)
+			var del = _target as Delegate;
+			if (del != null)
 			{
-				var del = _target as Delegate;
-				if (del != null)
-				{
-					_delegateParameterCount = del.Method.GetParameters().Length;
-				}
+				_delegateParameterCount = del.Method.GetParameters().Length;
 			}
 		}
 
@@ -50,15 +47,40 @@ namespace MsieJavaScriptEngine
 			if (name == SpecialMemberName.Default && processedTarget is Delegate)
 			{
 				var del = (Delegate)processedTarget;
-				object[] processedArgs = args;
+				int argCount = args.Length;
+				int skippedArgCount = 0;
+				int parameterCount = _delegateParameterCount;
 
-				if (_engineMode == JsEngineMode.Classic
-					&& processedArgs.Length > 0
-					&& (processedArgs.Length - _delegateParameterCount) == 1)
+				if (_engineMode == JsEngineMode.Classic && argCount > 0
+					&& (argCount - parameterCount) > 0)
 				{
-					processedArgs = processedArgs.Skip(1).ToArray();
+					skippedArgCount = 1;
 				}
-				processedArgs = TypeMappingHelpers.MapToHostType(processedArgs);
+
+				int processedArgCount = argCount;
+				if (processedArgCount >= skippedArgCount)
+				{
+					processedArgCount -= skippedArgCount;
+				}
+				if (processedArgCount > parameterCount)
+				{
+					processedArgCount = parameterCount;
+				}
+
+				object[] processedArgs;
+				if (processedArgCount > 0)
+				{
+					processedArgs = args
+						.Skip(skippedArgCount)
+						.Take(processedArgCount)
+						.Select(TypeMappingHelpers.MapToHostType)
+						.ToArray()
+						;
+				}
+				else
+				{
+					processedArgs = new object[0];
+				}
 
 				result = del.DynamicInvoke(processedArgs);
 			}

@@ -172,31 +172,11 @@ namespace MsieJavaScriptEngine.JsRt
 		public abstract TValue MapToScriptType(object value);
 
 		/// <summary>
-		/// Makes a mapping of array items from the host type to a script type
-		/// </summary>
-		/// <param name="args">The source array</param>
-		/// <returns>The mapped array</returns>
-		public virtual TValue[] MapToScriptType(object[] args)
-		{
-			return args.Select(MapToScriptType).ToArray();
-		}
-
-		/// <summary>
 		/// Makes a mapping of value from the script type to a host type
 		/// </summary>
 		/// <param name="value">The source value</param>
 		/// <returns>The mapped value</returns>
 		public abstract object MapToHostType(TValue value);
-
-		/// <summary>
-		/// Makes a mapping of array items from the script type to a host type
-		/// </summary>
-		/// <param name="args">The source array</param>
-		/// <returns>The mapped array</returns>
-		public virtual object[] MapToHostType(TValue[] args)
-		{
-			return args.Select(MapToHostType).ToArray();
-		}
 #if NETSTANDARD
 
 		protected abstract EmbeddedObject<TValue, TFunction> CreateEmbeddedObjectOrFunction(object obj);
@@ -253,11 +233,39 @@ namespace MsieJavaScriptEngine.JsRt
 			embeddedTypeHandle.Free();
 		}
 
-		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
-		protected object[] GetHostItemMemberArguments(TValue[] args)
+		protected object[] GetHostItemMemberArguments(TValue[] args, int maxArgCount = -1)
 		{
-			object[] processedArgs = args.Length > 1 ?
-				MapToHostType(args.Skip(1).ToArray()) : new object[0];
+			if (args == null)
+			{
+				throw new ArgumentNullException(nameof(args));
+			}
+
+			int argCount = args.Length;
+			const int skippedArgCount = 1;
+			int processedArgCount = argCount;
+			if (processedArgCount >= skippedArgCount)
+			{
+				processedArgCount -= skippedArgCount;
+			}
+			if (maxArgCount >= 0 && processedArgCount > maxArgCount)
+			{
+				processedArgCount = maxArgCount;
+			}
+
+			object[] processedArgs;
+			if (processedArgCount > 0)
+			{
+				processedArgs = args
+					.Skip(skippedArgCount)
+					.Take(processedArgCount)
+					.Select(MapToHostType)
+					.ToArray()
+					;
+			}
+			else
+			{
+				processedArgs = new object[0];
+			}
 
 			return processedArgs;
 		}
