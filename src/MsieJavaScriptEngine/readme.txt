@@ -1,11 +1,11 @@
 ﻿
 
    --------------------------------------------------------------------------------
-                README file for MSIE JavaScript Engine for .NET v3.0.6
+                README file for MSIE JavaScript Engine for .NET v3.0.7
 
    --------------------------------------------------------------------------------
 
-           Copyright (c) 2012-2019 Andrey Taritsyn - http://www.taritsyn.ru
+           Copyright (c) 2012-2020 Andrey Taritsyn - http://www.taritsyn.ru
 
 
    ===========

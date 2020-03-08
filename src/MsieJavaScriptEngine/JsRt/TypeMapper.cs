@@ -242,11 +242,7 @@ namespace MsieJavaScriptEngine.JsRt
 
 			int argCount = args.Length;
 			const int skippedArgCount = 1;
-			int processedArgCount = argCount;
-			if (processedArgCount >= skippedArgCount)
-			{
-				processedArgCount -= skippedArgCount;
-			}
+			int processedArgCount = argCount >= skippedArgCount ? argCount - skippedArgCount : 0;
 			if (maxArgCount >= 0 && processedArgCount > maxArgCount)
 			{
 				processedArgCount = maxArgCount;

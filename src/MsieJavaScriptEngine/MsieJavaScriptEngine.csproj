@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<Product>MSIE JavaScript Engine for .NET</Product>
-		<VersionPrefix>3.0.6</VersionPrefix>
+		<VersionPrefix>3.0.7</VersionPrefix>
 		<TargetFrameworks>net40-client;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
 		<NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.0</NetStandardImplicitPackageVersion>
 		<LangVersion>7.3</LangVersion>

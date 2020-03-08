@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.7 - March 8, 2020
+ * Fixed a error “Program crash after function call with too much parameters”
+
 ## v3.0.6 - December 16, 2019
  * Fixed a errors leading to null reference exceptions in the `ReflectionHelpers` class. Special thanks to [Vanjoge](https://github.com/vanjoge).
 
