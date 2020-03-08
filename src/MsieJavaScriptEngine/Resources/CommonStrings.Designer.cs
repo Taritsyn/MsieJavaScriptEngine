@@ -122,7 +122,7 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Try to install the Windows 10 with Edge browser."
+		/// Looks up a localized string similar to "Try to install the Windows 10 with Edge Legacy browser."
 		/// </summary>
 		internal static string Engine_EdgeInstallationRequired
 		{

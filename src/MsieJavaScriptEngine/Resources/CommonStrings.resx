@@ -142,7 +142,7 @@
     <value>Most likely it happened, because the '{0}' assembly was not registered in your system.</value>
   </data>
   <data name="Engine_EdgeInstallationRequired" xml:space="preserve">
-    <value>Try to install the Windows 10 with Edge browser.</value>
+    <value>Try to install the Windows 10 with Edge Legacy browser.</value>
   </data>
   <data name="Engine_IeInstallationRequired" xml:space="preserve">
     <value>Try to install the Internet Explorer {0} or higher.</value>

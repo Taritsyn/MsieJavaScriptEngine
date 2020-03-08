@@ -3,16 +3,16 @@ MSIE JavaScript Engine for .NET [![NuGet version](http://img.shields.io/nuget/v/
 
 ![MSIE JS Engine Logo](http://i.imgur.com/T3K5q.png)
 
-This project is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). 
+This project is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge Legacy (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). 
 Project was based on the code of [SassAndCoffee.JavaScript](http://github.com/paulcbetts/SassAndCoffee), [Chakra Sample Hosts](http://github.com/panopticoncentral/chakra-host) and [jsrt-dotnet](http://github.com/robpaveza/jsrt-dotnet).
 
-MSIE JavaScript Engine requires a installation of Internet Explorer or Edge on the machine and can work in 5 modes, that are defined in the <code title="MsieJavaScriptEngine.JsEngineMode">JsEngineMode</code> enumeration:
+MSIE JavaScript Engine requires a installation of Internet Explorer or Edge Legacy on the machine and can work in 5 modes, that are defined in the <code title="MsieJavaScriptEngine.JsEngineMode">JsEngineMode</code> enumeration:
 
  * `Auto`. Automatically selects the most modern JavaScript engine from available on the machine.
  * `Classic`. Classic MSIE JavaScript engine (supports ECMAScript 3 with possibility of using the ECMAScript 5 Polyfill and the JSON2 library). Requires Internet Explorer 6 or higher on the machine. **Not supported in version for .NET Core.**
  * `ChakraActiveScript`. ActiveScript version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 9 or higher on the machine. **Not supported in version for .NET Core.**
- * `ChakraIeJsRt`. “IE” JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 11 or Microsoft Edge on the machine.
- * `ChakraEdgeJsRt`. “Edge” JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Microsoft Edge on the machine.
+ * `ChakraIeJsRt`. “IE” JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Internet Explorer 11 or Microsoft Edge Legacy on the machine.
+ * `ChakraEdgeJsRt`. “Edge” JsRT version of Chakra JavaScript engine (supports ECMAScript 5). Requires Microsoft Edge Legacy on the machine.
 
 The supported .NET types are as follows:
 

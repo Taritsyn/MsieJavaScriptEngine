@@ -142,7 +142,7 @@
     <value>Скорее всего, это произошло, потому что сборка "{0}" не была зарегистрирована в вашей системе.</value>
   </data>
   <data name="Engine_EdgeInstallationRequired" xml:space="preserve">
-    <value>Попробуйте установить Windows 10 с веб-браузером Edge.</value>
+    <value>Попробуйте установить Windows 10 с веб-браузером Edge Legacy.</value>
   </data>
   <data name="Engine_IeInstallationRequired" xml:space="preserve">
     <value>Попробуйте установить Internet Explorer {0} или выше.</value>

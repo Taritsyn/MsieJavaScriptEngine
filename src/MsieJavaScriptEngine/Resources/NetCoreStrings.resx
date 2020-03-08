@@ -121,7 +121,7 @@
     <value>The parameter '{0}' must have a `{1}` type.</value>
   </data>
   <data name="Engine_JsEnginesNotFound" xml:space="preserve">
-    <value>Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps you have not installed the Microsoft Edge or Internet Explorer 11 browser.</value>
+    <value>Could not found none of the JavaScript engines, which would be compatible with .NET Core. Perhaps you have not installed the Microsoft Edge Legacy or Internet Explorer 11 browser.</value>
   </data>
   <data name="Runtime_HostDelegateInvocationFailed" xml:space="preserve">
     <value>During invocation of the host delegate an error has occurred - “{0}”.</value>
