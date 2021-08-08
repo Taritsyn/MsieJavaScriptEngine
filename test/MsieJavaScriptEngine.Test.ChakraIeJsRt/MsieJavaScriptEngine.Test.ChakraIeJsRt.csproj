@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Product>MSIE JavaScript Engine: Tests for Chakra IE JsRT Mode</Product>
 		<VersionPrefix>3.0.7</VersionPrefix>
-		<TargetFrameworks>net40;net451;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
+		<TargetFrameworks>net40;net45;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<IsTestProject>true</IsTestProject>
@@ -13,7 +13,7 @@
 	<Import Project="../../build/common.props" />
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
 
 		<ProjectReference Include="../MsieJavaScriptEngine.Test.Common/MsieJavaScriptEngine.Test.Common.csproj" />
 	</ItemGroup>
