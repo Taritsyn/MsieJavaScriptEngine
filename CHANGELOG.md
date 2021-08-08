@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.8 - August 8, 2021
+ * Improved a implementation of the `Dispose` method
+
 ## v3.0.7 - March 8, 2020
  * Fixed a error “Program crash after function call with too much parameters”
 

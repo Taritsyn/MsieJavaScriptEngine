@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Product>MSIE JavaScript Engine for .NET</Product>
-    <VersionPrefix>3.0.7</VersionPrefix>
+    <VersionPrefix>3.0.8</VersionPrefix>
     <TargetFrameworks>net40-client;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.0</NetStandardImplicitPackageVersion>
     <LangVersion>7.3</LangVersion>
@@ -17,6 +17,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/Taritsyn/MsieJavaScriptEngine/master/images/MsieJavaScriptEngine_Logo_128x128.png</PackageIconUrl>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
