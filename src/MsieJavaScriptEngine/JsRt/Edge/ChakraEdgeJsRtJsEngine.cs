@@ -776,9 +776,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{
-			if (_disposedFlag.Set())
+			if (disposing)
 			{
-				if (disposing)
+				if (_disposedFlag.Set())
 				{
 					if (_dispatcher != null)
 					{
@@ -794,10 +794,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						_typeMapper = null;
 					}
 				}
-				else
-				{
-					DisposeUnmanagedResources();
-				}
+			}
+			else
+			{
+				DisposeUnmanagedResources();
 			}
 		}
 

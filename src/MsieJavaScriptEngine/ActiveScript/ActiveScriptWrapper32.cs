@@ -146,21 +146,30 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// managed objects contained in fields of class</param>
 		protected override void Dispose(bool disposing)
 		{
-			if (_disposedFlag.Set())
+			if (disposing)
 			{
-				if (disposing)
+				if (_disposedFlag.Set())
 				{
 					_debugStackFrameSniffer32 = null;
 					_activeScriptDebug32 = null;
 					_activeScriptParse32 = null;
+
+					DisposeUnmanagedResources();
+					base.Dispose(true);
 				}
-
-				ComHelpers.ReleaseAndEmpty(ref _pDebugStackFrameSniffer32);
-				ComHelpers.ReleaseAndEmpty(ref _pActiveScriptDebug32);
-				ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse32);
-
-				base.Dispose(disposing);
 			}
+			else
+			{
+				DisposeUnmanagedResources();
+				base.Dispose(false);
+			}
+		}
+
+		private void DisposeUnmanagedResources()
+		{
+			ComHelpers.ReleaseAndEmpty(ref _pDebugStackFrameSniffer32);
+			ComHelpers.ReleaseAndEmpty(ref _pActiveScriptDebug32);
+			ComHelpers.ReleaseAndEmpty(ref _pActiveScriptParse32);
 		}
 
 		#endregion

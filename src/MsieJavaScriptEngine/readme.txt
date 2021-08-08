@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a error “Program crash after function call with too much parameters”.
+   Improved a implementation of the `Dispose` method.
 
    ============
    PROJECT SITE
