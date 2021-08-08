@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if !NETCOREAPP1_0
 using System.Drawing;
-#endif
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,9 +9,6 @@ using NUnit.Framework;
 
 using MsieJavaScriptEngine.Test.Common.Interop;
 using MsieJavaScriptEngine.Test.Common.Interop.Animals;
-#if NETCOREAPP1_0
-using MsieJavaScriptEngine.Test.Common.Interop.Drawing;
-#endif
 using MsieJavaScriptEngine.Test.Common.Interop.Logging;
 
 namespace MsieJavaScriptEngine.Test.Common

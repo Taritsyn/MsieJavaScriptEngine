@@ -126,7 +126,7 @@ namespace MsieJavaScriptEngine.Test.ChakraIeJsRt
 		charIndex
 		;
 
-	for (charIndex = 0; charIndex < length; charIndex++) 
+	for (charIndex = 0; charIndex < length; charIndex++)
 		result += possible.charAt(Math.floor(Math.random() * possible.length));
 	}
 
