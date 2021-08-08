@@ -1,14 +1,14 @@
 [
-	{
-		"outputFileName": "Resources/ES5.min.js",
-		"inputFiles": [
-			"Resources/ES5.js"
-		]
-	},
-	{
-		"outputFileName": "Resources/json2.min.js",
-		"inputFiles": [
-			"Resources/json2.js"
-		]
-	}
+  {
+    "outputFileName": "Resources/ES5.min.js",
+    "inputFiles": [
+      "Resources/ES5.js"
+    ]
+  },
+  {
+    "outputFileName": "Resources/json2.min.js",
+    "inputFiles": [
+      "Resources/json2.js"
+    ]
+  }
 ]

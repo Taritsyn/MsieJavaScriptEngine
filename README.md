@@ -36,42 +36,42 @@ using MsieJavaScriptEngine.Helpers;
 
 namespace MsieJavaScriptEngine.Example.Console
 {
-	class Program
-	{
-		static void Main(string[] args)
-		{
-			try
-			{
-				using (var jsEngine = new MsieJsEngine())
-				{
-					const string expression = "7 * 8 - 20";
-					var result = jsEngine.Evaluate<int>(expression);
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                using (var jsEngine = new MsieJsEngine())
+                {
+                    const string expression = "7 * 8 - 20";
+                    var result = jsEngine.Evaluate<int>(expression);
 
-					Console.WriteLine("{0} = {1}", expression, result);
-				}
-			}
-			catch (JsEngineLoadException e)
-			{
-				Console.WriteLine("During loading of JavaScript engine an error occurred.");
-				Console.WriteLine();
-				Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
-			}
-			catch (JsScriptException e)
-			{
-				Console.WriteLine("During processing of JavaScript code an error occurred.");
-				Console.WriteLine();
-				Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
-			}
-			catch (JsException e)
-			{
-				Console.WriteLine("During working of JavaScript engine an unknown error occurred.");
-				Console.WriteLine();
-				Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
-			}
+                    Console.WriteLine("{0} = {1}", expression, result);
+                }
+            }
+            catch (JsEngineLoadException e)
+            {
+                Console.WriteLine("During loading of JavaScript engine an error occurred.");
+                Console.WriteLine();
+                Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
+            }
+            catch (JsScriptException e)
+            {
+                Console.WriteLine("During processing of JavaScript code an error occurred.");
+                Console.WriteLine();
+                Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
+            }
+            catch (JsException e)
+            {
+                Console.WriteLine("During working of JavaScript engine an unknown error occurred.");
+                Console.WriteLine();
+                Console.WriteLine(JsErrorHelpers.GenerateErrorDetails(e));
+            }
 
-			Console.ReadLine();
-		}
-	}
+            Console.ReadLine();
+        }
+    }
 }
 ```
 
@@ -94,49 +94,49 @@ Also, when you create an instance of the <code title="MsieJavaScriptEngine.MsieJ
 Consider in detail properties of the <code title="MsieJavaScriptEngine.JsEngineSettings">JsEngineSettings</code> class:
 
 <table border="1" style="font-size: 0.7em">
-	<thead>
-		<tr valign="top">
-			<th>Property name</th>
-			<th>Data&nbsp;type</th>
-			<th>Default value</th>
-			<th>Description</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr valign="top">
-			<td><code>EnableDebugging</code></td>
-			<td><code title="System.Boolean">Boolean</code></td>
-			<td><code>false</code></td>
-			<td>Flag for whether to allow debugging in Visual Studio by adding the <code>debugger</code> statement to script code.</td>
-		</tr>
-		<tr valign="top">
-			<td><code>EngineMode</code></td>
-			<td><code title="MsieJavaScriptEngine.JsEngineMode">JsEngineMode</code> enumeration</td>
-			<td><code>Auto</code></td>
-			<td>JavaScript engine mode.</td>
-		</tr>
-		<tr valign="top">
-			<td><code>MaxStackSize</code></td>
-			<td><code title="System.Int32">Int32</code></td>
-			<td><code>503 808</code> or <code>1 007 616</code></td>
-			<td>
-				<p>Maximum stack size in bytes.</p>
-				<p>Set a <code>0</code> to use the default maximum stack size specified in the header for the executable.</p>
-			</td>
-		</tr>
-		<tr valign="top">
-			<td><code>UseEcmaScript5Polyfill</code></td>
-			<td><code title="System.Boolean">Boolean</code></td>
-			<td><code>false</code></td>
-			<td>Flag for whether to use the ECMAScript 5 Polyfill.</td>
-		</tr>
-		<tr valign="top">
-			<td><code>UseJson2Library</code></td>
-			<td><code title="System.Boolean">Boolean</code></td>
-			<td><code>false</code></td>
-			<td>Flag for whether to use the <a href="http://github.com/douglascrockford/JSON-js">JSON2</a> library</td>
-		</tr>
-	</tbody>
+    <thead>
+        <tr valign="top">
+            <th>Property name</th>
+            <th>Data&nbsp;type</th>
+            <th>Default value</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr valign="top">
+            <td><code>EnableDebugging</code></td>
+            <td><code title="System.Boolean">Boolean</code></td>
+            <td><code>false</code></td>
+            <td>Flag for whether to allow debugging in Visual Studio by adding the <code>debugger</code> statement to script code.</td>
+        </tr>
+        <tr valign="top">
+            <td><code>EngineMode</code></td>
+            <td><code title="MsieJavaScriptEngine.JsEngineMode">JsEngineMode</code> enumeration</td>
+            <td><code>Auto</code></td>
+            <td>JavaScript engine mode.</td>
+        </tr>
+        <tr valign="top">
+            <td><code>MaxStackSize</code></td>
+            <td><code title="System.Int32">Int32</code></td>
+            <td><code>503 808</code> or <code>1 007 616</code></td>
+            <td>
+                <p>Maximum stack size in bytes.</p>
+                <p>Set a <code>0</code> to use the default maximum stack size specified in the header for the executable.</p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <td><code>UseEcmaScript5Polyfill</code></td>
+            <td><code title="System.Boolean">Boolean</code></td>
+            <td><code>false</code></td>
+            <td>Flag for whether to use the ECMAScript 5 Polyfill.</td>
+        </tr>
+        <tr valign="top">
+            <td><code>UseJson2Library</code></td>
+            <td><code title="System.Boolean">Boolean</code></td>
+            <td><code>false</code></td>
+            <td>Flag for whether to use the <a href="http://github.com/douglascrockford/JSON-js">JSON2</a> library</td>
+        </tr>
+    </tbody>
 </table>
 
 

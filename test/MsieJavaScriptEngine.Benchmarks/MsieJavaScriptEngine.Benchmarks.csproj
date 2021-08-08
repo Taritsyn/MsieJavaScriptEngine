@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Product>MSIE JavaScript Engine: Benchmarks</Product>
-		<VersionPrefix>3.0.7</VersionPrefix>
-		<TargetFrameworks>net461;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
-		<OutputType>Exe</OutputType>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<IsPackable>false</IsPackable>
-	</PropertyGroup>
+  <PropertyGroup>
+    <Product>MSIE JavaScript Engine: Benchmarks</Product>
+    <VersionPrefix>3.0.7</VersionPrefix>
+    <TargetFrameworks>net461;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
-	<Import Project="../../build/common.props" />
+  <Import Project="../../build/common.props" />
 
-	<ItemGroup>
-		<PackageReference Include="BenchmarkDotNet" Version="0.13.0" />
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.0" />
 
-		<ProjectReference Include="../../src/MsieJavaScriptEngine/MsieJavaScriptEngine.csproj" />
-	</ItemGroup>
+    <ProjectReference Include="../../src/MsieJavaScriptEngine/MsieJavaScriptEngine.csproj" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<EmbeddedResource Include="Resources/russian-translit.js" />
-	</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources/russian-translit.js" />
+  </ItemGroup>
 
 </Project>

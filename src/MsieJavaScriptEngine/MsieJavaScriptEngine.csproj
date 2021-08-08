@@ -1,88 +1,88 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Product>MSIE JavaScript Engine for .NET</Product>
-		<VersionPrefix>3.0.7</VersionPrefix>
-		<TargetFrameworks>net40-client;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
-		<NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.0</NetStandardImplicitPackageVersion>
-		<LangVersion>7.3</LangVersion>
-		<OutputType>Library</OutputType>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<NoWarn>$(NoWarn);CS1591;NU1605</NoWarn>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<DisableDefaultResxToCsConversionTarget>true</DisableDefaultResxToCsConversionTarget>
-		<Title>$(Product)</Title>
-		<Authors>Andrey Taritsyn</Authors>
-		<Description>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge Legacy (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). Project was based on the code of SassAndCoffee.JavaScript (http://github.com/paulcbetts/SassAndCoffee), Chakra Sample Hosts (http://github.com/panopticoncentral/chakra-host) and jsrt-dotnet (http://github.com/robpaveza/jsrt-dotnet).</Description>
-		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<PackageProjectUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</PackageProjectUrl>
-		<PackageIcon>icon.png</PackageIcon>
-		<RepositoryUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-		<PackageReleaseNotes>Fixed a error “Program crash after function call with too much parameters”.</PackageReleaseNotes>
-		<NeutralLanguage>en-US</NeutralLanguage>
-		<PackageOutputPath>../../nuget</PackageOutputPath>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-		<GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-	</PropertyGroup>
+  <PropertyGroup>
+    <Product>MSIE JavaScript Engine for .NET</Product>
+    <VersionPrefix>3.0.7</VersionPrefix>
+    <TargetFrameworks>net40-client;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.0</NetStandardImplicitPackageVersion>
+    <LangVersion>7.3</LangVersion>
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);CS1591;NU1605</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DisableDefaultResxToCsConversionTarget>true</DisableDefaultResxToCsConversionTarget>
+    <Title>$(Product)</Title>
+    <Authors>Andrey Taritsyn</Authors>
+    <Description>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge Legacy (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). Project was based on the code of SassAndCoffee.JavaScript (http://github.com/paulcbetts/SassAndCoffee), Chakra Sample Hosts (http://github.com/panopticoncentral/chakra-host) and jsrt-dotnet (http://github.com/robpaveza/jsrt-dotnet).</Description>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
+    <PackageReleaseNotes>Fixed a error “Program crash after function call with too much parameters”.</PackageReleaseNotes>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageOutputPath>../../nuget</PackageOutputPath>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+  </PropertyGroup>
 
-	<Import Project="../../build/common.props" />
-	<Import Project="../../build/net40-client-target.props" />
-	<Import Project="../../build/strong-name-signing.props" />
+  <Import Project="../../build/common.props" />
+  <Import Project="../../build/net40-client-target.props" />
+  <Import Project="../../build/strong-name-signing.props" />
 
-	<ItemGroup>
-		<PackageReference Include="AdvancedStringBuilder" Version="0.1.0" />
-		<PackageReference Include="BuildBundlerMinifier" Version="3.2.449" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-		<PackageReference Include="ResxToCs.MSBuild" Version="1.0.0-alpha6" PrivateAssets="All" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AdvancedStringBuilder" Version="0.1.0" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="ResxToCs.MSBuild" Version="1.0.0-alpha6" PrivateAssets="All" />
+  </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net45' ">
-		<Compile Remove="Resources/NetCoreStrings.*" />
-		<EmbeddedResource Include="Resources/*.min.js" />
-	</ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net45' ">
+    <Compile Remove="Resources/NetCoreStrings.*" />
+    <EmbeddedResource Include="Resources/*.min.js" />
+  </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard2.0' ">
-		<Compile Remove="Resources/NetFrameworkStrings.*" />
-	</ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard2.0' ">
+    <Compile Remove="Resources/NetFrameworkStrings.*" />
+  </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-		<PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
-		<PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
-		<PackageReference Include="System.Threading.Thread" Version="4.0.0" />
-	</ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Include="../../images/MsieJavaScriptEngine_Logo_128x128.png">
-			<PackagePath>$(PackageIcon)</PackagePath>
-			<Pack>true</Pack>
-			<Visible>false</Visible>
-		</None>
-		<None Include="../../LICENSE.txt">
-			<PackagePath>$(PackageLicenseFile)</PackagePath>
-			<Pack>true</Pack>
-			<Visible>false</Visible>
-		</None>
-		<None Include="../../Licenses/*.txt">
-			<PackagePath>/</PackagePath>
-			<Pack>true</Pack>
-			<Visible>false</Visible>
-		</None>
+  <ItemGroup>
+    <None Include="../../images/MsieJavaScriptEngine_Logo_128x128.png">
+      <PackagePath>$(PackageIcon)</PackagePath>
+      <Pack>true</Pack>
+      <Visible>false</Visible>
+    </None>
+    <None Include="../../LICENSE.txt">
+      <PackagePath>$(PackageLicenseFile)</PackagePath>
+      <Pack>true</Pack>
+      <Visible>false</Visible>
+    </None>
+    <None Include="../../Licenses/*.txt">
+      <PackagePath>/</PackagePath>
+      <Pack>true</Pack>
+      <Visible>false</Visible>
+    </None>
 
-		<Content Include="readme.txt">
-			<PackagePath>readme.txt</PackagePath>
-			<Pack>true</Pack>
-		</Content>
-	</ItemGroup>
+    <Content Include="readme.txt">
+      <PackagePath>readme.txt</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
 
-	<Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile">
-		<ResxToCsTask InputDirectory="./Resources/" Namespace="$(RootNamespace).Resources" InternalAccessModifier="true" />
-	</Target>
+  <Target Name="СonvertResxToCs" BeforeTargets="BeforeCompile">
+    <ResxToCsTask InputDirectory="./Resources/" Namespace="$(RootNamespace).Resources" InternalAccessModifier="true" />
+  </Target>
 
 </Project>

@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Product>MSIE JavaScript Engine: Tests for Auto Mode</Product>
-		<VersionPrefix>3.0.7</VersionPrefix>
-		<TargetFrameworks>net40;net45;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
-		<OutputType>Library</OutputType>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<IsTestProject>true</IsTestProject>
-		<IsPackable>false</IsPackable>
-	</PropertyGroup>
+  <PropertyGroup>
+    <Product>MSIE JavaScript Engine: Tests for Auto Mode</Product>
+    <VersionPrefix>3.0.7</VersionPrefix>
+    <TargetFrameworks>net40;net45;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
-	<Import Project="../../build/common.props" />
+  <Import Project="../../build/common.props" />
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
 
-		<ProjectReference Include="../MsieJavaScriptEngine.Test.Common/MsieJavaScriptEngine.Test.Common.csproj" />
-	</ItemGroup>
+    <ProjectReference Include="../MsieJavaScriptEngine.Test.Common/MsieJavaScriptEngine.Test.Common.csproj" />
+  </ItemGroup>
 
 </Project>
