@@ -1,10 +1,10 @@
 ﻿using System;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 using System.Collections.Generic;
 using System.Linq;
 #endif
 using System.Reflection;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 
 using MsieJavaScriptEngine.Utilities;
 #endif
@@ -44,7 +44,7 @@ namespace MsieJavaScriptEngine.Helpers
 
 			return isFullyFledged;
 		}
-#if !NETSTANDARD
+#if NETFRAMEWORK
 
 		public static MethodInfo[] GetFullyFledgedMethods(MethodInfo[] methods)
 		{

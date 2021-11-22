@@ -11,7 +11,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	internal interface IDebugApplication32 // : IRemoteDebugApplication
 	{
-#if !NETSTANDARD
+#if NETFRAMEWORK
 		#region IRemoteDebugApplication methods
 
 		/// <summary>

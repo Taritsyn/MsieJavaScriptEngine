@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD
+﻿#if NETFRAMEWORK
 namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>

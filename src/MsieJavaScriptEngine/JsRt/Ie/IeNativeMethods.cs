@@ -154,7 +154,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 		[DllImport(DllName.JScript9)]
 		internal static extern JsErrorCode JsConvertValueToString(IeJsValue value, out IeJsValue stringValue);
-#if !NETSTANDARD
+#if NETFRAMEWORK
 
 		[DllImport(DllName.JScript9)]
 		internal static extern JsErrorCode JsVariantToValue([MarshalAs(UnmanagedType.Struct)] ref object var,

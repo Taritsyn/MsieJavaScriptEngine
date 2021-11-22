@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD
+﻿#if NETFRAMEWORK
 using System;
 
 namespace MsieJavaScriptEngine.ActiveScript.Debugging

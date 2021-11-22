@@ -1,5 +1,5 @@
 ﻿using System;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 using MsieJavaScriptEngine.Extensions;
 using MsieJavaScriptEngine.Helpers;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 using MsieJavaScriptEngine.JsRt.Embedding;
 using MsieJavaScriptEngine.Resources;
 
@@ -20,7 +20,7 @@ using WrapperScriptException = MsieJavaScriptEngine.JsScriptException;
 
 namespace MsieJavaScriptEngine.JsRt.Ie
 {
-#if NETSTANDARD
+#if !NETFRAMEWORK
 	using IeEmbeddedItem = EmbeddedItem<IeJsValue, IeJsNativeFunction>;
 	using IeEmbeddedObject = EmbeddedObject<IeJsValue, IeJsNativeFunction>;
 	using IeEmbeddedType = EmbeddedType<IeJsValue, IeJsNativeFunction>;
@@ -35,13 +35,13 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// Constructs an instance of the “IE” type mapper
 		/// </summary>
 		public IeTypeMapper()
-#if !NETSTANDARD
+#if NETFRAMEWORK
 			: base(JsEngineMode.ChakraIeJsRt)
 #endif
 		{ }
 
 
-#if !NETSTANDARD
+#if NETFRAMEWORK
 		/// <summary>
 		/// Creates a JavaScript value from an host object if the it does not already exist
 		/// </summary>
@@ -143,7 +143,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				case JsValueType.String:
 					result = value.ToString();
 					break;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 				case JsValueType.Function:
 					IeJsPropertyId externalObjectPropertyId = IeJsPropertyId.FromString(ExternalObjectPropertyName);
 					if (value.HasProperty(externalObjectPropertyId))
@@ -157,12 +157,12 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					break;
 #endif
 				case JsValueType.Object:
-#if !NETSTANDARD
+#if NETFRAMEWORK
 				case JsValueType.Function:
 #endif
 				case JsValueType.Error:
 				case JsValueType.Array:
-#if NETSTANDARD
+#if !NETFRAMEWORK
 					result = value.HasExternalData ?
 						GCHandle.FromIntPtr(value.ExternalData).Target : value.ConvertToObject();
 #else
@@ -179,7 +179,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 			return result;
 		}
-#if NETSTANDARD
+#if !NETFRAMEWORK
 
 		protected override IeEmbeddedObject CreateEmbeddedObjectOrFunction(object obj)
 		{

@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD
+﻿#if NETFRAMEWORK
 using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.Utilities;
 

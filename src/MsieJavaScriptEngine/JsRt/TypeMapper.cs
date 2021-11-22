@@ -1,14 +1,14 @@
 ﻿using System;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 using System.Collections.Concurrent;
 #endif
 using System.Linq;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #endif
-#if NETSTANDARD
+#if !NETFRAMEWORK
 
 using MsieJavaScriptEngine.JsRt.Embedding;
 using MsieJavaScriptEngine.Utilities;
@@ -25,7 +25,7 @@ namespace MsieJavaScriptEngine.JsRt
 		where TValue : struct
 		where TFunction : Delegate
 	{
-#if NETSTANDARD
+#if !NETFRAMEWORK
 		/// <summary>
 		/// Name of property to store the external object
 		/// </summary>
@@ -98,7 +98,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// </summary>
 		/// <param name="obj">Instance of host type</param>
 		/// <returns>JavaScript value created from an host object</returns>
-#if NETSTANDARD
+#if !NETFRAMEWORK
 		public virtual TValue GetOrCreateScriptObject(object obj)
 		{
 
@@ -134,7 +134,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// </summary>
 		/// <param name="type">Host type</param>
 		/// <returns>JavaScript value created from an host type</returns>
-#if NETSTANDARD
+#if !NETFRAMEWORK
 		public virtual TValue GetOrCreateScriptType(Type type)
 		{
 			if (!_embeddedTypeStorageInitialized)
@@ -177,7 +177,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <param name="value">The source value</param>
 		/// <returns>The mapped value</returns>
 		public abstract object MapToHostType(TValue value);
-#if NETSTANDARD
+#if !NETFRAMEWORK
 
 		protected abstract EmbeddedObject<TValue, TFunction> CreateEmbeddedObjectOrFunction(object obj);
 
@@ -291,7 +291,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// </summary>
 		public virtual void Dispose()
 		{
-#if NETSTANDARD
+#if !NETFRAMEWORK
 			if (_disposedFlag.Set())
 			{
 				var lazyEmbeddedObjects = _lazyEmbeddedObjects;

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Product>MSIE JavaScript Engine: Common Tests</Product>
     <VersionPrefix>3.0.8</VersionPrefix>
-    <TargetFrameworks>net40;net45;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsTestProject>true</IsTestProject>
@@ -14,9 +14,9 @@
   <Import Project="../../build/strong-name-signing.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
 
     <ProjectReference Include="../../src/MsieJavaScriptEngine/MsieJavaScriptEngine.csproj" />
   </ItemGroup>

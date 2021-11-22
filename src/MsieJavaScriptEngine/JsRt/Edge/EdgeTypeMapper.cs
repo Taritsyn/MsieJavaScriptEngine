@@ -1,5 +1,5 @@
 ﻿using System;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,14 +9,14 @@ using System.Runtime.InteropServices;
 
 using MsieJavaScriptEngine.Extensions;
 using MsieJavaScriptEngine.Helpers;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 using MsieJavaScriptEngine.JsRt.Embedding;
 using MsieJavaScriptEngine.Resources;
 #endif
-#if !NETSTANDARD
+#if NETFRAMEWORK
 using MsieJavaScriptEngine.Utilities;
 #endif
-#if NETSTANDARD
+#if !NETFRAMEWORK
 
 using WrapperException = MsieJavaScriptEngine.JsException;
 using WrapperRuntimeException = MsieJavaScriptEngine.JsRuntimeException;
@@ -25,7 +25,7 @@ using WrapperScriptException = MsieJavaScriptEngine.JsScriptException;
 
 namespace MsieJavaScriptEngine.JsRt.Edge
 {
-#if NETSTANDARD
+#if !NETFRAMEWORK
 	using EdgeEmbeddedItem = EmbeddedItem<EdgeJsValue, EdgeJsNativeFunction>;
 	using EdgeEmbeddedObject = EmbeddedObject<EdgeJsValue, EdgeJsNativeFunction>;
 	using EdgeEmbeddedType = EmbeddedType<EdgeJsValue, EdgeJsNativeFunction>;
@@ -40,13 +40,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// Constructs an instance of the “Edge” type mapper
 		/// </summary>
 		public EdgeTypeMapper()
-#if !NETSTANDARD
+#if NETFRAMEWORK
 			: base(JsEngineMode.ChakraEdgeJsRt)
 #endif
 		{ }
 
 
-#if !NETSTANDARD
+#if NETFRAMEWORK
 		/// <summary>
 		/// Creates a JavaScript value from an host object if the it does not already exist
 		/// </summary>
@@ -148,7 +148,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				case JsValueType.String:
 					result = value.ToString();
 					break;
-#if NETSTANDARD
+#if !NETFRAMEWORK
 				case JsValueType.Function:
 					EdgeJsPropertyId externalObjectPropertyId = EdgeJsPropertyId.FromString(ExternalObjectPropertyName);
 					if (value.HasProperty(externalObjectPropertyId))
@@ -162,12 +162,12 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					break;
 #endif
 				case JsValueType.Object:
-#if !NETSTANDARD
+#if NETFRAMEWORK
 				case JsValueType.Function:
 #endif
 				case JsValueType.Error:
 				case JsValueType.Array:
-#if NETSTANDARD
+#if !NETFRAMEWORK
 					result = value.HasExternalData ?
 						GCHandle.FromIntPtr(value.ExternalData).Target : value.ConvertToObject();
 #else
@@ -184,7 +184,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			return result;
 		}
-#if NETSTANDARD
+#if !NETFRAMEWORK
 
 		protected override EdgeEmbeddedObject CreateEmbeddedObjectOrFunction(object obj)
 		{
