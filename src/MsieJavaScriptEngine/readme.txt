@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Improved a implementation of the `Dispose` method.
+   Now a case-sensitive cultural postfixes are used in the names of `.resx` files.
 
    ============
    PROJECT SITE

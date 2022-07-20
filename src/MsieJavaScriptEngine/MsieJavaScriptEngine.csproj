@@ -25,7 +25,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-    <PackageReleaseNotes>Improved a implementation of the `Dispose` method.</PackageReleaseNotes>
+    <PackageReleaseNotes>Now a case-sensitive cultural postfixes are used in the names of `.resx` files.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
