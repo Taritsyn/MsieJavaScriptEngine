@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.0.9 - July 20, 2022
+ * Now a case-sensitive cultural postfixes are used in the names of `.resx` files
+
 ## v3.0.8 - August 8, 2021
  * Improved a implementation of the `Dispose` method
 
