@@ -13,7 +13,7 @@
   <Import Project="../../build/common.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
 
     <ProjectReference Include="../MsieJavaScriptEngine.Test.Common/MsieJavaScriptEngine.Test.Common.csproj" />
   </ItemGroup>
