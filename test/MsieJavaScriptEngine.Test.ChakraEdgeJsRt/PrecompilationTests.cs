@@ -18,7 +18,7 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 		#region Mapping of errors
 
 		[Test]
-		public void MappingCompilationErrorDuringPrecompilationOfCodeIsCorrect()
+		public void MappingCompilationErrorDuringPrecompilationOfCode()
 		{
 			// Arrange
 			const string input = @"function guid() {
@@ -63,7 +63,7 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 		}
 
 		[Test]
-		public void MappingRuntimeErrorDuringExecutionOfPrecompiledCodeIsCorrect()
+		public void MappingRuntimeErrorDuringExecutionOfPrecompiledCode()
 		{
 			// Arrange
 			const string input = @"function getItem(items, itemIndex) {
@@ -118,7 +118,7 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 		#region Generation of error messages
 
 		[Test]
-		public void GenerationOfCompilationErrorMessageIsCorrect()
+		public void GenerationOfCompilationErrorMessage()
 		{
 			// Arrange
 			const string input = @"function makeId(length) {
@@ -159,7 +159,7 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 		}
 
 		[Test]
-		public void GenerationOfRuntimeErrorMessageIsCorrect()
+		public void GenerationOfRuntimeErrorMessage()
 		{
 			// Arrange
 			const string input = @"function getFullName(firstName, lastName) {

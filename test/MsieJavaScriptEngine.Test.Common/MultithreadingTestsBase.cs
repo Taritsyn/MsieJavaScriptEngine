@@ -8,7 +8,7 @@ namespace MsieJavaScriptEngine.Test.Common
 	public abstract class MultithreadingTestsBase : TestsBase
 	{
 		[Test]
-		public virtual void ExecutionOfCodeFromDifferentThreadsIsCorrect()
+		public virtual void ExecutionOfCodeFromDifferentThreads()
 		{
 			// Arrange
 			const string variableName = "foo";

@@ -8,7 +8,7 @@ namespace MsieJavaScriptEngine.Test.Common
 	public class ValidationTests
 	{
 		[Test]
-		public void NameFormatIsCorrect()
+		public void CheckingOfCorrectNameFormat()
 		{
 			// Arrange
 
@@ -30,7 +30,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
-		public void NameFormatIsWrong()
+		public void CheckingOfWrongNameFormat()
 		{
 			// Arrange
 
@@ -50,7 +50,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
-		public void DocumentNameFormatIsCorrect()
+		public void CheckingOfCorrectDocumentNameFormat()
 		{
 			// Arrange
 
@@ -74,7 +74,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
-		public void DocumentNameFormatIsWrong()
+		public void CheckingOfWrongDocumentNameFormat()
 		{
 			// Arrange
 

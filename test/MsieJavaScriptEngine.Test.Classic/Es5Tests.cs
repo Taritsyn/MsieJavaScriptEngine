@@ -15,7 +15,7 @@ namespace MsieJavaScriptEngine.Test.Classic
 		#region Object methods
 
 		[Test]
-		public override void ObjectKeysMethodIsSupported()
+		public override void SupportsObjectKeysMethod()
 		{
 			// Arrange
 			const string input1 = "Object.keys(['a', 'b', 'c']).toString();";

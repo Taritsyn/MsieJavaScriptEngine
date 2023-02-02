@@ -10,7 +10,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		#region Array methods
 
 		[Test]
-		public virtual void ArrayEveryMethodIsSupported()
+		public virtual void SupportsArrayEveryMethod()
 		{
 			// Arrange
 			const string initCode = "var engines = ['Chakra', 'V8', 'SpiderMonkey', 'Jurassic'];";
@@ -39,7 +39,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
-		public virtual void ArrayFilterMethodIsSupported()
+		public virtual void SupportsArrayFilterMethod()
 		{
 			// Arrange
 			const string initCode = "var engines = ['Chakra', 'V8', 'SpiderMonkey', 'Jurassic'];";
@@ -65,7 +65,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
-		public virtual void ArrayForEachMethodIsSupported()
+		public virtual void SupportsArrayForEachMethod()
 		{
 			// Arrange
 			const string resultVariableName = "enginesString";
@@ -95,7 +95,7 @@ engines.forEach(function(value, index, array) {{
 		}
 
 		[Test]
-		public virtual void ArrayIndexOfMethodIsSupported()
+		public virtual void SupportsArrayIndexOfMethod()
 		{
 			// Arrange
 			const string initCode = "var arr = [2, 5, 9, 2]";
@@ -154,7 +154,7 @@ engines.forEach(function(value, index, array) {{
 		}
 
 		[Test]
-		public virtual void ArrayIsArrayMethodIsSupported()
+		public virtual void SupportsArrayIsArrayMethod()
 		{
 			// Arrange
 			const string input1 = "Array.isArray({ length: 0 });";
@@ -179,7 +179,7 @@ engines.forEach(function(value, index, array) {{
 		}
 
 		[Test]
-		public virtual void ArrayLastIndexOfMethodIsSupported()
+		public virtual void SupportsArrayLastIndexOfMethod()
 		{
 			// Arrange
 			const string initCode = "var arr = [2, 5, 9, 2]";
@@ -238,7 +238,7 @@ engines.forEach(function(value, index, array) {{
 		}
 
 		[Test]
-		public virtual void ArrayMapMethodIsSupported()
+		public virtual void SupportsArrayMapMethod()
 		{
 			// Arrange
 			const string initCode = "var engines = ['Chakra', 'V8', 'SpiderMonkey', 'Jurassic'];";
@@ -264,7 +264,7 @@ engines.forEach(function(value, index, array) {{
 		}
 
 		[Test]
-		public virtual void ArrayReduceMethodIsSupported()
+		public virtual void SupportsArrayReduceMethod()
 		{
 			// Arrange
 			const string input1 = @"[1, 2, 3, 4, 5].reduce(function (accum, value, index, array) {
@@ -293,7 +293,7 @@ engines.forEach(function(value, index, array) {{
 		}
 
 		[Test]
-		public virtual void ArrayReduceRightMethodIsSupported()
+		public virtual void SupportsArrayReduceRightMethod()
 		{
 			// Arrange
 			const string input1 = @"[1, 2, 3, 4, 5].reduceRight(function (accum, value, index, array) {
@@ -322,7 +322,7 @@ engines.forEach(function(value, index, array) {{
 		}
 
 		[Test]
-		public virtual void ArraySomeMethodIsSupported()
+		public virtual void SupportsArraySomeMethod()
 		{
 			// Arrange
 			const string initCode = "var engines = ['Chakra', 'V8', 'SpiderMonkey', 'Jurassic'];";
@@ -348,7 +348,7 @@ engines.forEach(function(value, index, array) {{
 		#region Date methods
 
 		[Test]
-		public virtual void DateNowMethodIsSupported()
+		public virtual void SupportsDateNowMethod()
 		{
 			// Arrange
 			const string input = "Date.now();";
@@ -367,7 +367,7 @@ engines.forEach(function(value, index, array) {{
 		}
 
 		[Test]
-		public virtual void DateToIsoStringMethodIsSupported()
+		public virtual void SupportsDateToIsoStringMethod()
 		{
 			// Arrange
 			const string input = @"(new Date(1386696984000)).toISOString();";
@@ -390,7 +390,7 @@ engines.forEach(function(value, index, array) {{
 		#region Function methods
 
 		[Test]
-		public virtual void FunctionBindIsSupported()
+		public virtual void SupportsFunctionBindMethod()
 		{
 			// Arrange
 			const string initCode = @"var a = 5,
@@ -429,7 +429,7 @@ engines.forEach(function(value, index, array) {{
 		#region JSON methods
 
 		[Test]
-		public virtual void JsonParseMethodIsSupported()
+		public virtual void SupportsJsonParseMethod()
 		{
 			// Arrange
 			const string initCode = "var obj = JSON.parse('{ \"foo\": \"bar\" }');";
@@ -450,7 +450,7 @@ engines.forEach(function(value, index, array) {{
 		}
 
 		[Test]
-		public virtual void JsonStringifyMethodIsSupported()
+		public virtual void SupportsJsonStringifyMethod()
 		{
 			// Arrange
 			const string initCode = @"var obj = new Object();
@@ -476,7 +476,7 @@ obj['foo'] = 'bar';";
 		#region Object methods
 
 		[Test]
-		public virtual void ObjectCreateMethodIsSupported()
+		public virtual void SupportsObjectCreateMethod()
 		{
 			// Arrange
 			const string initCode1 = "var obj1 = Object.create(null);";
@@ -531,7 +531,7 @@ greeter.name = 'Vasya'";
 		}
 
 		[Test]
-		public virtual void ObjectKeysMethodIsSupported()
+		public virtual void SupportsObjectKeysMethod()
 		{
 			// Arrange
 			const string input1 = "Object.keys(['a', 'b', 'c']).toString();";
@@ -578,7 +578,7 @@ myObj.foo = 1;
 		#region String methods
 
 		[Test]
-		public virtual void StringSplitMethodIsCorrect()
+		public virtual void SupportsStringSplitMethod()
 		{
 			// Arrange
 			const string input1 = "'aaaa'.split(/a/).length;";
@@ -609,7 +609,7 @@ myObj.foo = 1;
 		}
 
 		[Test]
-		public virtual void StringTrimMethodIsSupported()
+		public virtual void SupportsStringTrimMethod()
 		{
 			// Arrange
 			const string input = "'	foo '.trim();";

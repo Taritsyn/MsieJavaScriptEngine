@@ -21,7 +21,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		#region Objects with fields
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfCustomValueTypeWithFieldsIsCorrect()
+		public virtual void EmbeddingOfInstanceOfCustomValueTypeWithFields()
 		{
 			// Arrange
 			var date = new Date(2015, 12, 29);
@@ -58,7 +58,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfCustomReferenceTypeWithFieldsIsCorrect()
+		public virtual void EmbeddingOfInstanceOfCustomReferenceTypeWithFields()
 		{
 			// Arrange
 			var product = new Product
@@ -106,7 +106,7 @@ product.Price *= 1.15;";
 		#region Objects with properties
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfBuiltinValueTypeWithPropertiesIsCorrect()
+		public virtual void EmbeddingOfInstanceOfBuiltinValueTypeWithProperties()
 		{
 			// Arrange
 			var timeSpan = new TimeSpan(4840780000000);
@@ -147,7 +147,7 @@ product.Price *= 1.15;";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfBuiltinReferenceTypeWithPropertiesIsCorrect()
+		public virtual void EmbeddingOfInstanceOfBuiltinReferenceTypeWithProperties()
 		{
 			// Arrange
 			var uri = new Uri("https://github.com/Taritsyn/MsieJavaScriptEngine");
@@ -182,7 +182,7 @@ product.Price *= 1.15;";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfCustomValueTypeWithPropertiesIsCorrect()
+		public virtual void EmbeddingOfInstanceOfCustomValueTypeWithProperties()
 		{
 			// Arrange
 			var temperature = new Temperature(-17.3, TemperatureUnits.Celsius);
@@ -217,7 +217,7 @@ product.Price *= 1.15;";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfCustomReferenceTypeWithPropertiesIsCorrect()
+		public virtual void EmbeddingOfInstanceOfCustomReferenceTypeWithProperties()
 		{
 			// Arrange
 			var person = new Person("Vanya", "Ivanov");
@@ -255,7 +255,7 @@ person.Patronymic = null;";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfAnonymousTypeWithPropertiesIsCorrect()
+		public virtual void EmbeddingOfInstanceOfAnonymousTypeWithProperties()
 		{
 			// Arrange
 			var person = new
@@ -323,7 +323,7 @@ person.Patronymic = null;";
 		#region Objects with methods
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfBuiltinValueTypeWithMethodsIsCorrect()
+		public virtual void EmbeddingOfInstanceOfBuiltinValueTypeWithMethods()
 		{
 			// Arrange
 			var color = Color.FromArgb(84, 139, 212);
@@ -358,7 +358,7 @@ person.Patronymic = null;";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfBuiltinReferenceTypeWithMethodIsCorrect()
+		public virtual void EmbeddingOfInstanceOfBuiltinReferenceTypeWithMethod()
 		{
 			// Arrange
 			var random = new Random();
@@ -380,7 +380,7 @@ person.Patronymic = null;";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfCustomValueTypeWithMethodsIsCorrect()
+		public virtual void EmbeddingOfInstanceOfCustomValueTypeWithMethods()
 		{
 			// Arrange
 			var programmerDayDate = new Date(2015, 9, 13);
@@ -409,7 +409,7 @@ smileDay.GetDayOfYear();";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfCustomReferenceTypeWithMethodIsCorrect()
+		public virtual void EmbeddingOfInstanceOfCustomReferenceTypeWithMethod()
 		{
 			// Arrange
 			var fileManager = new FileManager();
@@ -432,7 +432,7 @@ smileDay.GetDayOfYear();";
 		}
 
 		[Test]
-		public virtual void CallingOfMethodOfCustomReferenceTypeWithInterfaceParameterIsCorrect()
+		public virtual void CallingOfMethodOfCustomReferenceTypeWithInterfaceParameter()
 		{
 			// Arrange
 			var animalTrainer = new AnimalTrainer();
@@ -468,7 +468,7 @@ smileDay.GetDayOfYear();";
 		#region Delegates
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfDelegateWithoutParametersIsCorrect()
+		public virtual void EmbeddingOfInstanceOfDelegateWithoutParameters()
 		{
 			// Arrange
 			var generateRandomStringFunc = new Func<string>(() =>
@@ -507,7 +507,7 @@ smileDay.GetDayOfYear();";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfDelegateWithOneParameterIsCorrect()
+		public virtual void EmbeddingOfInstanceOfDelegateWithOneParameter()
 		{
 			// Arrange
 			var squareFunc = new Func<int, int>(a => a * a);
@@ -529,7 +529,7 @@ smileDay.GetDayOfYear();";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfDelegateWithTwoParametersIsCorrect()
+		public virtual void EmbeddingOfInstanceOfDelegateWithTwoParameters()
 		{
 			// Arrange
 			var sumFunc = new Func<double, double, double>((a, b) => a + b);
@@ -551,7 +551,7 @@ smileDay.GetDayOfYear();";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfInstanceOfDelegateWithoutResultIsCorrect()
+		public virtual void EmbeddingOfInstanceOfDelegateWithoutResult()
 		{
 			// Arrange
 			var logBuilder = new StringBuilder();
@@ -651,7 +651,7 @@ smileDay.GetDayOfYear();";
 		#region Integration
 
 		[Test]
-		public virtual void InteractionOfEmbeddedCustomValueTypeAndDelegateInstancesIsCorrect()
+		public virtual void InteractionOfEmbeddedCustomValueTypeAndDelegateInstances()
 		{
 			// Arrange
 			var informaticsDayDate = new Date(2015, 12, 4);
@@ -702,7 +702,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		#region Recursive calls
 
 		[Test]
-		public virtual void RecursiveEvaluationOfFilesIsCorrect()
+		public virtual void RecursiveEvaluationOfFiles()
 		{
 			// Arrange
 			string directoryPath = GetAbsolutePath("SharedFiles/recursiveEvaluation/noError");
@@ -731,7 +731,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void RecursiveExecutionOfFilesIsCorrect()
+		public virtual void RecursiveExecutionOfFiles()
 		{
 			// Arrange
 			string directoryPath = GetAbsolutePath("SharedFiles/recursiveExecution/noError");
@@ -761,7 +761,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		#region Removal
 
 		[Test]
-		public virtual void RemovingOfEmbeddedInstanceOfCustomReferenceTypeIsCorrect()
+		public virtual void RemovingOfEmbeddedInstanceOfCustomReferenceType()
 		{
 			// Arrange
 			var person = new Person("Vasya", "Pupkin");
@@ -797,7 +797,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		#region Creating of instances
 
 		[Test]
-		public virtual void CreatingAnInstanceOfEmbeddedBuiltinValueTypeIsCorrect()
+		public virtual void CreatingAnInstanceOfEmbeddedBuiltinValueType()
 		{
 			// Arrange
 			Type pointType = typeof(Point);
@@ -819,7 +819,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void CreatingAnInstanceOfEmbeddedBuiltinReferenceTypeIsCorrect()
+		public virtual void CreatingAnInstanceOfEmbeddedBuiltinReferenceType()
 		{
 			// Arrange
 			Type uriType = typeof(Uri);
@@ -845,7 +845,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void CreatingAnInstanceOfEmbeddedCustomValueTypeIsCorrect()
+		public virtual void CreatingAnInstanceOfEmbeddedCustomValueType()
 		{
 			// Arrange
 			Type point3DType = typeof(Point3D);
@@ -867,7 +867,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void CreatingAnInstanceOfEmbeddedCustomReferenceTypeIsCorrect()
+		public virtual void CreatingAnInstanceOfEmbeddedCustomReferenceType()
 		{
 			// Arrange
 			Type personType = typeof(Person);
@@ -893,7 +893,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		#region Types with constants
 
 		[Test]
-		public virtual void EmbeddingOfBuiltinReferenceTypeWithConstantsIsCorrect()
+		public virtual void EmbeddingOfBuiltinReferenceTypeWithConstants()
 		{
 			// Arrange
 			Type mathType = typeof(Math);
@@ -922,7 +922,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfCustomValueTypeWithConstantsIsCorrect()
+		public virtual void EmbeddingOfCustomValueTypeWithConstants()
 		{
 			// Arrange
 			Type predefinedStringsType = typeof(PredefinedStrings);
@@ -957,7 +957,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfCustomReferenceTypeWithConstantIsCorrect()
+		public virtual void EmbeddingOfCustomReferenceTypeWithConstant()
 		{
 			// Arrange
 			Type base64EncoderType = typeof(Base64Encoder);
@@ -983,7 +983,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		#region Types with fields
 
 		[Test]
-		public virtual void EmbeddingOfBuiltinValueTypeWithFieldIsCorrect()
+		public virtual void EmbeddingOfBuiltinValueTypeWithField()
 		{
 			// Arrange
 			Type guidType = typeof(Guid);
@@ -1005,7 +1005,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfBuiltinReferenceTypeWithFieldIsCorrect()
+		public virtual void EmbeddingOfBuiltinReferenceTypeWithField()
 		{
 			// Arrange
 			Type bitConverterType = typeof(BitConverter);
@@ -1027,7 +1027,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfCustomValueTypeWithFieldIsCorrect()
+		public virtual void EmbeddingOfCustomValueTypeWithField()
 		{
 			// Arrange
 			Type point3DType = typeof(Point3D);
@@ -1049,7 +1049,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfCustomReferenceTypeWithFieldIsCorrect()
+		public virtual void EmbeddingOfCustomReferenceTypeWithField()
 		{
 			// Arrange
 			Type defaultLoggerType = typeof(DefaultLogger);
@@ -1080,7 +1080,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		#region Types with properties
 
 		[Test]
-		public virtual void EmbeddingOfBuiltinValueTypeWithPropertyIsCorrect()
+		public virtual void EmbeddingOfBuiltinValueTypeWithProperty()
 		{
 			// Arrange
 			Type colorType = typeof(Color);
@@ -1102,7 +1102,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfBuiltinReferenceTypeWithPropertyIsCorrect()
+		public virtual void EmbeddingOfBuiltinReferenceTypeWithProperty()
 		{
 			// Arrange
 			Type environmentType = typeof(Environment);
@@ -1124,7 +1124,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfCustomValueTypeWithPropertyIsCorrect()
+		public virtual void EmbeddingOfCustomValueTypeWithProperty()
 		{
 			// Arrange
 			Type dateType = typeof(Date);
@@ -1157,7 +1157,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfCustomReferenceTypeWithPropertyIsCorrect()
+		public virtual void EmbeddingOfCustomReferenceTypeWithProperty()
 		{
 			// Arrange
 			Type bundleTableType = typeof(BundleTable);
@@ -1186,7 +1186,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		#region Types with methods
 
 		[Test]
-		public virtual void EmbeddingOfBuiltinValueTypeWithMethodIsCorrect()
+		public virtual void EmbeddingOfBuiltinValueTypeWithMethod()
 		{
 			// Arrange
 			Type dateTimeType = typeof(DateTime);
@@ -1208,7 +1208,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfBuiltinReferenceTypeWithMethodsIsCorrect()
+		public virtual void EmbeddingOfBuiltinReferenceTypeWithMethods()
 		{
 			// Arrange
 			Type mathType = typeof(Math);
@@ -1236,7 +1236,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfCustomValueTypeWithMethodIsCorrect()
+		public virtual void EmbeddingOfCustomValueTypeWithMethod()
 		{
 			// Arrange
 			var dateType = typeof(Date);
@@ -1258,7 +1258,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		}
 
 		[Test]
-		public virtual void EmbeddingOfCustomReferenceTypeWithMethodIsCorrect()
+		public virtual void EmbeddingOfCustomReferenceTypeWithMethod()
 		{
 			// Arrange
 			Type base64EncoderType = typeof(Base64Encoder);
@@ -1284,7 +1284,7 @@ var sysadminDay = addDays(webmasterDay, 118);";
 		#region Removal
 
 		[Test]
-		public virtual void RemovingOfEmbeddedCustomReferenceTypeIsCorrect()
+		public virtual void RemovingOfEmbeddedCustomReferenceType()
 		{
 			// Arrange
 			Type personType = typeof(Person);

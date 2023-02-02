@@ -8,7 +8,7 @@ namespace MsieJavaScriptEngine.Test.Common
 	public class ErrorFormattingTests
 	{
 		[Test]
-		public void GettingSourceFragmentFromLineIsCorrect()
+		public void GettingSourceFragmentFromLine()
 		{
 			// Arrange
 			const string input1 = "";

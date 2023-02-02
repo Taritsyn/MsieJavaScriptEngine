@@ -14,7 +14,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		#region Execution of precompiled scripts
 
 		[Test]
-		public virtual void ExecutionOfPrecompiledCodeIsCorrect()
+		public virtual void ExecutionOfPrecompiledCode()
 		{
 			// Arrange
 			const string libraryCode = @"function declensionOfNumerals(number, titles) {
@@ -86,7 +86,7 @@ function declinationOfSeconds(number) {
 		}
 
 		[Test]
-		public virtual void ExecutionOfPrecompiledFileIsCorrect()
+		public virtual void ExecutionOfPrecompiledFile()
 		{
 			// Arrange
 			string filePath = GetAbsolutePath("SharedFiles/declinationOfMinutes.js");
@@ -136,7 +136,7 @@ function declinationOfSeconds(number) {
 		}
 
 		[Test]
-		public virtual void ExecutionOfPrecompiledResourceByNameAndTypeIsCorrect()
+		public virtual void ExecutionOfPrecompiledResourceByNameAndType()
 		{
 			// Arrange
 			const string resourceName = "Resources.declinationOfHours.js";
@@ -186,7 +186,7 @@ function declinationOfSeconds(number) {
 		}
 
 		[Test]
-		public virtual void ExecutionOfPrecompiledResourceByNameAndAssemblyIsCorrect()
+		public virtual void ExecutionOfPrecompiledResourceByNameAndAssembly()
 		{
 			// Arrange
 			const string resourceName = "MsieJavaScriptEngine.Test.Common.Resources.declinationOfDays.js";

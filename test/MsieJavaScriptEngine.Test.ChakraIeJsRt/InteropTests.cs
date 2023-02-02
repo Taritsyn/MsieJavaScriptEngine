@@ -46,7 +46,7 @@ namespace MsieJavaScriptEngine.Test.ChakraIeJsRt
 		#region Mapping of errors
 
 		[Test]
-		public void MappingRuntimeErrorDuringRecursiveEvaluationOfFilesIsCorrect()
+		public void MappingRuntimeErrorDuringRecursiveEvaluationOfFiles()
 		{
 			// Arrange
 			string directoryPath = GetAbsolutePath("SharedFiles/recursiveEvaluation/runtimeError");
