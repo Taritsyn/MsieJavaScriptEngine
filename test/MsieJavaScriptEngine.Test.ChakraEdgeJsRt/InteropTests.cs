@@ -14,7 +14,6 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 
 
 		#region Embedding of objects
-#if NETCOREAPP
 
 		#region Delegates
 
@@ -97,7 +96,6 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 
 		#endregion
 
-#endif
 		#endregion
 	}
 }

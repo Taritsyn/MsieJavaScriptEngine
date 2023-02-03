@@ -58,6 +58,14 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "The parameter '{0}' must have a `{1}` type."
+		/// </summary>
+		internal static string Common_ArgumentHasIncorrectType
+		{
+			get { return GetString("Common_ArgumentHasIncorrectType"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "The parameter '{0}' must be a non-empty string."
 		/// </summary>
 		internal static string Common_ArgumentIsEmpty
@@ -242,6 +250,110 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "During invocation of the host delegate an error has occurred - “{0}”."
+		/// </summary>
+		internal static string Runtime_HostDelegateInvocationFailed
+		{
+			get { return GetString("Runtime_HostDelegateInvocationFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During getting value of '{0}' field of the host object an error has occurred - “{1}”."
+		/// </summary>
+		internal static string Runtime_HostObjectFieldGettingFailed
+		{
+			get { return GetString("Runtime_HostObjectFieldGettingFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During setting value of '{0}' field of the host object an error has occurred - “{1}”."
+		/// </summary>
+		internal static string Runtime_HostObjectFieldSettingFailed
+		{
+			get { return GetString("Runtime_HostObjectFieldSettingFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During invocation of '{0}' method of the host object an error has occurred - “{1}”."
+		/// </summary>
+		internal static string Runtime_HostObjectMethodInvocationFailed
+		{
+			get { return GetString("Runtime_HostObjectMethodInvocationFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During getting value of '{0}' property of the host object an error has occurred - “{1}”."
+		/// </summary>
+		internal static string Runtime_HostObjectPropertyGettingFailed
+		{
+			get { return GetString("Runtime_HostObjectPropertyGettingFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During setting value of '{0}' property of the host object an error has occurred - “{1}”."
+		/// </summary>
+		internal static string Runtime_HostObjectPropertySettingFailed
+		{
+			get { return GetString("Runtime_HostObjectPropertySettingFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During invocation of constructor of the `{0}` host type an error has occurred - “{1}”."
+		/// </summary>
+		internal static string Runtime_HostTypeConstructorInvocationFailed
+		{
+			get { return GetString("Runtime_HostTypeConstructorInvocationFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Could not create instance of the `{0}` host type, because it does not have any public constructor."
+		/// </summary>
+		internal static string Runtime_HostTypeConstructorNotFound
+		{
+			get { return GetString("Runtime_HostTypeConstructorNotFound"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During getting value of '{0}' field of the `{1}` host type an error has occurred - “{2}”."
+		/// </summary>
+		internal static string Runtime_HostTypeFieldGettingFailed
+		{
+			get { return GetString("Runtime_HostTypeFieldGettingFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During setting value of '{0}' field of the `{1}` host type an error has occurred - “{2}”."
+		/// </summary>
+		internal static string Runtime_HostTypeFieldSettingFailed
+		{
+			get { return GetString("Runtime_HostTypeFieldSettingFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During invocation of '{0}' method of the `{1}` host type an error has occurred - “{2}”."
+		/// </summary>
+		internal static string Runtime_HostTypeMethodInvocationFailed
+		{
+			get { return GetString("Runtime_HostTypeMethodInvocationFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During getting value of '{0}' property of the `{1}` host type an error has occurred - “{2}”."
+		/// </summary>
+		internal static string Runtime_HostTypePropertyGettingFailed
+		{
+			get { return GetString("Runtime_HostTypePropertyGettingFailed"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "During setting value of '{0}' property of the host type `{1}` an error has occurred - “{2}”."
+		/// </summary>
+		internal static string Runtime_HostTypePropertySettingFailed
+		{
+			get { return GetString("Runtime_HostTypePropertySettingFailed"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "The '{0}' line of the script call stack has an incorrect format."
 		/// </summary>
 		internal static string Runtime_InvalidCallStackLineFormat
@@ -250,11 +362,51 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
+		/// Looks up a localized string similar to "Could not retrieve field '{0}' of the host object, because there was an invalid `this` context."
+		/// </summary>
+		internal static string Runtime_InvalidThisContextForHostObjectField
+		{
+			get { return GetString("Runtime_InvalidThisContextForHostObjectField"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Could not call method '{0}' of the host object, because there was an invalid `this` context."
+		/// </summary>
+		internal static string Runtime_InvalidThisContextForHostObjectMethod
+		{
+			get { return GetString("Runtime_InvalidThisContextForHostObjectMethod"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Could not retrieve property '{0}' of the host object, because there was an invalid `this` context."
+		/// </summary>
+		internal static string Runtime_InvalidThisContextForHostObjectProperty
+		{
+			get { return GetString("Runtime_InvalidThisContextForHostObjectProperty"); }
+		}
+
+		/// <summary>
 		/// Looks up a localized string similar to "Script execution was interrupted."
 		/// </summary>
 		internal static string Runtime_ScriptInterrupted
 		{
 			get { return GetString("Runtime_ScriptInterrupted"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Could not find suitable constructor or not enough arguments to invoke of constructor of the `{0}`..."
+		/// </summary>
+		internal static string Runtime_SuitableConstructorOfHostTypeNotFound
+		{
+			get { return GetString("Runtime_SuitableConstructorOfHostTypeNotFound"); }
+		}
+
+		/// <summary>
+		/// Looks up a localized string similar to "Could not find suitable method or not enough arguments to invoke of '{0}' method of the host object."
+		/// </summary>
+		internal static string Runtime_SuitableMethodOfHostObjectNotFound
+		{
+			get { return GetString("Runtime_SuitableMethodOfHostObjectNotFound"); }
 		}
 
 		/// <summary>
@@ -383,14 +535,6 @@ namespace MsieJavaScriptEngine.Resources
 		internal static string Usage_JsEnginesConflictInProcess
 		{
 			get { return GetString("Usage_JsEnginesConflictInProcess"); }
-		}
-
-		/// <summary>
-		/// Looks up a localized string similar to "It is prohibited to use the Chakra JsRT and Chakra ActiveScript engines on one machine at a time."
-		/// </summary>
-		internal static string Usage_JsEnginesConflictOnMachine
-		{
-			get { return GetString("Usage_JsEnginesConflictOnMachine"); }
 		}
 
 		/// <summary>

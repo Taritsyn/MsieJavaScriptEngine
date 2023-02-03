@@ -148,16 +148,6 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 		[DllImport(DllName.Chakra)]
 		internal static extern JsErrorCode JsConvertValueToString(EdgeJsValue value, out EdgeJsValue stringValue);
-#if NETFRAMEWORK
-
-		[DllImport(DllName.Chakra)]
-		internal static extern JsErrorCode JsVariantToValue([MarshalAs(UnmanagedType.Struct)] ref object var,
-			out EdgeJsValue value);
-
-		[DllImport(DllName.Chakra)]
-		internal static extern JsErrorCode JsValueToVariant(EdgeJsValue obj,
-			[MarshalAs(UnmanagedType.Struct)] out object var);
-#endif
 
 		[DllImport(DllName.Chakra)]
 		internal static extern JsErrorCode JsGetGlobalObject(out EdgeJsValue globalObject);

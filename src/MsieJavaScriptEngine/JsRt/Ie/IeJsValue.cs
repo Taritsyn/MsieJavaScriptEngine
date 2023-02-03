@@ -305,24 +305,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 			return reference;
 		}
-#if NETFRAMEWORK
-
-		/// <summary>
-		/// Creates a JavaScript value that is a projection of the passed in object
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <param name="value">The object to be projected</param>
-		/// <returns>The JavaScript value that is a projection of the object</returns>
-		public static IeJsValue FromObject(object value)
-		{
-			IeJsValue reference;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsVariantToValue(ref value, out reference));
-
-			return reference;
-		}
-#endif
 
 		/// <summary>
 		/// Creates a new <c>Object</c>
@@ -611,23 +593,6 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 			return Marshal.PtrToStringUni(buffer, (int)length);
 		}
-#if NETFRAMEWORK
-
-		/// <summary>
-		/// Retrieves a object representation of an <c>Object</c> value
-		/// </summary>
-		/// <remarks>
-		/// Requires an active script context.
-		/// </remarks>
-		/// <returns>The object representation of the value</returns>
-		public object ToObject()
-		{
-			object value;
-			IeJsErrorHelpers.ThrowIfError(IeNativeMethods.JsValueToVariant(this, out value));
-
-			return value;
-		}
-#endif
 
 		/// <summary>
 		/// Converts a value to <c>Boolean</c> using regular JavaScript semantics

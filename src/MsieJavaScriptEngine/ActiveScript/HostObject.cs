@@ -7,7 +7,7 @@ using System.Reflection;
 using MsieJavaScriptEngine.Constants;
 using MsieJavaScriptEngine.Helpers;
 
-namespace MsieJavaScriptEngine
+namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
 	/// Wrapper for object, that implements <see cref="IReflect"/> interface

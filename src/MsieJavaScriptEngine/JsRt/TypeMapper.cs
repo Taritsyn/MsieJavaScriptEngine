@@ -1,18 +1,11 @@
 ﻿using System;
-#if !NETFRAMEWORK
 using System.Collections.Concurrent;
-#endif
 using System.Linq;
-#if !NETFRAMEWORK
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#endif
-#if !NETFRAMEWORK
 
 using MsieJavaScriptEngine.JsRt.Embedding;
 using MsieJavaScriptEngine.Utilities;
-#endif
 
 namespace MsieJavaScriptEngine.JsRt
 {
@@ -25,7 +18,6 @@ namespace MsieJavaScriptEngine.JsRt
 		where TValue : struct
 		where TFunction : Delegate
 	{
-#if !NETFRAMEWORK
 		/// <summary>
 		/// Name of property to store the external object
 		/// </summary>
@@ -74,23 +66,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// Flag indicating whether this object is disposed
 		/// </summary>
-		private readonly InterlockedStatedFlag _disposedFlag = new InterlockedStatedFlag();
-#else
-		/// <summary>
-		/// JS engine mode
-		/// </summary>
-		protected readonly JsEngineMode _engineMode;
-
-
-		/// <summary>
-		/// Constructs an instance of type mapper
-		/// </summary>
-		/// <param name="engineMode">JS engine mode</param>
-		protected TypeMapper(JsEngineMode engineMode)
-		{
-			_engineMode = engineMode;
-		}
-#endif
+		private InterlockedStatedFlag _disposedFlag = new InterlockedStatedFlag();
 
 
 		/// <summary>
@@ -98,7 +74,6 @@ namespace MsieJavaScriptEngine.JsRt
 		/// </summary>
 		/// <param name="obj">Instance of host type</param>
 		/// <returns>JavaScript value created from an host object</returns>
-#if !NETFRAMEWORK
 		public virtual TValue GetOrCreateScriptObject(object obj)
 		{
 
@@ -125,16 +100,12 @@ namespace MsieJavaScriptEngine.JsRt
 
 			return embeddedObject.ScriptValue;
 		}
-#else
-		public abstract TValue GetOrCreateScriptObject(object obj);
-#endif
 
 		/// <summary>
 		/// Creates a JavaScript value from an host type if the it does not already exist
 		/// </summary>
 		/// <param name="type">Host type</param>
 		/// <returns>JavaScript value created from an host type</returns>
-#if !NETFRAMEWORK
 		public virtual TValue GetOrCreateScriptType(Type type)
 		{
 			if (!_embeddedTypeStorageInitialized)
@@ -160,9 +131,6 @@ namespace MsieJavaScriptEngine.JsRt
 
 			return embeddedType.ScriptValue;
 		}
-#else
-		public abstract TValue GetOrCreateScriptType(Type type);
-#endif
 
 		/// <summary>
 		/// Makes a mapping of value from the host type to a script type
@@ -177,7 +145,6 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <param name="value">The source value</param>
 		/// <returns>The mapped value</returns>
 		public abstract object MapToHostType(TValue value);
-#if !NETFRAMEWORK
 
 		protected abstract EmbeddedObject<TValue, TFunction> CreateEmbeddedObjectOrFunction(object obj);
 
@@ -282,7 +249,6 @@ namespace MsieJavaScriptEngine.JsRt
 
 			return originalException;
 		}
-#endif
 
 		#region IDisposable implementation
 
@@ -291,7 +257,6 @@ namespace MsieJavaScriptEngine.JsRt
 		/// </summary>
 		public virtual void Dispose()
 		{
-#if !NETFRAMEWORK
 			if (_disposedFlag.Set())
 			{
 				var lazyEmbeddedObjects = _lazyEmbeddedObjects;
@@ -340,7 +305,6 @@ namespace MsieJavaScriptEngine.JsRt
 
 				_embeddedTypeFinalizeCallback = null;
 			}
-#endif
 		}
 
 		#endregion

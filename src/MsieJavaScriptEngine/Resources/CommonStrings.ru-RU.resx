@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Common_ArgumentHasIncorrectType" xml:space="preserve">
+    <value>Параметр с именем "{0}" должен иметь тип `{1}`!</value>
+  </data>
   <data name="Common_ArgumentIsEmpty" xml:space="preserve">
     <value>Параметр с именем "{0}" не должен содержать пустую строку!</value>
   </data>
@@ -186,11 +189,65 @@
   <data name="Runtime_FunctionNotExist" xml:space="preserve">
     <value>Функция с именем "{0}" не существует!</value>
   </data>
+  <data name="Runtime_HostDelegateInvocationFailed" xml:space="preserve">
+    <value>Во время вызова делегата хоста произошла ошибка - «{0}»!</value>
+  </data>
+  <data name="Runtime_HostObjectFieldGettingFailed" xml:space="preserve">
+    <value>Во время получения значения поля "{0}" объекта хоста произошла ошибка - «{1}»!</value>
+  </data>
+  <data name="Runtime_HostObjectFieldSettingFailed" xml:space="preserve">
+    <value>Во время присваивания значения полю "{0}" объекта хоста произошла ошибка - «{1}»!</value>
+  </data>
+  <data name="Runtime_HostObjectMethodInvocationFailed" xml:space="preserve">
+    <value>Во время вызова метода "{0}" объекта хоста произошла ошибка - «{1}»!</value>
+  </data>
+  <data name="Runtime_HostObjectPropertyGettingFailed" xml:space="preserve">
+    <value>Во время получения значения свойства "{0}" объекта хоста произошла ошибка - «{1}»!</value>
+  </data>
+  <data name="Runtime_HostObjectPropertySettingFailed" xml:space="preserve">
+    <value>Во время присваивания значения свойству "{0}" объекта хоста произошла ошибка - «{1}»!</value>
+  </data>
+  <data name="Runtime_HostTypeConstructorInvocationFailed" xml:space="preserve">
+    <value>Во время вызова конструктора типа хоста `{0}` произошла ошибка - «{1}»!</value>
+  </data>
+  <data name="Runtime_HostTypeConstructorNotFound" xml:space="preserve">
+    <value>Не удается создать экземпляр типа хоста `{0}`, потому что он не имеет ни одного публичного конструктора!</value>
+  </data>
+  <data name="Runtime_HostTypeFieldGettingFailed" xml:space="preserve">
+    <value>Во время получения значения поля "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
+  </data>
+  <data name="Runtime_HostTypeFieldSettingFailed" xml:space="preserve">
+    <value>Во время присваивания значения полю "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
+  </data>
+  <data name="Runtime_HostTypeMethodInvocationFailed" xml:space="preserve">
+    <value>Во время вызова метода "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
+  </data>
+  <data name="Runtime_HostTypePropertyGettingFailed" xml:space="preserve">
+    <value>Во время получения значения свойства "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
+  </data>
+  <data name="Runtime_HostTypePropertySettingFailed" xml:space="preserve">
+    <value>Во время присваивания значения свойству "{0}" типа хоста `{1}` произошла ошибка - «{2}»!</value>
+  </data>
   <data name="Runtime_InvalidCallStackLineFormat" xml:space="preserve">
     <value>Строка стека вызовов скрипта "{0}" имеет некорректный формат!</value>
   </data>
+  <data name="Runtime_InvalidThisContextForHostObjectField" xml:space="preserve">
+    <value>Не удалось получить поле "{0}" объекта хоста, потому что контекст `this` недействителен!</value>
+  </data>
+  <data name="Runtime_InvalidThisContextForHostObjectMethod" xml:space="preserve">
+    <value>Не удалось вызвать метод "{0}" объекта хоста, потому что контекст `this` недействителен!</value>
+  </data>
+  <data name="Runtime_InvalidThisContextForHostObjectProperty" xml:space="preserve">
+    <value>Не удалось получить свойство "{0}" объекта хоста, потому что контекст `this` недействителен!</value>
+  </data>
   <data name="Runtime_ScriptInterrupted" xml:space="preserve">
     <value>Выполнение скрипта было прервано!</value>
+  </data>
+  <data name="Runtime_SuitableConstructorOfHostTypeNotFound" xml:space="preserve">
+    <value>Не получается найти подходящий конструктор или не хватает аргументов для вызова конструктора `{0}` типа хоста!</value>
+  </data>
+  <data name="Runtime_SuitableMethodOfHostObjectNotFound" xml:space="preserve">
+    <value>Не получается найти подходящий метод или не хватает аргументов для вызова метода "{0}" объекта хоста!</value>
   </data>
   <data name="Usage_CannotExecuteEmptyFile" xml:space="preserve">
     <value>Нельзя выполнить файл "{0}", потому что он пустой!</value>
@@ -239,9 +296,6 @@
   </data>
   <data name="Usage_JsEnginesConflictInProcess" xml:space="preserve">
     <value>Нельзя использовать {0} и {1} движки в одном процессе.</value>
-  </data>
-  <data name="Usage_JsEnginesConflictOnMachine" xml:space="preserve">
-    <value>Нельзя использовать Chakra JsRT и Chakra ActiveScript движки на одном компьютере одновременно.</value>
   </data>
   <data name="Usage_ReturnValueTypeNotSupported" xml:space="preserve">
     <value>Тип возвращаемого значения `{0}` не поддерживается!</value>

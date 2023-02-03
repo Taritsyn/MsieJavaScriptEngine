@@ -5,7 +5,7 @@ using System.Reflection;
 
 using MsieJavaScriptEngine.Helpers;
 
-namespace MsieJavaScriptEngine
+namespace MsieJavaScriptEngine.ActiveScript
 {
 	/// <summary>
 	/// Base class of item, that implements <see cref="IReflect"/> interface

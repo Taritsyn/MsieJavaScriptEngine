@@ -13,34 +13,6 @@ namespace MsieJavaScriptEngine.Helpers
 
 
 		/// <summary>
-		/// Gets a value indicating whether the specified type is one of the numeric types
-		/// </summary>
-		/// <param name="type">The type</param>
-		/// <returns>true if the specified type is one of the numeric types; otherwise, false</returns>
-		public static bool IsNumericType(Type type)
-		{
-			TypeCode typeCode = type.GetTypeCode();
-
-			switch (typeCode)
-			{
-				case TypeCode.SByte:
-				case TypeCode.Byte:
-				case TypeCode.Int16:
-				case TypeCode.UInt16:
-				case TypeCode.Int32:
-				case TypeCode.UInt32:
-				case TypeCode.Int64:
-				case TypeCode.UInt64:
-				case TypeCode.Single:
-				case TypeCode.Double:
-				case TypeCode.Decimal:
-					return true;
-				default:
-					return false;
-			}
-		}
-
-		/// <summary>
 		/// Casts a double value to the correct type
 		/// </summary>
 		/// <param name="value">Double value</param>

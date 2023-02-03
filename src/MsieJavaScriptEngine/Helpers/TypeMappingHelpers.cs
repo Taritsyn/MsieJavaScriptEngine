@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 
+using MsieJavaScriptEngine.ActiveScript;
 using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.Helpers

@@ -1,5 +1,4 @@
-﻿#if !NETFRAMEWORK
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -84,7 +83,7 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 			if (!(other is EmbeddedObjectKey))
 			{
 				throw new ArgumentException(
-					string.Format(NetCoreStrings.Common_ArgumentHasIncorrectType, nameof(other),
+					string.Format(CommonStrings.Common_ArgumentHasIncorrectType, nameof(other),
 						other.GetType().Name),
 					nameof(other)
 				);
@@ -122,7 +121,7 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 			if (!(other is EmbeddedObjectKey))
 			{
 				throw new ArgumentException(
-					string.Format(NetCoreStrings.Common_ArgumentHasIncorrectType, nameof(other),
+					string.Format(CommonStrings.Common_ArgumentHasIncorrectType, nameof(other),
 						other.GetType().Name),
 					nameof(other)
 				);
@@ -162,4 +161,3 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 		#endregion
 	}
 }
-#endif

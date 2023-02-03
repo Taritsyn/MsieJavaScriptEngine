@@ -1,13 +1,9 @@
 ﻿using System;
-#if !NETFRAMEWORK
 using System.Collections.Generic;
 using System.Linq;
-#endif
 using System.Reflection;
-#if !NETFRAMEWORK
 
 using MsieJavaScriptEngine.Utilities;
-#endif
 
 namespace MsieJavaScriptEngine.Helpers
 {
@@ -66,7 +62,7 @@ namespace MsieJavaScriptEngine.Helpers
 
 			return fullyFledgedMethods;
 		}
-#else
+#endif
 
 		public static void FixFieldValueType(ref object value, FieldInfo field)
 		{
@@ -269,6 +265,5 @@ namespace MsieJavaScriptEngine.Helpers
 				set;
 			}
 		}
-#endif
 	}
 }

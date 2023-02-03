@@ -1,5 +1,4 @@
-﻿#if !NETFRAMEWORK
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using MsieJavaScriptEngine.Utilities;
@@ -38,7 +37,7 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 		/// <summary>
 		/// Flag indicating whether this object is disposed
 		/// </summary>
-		private readonly InterlockedStatedFlag _disposedFlag = new InterlockedStatedFlag();
+		private InterlockedStatedFlag _disposedFlag = new InterlockedStatedFlag();
 
 		/// <summary>
 		/// Gets a host type
@@ -122,4 +121,3 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 		#endregion
 	}
 }
-#endif

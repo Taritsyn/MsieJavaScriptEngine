@@ -1,5 +1,4 @@
-﻿#if !NETFRAMEWORK
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace MsieJavaScriptEngine.JsRt.Embedding
@@ -45,4 +44,3 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 		#endregion
 	}
 }
-#endif

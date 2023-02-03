@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Now a case-sensitive cultural postfixes are used in the names of `.resx` files.
+   In JsRT modes, `JsVariantToValue` and `JsValueToVariant` native methods are no
+   longer used for embedding objects and types.
 
    ============
    PROJECT SITE

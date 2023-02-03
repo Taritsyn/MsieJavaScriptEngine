@@ -29,50 +29,6 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <summary>
 		/// Gets a content of the embedded resource as string
 		/// </summary>
-		/// <param name="resourceName">The case-sensitive resource name without the namespace of the specified type</param>
-		/// <param name="type">The type, that determines the assembly and whose namespace is used to scope
-		/// the resource name</param>
-		/// <returns>Сontent of the embedded resource as string</returns>
-		public static string GetResourceAsString(string resourceName, Type type)
-		{
-			if (resourceName == null)
-			{
-				throw new ArgumentNullException(
-					nameof(resourceName),
-					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(resourceName))
-				);
-			}
-
-			if (type == null)
-			{
-				throw new ArgumentNullException(
-					nameof(type),
-					string.Format(CommonStrings.Common_ArgumentIsNull, nameof(type))
-				);
-			}
-
-			if (string.IsNullOrWhiteSpace(resourceName))
-			{
-				throw new ArgumentException(
-					string.Format(CommonStrings.Common_ArgumentIsEmpty, nameof(resourceName)),
-					nameof(resourceName)
-				);
-			}
-
-#if NET40
-			Assembly assembly = type.Assembly;
-#else
-			Assembly assembly = type.GetTypeInfo().Assembly;
-#endif
-			string nameSpace = type.Namespace;
-			string resourceFullName = nameSpace != null ? nameSpace + "." + resourceName : resourceName;
-
-			return InnerGetResourceAsString(resourceFullName, assembly);
-		}
-
-		/// <summary>
-		/// Gets a content of the embedded resource as string
-		/// </summary>
 		/// <param name="resourceName">The case-sensitive resource name</param>
 		/// <param name="assembly">The assembly, which contains the embedded resource</param>
 		/// <returns>Сontent of the embedded resource as string</returns>
@@ -102,11 +58,6 @@ namespace MsieJavaScriptEngine.Utilities
 				);
 			}
 
-			return InnerGetResourceAsString(resourceName, assembly);
-		}
-
-		private static string InnerGetResourceAsString(string resourceName, Assembly assembly)
-		{
 			using (Stream stream = assembly.GetManifestResourceStream(resourceName))
 			{
 				if (stream == null)

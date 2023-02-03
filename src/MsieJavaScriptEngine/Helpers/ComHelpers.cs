@@ -27,26 +27,6 @@ namespace MsieJavaScriptEngine.Helpers
 			return pInterface;
 		}
 
-		public static IntPtr CreateInstanceByProgId<T>(string progId)
-		{
-			Guid clsid = ClsidFromProgId(progId);
-			IntPtr pInterface = CreateInstanceByClsid<T>(clsid);
-
-			return pInterface;
-		}
-
-		private static Guid ClsidFromProgId(string progId)
-		{
-			Guid clsid;
-
-			if (!Guid.TryParseExact(progId, "B", out clsid))
-			{
-				HResult.Check(NativeMethods.CLSIDFromProgID(progId, out clsid));
-			}
-
-			return clsid;
-		}
-
 		public static bool TryCreateComObject<T>(string progId, string serverName, out T obj) where T : class
 		{
 			Type type;
@@ -92,14 +72,6 @@ namespace MsieJavaScriptEngine.Helpers
 			return result == ComErrorCode.S_OK ? pInterface : IntPtr.Zero;
 		}
 
-		public static T GetMethodDelegate<T>(IntPtr pInterface, int methodIndex) where T : class
-		{
-			var pVTable = Marshal.ReadIntPtr(pInterface);
-			var pMethod = Marshal.ReadIntPtr(pVTable + methodIndex * IntPtr.Size);
-
-			return Marshal.GetDelegateForFunctionPointer(pMethod, typeof(T)) as T;
-		}
-
 		public static void ReleaseAndEmpty(ref IntPtr pUnk)
 		{
 			if (pUnk != IntPtr.Zero)
@@ -120,12 +92,6 @@ namespace MsieJavaScriptEngine.Helpers
 				[In] uint clsContext,
 				[In] ref Guid iid,
 				[Out] out IntPtr pInterface
-			);
-
-			[DllImport("ole32.dll", ExactSpelling = true)]
-			public static extern uint CLSIDFromProgID(
-				[In] [MarshalAs(UnmanagedType.LPWStr)] string progId,
-				[Out] out Guid clsid
 			);
 		}
 

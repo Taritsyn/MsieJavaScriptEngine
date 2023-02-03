@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace MsieJavaScriptEngine.Extensions
 {
@@ -63,6 +62,7 @@ namespace MsieJavaScriptEngine.Extensions
 
 			return result;
 		}
+#if NETFRAMEWORK
 
 		/// <summary>
 		/// Converts a first letter of string to capital
@@ -83,7 +83,7 @@ namespace MsieJavaScriptEngine.Extensions
 			}
 
 			string result;
-			char firstCharacter = source.First();
+			char firstCharacter = source[0];
 
 			if (char.IsLower(firstCharacter))
 			{
@@ -100,6 +100,7 @@ namespace MsieJavaScriptEngine.Extensions
 
 			return result;
 		}
+#endif
 
 		/// <summary>
 		/// Splits a string into lines
