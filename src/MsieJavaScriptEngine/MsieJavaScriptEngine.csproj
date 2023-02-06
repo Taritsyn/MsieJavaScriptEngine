@@ -25,7 +25,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-    <PackageReleaseNotes>In JsRT modes, `JsVariantToValue` and `JsValueToVariant` native methods are no longer used for embedding objects and types.</PackageReleaseNotes>
+    <PackageReleaseNotes>1. In JsRT modes, `JsVariantToValue` and `JsValueToVariant` native methods are no longer used for embedding objects and types;
+2. JSON2 library was updated to version of October 30, 2022.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
