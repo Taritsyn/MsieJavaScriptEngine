@@ -12,12 +12,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		None = 0,
 
 		/// <summary>
-		/// Returns the IUnknown interface for this item
+		/// Returns the <c>IUnknown</c> interface for this item
 		/// </summary>
 		IUnknown = 1,
 
 		/// <summary>
-		/// Returns the ITypeInfo interface for this item
+		/// Returns the <c>ITypeInfo</c> interface for this item
 		/// </summary>
 		ITypeInfo = 2
 	}

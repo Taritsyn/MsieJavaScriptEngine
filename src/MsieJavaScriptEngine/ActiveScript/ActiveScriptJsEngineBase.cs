@@ -184,7 +184,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Initializes a script dispatcher
 		/// </summary>
 		/// <param name="maxStackSize">The maximum stack size, in bytes, to be used by the thread,
-		/// or 0 to use the default maximum stack size specified in the header for the executable.</param>
+		/// or <c>0</c> to use the default maximum stack size specified in the header for the executable.</param>
 		private static void InitScriptDispatcher(int maxStackSize)
 		{
 			if (_dispatcher != null)
@@ -209,7 +209,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="clsid">CLSID of JS engine</param>
 		/// <param name="isSupported">Flag indicating whether this JS engine is supported</param>
 		/// <param name="supportSynchronizer">Support synchronizer</param>
-		/// <returns>Result of check (true - supports; false - does not support)</returns>
+		/// <returns>Result of check (<c>true</c> - supports; <c>false</c> - does not support)</returns>
 		protected static bool IsSupported(string clsid, ref bool? isSupported, ref object supportSynchronizer)
 		{
 			if (isSupported.HasValue)
@@ -315,7 +315,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		}
 
 		/// <summary>
-		/// Gets and resets a last exception. Returns null for none.
+		/// Gets and resets a last exception. Returns <c>null</c> for none.
 		/// </summary>
 		private ActiveScriptException GetAndResetLastException()
 		{
@@ -417,7 +417,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="code">Script text</param>
 		/// <param name="sourceContext">Application specific source context</param>
 		/// <param name="document">Debug document</param>
-		/// <returns>Result of creating a debug document (true - is created; false - is not created)</returns>
+		/// <returns>Result of creating a debug document (<c>true</c> - is created; <c>false</c> - is not created)</returns>
 		private bool TryCreateDebugDocument(string name, string code, out UIntPtr sourceContext,
 			out DebugDocument document)
 		{

@@ -137,7 +137,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <summary>
 		/// Checks a support of the Chakra “IE” JsRT engine
 		/// </summary>
-		/// <returns>Result of check (true - supports; false - does not support)</returns>
+		/// <returns>Result of check (<c>true</c> - supports; <c>false</c> - does not support)</returns>
 		public static bool IsSupported()
 		{
 			if (_isSupported.HasValue)
@@ -224,7 +224,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// Checks whether the value can have references
 		/// </summary>
 		/// <param name="value">The value</param>
-		/// <returns>Result of check (true - may have; false - may not have)</returns>
+		/// <returns>Result of check (<c>true</c> - may have; <c>false</c> - may not have)</returns>
 		private static bool CanHaveReferences(IeJsValue value)
 		{
 			JsValueType valueType = value.ValueType;
@@ -826,8 +826,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of
-		/// managed objects contained in fields of class</param>
+		/// <param name="disposing">Flag, allowing destruction of managed objects contained in fields of class</param>
 		private void Dispose(bool disposing)
 		{
 			if (disposing)

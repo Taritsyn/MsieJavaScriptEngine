@@ -38,7 +38,7 @@ namespace MsieJavaScriptEngine.JsRt
 		DisableNativeCodeGeneration = 0x00000008,
 
 		/// <summary>
-		/// Using Eval or Function constructor will throw an exception
+		/// Using <c>eval</c> or <c>Function</c> constructor will throw an exception
 		/// </summary>
 		[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Eval is a valid function name.")]
 		DisableEval = 0x00000010

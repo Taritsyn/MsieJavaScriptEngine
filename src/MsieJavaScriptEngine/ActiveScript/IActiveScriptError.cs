@@ -19,7 +19,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Retrieves information about an error that occurred while the scripting engine was running
 		/// a script
 		/// </summary>
-		/// <param name="exceptionInfo">An EXCEPINFO structure that receives error information</param>
+		/// <param name="exceptionInfo">An <c>EXCEPINFO</c> structure that receives error information</param>
 		void GetExceptionInfo(
 			[Out] out EXCEPINFO exceptionInfo
 		);

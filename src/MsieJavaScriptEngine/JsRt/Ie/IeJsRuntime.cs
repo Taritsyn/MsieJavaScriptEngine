@@ -20,7 +20,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 	/// <para>
 	/// NOTE: A <see cref="IeJsRuntime" />, unlike other objects in the Chakra hosting API, is not
 	/// garbage collected since it contains the garbage collected heap itself. A runtime will
-	/// continue to exist until Dispose is called.
+	/// continue to exist until <c>Dispose</c> is called.
 	/// </para>
 	/// </remarks>
 	internal struct IeJsRuntime : IDisposable
@@ -126,7 +126,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// </summary>
 		/// <param name="attributes">The attributes of the runtime to be created</param>
 		/// <param name="version">The version of the runtime to be created</param>
-		/// <param name="threadServiceCallback">The thread service for the runtime. Can be null.</param>
+		/// <param name="threadServiceCallback">The thread service for the runtime. Can be <c>null</c>.</param>
 		/// <returns>The runtime created</returns>
 		public static IeJsRuntime Create(JsRuntimeAttributes attributes, JsRuntimeVersion version, JsThreadServiceCallback threadServiceCallback)
 		{
@@ -152,7 +152,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// Registering a memory allocation callback will cause the runtime to call back to the host
 		/// whenever it acquires memory from, or releases memory to, the OS. The callback routine is
 		/// called before the runtime memory manager allocates a block of memory. The allocation will
-		/// be rejected if the callback returns false. The runtime memory manager will also invoke the
+		/// be rejected if the callback returns <c>false</c>. The runtime memory manager will also invoke the
 		/// callback routine after freeing a block of memory, as well as after allocation failures.
 		/// </para>
 		/// <para>

@@ -15,7 +15,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Allows a host to specify that a script should terminate
 		/// </summary>
-		/// <returns>The method returns an HRESULT</returns>
+		/// <returns>The method returns an <c>HRESULT</c></returns>
 		[PreserveSig]
 		uint QueryContinue();
 	}

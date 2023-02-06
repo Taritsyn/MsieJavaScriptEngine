@@ -22,8 +22,8 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// <summary>
 		/// Returns a short or long textual description of the stack frame
 		/// </summary>
-		/// <param name="longString">Flag, where <code>true</code> returns a long description and
-		/// <code>false</code> returns a short description</param>
+		/// <param name="longString">Flag, where <c>true</c> returns a long description and
+		/// <c>false</c> returns a short description</param>
 		/// <param name="description">The description of the stack frame</param>
 		void GetDescriptionString(
 			[In] [MarshalAs(UnmanagedType.Bool)] bool longString,
@@ -33,8 +33,8 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// <summary>
 		/// Returns a short or long textual description of the language
 		/// </summary>
-		/// <param name="longString">Flag, where <code>true</code> returns a long description and
-		/// <code>false</code> returns a short description</param>
+		/// <param name="longString">Flag, where <c>true</c> returns a long description and
+		/// <c>false</c> returns a short description</param>
 		/// <param name="language">The description of the language</param>
 		void GetLanguageString(
 			[In] [MarshalAs(UnmanagedType.Bool)] bool longString,

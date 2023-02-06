@@ -13,7 +13,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 
 		/// <summary>
 		/// The character is part of a language keyword
-		/// (for example, the JavaScript keyword <code>while</code>)
+		/// (for example, the JavaScript keyword <c>while</c>)
 		/// </summary>
 		Keyword = 0x0001,
 
@@ -30,19 +30,19 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 
 		/// <summary>
 		/// The character is part of a language operator
-		/// (for example, the arithmetic operator <code>+</code>)
+		/// (for example, the arithmetic operator <c>+</c>)
 		/// </summary>
 		Operator = 0x0008,
 
 		/// <summary>
 		/// The character is part of a language numeric constant
-		/// (for example, the constant <code>3.14159</code>)
+		/// (for example, the constant <c>3.14159</c>)
 		/// </summary>
 		Number = 0x0010,
 
 		/// <summary>
 		/// The character is part of a language string constant
-		/// (for example, the string <code>"Hello World"</code>)
+		/// (for example, the string <c>"Hello World"</c>)
 		/// </summary>
 		String = 0x0020,
 

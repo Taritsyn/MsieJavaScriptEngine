@@ -48,7 +48,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// Returns the current debugger connected to the application
 		/// </summary>
 		/// <param name="debugger">The current debugger connected to the application</param>
-		/// <returns>The method returns an HRESULT</returns>
+		/// <returns>The method returns an <c>HRESULT</c></returns>
 		[PreserveSig]
 		uint GetDebugger(
 			[Out] [MarshalAs(UnmanagedType.Interface)] out IApplicationDebugger debugger
@@ -207,7 +207,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// <summary>
 		/// Determines if the current running thread is the debugger thread
 		/// </summary>
-		/// <returns>The method returns an HRESULT</returns>
+		/// <returns>The method returns an <c>HRESULT</c></returns>
 		[PreserveSig]
 		uint QueryCurrentThreadIsDebuggerThread();
 
@@ -251,7 +251,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// <param name="breakResumeAction">Action to take when the debugger resumes the application</param>
 		/// <param name="errorResumeAction">Action to take when the debugger resumes the application
 		/// if there is an error</param>
-		/// <param name="callOnScriptError">Flag which is <code>true</code> if the engine should call
+		/// <param name="callOnScriptError">Flag which is <c>true</c> if the engine should call
 		/// the <see cref="IActiveScriptSite.OnScriptError"/> method</param>
 		void HandleRuntimeError(
 			[In] [MarshalAs(UnmanagedType.Interface)] IActiveScriptErrorDebug errorDebug,
@@ -264,8 +264,8 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// <summary>
 		/// Determines if a JIT debugger is registered
 		/// </summary>
-		/// <returns>If the method succeeds and a JIT debugger is registered, the method returns <code>true</code>.
-		/// Otherwise, it returns <code>false</code>.</returns>
+		/// <returns>If the method succeeds and a JIT debugger is registered, the method returns <c>true</c>.
+		/// Otherwise, it returns <c>false</c>.</returns>
 		[PreserveSig]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		bool FCanJitDebug();
@@ -274,7 +274,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// Determines if a JIT debugger is registered to auto-debug dumb hosts
 		/// </summary>
 		/// <returns>If the method succeeds and a JIT debugger is registered to auto-debug dumb hosts,
-		/// the method returns <code>true</code>. Otherwise, it returns <code>false</code>.</returns>
+		/// the method returns <c>true</c>. Otherwise, it returns <c>false</c>.</returns>
 		[PreserveSig]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		bool FIsAutoJitDebugEnabled();

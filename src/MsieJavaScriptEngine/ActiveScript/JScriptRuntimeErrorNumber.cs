@@ -23,7 +23,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public const int OutOfStackSpace = 28;
 
 		/// <summary>
-		/// Cannot assign to 'this'
+		/// Cannot assign to <c>this</c>
 		/// </summary>
 		public const int CannotAssignToThisKeyword = 5000;
 
@@ -108,12 +108,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public const int UnexpectedQuantifier = 5018;
 
 		/// <summary>
-		/// Expected ']' in regular expression
+		/// Expected <c>]</c> in regular expression
 		/// </summary>
 		public const int ExpectedRightSquareBracketInRegularExpression = 5019;
 
 		/// <summary>
-		/// Expected ')' in regular expression
+		/// Expected <c>)</c> in regular expression
 		/// </summary>
 		public const int ExpectedRightParenthesisInRegularExpression = 5020;
 

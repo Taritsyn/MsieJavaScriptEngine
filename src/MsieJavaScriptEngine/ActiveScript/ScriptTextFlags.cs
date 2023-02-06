@@ -25,7 +25,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		/// <summary>
 		/// Indicates that the code added during this call should be saved if the scripting engine is saved
-		/// (for example, through a call to IPersist*::Save), or if the scripting engine is reset by way of
+		/// (for example, through a call to <c>IPersist*.Save</c>), or if the scripting engine is reset by way of
 		/// a transition back to the initialized state. For more information about this state, see Script
 		/// Engine States
 		/// </summary>

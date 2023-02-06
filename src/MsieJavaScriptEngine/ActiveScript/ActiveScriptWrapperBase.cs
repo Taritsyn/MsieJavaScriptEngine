@@ -151,11 +151,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="code">The scriptlet text to evaluate. The interpretation of this
 		/// string depends on the scripting language</param>
 		/// <param name="itemName">The item name that gives the context in which the
-		/// scriptlet is to be evaluated. If this parameter is null, the code is evaluated
+		/// scriptlet is to be evaluated. If this parameter is <c>null</c>, the code is evaluated
 		/// in the scripting engine's global context</param>
 		/// <param name="context">The context object. This object is reserved for use in a
 		/// debugging environment, where such a context may be provided by the debugger to
-		/// represent an active run-time context. If this parameter is null, the engine
+		/// represent an active run-time context. If this parameter is <c>null</c>, the engine
 		/// uses <paramref name="itemName"/> to identify the context.</param>
 		/// <param name="delimiter">The end-of-scriptlet delimiter. When <paramref name="code"/>
 		/// is parsed from a stream of text, the host typically uses a delimiter, such as two
@@ -164,14 +164,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// some conditional primitive preprocessing (for example, replacing a single quotation
 		/// mark ['] with two single quotation marks for use as a delimiter). Exactly how
 		/// (and if) the scripting engine makes use of this information depends on the
-		/// scripting engine. Set this parameter to null if the host did not use a delimiter
+		/// scripting engine. Set this parameter to <c>null</c> if the host did not use a delimiter
 		/// to mark the end of the scriptlet.</param>
 		/// <param name="sourceContextCookie">Application-defined value that is used for
 		/// debugging purposes</param>
 		/// <param name="startingLineNumber">Zero-based value that specifies which line the
 		/// parsing will begin at</param>
 		/// <param name="flags">Flags associated with the scriptlet</param>
-		/// <returns>The results of scriptlet processing, or null if the caller expects no
+		/// <returns>The results of scriptlet processing, or <c>null</c> if the caller expects no
 		/// result (that is, the <see cref="ScriptTextFlags.IsExpression"/> value is not set)</returns>
 		public abstract object ParseScriptText(string code, string itemName, object context, string delimiter,
 			UIntPtr sourceContextCookie, uint startingLineNumber, ScriptTextFlags flags);
@@ -240,8 +240,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of
-		/// managed objects contained in fields of class</param>
+		/// <param name="disposing">Flag, allowing destruction of managed objects contained in fields of class</param>
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)

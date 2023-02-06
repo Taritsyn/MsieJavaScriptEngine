@@ -74,7 +74,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Checks a support of the Classic Active Script engine on the machine
 		/// </summary>
-		/// <returns>Result of check (true - supports; false - does not support)</returns>
+		/// <returns>Result of check (<c>true</c> - supports; <c>false</c> - does not support)</returns>
 		public static bool IsSupported()
 		{
 			bool isSupported = IsSupported(ClassId.Classic, ref _isSupported, ref _supportSynchronizer);

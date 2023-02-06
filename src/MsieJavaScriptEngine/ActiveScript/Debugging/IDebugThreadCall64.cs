@@ -5,7 +5,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 {
 	/// <summary>
 	/// The <see cref="IDebugThreadCall64"/> interface is typically implemented by a component that makes
-	/// cross-thread calls with the IDebugThread marshalling implementation provided by
+	/// cross-thread calls with the <c>IDebugThread</c> marshalling implementation provided by
 	/// the process debug manager (PDM).
 	/// </summary>
 	[ComImport]

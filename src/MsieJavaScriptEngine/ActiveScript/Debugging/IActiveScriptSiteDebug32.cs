@@ -13,7 +13,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 	internal interface IActiveScriptSiteDebug32
 	{
 		/// <summary>
-		/// Used by the language engine to delegate IDebugCodeContext.GetSourceContext
+		/// Used by the language engine to delegate <see cref="IDebugCodeContext.GetDocumentContext"/>
 		/// </summary>
 		/// <param name="sourceContext">The source context as provided to
 		/// <see cref="IActiveScriptParse32.ParseScriptText"/> or

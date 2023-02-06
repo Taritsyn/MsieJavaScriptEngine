@@ -19,7 +19,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="dwProperty">The property value to get</param>
 		/// <param name="pvarIndex">Not used</param>
 		/// <param name="pvarValue">The value of the property</param>
-		/// <returns>The method returns an HRESULT</returns>
+		/// <returns>The method returns an <c>HRESULT</c></returns>
 		[PreserveSig]
 		uint GetProperty(
 			[In] uint dwProperty,
@@ -33,7 +33,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="dwProperty">The property value to set</param>
 		/// <param name="pvarIndex">Not used</param>
 		/// <param name="pvarValue">The value of the property</param>
-		/// <returns>The method returns an HRESULT</returns>
+		/// <returns>The method returns an <c>HRESULT</c></returns>
 		[PreserveSig]
 		uint SetProperty(
 			[In] uint dwProperty,

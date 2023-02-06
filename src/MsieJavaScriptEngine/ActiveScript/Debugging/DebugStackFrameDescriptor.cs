@@ -38,7 +38,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		public bool IsFinal;
 
 		/// <summary>
-		/// If this parameter is not null, the current enumerator merging should stop and
+		/// If this parameter is not <c>null</c>, the current enumerator merging should stop and
 		/// a new one should be started. The object indicates how to start the new enumeration.
 		/// </summary>
 		public IntPtr pFinalObject;

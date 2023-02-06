@@ -60,7 +60,7 @@ namespace MsieJavaScriptEngine
 		/// Сhecks for the existence of a variable
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
-		/// <returns>Result of check (true - exists; false - not exists</returns>
+		/// <returns>Result of check (<c>true</c> - exists; <c>false</c> - not exists</returns>
 		bool HasVariable(string variableName);
 
 		/// <summary>

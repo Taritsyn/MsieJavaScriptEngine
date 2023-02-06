@@ -13,7 +13,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <summary>
 		/// Determines whether the current process is a 64-bit process
 		/// </summary>
-		/// <returns>true if the process is 64-bit; otherwise, false</returns>
+		/// <returns><c>true</c> if the process is 64-bit; otherwise, <c>false</c></returns>
 		[MethodImpl((MethodImplOptions)256 /* AggressiveInlining */)]
 		public static bool Is64BitProcess()
 		{

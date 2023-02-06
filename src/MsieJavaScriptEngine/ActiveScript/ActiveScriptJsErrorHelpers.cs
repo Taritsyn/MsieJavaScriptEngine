@@ -16,7 +16,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Checks whether the specified error number is compilation error
 		/// </summary>
 		/// <param name="errorNumber">Error number</param>
-		/// <returns>Result of check (true - is compilation error; false - is not compilation error)</returns>
+		/// <returns>Result of check (<c>true</c> - is compilation error; <c>false</c> - is not compilation error)</returns>
 		public static bool IsCompilationError(int errorNumber)
 		{
 			bool result = errorNumber >= JScriptSyntaxErrorNumber.SyntaxError
@@ -29,7 +29,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// Checks whether the specified error number is runtime error
 		/// </summary>
 		/// <param name="errorNumber">Error number</param>
-		/// <returns>Result of check (true - is runtime error; false - is not runtime error)</returns>
+		/// <returns>Result of check (<c>true</c> - is runtime error; <c>false</c> - is not runtime error)</returns>
 		public static bool IsRuntimeError(int errorNumber)
 		{	bool result = errorNumber == JScriptRuntimeErrorNumber.OutOfStackSpace
 				|| (errorNumber >= JScriptRuntimeErrorNumber.CannotAssignToThisKeyword

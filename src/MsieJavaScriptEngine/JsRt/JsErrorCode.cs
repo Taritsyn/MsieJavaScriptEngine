@@ -25,7 +25,7 @@ namespace MsieJavaScriptEngine.JsRt
 		InvalidArgument,
 
 		/// <summary>
-		/// An argument to a hosting API was null in a context where null is not allowed
+		/// An argument to a hosting API was <c>null</c> in a context where <c>null</c> is not allowed
 		/// </summary>
 		NullArgument,
 
@@ -77,7 +77,7 @@ namespace MsieJavaScriptEngine.JsRt
 		HeapEnumInProgress,
 
 		/// <summary>
-		/// A hosting API that operates on Object values was called with a non-Object value
+		/// A hosting API that operates on <c>Object</c> values was called with a non-<c>Object</c> value
 		/// </summary>
 		ArgumentNotObject,
 

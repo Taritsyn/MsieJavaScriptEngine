@@ -30,11 +30,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Indicates that the item is a collection of global properties and methods associated
 		/// with the script. Normally, a scripting engine would ignore the object name (other than
-		/// for the purpose of using it as a cookie for the IActiveScriptSite.GetItemInfo method,
+		/// for the purpose of using it as a cookie for the <see cref="IActiveScriptSite.GetItemInfo"/> method,
 		/// or for resolving explicit scoping) and expose its members as global variables and
 		/// methods. This allows the host to extend the library (run-time functions and so on)
 		/// available to the script. It is left to the scripting engine to deal with name conflicts
-		/// (for example, when two ScriptItemFlags.GlobalMembers items have methods of the same
+		/// (for example, when two <see cref="ScriptItemFlags.GlobalMembers"/> items have methods of the same
 		/// name), although an error should not be returned because of this situation.
 		/// </summary>
 		GlobalMembers = 0x00000008,
@@ -49,7 +49,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		/// <summary>
 		/// Indicates that the named item represents a code-only object, and that the host has no
-		/// IUnknown to be associated with this code-only object. The host only has a name for this
+		/// <c>IUnknown</c> to be associated with this code-only object. The host only has a name for this
 		/// object. In object-oriented languages such as C++, this flag would create a class.
 		/// Not all languages support this flag.
 		/// </summary>

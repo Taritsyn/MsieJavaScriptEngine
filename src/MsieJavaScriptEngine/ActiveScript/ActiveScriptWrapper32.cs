@@ -142,8 +142,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Destroys object
 		/// </summary>
-		/// <param name="disposing">Flag, allowing destruction of
-		/// managed objects contained in fields of class</param>
+		/// <param name="disposing">Flag, allowing destruction of managed objects contained in fields of class</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)

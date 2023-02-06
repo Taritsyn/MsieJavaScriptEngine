@@ -8,7 +8,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 	{
 		/// <summary>
 		/// Forces the scripting engine to divide in integer mode instead of floating point mode.
-		/// The default value is False.
+		/// The default value is <c>false</c>.
 		/// </summary>
 		IntegerMode = 0x00003000,
 

@@ -41,23 +41,23 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// returned. The scripting engine should request the minimum amount of information possible
 		/// because some of the return parameters (for example, <see cref="ITypeInfo"/>) can take
 		/// considerable time to load or generate.</param>
-		/// <param name="pUnkItem">A variable that receives a pointer to the IUnknown interface
-		/// associated with the given item. The scripting engine can use the IUnknown.QueryInterface
-		/// method to obtain the IDispatch interface for the item. This parameter receives null if
+		/// <param name="pUnkItem">A variable that receives a pointer to the <c>IUnknown</c> interface
+		/// associated with the given item. The scripting engine can use the <c>IUnknown.QueryInterface</c>
+		/// method to obtain the <c>IDispatch</c> interface for the item. This parameter receives <c>null</c> if
 		/// mask does not include the <see cref="ScriptInfoFlags.IUnknown"/> value. Also, it receives
-		/// null if there is no object associated with the item name; this mechanism is used to create
+		/// <c>null</c> if there is no object associated with the item name; this mechanism is used to create
 		/// a simple class when the named item was added with the <see cref="ScriptItemFlags.CodeOnly"/>
 		/// flag set in the <see cref="IActiveScript.AddNamedItem"/> method.</param>
 		/// <param name="pTypeInfo">A variable that receives a pointer to the <see cref="ITypeInfo"/>
-		/// interface associated with the item. This parameter receives null if mask does not include
+		/// interface associated with the item. This parameter receives <c>null</c> if mask does not include
 		/// the <see cref="ScriptInfoFlags.ITypeInfo"/> value, or if type information is not available
 		/// for this item. If type information is not available, the object cannot source events, and
-		/// name binding must be realized with the IDispatch.GetIDsOfNames method. Note that the
-		/// <see cref="ITypeInfo"/> interface retrieved describes the item's coclass (TKIND_COCLASS)
+		/// name binding must be realized with the <c>IDispatch.GetIDsOfNames</c> method. Note that the
+		/// <see cref="ITypeInfo"/> interface retrieved describes the item's coclass (<c>TKIND_COCLASS</c>)
 		/// because the object may support multiple interfaces and event interfaces. If the item supports
-		/// the IProvideMultipleTypeInfo interface, the <see cref="ITypeInfo"/> interface retrieved is
+		/// the <c>IProvideMultipleTypeInfo</c> interface, the <see cref="ITypeInfo"/> interface retrieved is
 		/// the same as the index zero <see cref="ITypeInfo"/> that would be obtained using the
-		/// IProvideMultipleTypeInfo.GetInfoOfIndex method.</param>
+		/// <c>IProvideMultipleTypeInfo.GetInfoOfIndex</c> method.</param>
 		void GetItemInfo(
 			[In] [MarshalAs(UnmanagedType.LPWStr)] string name,
 			[In] ScriptInfoFlags mask,
@@ -79,10 +79,10 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Informs the host that the script has completed execution
 		/// </summary>
-		/// <param name="result">A variable that contains the script result, or null if the script
+		/// <param name="result">A variable that contains the script result, or <c>null</c> if the script
 		/// produced no result</param>
 		/// <param name="exceptionInfo">Contains exception information generated when the script
-		/// terminated, or null if no exception was generated</param>
+		/// terminated, or <c>null</c> if no exception was generated</param>
 		void OnScriptTerminate(
 			[In] object result,
 			[In] EXCEPINFO exceptionInfo

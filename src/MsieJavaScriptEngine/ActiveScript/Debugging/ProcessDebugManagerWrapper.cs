@@ -51,7 +51,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// the creation succeeded.
 		/// </summary>
 		/// <param name="wrapper">Wrapper for process debug manager</param>
-		/// <returns>true if the wrapper was created successfully; otherwise, false.</returns>
+		/// <returns><c>true</c> if the wrapper was created successfully; otherwise, <c>false</c>.</returns>
 		public static bool TryCreate(out ProcessDebugManagerWrapper wrapper)
 		{
 			const string progId = "ProcessDebugManager";
@@ -104,7 +104,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// </summary>
 		/// <param name="applicationWrapper">Wrapper for debug application</param>
 		/// <param name="cookie">An engine-defined cookie</param>
-		/// <returns>true if the debug application was added successfully; otherwise, false.</returns>
+		/// <returns><c>true</c> if the debug application was added successfully; otherwise, <c>false</c>.</returns>
 		public bool TryAddApplication(DebugApplicationWrapper applicationWrapper, out uint cookie)
 		{
 			uint result;

@@ -84,8 +84,8 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		/// <summary>
 		/// Adds a type library to the name space for the script. This is similar to the
-		/// <code>#include</code> directive in C/C++. It allows a set of predefined items such as
-		/// class definitions, <code>typedefs</code>, and named constants to be added to the run-time
+		/// <c>#include</c> directive in C/C++. It allows a set of predefined items such as
+		/// class definitions, <c>typedefs</c>, and named constants to be added to the run-time
 		/// environment available to the script.
 		/// </summary>
 		/// <param name="clsId">CLSID of the type library to add</param>
@@ -100,16 +100,16 @@ namespace MsieJavaScriptEngine.ActiveScript
 		);
 
 		/// <summary>
-		/// Retrieves the IDispatch interface for the methods and properties associated
+		/// Retrieves the <c>IDispatch</c> interface for the methods and properties associated
 		/// with the currently running script
 		/// </summary>
 		/// <param name="itemName">The name of the item for which the caller needs the associated
-		/// dispatch object. If this parameter is null, the dispatch object contains as its members
+		/// dispatch object. If this parameter is <c>null</c>, the dispatch object contains as its members
 		/// all of the global methods and properties defined by the script. Through the
-		/// IDispatch interface and the associated <see cref="ITypeInfo"/> interface,
+		/// <c>IDispatch</c> interface and the associated <see cref="ITypeInfo"/> interface,
 		/// the host can invoke script methods or view and modify script variables.</param>
 		/// <param name="dispatch">The object associated with the script's global methods and
-		/// properties. If the scripting engine does not support such an object, null is returned.</param>
+		/// properties. If the scripting engine does not support such an object, <c>null</c> is returned.</param>
 		void GetScriptDispatch(
 			[In] [MarshalAs(UnmanagedType.LPWStr)] string itemName,
 			[Out] [MarshalAs(UnmanagedType.IDispatch)] out object dispatch

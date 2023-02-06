@@ -7,21 +7,21 @@ namespace MsieJavaScriptEngine.ActiveScript
 	internal enum ScriptState : uint
 	{
 		/// <summary>
-		/// Script has just been created, but has not yet been initialized using an IPersist*
-		/// interface and IActiveScript.SetScriptSite
+		/// Script has just been created, but has not yet been initialized using an <c>IPersist*</c>
+		/// interface and <see cref="IActiveScript.SetScriptSite"/>
 		/// </summary>
 		Uninitialized = 0,
 
 		/// <summary>
 		/// Script has been initialized, but is not running (connecting to other objects or
 		/// sinking events) or executing any code. Code can be queried for execution by
-		/// calling the IActiveScriptParse.ParseScriptText method.
+		/// calling the <c>IActiveScriptParse.ParseScriptText</c> method.
 		/// </summary>
 		Initialized = 1,
 
 		/// <summary>
 		/// Script can execute code, but is not yet sinking the events of objects added by
-		/// the IActiveScript.AddNamedItem method
+		/// the <c>IActiveScript.AddNamedItem</c> method
 		/// </summary>
 		Started = 2,
 

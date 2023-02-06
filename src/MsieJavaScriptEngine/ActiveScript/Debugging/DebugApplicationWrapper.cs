@@ -112,7 +112,7 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// Returns the current debugger connected to the application
 		/// </summary>
 		/// <param name="debugger">The current debugger connected to the application</param>
-		/// <returns>The method returns an HRESULT</returns>
+		/// <returns>The method returns an <c>HRESULT</c></returns>
 		public uint GetDebugger(out IApplicationDebugger debugger)
 		{
 			uint result = _is64Bit ?

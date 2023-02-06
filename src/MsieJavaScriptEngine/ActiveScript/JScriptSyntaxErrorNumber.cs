@@ -23,37 +23,37 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public const int SyntaxError = 1002;
 
 		/// <summary>
-		/// Expected ':'
+		/// Expected <c>:</c>
 		/// </summary>
 		public const int ExpectedColon = 1003;
 
 		/// <summary>
-		/// Expected ';'
+		/// Expected <c>;</c>
 		/// </summary>
 		public const int ExpectedSemicolon = 1004;
 
 		/// <summary>
-		/// Expected '('
+		/// Expected <c>(</c>
 		/// </summary>
 		public const int ExpectedLeftParenthesis = 1005;
 
 		/// <summary>
-		/// Expected ')'
+		/// Expected <c>)</c>
 		/// </summary>
 		public const int ExpectedRightParenthesis = 1006;
 
 		/// <summary>
-		/// Expected ']'
+		/// Expected <c>]</c>
 		/// </summary>
 		public const int ExpectedRightSquareBracket = 1007;
 
 		/// <summary>
-		/// Expected '{'
+		/// Expected <c>{</c>
 		/// </summary>
 		public const int ExpectedLeftCurlyBrace = 1008;
 
 		/// <summary>
-		/// Expected '}'
+		/// Expected <c>}</c>
 		/// </summary>
 		public const int ExpectedRightCurlyBrace = 1009;
 
@@ -63,12 +63,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public const int ExpectedIdentifier = 1010;
 
 		/// <summary>
-		/// Expected '='
+		/// Expected <c>=</c>
 		/// </summary>
 		public const int ExpectedEqualSign = 1011;
 
 		/// <summary>
-		/// Expected '/'
+		/// Expected <c>/</c>
 		/// </summary>
 		public const int ExpectedForwardSlash = 1012;
 
@@ -88,17 +88,17 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public const int UnterminatedComment = 1016;
 
 		/// <summary>
-		/// 'return' statement outside of function
+		/// <c>return</c> statement outside of function
 		/// </summary>
 		public const int ReturnStatementOutsideOfFunction = 1018;
 
 		/// <summary>
-		/// Can't have 'break' outside of loop
+		/// Can't have <c>break</c> outside of loop
 		/// </summary>
 		public const int CannotHaveBreakStatementOutsideOfLoop = 1019;
 
 		/// <summary>
-		/// Can't have 'continue' outside of loop
+		/// Can't have <c>continue</c> outside of loop
 		/// </summary>
 		public const int CannotHaveContinueStatementOutsideOfLoop = 1020;
 
@@ -108,7 +108,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public const int ExpectedHexadecimalDigit = 1023;
 
 		/// <summary>
-		/// Expected 'while'
+		/// Expected <c>while</c>
 		/// </summary>
 		public const int ExpectedWhileStatement = 1024;
 
@@ -123,7 +123,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public const int LabelNotFound = 1026;
 
 		/// <summary>
-		/// 'default' can only appear once in a 'switch' statement
+		/// <c>default</c> can only appear once in a <c>switch</c> statement
 		/// </summary>
 		public const int DefaultStatementCanOnlyAppearOnceInSwitchStatement = 1027;
 
@@ -133,7 +133,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public const int ExpectedIdentifierStringOrNumber = 1028;
 
 		/// <summary>
-		/// Expected '@end'
+		/// Expected <c>@end</c>
 		/// </summary>
 		public const int ExpectedConditionalCompilationEndStatement = 1029;
 
@@ -148,12 +148,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		public const int ExpectedConstant = 1031;
 
 		/// <summary>
-		/// Expected '@'
+		/// Expected <c>@</c>
 		/// </summary>
 		public const int ExpectedAtSign = 1032;
 
 		/// <summary>
-		/// Expected 'catch'
+		/// Expected <c>catch</c>
 		/// </summary>
 		public const int ExpectedCatchStatement = 1033;
 

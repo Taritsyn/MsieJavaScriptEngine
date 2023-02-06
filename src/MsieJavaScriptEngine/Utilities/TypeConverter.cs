@@ -64,7 +64,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <typeparam name="T">The type to convert the value to</typeparam>
 		/// <param name="value">The value to convert</param>
 		/// <param name="convertedValue">The value that has been converted to the target type</param>
-		/// <returns>Result of conversion (true - success; false - failure)</returns>
+		/// <returns>Result of conversion (<c>true</c> - success; <c>false</c> - failure)</returns>
 		public static bool TryConvertToType<T>(object value, out T convertedValue)
 		{
 			object resultValue;
@@ -82,7 +82,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <param name="value">The value to convert</param>
 		/// <param name="targetType">The type to convert the value to</param>
 		/// <param name="convertedValue">The value that has been converted to the target type</param>
-		/// <returns>Result of conversion (true - success; false - failure)</returns>
+		/// <returns>Result of conversion (<c>true</c> - success; <c>false</c> - failure)</returns>
 		public static bool TryConvertToType(object value, Type targetType, out object convertedValue)
 		{
 			bool result = ConvertObjectToType(value, targetType, false, out convertedValue);
@@ -94,7 +94,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// Checks whether .NET type is primitive
 		/// </summary>
 		/// <param name="type">.NET type</param>
-		/// <returns>Result of check (true - is primitive; false - is not primitive)</returns>
+		/// <returns>Result of check (<c>true</c> - is primitive; <c>false</c> - is not primitive)</returns>
 		internal static bool IsPrimitiveType(Type type)
 		{
 			TypeCode typeCode = type.GetTypeCode();
@@ -107,7 +107,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// Checks whether .NET type is primitive
 		/// </summary>
 		/// <param name="typeCode">.NET type code</param>
-		/// <returns>Result of check (true - is primitive; false - is not primitive)</returns>
+		/// <returns>Result of check (<c>true</c> - is primitive; <c>false</c> - is not primitive)</returns>
 		internal static bool IsPrimitiveType(TypeCode typeCode)
 		{
 			bool result = _primitiveTypeCodes.Contains(typeCode);

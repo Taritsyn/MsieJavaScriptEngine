@@ -314,7 +314,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// Adds a reference to a script context
 		/// </summary>
 		/// <remarks>
-		/// Calling AddRef ensures that the context will not be freed until Release is called.
+		/// Calling <c>AddRef</c> ensures that the context will not be freed until <c>Release</c> is called.
 		/// </remarks>
 		/// <returns>The object's new reference count</returns>
 		public uint AddRef()
@@ -329,7 +329,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// Releases a reference to a script context
 		/// </summary>
 		/// <remarks>
-		/// Removes a reference to a context that was created by AddRef.
+		/// Removes a reference to a context that was created by <c>AddRef</c>.
 		/// </remarks>
 		/// <returns>The object's new reference count</returns>
 		public uint Release()
