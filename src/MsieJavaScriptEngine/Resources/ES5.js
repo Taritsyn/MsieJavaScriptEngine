@@ -1,8 +1,8 @@
 ﻿/*!
 * This polyfill based on code of the following libraries:
-* 1. Douglas Crockford's ECMAScript 5 Polyfill v0.1 - http://nuget.org/packages/ES5
-* 2. MDN JavaScript Polyfills - http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
-* 3. Steven Levithan's Cross-Browser Split v1.1.1 - http://blog.stevenlevithan.com/archives/cross-browser-split
+* 1. Douglas Crockford's ECMAScript 5 Polyfill v0.1 - https://www.nuget.org/packages/ES5
+* 2. MDN JavaScript Polyfills - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
+* 3. Steven Levithan's Cross-Browser Split v1.1.1 - https://blog.stevenlevithan.com/archives/cross-browser-split
 */
 
 (function (undefined) {

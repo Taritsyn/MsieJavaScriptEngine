@@ -1,6 +1,10 @@
 Change log
 ==========
 
+## v3.1.0 - February 6, 2023
+ * In JsRT modes, `JsVariantToValue` and `JsValueToVariant` native methods are no longer used for embedding objects and types
+ * JSON2 library was updated to version of October 30, 2022
+
 ## v3.0.9 - July 20, 2022
  * Now a case-sensitive cultural postfixes are used in the names of `.resx` files
 
@@ -233,14 +237,14 @@ Change log
  * Fixed [JavaScriptEngineSwitcher.Msie's bug #7](https://github.com/Taritsyn/JavaScriptEngineSwitcher/issues/7) "MsieJavaScriptEngine.ActiveScript.ActiveScriptException not wrapped"
 
 ## v1.4.2 - March 24, 2014
- * Fixed [JavaScriptEngineSwitcher.Msie's bug #5](http://github.com/Taritsyn/JavaScriptEngineSwitcher/issues/5) "MSIE "Catastrophic failure" when disposing"
+ * Fixed [JavaScriptEngineSwitcher.Msie's bug #5](https://github.com/Taritsyn/JavaScriptEngineSwitcher/issues/5) "MSIE "Catastrophic failure" when disposing"
 
 ## v1.4.1 - March 22, 2014
  * Fixed minor bugs
 
 ## v1.4.0 - February 27, 2014
  * Removed following methods: `HasProperty`, `GetPropertyValue`, `SetPropertyValue` and `RemoveProperty`
- * Fixed [bug #3](http://github.com/Taritsyn/MsieJavaScriptEngine/issues/3) "execute code from different threads"
+ * Fixed [bug #3](https://github.com/Taritsyn/MsieJavaScriptEngine/issues/3) "execute code from different threads"
  * Now in the `ChakraJsRt` mode is available a more detailed information about errors
  * In ECMAScript 5 Polyfill improved a performance of the `String.prototype.trim` method
  * JSON2 library was updated to version of February 4, 2014
@@ -264,7 +268,7 @@ Change log
  * Assembly `MsieJavaScriptEngine.dll` now signed
 
 ## v1.1.0 - October 11, 2012
- * Added ability of using the Douglas Crockford's [JSON2](http://github.com/douglascrockford/JSON-js) library
+ * Added ability of using the Douglas Crockford's [JSON2](https://github.com/douglascrockford/JSON-js) library
  * By default using of the JSON2 library is disabled
 
 ## v1.0.8 - September 21, 2012
@@ -274,7 +278,7 @@ Change log
  * Added the `ActiveScriptErrorFormatter` class
 
 ## v1.0.5 - August 29, 2012
- * [JavaScript Array Polyfills from TutorialsPoint.com](http://www.tutorialspoint.com/javascript/) was replaced by the Douglas Crockford's [ECMAScript 5 Polyfill](http://nuget.org/packages/ES5)
+ * [JavaScript Array Polyfills from TutorialsPoint.com](https://www.tutorialspoint.com/javascript/) was replaced by the Douglas Crockford's [ECMAScript 5 Polyfill](https://www.nuget.org/packages/ES5)
  * By default using of the ECMAScript 5 Polyfill is disabled
 
 ## v1.0.1 - August 27, 2012

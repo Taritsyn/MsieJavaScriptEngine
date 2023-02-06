@@ -1,11 +1,11 @@
 ﻿
 
    --------------------------------------------------------------------------------
-                README file for MSIE JavaScript Engine for .NET v3.0.9
+                README file for MSIE JavaScript Engine for .NET v3.1.0
 
    --------------------------------------------------------------------------------
 
-           Copyright (c) 2012-2022 Andrey Taritsyn - http://www.taritsyn.ru
+           Copyright (c) 2012-2023 Andrey Taritsyn - http://www.taritsyn.ru
 
 
    ===========
@@ -14,9 +14,9 @@
    This library is a .NET wrapper for working with the JavaScript engines of
    Internet Explorer and Edge Legacy (JsRT versions of Chakra, ActiveScript version
    of Chakra and Classic JavaScript Engine). Project was based on the code of
-   SassAndCoffee.JavaScript (http://github.com/paulcbetts/SassAndCoffee),
-   Chakra Sample Hosts (http://github.com/panopticoncentral/chakra-host) and
-   jsrt-dotnet (http://github.com/robpaveza/jsrt-dotnet).
+   SassAndCoffee.JavaScript (https://github.com/anaisbetts/SassAndCoffee),
+   Chakra Sample Hosts (https://github.com/panopticoncentral/chakra-host) and
+   jsrt-dotnet (https://github.com/robpaveza/jsrt-dotnet).
 
    =============
    RELEASE NOTES
