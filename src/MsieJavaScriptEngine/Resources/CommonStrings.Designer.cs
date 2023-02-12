@@ -410,7 +410,7 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Сannot execute a '{0}' file, because it is empty."
+		/// Looks up a localized string similar to "Cannot execute a '{0}' file, because it is empty."
 		/// </summary>
 		internal static string Usage_CannotExecuteEmptyFile
 		{
@@ -418,7 +418,7 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Сannot execute a '{0}' resource, because it is empty."
+		/// Looks up a localized string similar to "Cannot execute a '{0}' resource, because it is empty."
 		/// </summary>
 		internal static string Usage_CannotExecuteEmptyResource
 		{
@@ -426,7 +426,7 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Сannot execute a pre-compiled script, because it was created for another mode with name `{0}`."
+		/// Looks up a localized string similar to "Cannot execute a pre-compiled script, because it was created for another mode with name `{0}`."
 		/// </summary>
 		internal static string Usage_CannotExecutePrecompiledScriptForAnotherJsEngineMode
 		{
@@ -434,7 +434,7 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Сannot pre-compile a '{0}' file, because it is empty."
+		/// Looks up a localized string similar to "Cannot pre-compile a '{0}' file, because it is empty."
 		/// </summary>
 		internal static string Usage_CannotPrecompileEmptyFile
 		{
@@ -442,7 +442,7 @@ namespace MsieJavaScriptEngine.Resources
 		}
 
 		/// <summary>
-		/// Looks up a localized string similar to "Сannot pre-compile a '{0}' resource, because it is empty."
+		/// Looks up a localized string similar to "Cannot pre-compile a '{0}' resource, because it is empty."
 		/// </summary>
 		internal static string Usage_CannotPrecompileEmptyResource
 		{

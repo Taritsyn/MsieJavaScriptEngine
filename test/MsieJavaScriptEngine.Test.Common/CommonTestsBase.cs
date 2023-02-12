@@ -977,7 +977,7 @@ namespace MsieJavaScriptEngine.Test.Common
 		public virtual void ScriptInterruption()
 		{
 			// Arrange
-			const string sleepyСode = @"function sleep(millisecondsTimeout) {
+			const string sleepyCode = @"function sleep(millisecondsTimeout) {
 	var totalMilliseconds = new Date().getTime() + millisecondsTimeout;
 
 	while (new Date() < totalMilliseconds)
@@ -1008,7 +1008,7 @@ sleep(5000);";
 
 					try
 					{
-						jsEngine.Execute(sleepyСode);
+						jsEngine.Execute(sleepyCode);
 					}
 					catch (Exception e)
 					{
