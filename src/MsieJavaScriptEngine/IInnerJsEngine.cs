@@ -57,7 +57,7 @@ namespace MsieJavaScriptEngine
 		object CallFunction(string functionName, params object[] args);
 
 		/// <summary>
-		/// Сhecks for the existence of a variable
+		/// Checks for the existence of a variable
 		/// </summary>
 		/// <param name="variableName">Name of variable</param>
 		/// <returns>Result of check (<c>true</c> - exists; <c>false</c> - not exists</returns>
@@ -86,20 +86,22 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Embeds a host object to script code
 		/// </summary>
+		/// <remarks>
+		/// Allows to embed instances of simple classes (or structures) and delegates.
+		/// </remarks>
 		/// <param name="itemName">The name for the new global variable or function that will represent the object</param>
 		/// <param name="value">The object to expose</param>
-		/// <remarks>Allows to embed instances of simple classes (or structures) and delegates.</remarks>
 		void EmbedHostObject(string itemName, object value);
 
 		/// <summary>
 		/// Embeds a host type to script code
 		/// </summary>
-		/// <param name="itemName">The name for the new global variable that will represent the type</param>
-		/// <param name="type">The type to expose</param>
 		/// <remarks>
 		/// Host types are exposed to script code in the form of objects whose properties and
 		/// methods are bound to the type's static members.
 		/// </remarks>
+		/// <param name="itemName">The name for the new global variable that will represent the type</param>
+		/// <param name="type">The type to expose</param>
 		void EmbedHostType(string itemName, Type type);
 
 		/// <summary>

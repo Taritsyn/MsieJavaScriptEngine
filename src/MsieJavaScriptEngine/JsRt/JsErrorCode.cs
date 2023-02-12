@@ -77,7 +77,7 @@ namespace MsieJavaScriptEngine.JsRt
 		HeapEnumInProgress,
 
 		/// <summary>
-		/// A hosting API that operates on <c>Object</c> values was called with a non-<c>Object</c> value
+		/// A hosting API that operates on object values was called with a non-object value
 		/// </summary>
 		ArgumentNotObject,
 
@@ -150,7 +150,7 @@ namespace MsieJavaScriptEngine.JsRt
 		ScriptTerminated,
 
 		/// <summary>
-		/// A script was terminated because it tried to use "eval" or "function" and eval was disabled
+		/// A script was terminated because it tried to use <c>eval</c> or <c>Function</c> and <c>eval</c> was disabled
 		/// </summary>
 		[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Eval is a valid function name.")]
 		ScriptEvalDisabled,

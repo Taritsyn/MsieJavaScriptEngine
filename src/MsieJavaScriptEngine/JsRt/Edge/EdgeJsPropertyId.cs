@@ -29,9 +29,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// Gets a name associated with the property ID
 		/// </summary>
 		/// <remarks>
-		/// <para>
 		/// Requires an active script context.
-		/// </para>
 		/// </remarks>
 		public string Name
 		{

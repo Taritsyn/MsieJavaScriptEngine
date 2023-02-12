@@ -31,7 +31,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// </summary>
 		/// <param name="resourceName">The case-sensitive resource name</param>
 		/// <param name="assembly">The assembly, which contains the embedded resource</param>
-		/// <returns>Сontent of the embedded resource as string</returns>
+		/// <returns>Content of the embedded resource as string</returns>
 		public static string GetResourceAsString(string resourceName, Assembly assembly)
 		{
 			if (resourceName == null)

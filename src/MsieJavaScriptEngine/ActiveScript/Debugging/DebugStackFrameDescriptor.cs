@@ -7,9 +7,11 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 	/// <summary>
 	/// Enumerates stack frames and merges output from several enumerators on the same thread
 	/// </summary>
-	/// <remarks>The process debug manager uses this structure to sort the stack frames from
+	/// <remarks>
+	/// The process debug manager uses this structure to sort the stack frames from
 	/// multiple script engines. By convention, stacks grow down. Consequently, on architectures
-	/// where stacks grow up, the addresses should be twos-complemented.</remarks>
+	/// where stacks grow up, the addresses should be twos-complemented.
+	/// </remarks>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct DebugStackFrameDescriptor
 	{

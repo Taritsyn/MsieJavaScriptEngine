@@ -18,7 +18,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 	/// time.
 	/// </para>
 	/// <para>
-	/// NOTE: A <see cref="IeJsRuntime" />, unlike other objects in the Chakra hosting API, is not
+	/// NOTE: A <see cref="IeJsRuntime"/>, unlike other objects in the Chakra hosting API, is not
 	/// garbage collected since it contains the garbage collected heap itself. A runtime will
 	/// continue to exist until <c>Dispose</c> is called.
 	/// </para>

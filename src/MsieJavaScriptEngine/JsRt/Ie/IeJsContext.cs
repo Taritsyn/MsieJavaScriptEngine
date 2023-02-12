@@ -167,9 +167,13 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// Parses a serialized script and returns a function representing the script
 		/// </summary>
 		/// <remarks>
-		/// <para>Requires an active script context.</para>
-		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
-		/// the buffer are garbage collected.</para>
+		/// <para>
+		/// Requires an active script context.
+		/// </para>
+		/// <para>
+		/// The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.
+		/// </para>
 		/// </remarks>
 		/// <param name="script">The script to parse</param>
 		/// <param name="buffer">The serialized script</param>
@@ -211,9 +215,13 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// Runs a serialized script
 		/// </summary>
 		/// <remarks>
-		/// <para>Requires an active script context.</para>
-		/// <para>The runtime will hold on to the buffer until all instances of any functions created from
-		/// the buffer are garbage collected.</para>
+		/// <para>
+		/// Requires an active script context.
+		/// </para>
+		/// <para>
+		/// The runtime will hold on to the buffer until all instances of any functions created from
+		/// the buffer are garbage collected.
+		/// </para>
 		/// </remarks>
 		/// <param name="script">The source code of the serialized script</param>
 		/// <param name="buffer">The serialized script</param>

@@ -150,7 +150,7 @@ namespace MsieJavaScriptEngine
 
 		/// <summary>
 		/// Runs a specified delegate on the thread with modified stack size,
-		/// and returns its result as an <typeparamref name="T" />.
+		/// and returns its result as an <typeparamref name="T"/>.
 		/// Blocks until the invocation of delegate is completed.
 		/// </summary>
 		/// <typeparam name="T">The type of the return value of the method,

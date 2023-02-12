@@ -27,7 +27,7 @@ namespace MsieJavaScriptEngine.JsRt
 		AllowScriptInterrupt = 0x00000002,
 
 		/// <summary>
-		/// Host will call Idle, so enable idle processing. Otherwise, the runtime will manage
+		/// Host will call <c>Idle</c>, so enable idle processing. Otherwise, the runtime will manage
 		/// memory slightly more aggressively.
 		/// </summary>
 		EnableIdleProcessing = 0x00000004,
