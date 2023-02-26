@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.2.0 - February 26, 2023
+ * In JavaScript engine settings was added one new property - `AllowReflection` (default `false`)
+
 ## v3.1.0 - February 6, 2023
  * In JsRT modes, `JsVariantToValue` and `JsValueToVariant` native methods are no longer used for embedding objects and types
  * JSON2 library was updated to version of October 30, 2022

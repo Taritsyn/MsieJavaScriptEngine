@@ -1,7 +1,7 @@
 ﻿
 
    --------------------------------------------------------------------------------
-                README file for MSIE JavaScript Engine for .NET v3.1.0
+                README file for MSIE JavaScript Engine for .NET v3.2.0
 
    --------------------------------------------------------------------------------
 
@@ -27,4 +27,4 @@
    ============
    PROJECT SITE
    ============
-   http://github.com/Taritsyn/MsieJavaScriptEngine
+   https://github.com/Taritsyn/MsieJavaScriptEngine

@@ -104,6 +104,15 @@ Consider in detail properties of the <code title="MsieJavaScriptEngine.JsEngineS
     </thead>
     <tbody>
         <tr valign="top">
+            <td><code>AllowReflection</code></td>
+            <td><code title="System.Boolean">Boolean</code></td>
+            <td><code>false</code></td>
+            <td>
+                <p>Flag for whether to allow the usage of reflection API in the script code.</p>
+                <p>This affects <code>Object.GetType</code>, <code>Exception.GetType</code>, <code>Exception.TargetSite</code> and <code>Delegate.Method</code>.</p>
+            </td>
+        </tr>
+        <tr valign="top">
             <td><code>EnableDebugging</code></td>
             <td><code title="System.Boolean">Boolean</code></td>
             <td><code>false</code></td>
@@ -153,7 +162,7 @@ See the [changelog](CHANGELOG.md).
  * [ECMAScript 5 Polyfill](https://www.nuget.org/packages/ES5) and [MDN JavaScript Polyfills](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference) - Adds support for many of the new functions in ECMAScript 5 to downlevel browsers.
  * [Cross-Browser Split](https://blog.stevenlevithan.com/archives/cross-browser-split) - Adds ECMAScript compliant and uniform cross-browser split method.
  * [JSON2 library](https://github.com/douglascrockford/JSON-js) - Adds support of the JSON object from ECMAScript 5 to downlevel browsers.
- * [Bundler and Minifier](https://github.com/madskristensen/BundlerMinifier) - [License: Apache License 2.0 (Apache)](http://github.com/madskristensen/BundlerMinifier/blob/master/LICENSE) JS-files, that used MSIE JS Engine, minificated by using this tool.
+ * [UglifyJS](https://github.com/mishoo/UglifyJS) - [License: BSD License (BSD)](https://github.com/mishoo/UglifyJS/blob/master/LICENSE) JS-files, that used MSIE JS Engine, minificated by using this tool.
 
 ## Who's Using MSIE JavaScript Engine
 If you use the MSIE JavaScript Engine in some project, please send me a message so I can include it in this list:
