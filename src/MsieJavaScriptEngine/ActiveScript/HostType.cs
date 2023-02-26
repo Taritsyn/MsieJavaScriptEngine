@@ -19,8 +19,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		/// <param name="type">Target type</param>
 		/// <param name="engineMode">JS engine mode</param>
-		public HostType(Type type, JsEngineMode engineMode)
-			: base(type, null, engineMode, false)
+		/// <param name="allowReflection">Flag for whether to allow the usage of reflection API in the script code</param>
+		public HostType(Type type, JsEngineMode engineMode, bool allowReflection)
+			: base(type, null, engineMode, allowReflection, false)
 		{ }
 
 
@@ -51,7 +52,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 					processedArgs, modifiers, culture, namedParameters);
 			}
 
-			return TypeMappingHelpers.MapToScriptType(result, _engineMode);
+			return TypeMappingHelpers.MapToScriptType(result, _engineMode, _allowReflection);
 		}
 
 		#endregion

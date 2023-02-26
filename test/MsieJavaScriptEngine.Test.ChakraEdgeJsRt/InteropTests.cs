@@ -15,31 +15,6 @@ namespace MsieJavaScriptEngine.Test.ChakraEdgeJsRt
 
 		#region Embedding of objects
 
-		#region Delegates
-
-		[Test]
-		public void EmbeddedInstanceOfDelegateHasFunctionPrototype()
-		{
-			// Arrange
-			var someFunc = new Func<int>(() => 42);
-
-			const string input = "Object.getPrototypeOf(embeddedFunc) === Function.prototype";
-
-			// Act
-			bool output;
-
-			using (var jsEngine = CreateJsEngine())
-			{
-				jsEngine.EmbedHostObject("embeddedFunc", someFunc);
-				output = jsEngine.Evaluate<bool>(input);
-			}
-
-			// Assert
-			Assert.True(output);
-		}
-
-		#endregion
-
 		#region Recursive calls
 
 		#region Mapping of errors

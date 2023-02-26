@@ -1,0 +1,12 @@
+{
+  "name": "MsieJavaScriptEngine",
+  "version": "3.1.0",
+  "devDependencies": {
+    "uglify-js": "3.16.1"
+  },
+  "scripts": {
+    "minify-es5-js": "uglifyjs ./Resources/ES5.js --output ./Resources/ES5.min.js --config-file ./.uglifyjsrc",
+    "minify-json2-js": "uglifyjs ./Resources/json2.js --output ./Resources/json2.min.js --config-file ./.uglifyjsrc",
+    "minify-js": "npm run -s minify-es5-js && npm run -s minify-json2-js"
+  }
+}

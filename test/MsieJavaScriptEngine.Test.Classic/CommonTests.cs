@@ -65,7 +65,7 @@ $variable1 + _variable2 - @variable3;";
 			JsCompilationException exception = null;
 
 			// Act
-			using (var jsEngine = CreateJsEngine(true))
+			using (var jsEngine = CreateJsEngine(enableDebugging: true))
 			{
 				try
 				{
@@ -186,7 +186,7 @@ factorial(0);";
 			JsCompilationException exception = null;
 
 			// Act
-			using (var jsEngine = CreateJsEngine(true))
+			using (var jsEngine = CreateJsEngine(enableDebugging: true))
 			{
 				try
 				{
@@ -300,7 +300,7 @@ var foo = 'Browser's bar';";
 			JsCompilationException exception = null;
 
 			// Act
-			using (var jsEngine = CreateJsEngine(true))
+			using (var jsEngine = CreateJsEngine(enableDebugging: true))
 			{
 				try
 				{

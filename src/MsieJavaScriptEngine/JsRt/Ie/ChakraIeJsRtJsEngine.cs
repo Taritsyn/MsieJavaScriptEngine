@@ -69,7 +69,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		public ChakraIeJsRtJsEngine(JsEngineSettings settings)
 			: base(settings)
 		{
-			_typeMapper = new IeTypeMapper();
+			_typeMapper = new IeTypeMapper(settings.AllowReflection);
 
 			try
 			{

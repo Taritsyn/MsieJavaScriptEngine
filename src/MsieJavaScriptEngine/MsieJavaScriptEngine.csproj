@@ -25,8 +25,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-    <PackageReleaseNotes>1. In JsRT modes, `JsVariantToValue` and `JsValueToVariant` native methods are no longer used for embedding objects and types;
-2. JSON2 library was updated to version of October 30, 2022.</PackageReleaseNotes>
+    <PackageReleaseNotes>In JavaScript engine settings was added one new property - `AllowReflection` (default `false`).</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -40,7 +39,6 @@
 
   <ItemGroup>
     <PackageReference Include="AdvancedStringBuilder" Version="0.1.0" />
-    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="ResxToCs.MSBuild" Version="1.0.0-alpha6" PrivateAssets="All" />
   </ItemGroup>
@@ -85,6 +83,12 @@
 
   <Target Name="ConvertResxToCs" BeforeTargets="BeforeCompile">
     <ResxToCsTask InputDirectory="./Resources/" Namespace="$(RootNamespace).Resources" InternalAccessModifier="true" />
+  </Target>
+
+  <Target Name="EnsureJsFilesBuilded" BeforeTargets="BeforeBuild" Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net45' ">
+    <Error
+      Condition=" !Exists('./Resources/ES5.min.js') Or !Exists('./Resources/json2.min.js') "
+      Text="You need to build JS files. To do this, run a `build-js.cmd` script." />
   </Target>
 
 </Project>

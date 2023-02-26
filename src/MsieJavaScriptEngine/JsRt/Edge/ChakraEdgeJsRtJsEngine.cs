@@ -61,7 +61,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		public ChakraEdgeJsRtJsEngine(JsEngineSettings settings)
 			: base(settings)
 		{
-			_typeMapper = new EdgeTypeMapper();
+			_typeMapper = new EdgeTypeMapper(settings.AllowReflection);
 
 			try
 			{

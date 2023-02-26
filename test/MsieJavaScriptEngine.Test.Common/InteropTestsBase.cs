@@ -432,7 +432,7 @@ smileDay.GetDayOfYear();";
 		}
 
 		[Test]
-		public virtual void CallingOfMethodOfCustomReferenceTypeWithInterfaceParameter()
+		public virtual void EmbeddingOfInstancesOfCustomReferenceTypesAndCallingOfMethodOfWithInterfaceParameter()
 		{
 			// Arrange
 			var animalTrainer = new AnimalTrainer();
@@ -461,6 +461,52 @@ smileDay.GetDayOfYear();";
 			// Assert
 			Assert.AreEqual(targetOutput1, output1);
 			Assert.AreEqual(targetOutput2, output2);
+		}
+
+		[Test]
+		public virtual void EmbeddingOfInstanceOfCustomValueTypeAndCallingOfItsGetTypeMethod()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				var date = new Date();
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostObject("date", date);
+					return jsEngine.Evaluate<string>("date.GetType();");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual(typeof(Date).FullName, TestAllowReflectionSetting(true));
+
+			var exception = Assert.Throws<JsRuntimeException>(() => TestAllowReflectionSetting(false));
+			Assert.AreEqual("Runtime error", exception.Category);
+			Assert.AreEqual("Object doesn't support property or method 'GetType'", exception.Description);
+		}
+
+		[Test]
+		public virtual void EmbeddingOfInstanceOfCustomReferenceTypeAndCallingOfItsGetTypeMethod()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				var cat = new Cat();
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostObject("cat", cat);
+					return jsEngine.Evaluate<string>("cat.GetType();");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual(typeof(Cat).FullName, TestAllowReflectionSetting(true));
+
+			var exception = Assert.Throws<JsRuntimeException>(() => TestAllowReflectionSetting(false));
+			Assert.AreEqual("Runtime error", exception.Category);
+			Assert.AreEqual("Object doesn't support property or method 'GetType'", exception.Description);
 		}
 
 		#endregion
@@ -597,7 +643,28 @@ smileDay.GetDayOfYear();";
 		}
 
 		[Test]
-		public virtual void CallingOfEmbeddedDelegateWithMissingParameter()
+		public virtual void EmbeddingOfInstanceOfDelegateAndCheckingItsPrototype()
+		{
+			// Arrange
+			var someFunc = new Func<int>(() => 42);
+
+			const string input = "Object.getPrototypeOf(embeddedFunc) === Function.prototype";
+
+			// Act
+			bool output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.EmbedHostObject("embeddedFunc", someFunc);
+				output = jsEngine.Evaluate<bool>(input);
+			}
+
+			// Assert
+			Assert.True(output);
+		}
+
+		[Test]
+		public virtual void EmbeddingOfInstanceOfDelegateAndCallingItWithMissingParameter()
 		{
 			// Arrange
 			var sumFunc = new Func<int, int, int>((a, b) => a + b);
@@ -625,7 +692,7 @@ smileDay.GetDayOfYear();";
 		}
 
 		[Test]
-		public virtual void CallingOfEmbeddedDelegateWithExtraParameter()
+		public virtual void EmbeddingOfInstanceOfDelegateAndCallingItWithExtraParameter()
 		{
 			// Arrange
 			var sumFunc = new Func<int, int, int>((a, b) => a + b);
@@ -644,6 +711,27 @@ smileDay.GetDayOfYear();";
 
 			// Assert
 			Assert.AreEqual(targetOutput, output);
+		}
+
+		[Test]
+		public virtual void EmbeddingOfInstanceOfDelegateAndGettingItsMethodProperty()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				var cat = new Cat();
+				var cryFunc = new Func<string>(cat.Cry);
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostObject("cry", cryFunc);
+					return jsEngine.Evaluate<string>("cry.Method;");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual("undefined", TestAllowReflectionSetting(true));
+			Assert.AreEqual("undefined", TestAllowReflectionSetting(false));
 		}
 
 		#endregion
@@ -886,6 +974,49 @@ var sysadminDay = addDays(webmasterDay, 118);";
 
 			// Assert
 			Assert.AreEqual(targetOutput, output);
+		}
+
+		[Test]
+		public virtual void CreatingAnInstanceOfEmbeddedBuiltinExceptionAndGettingItsTargetSiteProperty()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				Type invalidOperationExceptionType = typeof(InvalidOperationException);
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostType("InvalidOperationError", invalidOperationExceptionType);
+					return jsEngine.Evaluate<string>("new InvalidOperationError(\"A terrible thing happened!\").TargetSite;");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual(null, TestAllowReflectionSetting(true));
+			Assert.AreEqual("undefined", TestAllowReflectionSetting(false));
+		}
+
+		[Test]
+		public virtual void CreatingAnInstanceOfEmbeddedCustomExceptionAndCallingOfItsGetTypeMethod()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				Type loginFailedExceptionType = typeof(LoginFailedException);
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostType("LoginFailedError", loginFailedExceptionType);
+					return jsEngine.Evaluate<string>("new LoginFailedError(\"Wrong password entered!\").GetType();");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual(typeof(LoginFailedException).FullName, TestAllowReflectionSetting(true));
+
+			var exception = Assert.Throws<JsRuntimeException>(() => TestAllowReflectionSetting(false));
+			Assert.AreEqual("Runtime error", exception.Category);
+			Assert.AreEqual("Object doesn't support property or method 'GetType'", exception.Description);
 		}
 
 		#endregion

@@ -28,6 +28,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 		protected readonly JsEngineMode _engineMode;
 
 		/// <summary>
+		/// Flag for whether to allow the usage of reflection API in the script code
+		/// </summary>
+		protected readonly bool _allowReflection;
+
+		/// <summary>
 		/// List of fields
 		/// </summary>
 		private readonly FieldInfo[] _fields;
@@ -57,20 +62,26 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="type">Target type</param>
 		/// <param name="target">Target object</param>
 		/// <param name="engineMode">JS engine mode</param>
+		/// <param name="allowReflection">Flag for whether to allow the usage of reflection API in the script code</param>
 		/// <param name="instance">Flag for whether to allow access to members of the instance</param>
-		protected HostItemBase(Type type, object target, JsEngineMode engineMode, bool instance)
+		protected HostItemBase(Type type, object target, JsEngineMode engineMode, bool allowReflection, bool instance)
 		{
 			_type = type;
 			_target = target;
+			_allowReflection = allowReflection;
 			_engineMode = engineMode;
 
 			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
 			FieldInfo[] fields = _type.GetFields(defaultBindingFlags);
 			PropertyInfo[] properties = _type.GetProperties(defaultBindingFlags);
-			MethodInfo[] methods = _type.GetMethods(defaultBindingFlags);
-			if (methods.Length > 0 && properties.Length > 0)
+			if (properties.Length > 0 && !allowReflection)
 			{
-				methods = ReflectionHelpers.GetFullyFledgedMethods(methods);
+				properties = GetAvailableProperties(properties);
+			}
+			MethodInfo[] methods = _type.GetMethods(defaultBindingFlags);
+			if (methods.Length > 0 && (properties.Length > 0 || !allowReflection))
+			{
+				methods = GetAvailableMethods(methods, allowReflection);
 			}
 
 			_fields = fields;
@@ -78,6 +89,49 @@ namespace MsieJavaScriptEngine.ActiveScript
 			_methods = methods;
 		}
 
+
+		private static PropertyInfo[] GetAvailableProperties(PropertyInfo[] properties)
+		{
+			int propertyCount = properties.Length;
+			var availableProperties = new PropertyInfo[propertyCount];
+			int availablePropertyIndex = 0;
+
+			for (int propertyIndex = 0; propertyIndex < propertyCount; propertyIndex++)
+			{
+				PropertyInfo property = properties[propertyIndex];
+				if (ReflectionHelpers.IsAllowedProperty(property))
+				{
+					availableProperties[availablePropertyIndex] = property;
+					availablePropertyIndex++;
+				}
+			}
+
+			Array.Resize(ref availableProperties, availablePropertyIndex);
+
+			return availableProperties;
+		}
+
+		private static MethodInfo[] GetAvailableMethods(MethodInfo[] methods, bool allowReflection)
+		{
+			int methodCount = methods.Length;
+			var availableMethods = new MethodInfo[methodCount];
+			int availableMethodIndex = 0;
+
+			for (int methodIndex = 0; methodIndex < methodCount; methodIndex++)
+			{
+				MethodInfo method = methods[methodIndex];
+				if (ReflectionHelpers.IsFullyFledgedMethod(method)
+					&& (allowReflection || ReflectionHelpers.IsAllowedMethod(method)))
+				{
+					availableMethods[availableMethodIndex] = method;
+					availableMethodIndex++;
+				}
+			}
+
+			Array.Resize(ref availableMethods, availableMethodIndex);
+
+			return availableMethods;
+		}
 
 		private bool IsField(string name)
 		{

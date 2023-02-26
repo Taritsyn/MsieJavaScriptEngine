@@ -571,7 +571,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <returns>The mapped value</returns>
 		private object MapToScriptType(object value)
 		{
-			return TypeMappingHelpers.MapToScriptType(value, _settings.EngineMode);
+			return TypeMappingHelpers.MapToScriptType(value, _settings.EngineMode, _settings.AllowReflection);
 		}
 
 		/// <summary>
@@ -581,7 +581,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <returns>The mapped array</returns>
 		private object[] MapToScriptType(object[] args)
 		{
-			return TypeMappingHelpers.MapToScriptType(args, _settings.EngineMode);
+			return TypeMappingHelpers.MapToScriptType(args, _settings.EngineMode, _settings.AllowReflection);
 		}
 
 		/// <summary>
@@ -900,7 +900,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public override void EmbedHostType(string itemName, Type type)
 		{
-			var typeValue = new HostType(type, _settings.EngineMode);
+			var typeValue = new HostType(type, _settings.EngineMode, _settings.AllowReflection);
 
 			_dispatcher.Invoke(() =>
 			{

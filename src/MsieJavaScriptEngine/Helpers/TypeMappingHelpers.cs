@@ -17,8 +17,9 @@ namespace MsieJavaScriptEngine.Helpers
 		/// </summary>
 		/// <param name="value">The source value</param>
 		/// <param name="engineMode">JavaScript engine mode</param>
+		/// <param name="allowReflection">Flag for whether to allow the usage of reflection API in the script code</param>
 		/// <returns>The mapped value</returns>
-		public static object MapToScriptType(object value, JsEngineMode engineMode)
+		public static object MapToScriptType(object value, JsEngineMode engineMode, bool allowReflection)
 		{
 			if (value == null)
 			{
@@ -36,7 +37,7 @@ namespace MsieJavaScriptEngine.Helpers
 				return value;
 			}
 
-			var result = new HostObject(value, engineMode);
+			var result = new HostObject(value, engineMode, allowReflection);
 
 			return result;
 		}
@@ -46,10 +47,11 @@ namespace MsieJavaScriptEngine.Helpers
 		/// </summary>
 		/// <param name="args">The source array</param>
 		/// <param name="engineMode">JavaScript engine mode</param>
+		/// <param name="allowReflection">Flag for whether to allow the usage of reflection API in the script code</param>
 		/// <returns>The mapped array</returns>
-		public static object[] MapToScriptType(object[] args, JsEngineMode engineMode)
+		public static object[] MapToScriptType(object[] args, JsEngineMode engineMode, bool allowReflection)
 		{
-			return args.Select(arg => MapToScriptType(arg, engineMode)).ToArray();
+			return args.Select(arg => MapToScriptType(arg, engineMode, allowReflection)).ToArray();
 		}
 
 		/// <summary>

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+using MsieJavaScriptEngine.Helpers;
 using MsieJavaScriptEngine.JsRt.Embedding;
 using MsieJavaScriptEngine.Utilities;
 
@@ -22,6 +24,11 @@ namespace MsieJavaScriptEngine.JsRt
 		/// Name of property to store the external object
 		/// </summary>
 		protected const string ExternalObjectPropertyName = "_MsieJavaScriptEngine_externalObject";
+
+		/// <summary>
+		/// Flag for whether to allow the usage of reflection API in the script code
+		/// </summary>
+		protected readonly bool _allowReflection;
 
 		/// <summary>
 		/// Storage for lazy-initialized embedded objects
@@ -67,6 +74,16 @@ namespace MsieJavaScriptEngine.JsRt
 		/// Flag indicating whether this object is disposed
 		/// </summary>
 		private InterlockedStatedFlag _disposedFlag = new InterlockedStatedFlag();
+
+
+		/// <summary>
+		/// Constructs an instance of the type mapper
+		/// </summary>
+		/// <param name="allowReflection">Flag for whether to allow the usage of reflection API in the script code</param>
+		protected TypeMapper(bool allowReflection)
+		{
+			_allowReflection = allowReflection;
+		}
 
 
 		/// <summary>
@@ -198,6 +215,30 @@ namespace MsieJavaScriptEngine.JsRt
 			}
 
 			embeddedTypeHandle.Free();
+		}
+
+		protected bool IsAvailableProperty(PropertyInfo property)
+		{
+			if (_allowReflection)
+			{
+				return true;
+			}
+
+			bool isAvailable = ReflectionHelpers.IsAllowedProperty(property);
+
+			return isAvailable;
+		}
+
+		protected IEnumerable<IGrouping<string, MethodInfo>> GetAvailableMethodGroups(MethodInfo[] methods)
+		{
+			IEnumerable<MethodInfo> availableMethods = methods.Where(ReflectionHelpers.IsFullyFledgedMethod);
+			if (!_allowReflection)
+			{
+				availableMethods = availableMethods.Where(ReflectionHelpers.IsAllowedMethod);
+			}
+			IEnumerable<IGrouping<string, MethodInfo>> availableMethodGroups = availableMethods.GroupBy(m => m.Name);
+
+			return availableMethodGroups;
 		}
 
 		protected object[] GetHostItemMemberArguments(TValue[] args, int maxArgCount = -1)

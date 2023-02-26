@@ -4,6 +4,8 @@ using System.IO;
 using NUnit.Framework;
 
 using MsieJavaScriptEngine.Test.Common;
+using MsieJavaScriptEngine.Test.Common.Interop;
+using MsieJavaScriptEngine.Test.Common.Interop.Animals;
 
 namespace MsieJavaScriptEngine.Test.Classic
 {
@@ -14,6 +16,85 @@ namespace MsieJavaScriptEngine.Test.Classic
 
 
 		#region Embedding of objects
+
+		#region Objects with methods
+
+		[Test]
+		public override void EmbeddingOfInstanceOfCustomValueTypeAndCallingOfItsGetTypeMethod()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				var date = new Date();
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostObject("date", date);
+					return jsEngine.Evaluate<string>("date.GetType();");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual(typeof(Date).FullName, TestAllowReflectionSetting(true));
+
+			var exception = Assert.Throws<JsRuntimeException>(() => TestAllowReflectionSetting(false));
+			Assert.AreEqual("Runtime error", exception.Category);
+			Assert.AreEqual("Object doesn't support this property or method", exception.Description);
+		}
+
+		[Test]
+		public override void EmbeddingOfInstanceOfCustomReferenceTypeAndCallingOfItsGetTypeMethod()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				var cat = new Cat();
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostObject("cat", cat);
+					return jsEngine.Evaluate<string>("cat.GetType();");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual(typeof(Cat).FullName, TestAllowReflectionSetting(true));
+
+			var exception = Assert.Throws<JsRuntimeException>(() => TestAllowReflectionSetting(false));
+			Assert.AreEqual("Runtime error", exception.Category);
+			Assert.AreEqual("Object doesn't support this property or method", exception.Description);
+		}
+
+		#endregion
+
+		#region Delegates
+
+		[Test]
+		public override void EmbeddingOfInstanceOfDelegateAndCheckingItsPrototype()
+		{ }
+
+		[Test]
+		public override void EmbeddingOfInstanceOfDelegateAndGettingItsMethodProperty()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				var cat = new Cat();
+				var cryFunc = new Func<string>(cat.Cry);
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostObject("cry", cryFunc);
+					return jsEngine.Evaluate<string>("cry.Method;");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual("System.String Cry()", TestAllowReflectionSetting(true));
+			Assert.AreEqual("undefined", TestAllowReflectionSetting(false));
+		}
+
+		#endregion
 
 		#region Recursive calls
 
@@ -63,6 +144,38 @@ namespace MsieJavaScriptEngine.Test.Classic
 		}
 
 		#endregion
+
+		#endregion
+
+		#endregion
+
+
+		#region Embedding of types
+
+		#region Creating of instances
+
+		[Test]
+		public override void CreatingAnInstanceOfEmbeddedCustomExceptionAndCallingOfItsGetTypeMethod()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				Type loginFailedExceptionType = typeof(LoginFailedException);
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostType("LoginFailedError", loginFailedExceptionType);
+					return jsEngine.Evaluate<string>("new LoginFailedError(\"Wrong password entered!\").GetType();");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual(typeof(LoginFailedException).FullName, TestAllowReflectionSetting(true));
+
+			var exception = Assert.Throws<JsRuntimeException>(() => TestAllowReflectionSetting(false));
+			Assert.AreEqual("Runtime error", exception.Category);
+			Assert.AreEqual("Object doesn't support this property or method", exception.Description);
+		}
 
 		#endregion
 

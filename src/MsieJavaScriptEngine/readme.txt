@@ -21,9 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   1. In JsRT modes, `JsVariantToValue` and `JsValueToVariant` native methods are
-      no longer used for embedding objects and types;
-   2. JSON2 library was updated to version of October 30, 2022.
+   In JavaScript engine settings was added one new property - `AllowReflection`
+   (default `false`).
 
    ============
    PROJECT SITE

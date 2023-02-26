@@ -4,6 +4,7 @@ using System.IO;
 using NUnit.Framework;
 
 using MsieJavaScriptEngine.Test.Common;
+using MsieJavaScriptEngine.Test.Common.Interop.Animals;
 
 namespace MsieJavaScriptEngine.Test.ChakraActiveScript
 {
@@ -14,6 +15,35 @@ namespace MsieJavaScriptEngine.Test.ChakraActiveScript
 
 
 		#region Embedding of objects
+
+		#region Delegates
+
+		[Test]
+		public override void EmbeddingOfInstanceOfDelegateAndCheckingItsPrototype()
+		{ }
+
+		[Test]
+		public override void EmbeddingOfInstanceOfDelegateAndGettingItsMethodProperty()
+		{
+			// Arrange
+			string TestAllowReflectionSetting(bool allowReflection)
+			{
+				var cat = new Cat();
+				var cryFunc = new Func<string>(cat.Cry);
+
+				using (var jsEngine = CreateJsEngine(allowReflection: allowReflection))
+				{
+					jsEngine.EmbedHostObject("cry", cryFunc);
+					return jsEngine.Evaluate<string>("cry.Method;");
+				}
+			}
+
+			// Act and Assert
+			Assert.AreEqual("System.String Cry()", TestAllowReflectionSetting(true));
+			Assert.AreEqual("undefined", TestAllowReflectionSetting(false));
+		}
+
+		#endregion
 
 		#region Recursive calls
 

@@ -25,8 +25,9 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// </summary>
 		/// <param name="target">Target object</param>
 		/// <param name="engineMode">JS engine mode</param>
-		public HostObject(object target, JsEngineMode engineMode)
-			: base(target.GetType(), target, engineMode, true)
+		/// <param name="allowReflection">Flag for whether to allow the usage of reflection API in the script code</param>
+		public HostObject(object target, JsEngineMode engineMode, bool allowReflection)
+			: base(target.GetType(), target, engineMode, allowReflection, true)
 		{
 			var del = _target as Delegate;
 			if (del != null)
@@ -88,7 +89,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 					processedArgs, modifiers, culture, namedParameters);
 			}
 
-			return TypeMappingHelpers.MapToScriptType(result, _engineMode);
+			return TypeMappingHelpers.MapToScriptType(result, _engineMode, _allowReflection);
 		}
 
 		#endregion

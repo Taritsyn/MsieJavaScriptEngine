@@ -28,6 +28,19 @@ namespace MsieJavaScriptEngine
 
 #endif
 		/// <summary>
+		/// Gets or sets a flag for whether to allow the usage of reflection API in the script code
+		/// </summary>
+		/// <remarks>
+		/// This affects <see cref="Object.GetType"/>, <c>Exception.GetType</c>,
+		/// <c>Exception.TargetSite</c> and <c>Delegate.Method</c>.
+		/// </remarks>
+		public bool AllowReflection
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets or sets a flag for whether to enable script debugging features
 		/// </summary>
 		public bool EnableDebugging
@@ -95,6 +108,7 @@ namespace MsieJavaScriptEngine
 		/// </summary>
 		public JsEngineSettings()
 		{
+			AllowReflection = false;
 			EnableDebugging = false;
 			EngineMode = JsEngineMode.Auto;
 #if !NETSTANDARD1_3

@@ -26,7 +26,9 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <summary>
 		/// Constructs an instance of the “Edge” type mapper
 		/// </summary>
-		public EdgeTypeMapper()
+		/// <param name="allowReflection">Flag for whether to allow the usage of reflection API in the script code</param>
+		public EdgeTypeMapper(bool allowReflection)
+			: base(allowReflection)
 		{ }
 
 
@@ -437,6 +439,11 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			foreach (PropertyInfo property in properties)
 			{
+				if (!IsAvailableProperty(property))
+				{
+					continue;
+				}
+
 				string propertyName = property.Name;
 
 				EdgeJsValue descriptorValue = EdgeJsValue.CreateObject();
@@ -565,11 +572,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 			string typeName = type.FullName;
 			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
-			IEnumerable<MethodInfo> methods = type.GetMethods(defaultBindingFlags)
-				.Where(ReflectionHelpers.IsFullyFledgedMethod);
-			IEnumerable<IGrouping<string, MethodInfo>> methodGroups = methods.GroupBy(m => m.Name);
+			MethodInfo[] methods = type.GetMethods(defaultBindingFlags);
+			IEnumerable<IGrouping<string, MethodInfo>> availableMethodGroups = GetAvailableMethodGroups(methods);
 
-			foreach (IGrouping<string, MethodInfo> methodGroup in methodGroups)
+			foreach (IGrouping<string, MethodInfo> methodGroup in availableMethodGroups)
 			{
 				string methodName = methodGroup.Key;
 				MethodInfo[] methodCandidates = methodGroup.ToArray();

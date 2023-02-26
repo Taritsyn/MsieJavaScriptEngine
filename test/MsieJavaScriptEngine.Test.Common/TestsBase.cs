@@ -18,15 +18,11 @@
 		protected virtual bool UseJson2Library => false;
 
 
-		protected MsieJsEngine CreateJsEngine()
-		{
-			return CreateJsEngine(false);
-		}
-
-		protected MsieJsEngine CreateJsEngine(bool enableDebugging)
+		protected MsieJsEngine CreateJsEngine(bool allowReflection = false, bool enableDebugging = false)
 		{
 			var jsEngine = new MsieJsEngine(new JsEngineSettings
 			{
+				AllowReflection = allowReflection,
 				EnableDebugging = enableDebugging,
 				EngineMode = EngineMode,
 				UseEcmaScript5Polyfill = UseEcmaScript5Polyfill,
