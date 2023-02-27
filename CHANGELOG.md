@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.2.1 - February 27, 2023
+ * In JsRT modes improved a performance of .NET methods projection
+
 ## v3.2.0 - February 26, 2023
  * In JavaScript engine settings was added one new property - `AllowReflection` (default `false`)
 

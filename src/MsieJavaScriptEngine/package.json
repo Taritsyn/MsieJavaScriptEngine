@@ -1,6 +1,6 @@
 {
   "name": "MsieJavaScriptEngine",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "devDependencies": {
     "uglify-js": "3.16.1"
   },
