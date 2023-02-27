@@ -21,8 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   In JavaScript engine settings was added one new property - `AllowReflection`
-   (default `false`).
+   In JsRT modes improved a performance of .NET methods projection.
 
    ============
    PROJECT SITE

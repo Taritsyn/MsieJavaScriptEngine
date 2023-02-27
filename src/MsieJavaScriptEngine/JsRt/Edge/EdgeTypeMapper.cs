@@ -573,12 +573,12 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 			string typeName = type.FullName;
 			BindingFlags defaultBindingFlags = ReflectionHelpers.GetDefaultBindingFlags(instance);
 			MethodInfo[] methods = type.GetMethods(defaultBindingFlags);
-			IEnumerable<IGrouping<string, MethodInfo>> availableMethodGroups = GetAvailableMethodGroups(methods);
+			Dictionary<string, List<MethodInfo>> availableMethodGroups = GetAvailableMethodGroups(methods);
 
-			foreach (IGrouping<string, MethodInfo> methodGroup in availableMethodGroups)
+			foreach (KeyValuePair<string, List<MethodInfo>> methodGroup in availableMethodGroups)
 			{
 				string methodName = methodGroup.Key;
-				MethodInfo[] methodCandidates = methodGroup.ToArray();
+				MethodInfo[] methodCandidates = methodGroup.Value.ToArray();
 
 				EdgeJsNativeFunction nativeFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 				{

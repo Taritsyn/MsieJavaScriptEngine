@@ -229,14 +229,37 @@ namespace MsieJavaScriptEngine.JsRt
 			return isAvailable;
 		}
 
-		protected IEnumerable<IGrouping<string, MethodInfo>> GetAvailableMethodGroups(MethodInfo[] methods)
+		protected Dictionary<string, List<MethodInfo>> GetAvailableMethodGroups(MethodInfo[] methods)
 		{
-			IEnumerable<MethodInfo> availableMethods = methods.Where(ReflectionHelpers.IsFullyFledgedMethod);
-			if (!_allowReflection)
+			int methodCount = methods.Length;
+			if (methodCount == 0)
 			{
-				availableMethods = availableMethods.Where(ReflectionHelpers.IsAllowedMethod);
+				return new Dictionary<string, List<MethodInfo>>();
 			}
-			IEnumerable<IGrouping<string, MethodInfo>> availableMethodGroups = availableMethods.GroupBy(m => m.Name);
+
+			var availableMethodGroups = new Dictionary<string, List<MethodInfo>>(methodCount);
+
+			foreach (MethodInfo method in methods)
+			{
+				if (!ReflectionHelpers.IsFullyFledgedMethod(method)
+					|| (!_allowReflection && !ReflectionHelpers.IsAllowedMethod(method)))
+				{
+					continue;
+				}
+
+				string methodName = method.Name;
+				List<MethodInfo> methodGroup;
+
+				if (availableMethodGroups.TryGetValue(methodName, out methodGroup))
+				{
+					methodGroup.Add(method);
+				}
+				else
+				{
+					methodGroup = new List<MethodInfo> { method };
+					availableMethodGroups.Add(methodName, methodGroup);
+				}
+			}
 
 			return availableMethodGroups;
 		}
