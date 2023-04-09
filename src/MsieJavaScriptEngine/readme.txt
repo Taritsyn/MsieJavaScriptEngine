@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   In JsRT modes improved a performance of .NET methods projection.
+   Fixed a error due to which the global object to become read-only after embedding
+   of the host objects and types.
 
    ============
    PROJECT SITE

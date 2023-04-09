@@ -877,6 +877,41 @@ var sysadminDay = addDays(webmasterDay, 118);";
 
 		#endregion
 
+		#region Special cases
+
+		[Test]
+		public virtual void EmbeddingOfInstanceOfCustomReferenceTypeAndModificationOfGlobalObject()
+		{
+			// Arrange
+			var someObj = new SomeClass();
+
+			const string modifyingCode = @"(function () {
+	'use strict';
+
+	var global = typeof self != 'undefined' && self.Math == Math ?
+		self : Function('return this')();
+
+	global['foo'] = 'bar';
+})();";
+			const string variableName = "foo";
+			const string targetOutput = "bar";
+
+			// Act
+			string output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.EmbedHostObject("someObj", someObj);
+				jsEngine.Execute(modifyingCode);
+				output = jsEngine.GetVariableValue<string>(variableName);
+			}
+
+			// Assert
+			Assert.AreEqual(targetOutput, output);
+		}
+
+		#endregion
+
 		#endregion
 
 
@@ -1439,6 +1474,41 @@ var sysadminDay = addDays(webmasterDay, 118);";
 
 			// Assert
 			Assert.Null(currentException);
+		}
+
+		#endregion
+
+		#region Special cases
+
+		[Test]
+		public virtual void EmbeddingOfCustomReferenceTypeAndModificationOfGlobalObject()
+		{
+			// Arrange
+			var someType = typeof(SomeClass);
+
+			const string modifyingCode = @"(function () {
+	'use strict';
+
+	var global = typeof self != 'undefined' && self.Math == Math ?
+		self : Function('return this')();
+
+	global.foo = 'baz';
+})();";
+			const string variableName = "foo";
+			const string targetOutput = "baz";
+
+			// Act
+			string output;
+
+			using (var jsEngine = CreateJsEngine())
+			{
+				jsEngine.EmbedHostType("SomeType", someType);
+				jsEngine.Execute(modifyingCode);
+				output = jsEngine.GetVariableValue<string>(variableName);
+			}
+
+			// Assert
+			Assert.AreEqual(targetOutput, output);
 		}
 
 		#endregion

@@ -535,7 +535,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 			try
 			{
-				_activeScriptWrapper.AddNamedItem(itemName, ScriptItemFlags.IsVisible | ScriptItemFlags.GlobalMembers);
+				_activeScriptWrapper.AddNamedItem(itemName, ScriptItemFlags.IsVisible);
 			}
 			catch
 			{
