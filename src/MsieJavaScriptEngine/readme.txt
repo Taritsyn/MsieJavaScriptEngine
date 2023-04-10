@@ -1,7 +1,7 @@
 ﻿
 
    --------------------------------------------------------------------------------
-                README file for MSIE JavaScript Engine for .NET v3.2.1
+                README file for MSIE JavaScript Engine for .NET v3.2.2
 
    --------------------------------------------------------------------------------
 
@@ -22,7 +22,7 @@
    RELEASE NOTES
    =============
    Fixed a error due to which the global object to become read-only after embedding
-   of the host objects and types.
+   of the host objects and types. Special thanks to Denis Pushkarev.
 
    ============
    PROJECT SITE

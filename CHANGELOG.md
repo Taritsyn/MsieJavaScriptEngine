@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.2.2 - April 10, 2023
+ * Fixed a error due to which the global object to become read-only after embedding of the host objects and types. Special thanks to [Denis Pushkarev](https://github.com/zloirock).
+
 ## v3.2.1 - February 27, 2023
  * In JsRT modes improved a performance of .NET methods projection
 
