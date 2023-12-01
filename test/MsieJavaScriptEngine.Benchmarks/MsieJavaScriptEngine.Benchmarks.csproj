@@ -3,25 +3,18 @@
   <PropertyGroup>
     <Product>MSIE JavaScript Engine: Benchmarks</Product>
     <VersionPrefix>3.2.2</VersionPrefix>
-    <TargetFrameworks>net461;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net462;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPackable>false</IsPackable>
-    <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 
   <Import Project="../../build/common.props" />
 
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
+
     <ProjectReference Include="../../src/MsieJavaScriptEngine/MsieJavaScriptEngine.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' Or '$(TargetFramework)' == 'netcoreapp2.1'">
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net461' And '$(TargetFramework)' != 'netcoreapp2.1' ">
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
   </ItemGroup>
 
   <ItemGroup>

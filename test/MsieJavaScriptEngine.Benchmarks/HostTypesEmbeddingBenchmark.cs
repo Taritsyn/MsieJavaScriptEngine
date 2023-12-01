@@ -52,7 +52,11 @@ namespace MsieJavaScriptEngine.Benchmarks
 
 	return result;
 }(SomeClass, Point, SomeOtherClass));";
+#if NET462
 			const string targetOutput = "RmFsc2V8MjkyMHwwLjg3Mjg1OTEwNzM4ODQyNHxBU0RG0KTQq9CS0JA=";
+#else
+			const string targetOutput = "RmFsc2V8MjkyMHwwLjg3Mjg1OTEwNzM4ODQyMzV8QVNERtCk0KvQktCQ";
+#endif
 
 			// Act
 			string output;
@@ -69,7 +73,7 @@ namespace MsieJavaScriptEngine.Benchmarks
 			// Assert
 			Assert.Equal(targetOutput, output);
 		}
-#if NET461
+#if NET462
 
 		[Benchmark]
 		public void Classic()

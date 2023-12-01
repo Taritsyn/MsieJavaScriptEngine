@@ -66,7 +66,11 @@ namespace MsieJavaScriptEngine.Benchmarks
 
 	return result;
 }(someObj, log));";
+#if NET462
 			const string targetOutput = "RmFsc2V8MjkxNHwwLjg3Mjg1OTEwNzM4ODQyNHxBU0RG0KTQq9CS0JA=";
+#else
+			const string targetOutput = "RmFsc2V8MjkxNHwwLjg3Mjg1OTEwNzM4ODQyMzV8QVNERtCk0KvQktCQ";
+#endif
 			string targetLogOutput = "-= Start code execution =-" + Environment.NewLine +
 				"-= End of code execution =-" + Environment.NewLine;
 
@@ -89,7 +93,7 @@ namespace MsieJavaScriptEngine.Benchmarks
 			Assert.Equal(targetOutput, output);
 			Assert.Equal(targetLogOutput, logOutput);
 		}
-#if NET461
+#if NET462
 
 		[Benchmark]
 		public void Classic()

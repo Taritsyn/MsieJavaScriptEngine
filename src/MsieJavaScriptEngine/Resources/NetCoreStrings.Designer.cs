@@ -21,7 +21,7 @@ namespace MsieJavaScriptEngine.Resources
 		private static Lazy<ResourceManager> _resourceManager =
 			new Lazy<ResourceManager>(() => new ResourceManager(
 				"MsieJavaScriptEngine.Resources.NetCoreStrings",
-#if NET40
+#if NET20 || NET30 || NET35 || NET40
 				typeof(NetCoreStrings).Assembly
 #else
 				typeof(NetCoreStrings).GetTypeInfo().Assembly

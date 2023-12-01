@@ -1,7 +1,5 @@
 ﻿using System.IO;
-#if !NET40
 using System.Reflection;
-#endif
 using System.Threading.Tasks;
 
 using NUnit.Framework;
@@ -207,9 +205,7 @@ function declinationOfSeconds(number) {
 				if (supportsScriptPrecompilation)
 				{
 					precompiledResource = jsEngine.PrecompileResource(resourceName, typeof(PrecompilationTestsBase)
-#if !NET40
 						.GetTypeInfo()
-#endif
 						.Assembly
 					);
 

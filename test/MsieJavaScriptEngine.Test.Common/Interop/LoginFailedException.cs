@@ -1,5 +1,7 @@
 ﻿using System;
+#if !NET8_0_OR_GREATER
 using System.Runtime.Serialization;
+#endif
 
 namespace MsieJavaScriptEngine.Test.Common.Interop
 {
@@ -25,6 +27,7 @@ namespace MsieJavaScriptEngine.Test.Common.Interop
 		public LoginFailedException(string message, Exception innerException)
 			: base(message, innerException)
 		{ }
+#if !NET8_0_OR_GREATER
 
 		protected LoginFailedException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
@@ -46,5 +49,6 @@ namespace MsieJavaScriptEngine.Test.Common.Interop
 			base.GetObjectData(info, context);
 			info.AddValue("UserName", this._userName);
 		}
+#endif
 	}
 }

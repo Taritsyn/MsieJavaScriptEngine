@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-#if !NET40
 using System.Reflection;
-#endif
 using System.Threading;
 
 using NUnit.Framework;
@@ -247,9 +245,7 @@ namespace MsieJavaScriptEngine.Test.Common
 			using (var jsEngine = CreateJsEngine())
 			{
 				jsEngine.ExecuteResource(resourceName, typeof(CommonTestsBase)
-#if !NET40
 					.GetTypeInfo()
-#endif
 					.Assembly
 				);
 				output = jsEngine.Evaluate<int>(input);
