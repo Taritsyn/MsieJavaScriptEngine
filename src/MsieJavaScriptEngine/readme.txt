@@ -21,8 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a error due to which the global object to become read-only after embedding
-   of the host objects and types. Special thanks to Denis Pushkarev.
+   JSON2 library was updated to version of May 10, 2023.
 
    ============
    PROJECT SITE
