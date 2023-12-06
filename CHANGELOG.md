@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.2.3 - December 6, 2023
+ * JSON2 library was updated to version of May 10, 2023
+
 ## v3.2.2 - April 10, 2023
  * Fixed a error due to which the global object to become read-only after embedding of the host objects and types. Special thanks to [Denis Pushkarev](https://github.com/zloirock).
 
