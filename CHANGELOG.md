@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.2.4 - January 8, 2024
+ * Fixed a error that occurred in the `ReflectionHelpers.IsAllowedProperty` method when running on .NET Core 1.0
+
 ## v3.2.3 - December 6, 2023
  * JSON2 library was updated to version of May 10, 2023
 
