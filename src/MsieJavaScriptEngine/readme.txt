@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   JSON2 library was updated to version of May 10, 2023.
+   Fixed a error that occurred in the `ReflectionHelpers.IsAllowedProperty` method
+   when running on .NET Core 1.0.
 
    ============
    PROJECT SITE
