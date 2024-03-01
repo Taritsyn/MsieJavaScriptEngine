@@ -21,8 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Fixed a error that occurred in the `ReflectionHelpers.IsAllowedProperty` method
-   when running on .NET Core 1.0.
+   Added a `README.md` file to NuGet package.
 
    ============
    PROJECT SITE

@@ -1,0 +1,2 @@
+This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge Legacy (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine).
+Project was based on the code of [SassAndCoffee.JavaScript](https://github.com/anaisbetts/SassAndCoffee), [Chakra Sample Hosts](https://github.com/panopticoncentral/chakra-host) and [jsrt-dotnet](https://github.com/robpaveza/jsrt-dotnet).
