@@ -14,8 +14,7 @@
     <Title>$(Product)</Title>
     <Authors>Andrey Taritsyn</Authors>
     <Description>This library is a .NET wrapper for working with the JavaScript engines of Internet Explorer and Edge Legacy (JsRT versions of Chakra, ActiveScript version of Chakra and Classic JavaScript Engine). Project was based on the code of SassAndCoffee.JavaScript (https://github.com/anaisbetts/SassAndCoffee), Chakra Sample Hosts (https://github.com/panopticoncentral/chakra-host) and jsrt-dotnet (https://github.com/robpaveza/jsrt-dotnet).</Description>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Taritsyn/MsieJavaScriptEngine</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/Taritsyn/MsieJavaScriptEngine/master/images/MsieJavaScriptEngine_Logo_128x128.png</PackageIconUrl>
     <PackageIcon>icon.png</PackageIcon>
@@ -65,7 +64,7 @@
       <Visible>false</Visible>
     </None>
     <None Include="../../LICENSE.txt">
-      <PackagePath>$(PackageLicenseFile)</PackagePath>
+      <PackagePath>/</PackagePath>
       <Pack>true</Pack>
       <Visible>false</Visible>
     </None>
@@ -76,7 +75,7 @@
     </None>
 
     <Content Include="readme.txt">
-      <PackagePath>readme.txt</PackagePath>
+      <PackagePath>/</PackagePath>
       <Pack>true</Pack>
     </Content>
   </ItemGroup>
