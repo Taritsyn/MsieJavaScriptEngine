@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.2.5 - March 1, 2024
+ * Added a `README.md` file to NuGet package
+
 ## v3.2.4 - January 8, 2024
  * Fixed a error that occurred in the `ReflectionHelpers.IsAllowedProperty` method when running on .NET Core 1.0
 

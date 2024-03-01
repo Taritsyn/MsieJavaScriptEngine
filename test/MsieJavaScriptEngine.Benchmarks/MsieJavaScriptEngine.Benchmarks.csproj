@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <Product>MSIE JavaScript Engine: Benchmarks</Product>
-    <VersionPrefix>3.2.4</VersionPrefix>
+    <VersionPrefix>3.2.5</VersionPrefix>
     <TargetFrameworks>net462;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

@@ -2,10 +2,9 @@
 
   <PropertyGroup>
     <Product>MSIE JavaScript Engine for .NET</Product>
-    <VersionPrefix>3.2.4</VersionPrefix>
+    <VersionPrefix>3.2.5</VersionPrefix>
     <TargetFrameworks>net40-client;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.0</NetStandardImplicitPackageVersion>
-    <LangVersion>7.3</LangVersion>
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);CS1591;NU1605</NoWarn>
@@ -29,8 +28,6 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
   </PropertyGroup>
 
   <Import Project="../../build/common.props" />
@@ -38,8 +35,7 @@
   <Import Project="../../build/strong-name-signing.props" />
 
   <ItemGroup>
-    <PackageReference Include="AdvancedStringBuilder" Version="0.1.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="AdvancedStringBuilder" Version="0.1.1" />
     <PackageReference Include="ResxToCs.MSBuild" Version="1.0.0-alpha7" PrivateAssets="All" />
   </ItemGroup>
 
