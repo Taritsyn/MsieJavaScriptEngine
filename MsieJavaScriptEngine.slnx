@@ -1,0 +1,56 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="build-js.cmd" />
+    <File Path="CHANGELOG.md" />
+    <File Path="global.json" />
+    <File Path="LICENSE.txt" />
+    <File Path="README.md" />
+    <File Path="run-tests.cmd" />
+  </Folder>
+  <Folder Name="/build/">
+    <File Path="build/common.props" />
+    <File Path="build/Key.snk" />
+    <File Path="build/net40-client-target.props" />
+    <File Path="build/strong-name-signing.props" />
+  </Folder>
+  <Folder Name="/Licenses/">
+    <File Path="Licenses/chakra-host-license.txt" />
+    <File Path="Licenses/cross-browser-split-license.txt" />
+    <File Path="Licenses/jsrt-dotnet-license.txt" />
+    <File Path="Licenses/sass-and-coffee-license.txt" />
+    <File Path="Licenses/uglify-js-license.txt" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/MsieJavaScriptEngine/MsieJavaScriptEngine.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/MsieJavaScriptEngine.Benchmarks/MsieJavaScriptEngine.Benchmarks.csproj" />
+    <Project Path="test/MsieJavaScriptEngine.Test.Common/MsieJavaScriptEngine.Test.Common.csproj" />
+    <Project Path="test/MsieJavaScriptEngine.Test.Auto/MsieJavaScriptEngine.Test.Auto.csproj" />
+    <Project Path="test/MsieJavaScriptEngine.Test.ChakraEdgeJsRt/MsieJavaScriptEngine.Test.ChakraEdgeJsRt.csproj" />
+    <Project Path="test/MsieJavaScriptEngine.Test.ChakraIeJsRt/MsieJavaScriptEngine.Test.ChakraIeJsRt.csproj" />
+    <Project Path="test/MsieJavaScriptEngine.Test.ChakraActiveScript/MsieJavaScriptEngine.Test.ChakraActiveScript.csproj" />
+    <Project Path="test/MsieJavaScriptEngine.Test.Classic/MsieJavaScriptEngine.Test.Classic.csproj" />
+  </Folder>
+  <Folder Name="/test/SharedFiles/">
+    <File Path="test/SharedFiles/declinationOfMinutes.js" />
+    <File Path="test/SharedFiles/link.txt" />
+    <File Path="test/SharedFiles/square.js" />
+  </Folder>
+  <Folder Name="/test/SharedFiles/recursiveEvaluation/" />
+  <Folder Name="/test/SharedFiles/recursiveEvaluation/noError/">
+    <File Path="test/SharedFiles/recursiveEvaluation/noError/index.js" />
+    <File Path="test/SharedFiles/recursiveEvaluation/noError/math.js" />
+  </Folder>
+  <Folder Name="/test/SharedFiles/recursiveEvaluation/runtimeError/">
+    <File Path="test/SharedFiles/recursiveEvaluation/runtimeError/index.js" />
+    <File Path="test/SharedFiles/recursiveEvaluation/runtimeError/math.js" />
+  </Folder>
+  <Folder Name="/test/SharedFiles/recursiveExecution/" />
+  <Folder Name="/test/SharedFiles/recursiveExecution/noError/">
+    <File Path="test/SharedFiles/recursiveExecution/noError/firstFile.js" />
+    <File Path="test/SharedFiles/recursiveExecution/noError/mainFile.js" />
+    <File Path="test/SharedFiles/recursiveExecution/noError/secondFile.js" />
+  </Folder>
+</Solution>
