@@ -24,7 +24,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
-    <PackageReleaseNotes>Added a `README.md` file to NuGet package.</PackageReleaseNotes>
+    <PackageReleaseNotes>Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -39,6 +39,24 @@
     <PackageReference Include="ResxToCs.MSBuild" Version="1.0.0-alpha7" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40-client' ">
+    <PackageReference Include="PolyfillsForOldDotNet.System.Buffers" Version="0.1.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="System.Buffers" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Buffers" Version="4.4.0" />
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40-client' Or '$(TargetFramework)' == 'net45' ">
     <Compile Remove="Resources/NetCoreStrings.*" />
     <EmbeddedResource Include="Resources/*.min.js" />
@@ -46,12 +64,6 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard2.0' ">
     <Compile Remove="Resources/NetFrameworkStrings.*" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
-    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -21,7 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   Added a `README.md` file to NuGet package.
+   Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method.
 
    ============
    PROJECT SITE
