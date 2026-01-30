@@ -21,7 +21,8 @@
    =============
    RELEASE NOTES
    =============
-   Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method.
+   1. Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method;
+   2. Added support for .NET Standard 2.1.
 
    ============
    PROJECT SITE
