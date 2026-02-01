@@ -13,7 +13,7 @@ namespace MsieJavaScriptEngine.Test.Common.Interop
 
 		public string ReadFile(string path, Encoding encoding)
 		{
-			if (path == null)
+			if (path is null)
 			{
 				throw new ArgumentNullException("path");
 			}

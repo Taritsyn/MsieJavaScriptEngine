@@ -172,7 +172,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 			finally
 			{
-				if (_dispatch == null)
+				if (_dispatch is null)
 				{
 					Dispose();
 				}
@@ -187,14 +187,14 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// or <c>0</c> to use the default maximum stack size specified in the header for the executable.</param>
 		private static void InitScriptDispatcher(int maxStackSize)
 		{
-			if (_dispatcher != null)
+			if (_dispatcher is not null)
 			{
 				return;
 			}
 
 			lock (_dispatcherSynchronizer)
 			{
-				if (_dispatcher != null)
+				if (_dispatcher is not null)
 				{
 					return;
 				}
@@ -328,7 +328,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private void ThrowError()
 		{
 			ActiveScriptException last = GetAndResetLastException();
-			if (last != null)
+			if (last is not null)
 			{
 				throw last;
 			}
@@ -539,7 +539,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			}
 			catch
 			{
-				if (oldValue != null)
+				if (oldValue is not null)
 				{
 					_hostItems[itemName] = oldValue;
 				}
@@ -607,12 +607,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private static IExpando WrapScriptDispatch(object dispatch)
 		{
 			IExpando wrappedDispatch = null;
-			if (dispatch != null && dispatch.GetType().IsCOMObject)
+			if (dispatch is not null && dispatch.GetType().IsCOMObject)
 			{
 				wrappedDispatch = dispatch as IExpando;
 			}
 
-			if (wrappedDispatch == null)
+			if (wrappedDispatch is null)
 			{
 				throw new InvalidOperationException(
 					NetFrameworkStrings.Engine_ActiveScriptDispatcherNotInitialized);
@@ -652,7 +652,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			wrapperException.Description = originalException.Description;
 
 			var wrapperScriptException = wrapperException as JsScriptException;
-			if (wrapperScriptException != null)
+			if (wrapperScriptException is not null)
 			{
 				wrapperScriptException.Type = originalException.Type;
 				wrapperScriptException.DocumentName = originalException.DocumentName;
@@ -798,7 +798,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				try
 				{
 					object variableValue = InnerGetVariableValue(variableName);
-					variableExist = variableValue != null;
+					variableExist = variableValue is not null;
 				}
 				catch (ActiveScriptException e)
 				{
@@ -933,7 +933,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		{
 			if (_disposedFlag.Set())
 			{
-				if (_debuggingStarted && _debugDocuments != null)
+				if (_debuggingStarted && _debugDocuments is not null)
 				{
 					foreach (UIntPtr debugDocumentKey in _debugDocuments.Keys)
 					{
@@ -945,11 +945,11 @@ namespace MsieJavaScriptEngine.ActiveScript
 					_debugDocuments = null;
 				}
 
-				if (_processDebugManagerWrapper != null)
+				if (_processDebugManagerWrapper is not null)
 				{
 					_processDebugManagerWrapper.RemoveApplication(_debugApplicationCookie);
 
-					if (_debugApplicationWrapper != null)
+					if (_debugApplicationWrapper is not null)
 					{
 						_debugApplicationWrapper.Close();
 						_debugApplicationWrapper = null;
@@ -958,7 +958,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 					_processDebugManagerWrapper = null;
 				}
 
-				if (_documentNames != null)
+				if (_documentNames is not null)
 				{
 					_documentNames.Clear();
 					_documentNames = null;
@@ -966,20 +966,20 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 				_dispatcher.Invoke(() =>
 				{
-					if (_dispatch != null)
+					if (_dispatch is not null)
 					{
 						Marshal.ReleaseComObject(_dispatch);
 						_dispatch = null;
 					}
 
-					if (_activeScriptWrapper != null)
+					if (_activeScriptWrapper is not null)
 					{
 						_activeScriptWrapper.Dispose();
 						_activeScriptWrapper = null;
 					}
 				});
 
-				if (_hostItems != null)
+				if (_hostItems is not null)
 				{
 					_hostItems.Clear();
 					_hostItems = null;

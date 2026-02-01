@@ -69,7 +69,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			if (languageVersion != ScriptLanguageVersion.None)
 			{
 				var activeScriptProperty = _activeScript as IActiveScriptProperty;
-				if (activeScriptProperty != null)
+				if (activeScriptProperty is not null)
 				{
 					object scriptLanguageVersion = (int)languageVersion;
 					uint result = activeScriptProperty.SetProperty((uint)ScriptProperty.InvokeVersioning,
@@ -222,7 +222,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="type">The type of garbage collection</param>
 		public void CollectGarbage(ScriptGCType type)
 		{
-			if (_activeScriptGarbageCollector != null)
+			if (_activeScriptGarbageCollector is not null)
 			{
 				_activeScriptGarbageCollector.CollectGarbage(type);
 			}
@@ -247,7 +247,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			{
 				_activeScriptGarbageCollector = null;
 
-				if (_activeScript != null)
+				if (_activeScript is not null)
 				{
 					_activeScript.Close();
 					Marshal.FinalReleaseComObject(_activeScript);

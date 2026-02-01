@@ -38,7 +38,7 @@ namespace MsieJavaScriptEngine.Helpers
 
 			obj = Activator.CreateInstance(type) as T;
 
-			return obj != null;
+			return obj is not null;
 		}
 
 		public static bool TryGetComType(string progId, string serverName, out Type type)
@@ -50,7 +50,7 @@ namespace MsieJavaScriptEngine.Helpers
 				Type.GetTypeFromProgID(progId, serverName)
 				;
 
-			return type != null;
+			return type is not null;
 		}
 
 		public static IntPtr QueryInterface<T>(IntPtr pUnknown)

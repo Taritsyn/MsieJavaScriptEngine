@@ -39,7 +39,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		/// <returns>The mapped value</returns>
 		public override EdgeJsValue MapToScriptType(object value)
 		{
-			if (value == null)
+			if (value is null)
 			{
 				return EdgeJsValue.Null;
 			}
@@ -134,7 +134,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		protected override EdgeEmbeddedObject CreateEmbeddedObjectOrFunction(object obj)
 		{
 			var del = obj as Delegate;
-			EdgeEmbeddedObject embeddedObject = del != null ?
+			EdgeEmbeddedObject embeddedObject = del is not null ?
 				CreateEmbeddedFunction(del) : CreateEmbeddedObject(obj);
 
 			return embeddedObject;
@@ -183,7 +183,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
 					Exception exception = UnwrapException(e);
 					var wrapperException = exception as WrapperException;
-					EdgeJsValue errorValue = wrapperException != null ?
+					EdgeJsValue errorValue = wrapperException is not null ?
 						CreateErrorFromWrapperException(wrapperException)
 						:
 						EdgeJsErrorHelpers.CreateError(string.Format(
@@ -247,7 +247,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 				var bestFitConstructor = (ConstructorInfo)ReflectionHelpers.GetBestFitMethod(
 					constructors, processedArgs);
-				if (bestFitConstructor == null)
+				if (bestFitConstructor is null)
 				{
 					CreateAndSetReferenceError(string.Format(
 						CommonStrings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
@@ -264,7 +264,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					Exception exception = UnwrapException(e);
 					var wrapperException = exception as WrapperException;
-					EdgeJsValue errorValue = wrapperException != null ?
+					EdgeJsValue errorValue = wrapperException is not null ?
 						CreateErrorFromWrapperException(wrapperException)
 						:
 						EdgeJsErrorHelpers.CreateError(string.Format(
@@ -322,7 +322,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
 
-					if (instance && obj == null)
+					if (instance && obj is null)
 					{
 						CreateAndSetTypeError(string.Format(
 							CommonStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
@@ -341,7 +341,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						var wrapperException = exception as WrapperException;
 						EdgeJsValue errorValue;
 
-						if (wrapperException != null)
+						if (wrapperException is not null)
 						{
 							errorValue = CreateErrorFromWrapperException(wrapperException);
 						}
@@ -374,7 +374,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
 
-					if (instance && obj == null)
+					if (instance && obj is null)
 					{
 						CreateAndSetTypeError(string.Format(
 							CommonStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
@@ -394,7 +394,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						var wrapperException = exception as WrapperException;
 						EdgeJsValue errorValue;
 
-						if (wrapperException != null)
+						if (wrapperException is not null)
 						{
 							errorValue = CreateErrorFromWrapperException(wrapperException);
 						}
@@ -449,13 +449,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				EdgeJsValue descriptorValue = EdgeJsValue.CreateObject();
 				descriptorValue.SetProperty("enumerable", EdgeJsValue.True, true);
 
-				if (property.GetGetMethod() != null)
+				if (property.GetGetMethod() is not null)
 				{
 					EdgeJsNativeFunction nativeGetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
 						EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
 
-						if (instance && obj == null)
+						if (instance && obj is null)
 						{
 							CreateAndSetTypeError(string.Format(
 								CommonStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
@@ -474,7 +474,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							var wrapperException = exception as WrapperException;
 							EdgeJsValue errorValue;
 
-							if (wrapperException != null)
+							if (wrapperException is not null)
 							{
 								errorValue = CreateErrorFromWrapperException(wrapperException);
 							}
@@ -504,13 +504,13 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					descriptorValue.SetProperty("get", getMethodValue, true);
 				}
 
-				if (property.GetSetMethod() != null)
+				if (property.GetSetMethod() is not null)
 				{
 					EdgeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
 						EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
 
-						if (instance && obj == null)
+						if (instance && obj is null)
 						{
 							CreateAndSetTypeError(string.Format(
 								CommonStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
@@ -530,7 +530,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							var wrapperException = exception as WrapperException;
 							EdgeJsValue errorValue;
 
-							if (wrapperException != null)
+							if (wrapperException is not null)
 							{
 								errorValue = CreateErrorFromWrapperException(wrapperException);
 							}
@@ -584,7 +584,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				{
 					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
 
-					if (instance && obj == null)
+					if (instance && obj is null)
 					{
 						CreateAndSetTypeError(string.Format(
 							CommonStrings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
@@ -595,7 +595,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 
 					var bestFitMethod = (MethodInfo)ReflectionHelpers.GetBestFitMethod(
 						methodCandidates, processedArgs);
-					if (bestFitMethod == null)
+					if (bestFitMethod is null)
 					{
 						CreateAndSetReferenceError(string.Format(
 							CommonStrings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
@@ -616,7 +616,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 						var wrapperException = exception as WrapperException;
 						EdgeJsValue errorValue;
 
-						if (wrapperException != null)
+						if (wrapperException is not null)
 						{
 							errorValue = CreateErrorFromWrapperException(wrapperException);
 						}
@@ -694,7 +694,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 		{
 			var originalException = (JsException)exception.InnerException;
 			var originalScriptException = originalException as EdgeJsScriptException;
-			EdgeJsValue errorValue = originalScriptException != null ?
+			EdgeJsValue errorValue = originalScriptException is not null ?
 				originalScriptException.Error
 				:
 				EdgeJsErrorHelpers.CreateError(exception.Description)

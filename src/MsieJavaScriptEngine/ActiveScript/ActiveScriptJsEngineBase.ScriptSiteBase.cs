@@ -200,7 +200,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			public void GetItemInfo(string name, ScriptInfoFlags mask, ref IntPtr pUnkItem, ref IntPtr pTypeInfo)
 			{
 				object item = _jsEngine._hostItems[name];
-				if (item == null)
+				if (item is null)
 				{
 					throw new COMException(
 						string.Format(NetFrameworkStrings.Runtime_ItemNotFound, name),
@@ -254,7 +254,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				out bool callOnScriptErrorWhenContinuing)
 			{
 				var error = errorDebug as IActiveScriptError;
-				if (error != null)
+				if (error is not null)
 				{
 					ProcessActiveScriptError(error);
 				}
@@ -329,7 +329,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 					|| iid == typeof(IActiveScriptSiteDebug64).GUID
 					|| iid == typeof(IActiveScriptSiteDebugEx).GUID)
 				{
-					return _jsEngine._processDebugManagerWrapper != null ?
+					return _jsEngine._processDebugManagerWrapper is not null ?
 						CustomQueryInterfaceResult.NotHandled : CustomQueryInterfaceResult.Failed;
 				}
 

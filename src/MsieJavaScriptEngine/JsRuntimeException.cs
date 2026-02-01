@@ -87,7 +87,7 @@ namespace MsieJavaScriptEngine
 		protected JsRuntimeException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
-			if (info != null)
+			if (info is not null)
 			{
 				_callStack = info.GetString("CallStack");
 			}
@@ -104,7 +104,7 @@ namespace MsieJavaScriptEngine
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			if (info == null)
+			if (info is null)
 			{
 				throw new ArgumentNullException(nameof(info));
 			}

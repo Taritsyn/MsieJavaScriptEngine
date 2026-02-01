@@ -95,7 +95,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 						uint lineNumber = 0;
 						uint columnNumber = 0;
 
-						if (documentContext != null)
+						if (documentContext is not null)
 						{
 							IDebugDocument document;
 							documentContext.GetDocument(out document);

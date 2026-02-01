@@ -116,7 +116,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 
 		public override void EnumStackFrames(out IEnumDebugStackFrames enumFrames)
 		{
-			if (_debugStackFrameSniffer32 != null)
+			if (_debugStackFrameSniffer32 is not null)
 			{
 				_debugStackFrameSniffer32.EnumStackFrames(out enumFrames);
 			}

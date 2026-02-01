@@ -120,14 +120,14 @@ namespace MsieJavaScriptEngine.ActiveScript.Debugging
 		/// </summary>
 		public void Close()
 		{
-			if (_node != null)
+			if (_node is not null)
 			{
 				_node.Detach();
 				_node.Close();
 				_node = null;
 			}
 
-			if (_lines != null)
+			if (_lines is not null)
 			{
 				_lines.Clear();
 			}

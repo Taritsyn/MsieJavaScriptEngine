@@ -81,7 +81,7 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <returns>String representation of the script call stack</returns>
 		internal static string StringifyCallStackItems(CallStackItem[] callStackItems)
 		{
-			if (callStackItems == null)
+			if (callStackItems is null)
 			{
 				throw new ArgumentException(nameof(callStackItems));
 			}
@@ -127,7 +127,7 @@ namespace MsieJavaScriptEngine.Helpers
 		internal static string GenerateEngineLoadErrorMessage(string description, string engineModeName,
 			bool quoteDescription = false)
 		{
-			if (engineModeName == null)
+			if (engineModeName is null)
 			{
 				throw new ArgumentNullException(nameof(engineModeName));
 			}
@@ -213,7 +213,7 @@ namespace MsieJavaScriptEngine.Helpers
 		internal static string GenerateScriptErrorMessage(string type, string description, string documentName,
 			int lineNumber, int columnNumber, string sourceFragment, string callStack)
 		{
-			if (description == null)
+			if (description is null)
 			{
 				throw new ArgumentNullException(nameof(description));
 			}
@@ -268,7 +268,7 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <returns>Detailed error message</returns>
 		public static string GenerateErrorDetails(JsException jsException, bool omitMessage = false)
 		{
-			if (jsException == null)
+			if (jsException is null)
 			{
 				throw new ArgumentNullException(nameof(jsException));
 			}
@@ -278,12 +278,12 @@ namespace MsieJavaScriptEngine.Helpers
 			WriteCommonErrorDetails(detailsBuilder, jsException, omitMessage);
 
 			var jsScriptException = jsException as JsScriptException;
-			if (jsScriptException != null)
+			if (jsScriptException is not null)
 			{
 				WriteScriptErrorDetails(detailsBuilder, jsScriptException);
 
 				var jsRuntimeException = jsScriptException as JsRuntimeException;
-				if (jsRuntimeException != null)
+				if (jsRuntimeException is not null)
 				{
 					WriteRuntimeErrorDetails(detailsBuilder, jsRuntimeException);
 				}
@@ -306,7 +306,7 @@ namespace MsieJavaScriptEngine.Helpers
 		public static string GenerateErrorDetails(JsScriptException jsScriptException,
 			bool omitMessage = false)
 		{
-			if (jsScriptException == null)
+			if (jsScriptException is null)
 			{
 				throw new ArgumentNullException(nameof(jsScriptException));
 			}
@@ -317,7 +317,7 @@ namespace MsieJavaScriptEngine.Helpers
 			WriteScriptErrorDetails(detailsBuilder, jsScriptException);
 
 			var jsRuntimeException = jsScriptException as JsRuntimeException;
-			if (jsRuntimeException != null)
+			if (jsRuntimeException is not null)
 			{
 				WriteRuntimeErrorDetails(detailsBuilder, jsRuntimeException);
 			}
@@ -339,7 +339,7 @@ namespace MsieJavaScriptEngine.Helpers
 		public static string GenerateErrorDetails(JsRuntimeException jsRuntimeException,
 			bool omitMessage = false)
 		{
-			if (jsRuntimeException == null)
+			if (jsRuntimeException is null)
 			{
 				throw new ArgumentNullException(nameof(jsRuntimeException));
 			}

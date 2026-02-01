@@ -71,12 +71,12 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <returns>Short name of error item</returns>
 		public static string ShortenErrorItemName(string itemName, string prefix)
 		{
-			if (itemName == null)
+			if (itemName is null)
 			{
 				throw new ArgumentNullException(nameof(itemName));
 			}
 
-			if (prefix == null)
+			if (prefix is null)
 			{
 				throw new ArgumentNullException(nameof(prefix));
 			}

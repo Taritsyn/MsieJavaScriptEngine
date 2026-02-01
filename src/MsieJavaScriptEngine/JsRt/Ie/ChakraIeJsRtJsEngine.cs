@@ -257,7 +257,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			string sourceFragment = string.Empty;
 
 			var originalScriptException = originalException as OriginalScriptException;
-			if (originalScriptException != null)
+			if (originalScriptException is not null)
 			{
 				IeJsValue errorValue = originalScriptException.Error;
 
@@ -833,7 +833,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			{
 				if (_disposedFlag.Set())
 				{
-					if (_dispatcher != null)
+					if (_dispatcher is not null)
 					{
 						_dispatcher.Invoke(DisposeUnmanagedResources);
 
@@ -841,7 +841,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						_dispatcher = null;
 					}
 
-					if (_typeMapper != null)
+					if (_typeMapper is not null)
 					{
 						_typeMapper.Dispose();
 						_typeMapper = null;

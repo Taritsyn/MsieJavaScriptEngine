@@ -133,7 +133,7 @@ namespace MsieJavaScriptEngine
 		protected JsScriptException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
-			if (info != null)
+			if (info is not null)
 			{
 				_type = info.GetString("Type");
 				_documentName = info.GetString("DocumentName");
@@ -154,7 +154,7 @@ namespace MsieJavaScriptEngine
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			if (info == null)
+			if (info is null)
 			{
 				throw new ArgumentNullException(nameof(info));
 			}

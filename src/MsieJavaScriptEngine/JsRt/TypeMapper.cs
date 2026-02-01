@@ -176,7 +176,7 @@ namespace MsieJavaScriptEngine.JsRt
 			object obj = objHandle.Target;
 			var lazyEmbeddedObjects = _lazyEmbeddedObjects;
 
-			if (obj != null && lazyEmbeddedObjects != null)
+			if (obj is not null && lazyEmbeddedObjects is not null)
 			{
 				var embeddedObjectKey = new EmbeddedObjectKey(obj);
 				Lazy<EmbeddedObject<TValue, TFunction>> lazyEmbeddedObject;
@@ -204,7 +204,7 @@ namespace MsieJavaScriptEngine.JsRt
 			string embeddedTypeKey = type.AssemblyQualifiedName;
 			var lazyEmbeddedTypes = _lazyEmbeddedTypes;
 
-			if (!string.IsNullOrEmpty(embeddedTypeKey) && lazyEmbeddedTypes != null)
+			if (!string.IsNullOrEmpty(embeddedTypeKey) && lazyEmbeddedTypes is not null)
 			{
 				Lazy<EmbeddedType<TValue, TFunction>> lazyEmbeddedType;
 
@@ -266,7 +266,7 @@ namespace MsieJavaScriptEngine.JsRt
 
 		protected object[] GetHostItemMemberArguments(TValue[] args, int maxArgCount = -1)
 		{
-			if (args == null)
+			if (args is null)
 			{
 				throw new ArgumentNullException(nameof(args));
 			}
@@ -302,10 +302,10 @@ namespace MsieJavaScriptEngine.JsRt
 			Exception originalException = exception;
 			var targetInvocationException = exception as TargetInvocationException;
 
-			if (targetInvocationException != null)
+			if (targetInvocationException is not null)
 			{
 				Exception innerException = targetInvocationException.InnerException;
-				if (innerException != null)
+				if (innerException is not null)
 				{
 					originalException = innerException;
 				}
@@ -324,7 +324,7 @@ namespace MsieJavaScriptEngine.JsRt
 			if (_disposedFlag.Set())
 			{
 				var lazyEmbeddedObjects = _lazyEmbeddedObjects;
-				if (lazyEmbeddedObjects != null)
+				if (lazyEmbeddedObjects is not null)
 				{
 					if (lazyEmbeddedObjects.Count > 0)
 					{
@@ -347,7 +347,7 @@ namespace MsieJavaScriptEngine.JsRt
 				_embeddedObjectFinalizeCallback = null;
 
 				var lazyEmbeddedTypes = _lazyEmbeddedTypes;
-				if (lazyEmbeddedTypes != null)
+				if (lazyEmbeddedTypes is not null)
 				{
 					if (lazyEmbeddedTypes.Count > 0)
 					{

@@ -34,7 +34,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <returns>Content of the embedded resource as string</returns>
 		public static string GetResourceAsString(string resourceName, Assembly assembly)
 		{
-			if (resourceName == null)
+			if (resourceName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(resourceName),
@@ -42,7 +42,7 @@ namespace MsieJavaScriptEngine.Utilities
 				);
 			}
 
-			if (assembly == null)
+			if (assembly is null)
 			{
 				throw new ArgumentNullException(
 					nameof(assembly),
@@ -60,7 +60,7 @@ namespace MsieJavaScriptEngine.Utilities
 
 			using (Stream stream = assembly.GetManifestResourceStream(resourceName))
 			{
-				if (stream == null)
+				if (stream is null)
 				{
 					throw new NullReferenceException(
 						string.Format(CommonStrings.Common_ResourceIsNull, resourceName)

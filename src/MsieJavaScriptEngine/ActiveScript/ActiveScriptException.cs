@@ -163,7 +163,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private ActiveScriptException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
-			if (info != null)
+			if (info is not null)
 			{
 				_errorCode = info.GetInt32("ErrorCode");
 				_type = info.GetString("Type");
@@ -187,7 +187,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			if (info == null)
+			if (info is null)
 			{
 				throw new ArgumentNullException("info");
 			}

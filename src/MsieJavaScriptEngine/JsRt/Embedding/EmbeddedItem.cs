@@ -110,7 +110,7 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 				_hostObject = null;
 
 				IList<TFunction> nativeFunctions = _nativeFunctions;
-				if (nativeFunctions != null)
+				if (nativeFunctions is not null)
 				{
 					nativeFunctions.Clear();
 					_nativeFunctions = null;

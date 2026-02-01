@@ -21,7 +21,7 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <returns>The mapped value</returns>
 		public static object MapToScriptType(object value, JsEngineMode engineMode, bool allowReflection)
 		{
-			if (value == null)
+			if (value is null)
 			{
 				return DBNull.Value;
 			}
@@ -61,7 +61,7 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <returns>The mapped value</returns>
 		public static object MapToHostType(object value)
 		{
-			if (value == null)
+			if (value is null)
 			{
 				return Undefined.Value;
 			}
@@ -77,7 +77,7 @@ namespace MsieJavaScriptEngine.Helpers
 			}
 
 			var hostObj = value as HostObject;
-			object result = hostObj != null ? hostObj.Target : value;
+			object result = hostObj is not null ? hostObj.Target : value;
 
 			return result;
 		}

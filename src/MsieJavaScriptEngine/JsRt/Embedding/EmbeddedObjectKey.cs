@@ -53,7 +53,7 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 
 		bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
 		{
-			if (other == null || !(other is EmbeddedObjectKey))
+			if (other is null || !(other is EmbeddedObjectKey))
 			{
 				return false;
 			}
@@ -75,7 +75,7 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 
 		int IComparable.CompareTo(object other)
 		{
-			if (other == null)
+			if (other is null)
 			{
 				return 1;
 			}
@@ -113,7 +113,7 @@ namespace MsieJavaScriptEngine.JsRt.Embedding
 
 		int IStructuralComparable.CompareTo(object other, IComparer comparer)
 		{
-			if (other == null)
+			if (other is null)
 			{
 				return 1;
 			}

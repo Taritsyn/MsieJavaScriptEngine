@@ -253,7 +253,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (code == null)
+			if (code is null)
 			{
 				throw new ArgumentNullException(
 					nameof(code),
@@ -300,7 +300,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (path == null)
+			if (path is null)
 			{
 				throw new ArgumentNullException(
 					nameof(path),
@@ -355,7 +355,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (resourceName == null)
+			if (resourceName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(resourceName),
@@ -363,7 +363,7 @@ namespace MsieJavaScriptEngine
 				);
 			}
 
-			if (type == null)
+			if (type is null)
 			{
 				throw new ArgumentNullException(
 					nameof(type),
@@ -393,7 +393,7 @@ namespace MsieJavaScriptEngine
 			Assembly assembly = type.GetTypeInfo().Assembly;
 #endif
 			string nameSpace = type.Namespace;
-			string resourceFullName = nameSpace != null ? nameSpace + "." + resourceName : resourceName;
+			string resourceFullName = nameSpace is not null ? nameSpace + "." + resourceName : resourceName;
 
 			string code = Utils.GetResourceAsString(resourceFullName, assembly);
 			if (string.IsNullOrWhiteSpace(code))
@@ -425,7 +425,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (resourceName == null)
+			if (resourceName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(resourceName),
@@ -433,7 +433,7 @@ namespace MsieJavaScriptEngine
 				);
 			}
 
-			if (assembly == null)
+			if (assembly is null)
 			{
 				throw new ArgumentNullException(
 					nameof(assembly),
@@ -504,7 +504,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (expression == null)
+			if (expression is null)
 			{
 				throw new ArgumentNullException(
 					nameof(expression),
@@ -570,7 +570,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (expression == null)
+			if (expression is null)
 			{
 				throw new ArgumentNullException(
 					nameof(expression),
@@ -642,7 +642,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (code == null)
+			if (code is null)
 			{
 				throw new ArgumentNullException(
 					nameof(code),
@@ -687,7 +687,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (precompiledScript == null)
+			if (precompiledScript is null)
 			{
 				throw new ArgumentNullException(
 					nameof(precompiledScript),
@@ -725,7 +725,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (path == null)
+			if (path is null)
 			{
 				throw new ArgumentNullException(
 					nameof(path),
@@ -781,7 +781,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (resourceName == null)
+			if (resourceName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(resourceName),
@@ -789,7 +789,7 @@ namespace MsieJavaScriptEngine
 				);
 			}
 
-			if (type == null)
+			if (type is null)
 			{
 				throw new ArgumentNullException(
 					nameof(type),
@@ -819,7 +819,7 @@ namespace MsieJavaScriptEngine
 			Assembly assembly = type.GetTypeInfo().Assembly;
 #endif
 			string nameSpace = type.Namespace;
-			string resourceFullName = nameSpace != null ? nameSpace + "." + resourceName : resourceName;
+			string resourceFullName = nameSpace is not null ? nameSpace + "." + resourceName : resourceName;
 
 			string code = Utils.GetResourceAsString(resourceFullName, assembly);
 			if (string.IsNullOrWhiteSpace(code))
@@ -852,7 +852,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (resourceName == null)
+			if (resourceName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(resourceName),
@@ -860,7 +860,7 @@ namespace MsieJavaScriptEngine
 				);
 			}
 
-			if (assembly == null)
+			if (assembly is null)
 			{
 				throw new ArgumentNullException(
 					nameof(assembly),
@@ -913,7 +913,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (functionName == null)
+			if (functionName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(functionName),
@@ -944,7 +944,7 @@ namespace MsieJavaScriptEngine
 				{
 					object argument = args[argumentIndex];
 
-					if (argument != null)
+					if (argument is not null)
 					{
 						Type argType = argument.GetType();
 
@@ -982,7 +982,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (functionName == null)
+			if (functionName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(functionName),
@@ -1013,7 +1013,7 @@ namespace MsieJavaScriptEngine
 				{
 					object argument = args[argumentIndex];
 
-					if (argument != null)
+					if (argument is not null)
 					{
 						Type argType = argument.GetType();
 
@@ -1057,7 +1057,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (variableName == null)
+			if (variableName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(variableName),
@@ -1098,7 +1098,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (variableName == null)
+			if (variableName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(variableName),
@@ -1140,7 +1140,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (variableName == null)
+			if (variableName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(variableName),
@@ -1192,7 +1192,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (variableName == null)
+			if (variableName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(variableName),
@@ -1216,7 +1216,7 @@ namespace MsieJavaScriptEngine
 				);
 			}
 
-			if (value != null)
+			if (value is not null)
 			{
 				Type variableType = value.GetType();
 
@@ -1246,7 +1246,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (variableName == null)
+			if (variableName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(variableName),
@@ -1289,7 +1289,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (itemName == null)
+			if (itemName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(itemName),
@@ -1297,7 +1297,7 @@ namespace MsieJavaScriptEngine
 				);
 			}
 
-			if (value == null)
+			if (value is null)
 			{
 				throw new ArgumentNullException(
 					nameof(value),
@@ -1352,7 +1352,7 @@ namespace MsieJavaScriptEngine
 		{
 			VerifyNotDisposed();
 
-			if (itemName == null)
+			if (itemName is null)
 			{
 				throw new ArgumentNullException(
 					nameof(itemName),
@@ -1360,7 +1360,7 @@ namespace MsieJavaScriptEngine
 				);
 			}
 
-			if (type == null)
+			if (type is null)
 			{
 				throw new ArgumentNullException(
 					nameof(type),
@@ -1424,7 +1424,7 @@ namespace MsieJavaScriptEngine
 		{
 			if (_disposedFlag.Set())
 			{
-				if (_jsEngine != null)
+				if (_jsEngine is not null)
 				{
 					_jsEngine.Dispose();
 					_jsEngine = null;

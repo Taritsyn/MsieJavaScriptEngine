@@ -32,7 +32,7 @@ namespace MsieJavaScriptEngine.Test.Common.Interop
 		protected LoginFailedException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
-			if (info != null)
+			if (info is not null)
 			{
 				_userName = info.GetString("UserName");
 			}
@@ -41,7 +41,7 @@ namespace MsieJavaScriptEngine.Test.Common.Interop
 
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			if (info == null)
+			if (info is null)
 			{
 				throw new ArgumentNullException(nameof(info));
 			}

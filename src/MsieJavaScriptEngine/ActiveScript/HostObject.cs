@@ -30,7 +30,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			: base(target.GetType(), target, engineMode, allowReflection, true)
 		{
 			var del = _target as Delegate;
-			if (del != null)
+			if (del is not null)
 			{
 				_delegateParameterCount = del.Method.GetParameters().Length;
 			}

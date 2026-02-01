@@ -39,7 +39,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <returns>The mapped value</returns>
 		public override IeJsValue MapToScriptType(object value)
 		{
-			if (value == null)
+			if (value is null)
 			{
 				return IeJsValue.Null;
 			}
@@ -134,7 +134,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		protected override IeEmbeddedObject CreateEmbeddedObjectOrFunction(object obj)
 		{
 			var del = obj as Delegate;
-			IeEmbeddedObject embeddedObject = del != null ?
+			IeEmbeddedObject embeddedObject = del is not null ?
 				CreateEmbeddedFunction(del) : CreateEmbeddedObject(obj);
 
 			return embeddedObject;
@@ -183,7 +183,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					IeJsValue undefinedValue = IeJsValue.Undefined;
 					Exception exception = UnwrapException(e);
 					var wrapperException = exception as WrapperException;
-					IeJsValue errorValue = wrapperException != null ?
+					IeJsValue errorValue = wrapperException is not null ?
 						CreateErrorFromWrapperException(wrapperException)
 						:
 						IeJsErrorHelpers.CreateError(string.Format(
@@ -247,7 +247,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 				var bestFitConstructor = (ConstructorInfo)ReflectionHelpers.GetBestFitMethod(
 					constructors, processedArgs);
-				if (bestFitConstructor == null)
+				if (bestFitConstructor is null)
 				{
 					CreateAndSetReferenceError(string.Format(
 						CommonStrings.Runtime_SuitableConstructorOfHostTypeNotFound, typeName));
@@ -264,7 +264,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					Exception exception = UnwrapException(e);
 					var wrapperException = exception as WrapperException;
-					IeJsValue errorValue = wrapperException != null ?
+					IeJsValue errorValue = wrapperException is not null ?
 						CreateErrorFromWrapperException(wrapperException)
 						:
 						IeJsErrorHelpers.CreateError(string.Format(
@@ -322,7 +322,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					IeJsValue undefinedValue = IeJsValue.Undefined;
 
-					if (instance && obj == null)
+					if (instance && obj is null)
 					{
 						CreateAndSetTypeError(string.Format(
 							CommonStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
@@ -341,7 +341,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						var wrapperException = exception as WrapperException;
 						IeJsValue errorValue;
 
-						if (wrapperException != null)
+						if (wrapperException is not null)
 						{
 							errorValue = CreateErrorFromWrapperException(wrapperException);
 						}
@@ -374,7 +374,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					IeJsValue undefinedValue = IeJsValue.Undefined;
 
-					if (instance && obj == null)
+					if (instance && obj is null)
 					{
 						CreateAndSetTypeError(string.Format(
 							CommonStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
@@ -394,7 +394,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						var wrapperException = exception as WrapperException;
 						IeJsValue errorValue;
 
-						if (wrapperException != null)
+						if (wrapperException is not null)
 						{
 							errorValue = CreateErrorFromWrapperException(wrapperException);
 						}
@@ -449,13 +449,13 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				IeJsValue descriptorValue = IeJsValue.CreateObject();
 				descriptorValue.SetProperty("enumerable", IeJsValue.True, true);
 
-				if (property.GetGetMethod() != null)
+				if (property.GetGetMethod() is not null)
 				{
 					IeJsNativeFunction nativeGetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
 						IeJsValue undefinedValue = IeJsValue.Undefined;
 
-						if (instance && obj == null)
+						if (instance && obj is null)
 						{
 							CreateAndSetTypeError(string.Format(
 								CommonStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
@@ -474,7 +474,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 							var wrapperException = exception as WrapperException;
 							IeJsValue errorValue;
 
-							if (wrapperException != null)
+							if (wrapperException is not null)
 							{
 								errorValue = CreateErrorFromWrapperException(wrapperException);
 							}
@@ -504,13 +504,13 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					descriptorValue.SetProperty("get", getMethodValue, true);
 				}
 
-				if (property.GetSetMethod() != null)
+				if (property.GetSetMethod() is not null)
 				{
 					IeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
 						IeJsValue undefinedValue = IeJsValue.Undefined;
 
-						if (instance && obj == null)
+						if (instance && obj is null)
 						{
 							CreateAndSetTypeError(string.Format(
 								CommonStrings.Runtime_InvalidThisContextForHostObjectProperty, propertyName));
@@ -530,7 +530,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 							var wrapperException = exception as WrapperException;
 							IeJsValue errorValue;
 
-							if (wrapperException != null)
+							if (wrapperException is not null)
 							{
 								errorValue = CreateErrorFromWrapperException(wrapperException);
 							}
@@ -584,7 +584,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				{
 					IeJsValue undefinedValue = IeJsValue.Undefined;
 
-					if (instance && obj == null)
+					if (instance && obj is null)
 					{
 						CreateAndSetTypeError(string.Format(
 							CommonStrings.Runtime_InvalidThisContextForHostObjectMethod, methodName));
@@ -595,7 +595,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 					var bestFitMethod = (MethodInfo)ReflectionHelpers.GetBestFitMethod(
 						methodCandidates, processedArgs);
-					if (bestFitMethod == null)
+					if (bestFitMethod is null)
 					{
 						CreateAndSetReferenceError(string.Format(
 							CommonStrings.Runtime_SuitableMethodOfHostObjectNotFound, methodName));
@@ -616,7 +616,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 						var wrapperException = exception as WrapperException;
 						IeJsValue errorValue;
 
-						if (wrapperException != null)
+						if (wrapperException is not null)
 						{
 							errorValue = CreateErrorFromWrapperException(wrapperException);
 						}
@@ -693,7 +693,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		{
 			var originalException = exception.InnerException as JsException;
 			var originalScriptException = originalException as IeJsScriptException;
-			IeJsValue errorValue = originalScriptException != null ?
+			IeJsValue errorValue = originalScriptException is not null ?
 				originalScriptException.Error
 				:
 				IeJsErrorHelpers.CreateError(exception.Description)
