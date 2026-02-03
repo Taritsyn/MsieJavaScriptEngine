@@ -22,7 +22,7 @@
    RELEASE NOTES
    =============
    1. Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method;
-   2. Added support for .NET Standard 2.1;
+   2. Added support for .NET Standard 2.1 and .NET 10;
    3. Performed a migration to the modern C# null/not-null checks.
 
    ============

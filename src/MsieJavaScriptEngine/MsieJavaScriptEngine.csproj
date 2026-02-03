@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Product>MSIE JavaScript Engine for .NET</Product>
     <VersionPrefix>3.2.5</VersionPrefix>
-    <TargetFrameworks>net40-client;net45;netstandard1.3;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net40-client;net45;netstandard1.3;netstandard2.0;netstandard2.1;net10.0</TargetFrameworks>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.0</NetStandardImplicitPackageVersion>
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);CS1591;NETSDK1215;NU1605</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;NETSDK1215;NU1605;NU1903</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DisableDefaultResxToCsConversionTarget>true</DisableDefaultResxToCsConversionTarget>
     <Title>$(Product)</Title>
@@ -25,7 +25,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>JavaScript;ECMAScript;MSIE;IE;Edge;Chakra</PackageTags>
     <PackageReleaseNotes>1. Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method;
-2. Added support for .NET Standard 2.1;
+2. Added support for .NET Standard 2.1 and .NET 10;
 3. Performed a migration to the modern C# null/not-null checks.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageOutputPath>../../nuget</PackageOutputPath>
