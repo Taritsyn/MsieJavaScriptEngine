@@ -107,7 +107,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Synchronizer of script dispatcher initialization
 		/// </summary>
-		private static readonly object _dispatcherSynchronizer = new object();
+		private static readonly Lock _dispatcherSynchronizer = new Lock();
 
 
 		/// <summary>
@@ -210,7 +210,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="isSupported">Flag indicating whether this JS engine is supported</param>
 		/// <param name="supportSynchronizer">Support synchronizer</param>
 		/// <returns>Result of check (<c>true</c> - supports; <c>false</c> - does not support)</returns>
-		protected static bool IsSupported(string clsid, ref bool? isSupported, ref object supportSynchronizer)
+		protected static bool IsSupported(string clsid, ref bool? isSupported, ref Lock supportSynchronizer)
 		{
 			if (isSupported.HasValue)
 			{

@@ -43,7 +43,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// Synchronizer of embedded object storage's initialization
 		/// </summary>
-		private readonly object _embeddedObjectStorageInitializationSynchronizer = new object();
+		private readonly Lock _embeddedObjectStorageInitializationSynchronizer = new Lock();
 
 		/// <summary>
 		/// Flag indicating whether the embedded object storage is initialized
@@ -63,7 +63,7 @@ namespace MsieJavaScriptEngine.JsRt
 		/// <summary>
 		/// Synchronizer of embedded type storage's initialization
 		/// </summary>
-		private readonly object _embeddedTypeStorageInitializationSynchronizer = new object();
+		private readonly Lock _embeddedTypeStorageInitializationSynchronizer = new Lock();
 
 		/// <summary>
 		/// Flag indicating whether the embedded type storage is initialized

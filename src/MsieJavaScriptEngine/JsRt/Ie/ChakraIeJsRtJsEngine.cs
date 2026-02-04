@@ -59,7 +59,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 		/// <summary>
 		/// Support synchronizer
 		/// </summary>
-		private static readonly object _supportSynchronizer = new object();
+		private static readonly Lock _supportSynchronizer = new Lock();
 
 
 		/// <summary>

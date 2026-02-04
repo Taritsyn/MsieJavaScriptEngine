@@ -33,7 +33,7 @@ namespace MsieJavaScriptEngine
 		/// <summary>
 		/// Synchronizer of JS engines creation
 		/// </summary>
-		private static readonly object _creationSynchronizer = new object();
+		private static readonly Lock _creationSynchronizer = new Lock();
 
 		/// <summary>
 		/// Unique document name manager

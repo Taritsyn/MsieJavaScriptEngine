@@ -24,7 +24,7 @@ namespace MsieJavaScriptEngine.Utilities
 		/// <summary>
 		/// Synchronizer of unique name storage
 		/// </summary>
-		private readonly object _storageSynchronizer = new object();
+		private readonly Lock _storageSynchronizer = new Lock();
 
 
 		/// <summary>

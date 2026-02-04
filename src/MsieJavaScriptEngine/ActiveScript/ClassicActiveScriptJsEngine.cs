@@ -20,7 +20,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <summary>
 		/// Support synchronizer
 		/// </summary>
-		private static object _supportSynchronizer = new object();
+		private static Lock _supportSynchronizer = new Lock();
 
 		/// <summary>
 		/// Mapping of error numbers and types
