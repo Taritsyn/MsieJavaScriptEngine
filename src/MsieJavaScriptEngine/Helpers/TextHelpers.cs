@@ -4,6 +4,7 @@ using System.Text;
 using AdvancedStringBuilder;
 
 using MsieJavaScriptEngine.Extensions;
+using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.Helpers
 {
@@ -15,7 +16,7 @@ namespace MsieJavaScriptEngine.Helpers
 		/// <summary>
 		/// Array of characters used to find the next line break
 		/// </summary>
-		private static readonly char[] _nextLineBreakChars = new char[] { '\r', '\n' };
+		private static readonly char[] _nextLineBreakChars = EnvironmentShortcuts.NewLineChars;
 
 
 		/// <summary>

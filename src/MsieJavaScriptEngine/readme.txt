@@ -25,7 +25,8 @@
    2. Added support for .NET Standard 2.1 and .NET 10;
    3. Performed a migration to the modern C# null/not-null checks;
    4. In the `lock` statements for .NET 10 target now uses a instances of the
-      `System.Threading.Lock` class.
+      `System.Threading.Lock` class;
+   5. Reduced a memory allocation by using collection expressions.
 
    ============
    PROJECT SITE

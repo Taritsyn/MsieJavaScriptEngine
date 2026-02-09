@@ -38,12 +38,12 @@ namespace MsieJavaScriptEngine.Helpers
 		{
 			if (string.IsNullOrWhiteSpace(callStack))
 			{
-				return new CallStackItem[0];
+				return [];
 			}
 
-			var callStackItems = new List<CallStackItem>();
 			string[] lines = callStack.SplitToLines();
 			int lineCount = lines.Length;
+			var callStackItems = new List<CallStackItem>(lineCount);
 
 			for (int lineIndex = 0; lineIndex < lineCount; lineIndex++)
 			{
@@ -66,7 +66,7 @@ namespace MsieJavaScriptEngine.Helpers
 				else
 				{
 					Debug.WriteLine(string.Format(CommonStrings.Runtime_InvalidCallStackLineFormat, line));
-					return new CallStackItem[0];
+					return [];
 				}
 			}
 

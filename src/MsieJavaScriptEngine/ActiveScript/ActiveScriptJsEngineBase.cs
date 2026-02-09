@@ -479,7 +479,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			try
 			{
 				variableValue = _dispatch.InvokeMember(variableName, BindingFlags.GetProperty,
-					null, _dispatch, new object[0], null,
+					null, _dispatch, [], null,
 					CultureInfo.InvariantCulture, null);
 			}
 			catch

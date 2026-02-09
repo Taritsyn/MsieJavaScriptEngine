@@ -1,7 +1,14 @@
 ﻿#if NETFRAMEWORK
 using System;
+#if NET45_OR_GREATER
+using System.Buffers;
+#endif
 using System.Globalization;
 using System.Reflection;
+#if NET40
+
+using PolyfillsForOldDotNet.System.Buffers;
+#endif
 
 using MsieJavaScriptEngine.Helpers;
 
@@ -93,20 +100,45 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private static PropertyInfo[] GetAvailableProperties(PropertyInfo[] properties)
 		{
 			int propertyCount = properties.Length;
-			var availableProperties = new PropertyInfo[propertyCount];
-			int availablePropertyIndex = 0;
+			PropertyInfo[] availableProperties = null;
+			int availablePropertyCount = 0;
 
-			for (int propertyIndex = 0; propertyIndex < propertyCount; propertyIndex++)
+			var propertyArrayPool = ArrayPool<PropertyInfo>.Shared;
+			PropertyInfo[] buffer = propertyArrayPool.Rent(propertyCount);
+
+			try
 			{
-				PropertyInfo property = properties[propertyIndex];
-				if (ReflectionHelpers.IsAllowedProperty(property))
+				foreach (PropertyInfo property in properties)
 				{
-					availableProperties[availablePropertyIndex] = property;
-					availablePropertyIndex++;
+					if (ReflectionHelpers.IsAllowedProperty(property))
+					{
+						availablePropertyCount++;
+
+						int availablePropertyIndex = availablePropertyCount - 1;
+						buffer[availablePropertyIndex] = property;
+					}
+				}
+
+				if (availablePropertyCount < propertyCount)
+				{
+					if (availablePropertyCount == 0)
+					{
+						return [];
+					}
+
+					availableProperties = new PropertyInfo[availablePropertyCount];
+					Array.Copy(buffer, availableProperties, availablePropertyCount);
+				}
+				else
+				{
+					availableProperties = properties;
 				}
 			}
-
-			Array.Resize(ref availableProperties, availablePropertyIndex);
+			finally
+			{
+				bool clearArray = availablePropertyCount > 0;
+				propertyArrayPool.Return(buffer, clearArray);
+			}
 
 			return availableProperties;
 		}
@@ -114,21 +146,46 @@ namespace MsieJavaScriptEngine.ActiveScript
 		private static MethodInfo[] GetAvailableMethods(MethodInfo[] methods, bool allowReflection)
 		{
 			int methodCount = methods.Length;
-			var availableMethods = new MethodInfo[methodCount];
-			int availableMethodIndex = 0;
+			MethodInfo[] availableMethods = null;
+			int availableMethodCount = 0;
 
-			for (int methodIndex = 0; methodIndex < methodCount; methodIndex++)
+			var methodArrayPool = ArrayPool<MethodInfo>.Shared;
+			MethodInfo[] buffer = methodArrayPool.Rent(methodCount);
+
+			try
 			{
-				MethodInfo method = methods[methodIndex];
-				if (ReflectionHelpers.IsFullyFledgedMethod(method)
-					&& (allowReflection || ReflectionHelpers.IsAllowedMethod(method)))
+				foreach (MethodInfo method in methods)
 				{
-					availableMethods[availableMethodIndex] = method;
-					availableMethodIndex++;
+					if (ReflectionHelpers.IsFullyFledgedMethod(method)
+						&& (allowReflection || ReflectionHelpers.IsAllowedMethod(method)))
+					{
+						availableMethodCount++;
+
+						int availableMethodIndex = availableMethodCount - 1;
+						buffer[availableMethodIndex] = method;
+					}
+				}
+
+				if (availableMethodCount < methodCount)
+				{
+					if (availableMethodCount == 0)
+					{
+						return [];
+					}
+
+					availableMethods = new MethodInfo[availableMethodCount];
+					Array.Copy(buffer, availableMethods, availableMethodCount);
+				}
+				else
+				{
+					availableMethods = methods;
 				}
 			}
-
-			Array.Resize(ref availableMethods, availableMethodIndex);
+			finally
+			{
+				bool clearArray = availableMethodCount > 0;
+				methodArrayPool.Return(buffer, clearArray);
+			}
 
 			return availableMethods;
 		}

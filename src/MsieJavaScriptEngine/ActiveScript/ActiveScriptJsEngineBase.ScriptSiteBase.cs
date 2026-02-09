@@ -187,7 +187,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 			/// <returns>An array of <see cref="CallStackItem"/> instances</returns>
 			protected virtual CallStackItem[] GetCallStackItems()
 			{
-				return new CallStackItem[0];
+				return [];
 			}
 
 			#region IActiveScriptSite implementation

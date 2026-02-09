@@ -1,5 +1,7 @@
 ﻿using System;
 
+using MsieJavaScriptEngine.Utilities;
+
 namespace MsieJavaScriptEngine.Extensions
 {
 	/// <summary>
@@ -7,6 +9,12 @@ namespace MsieJavaScriptEngine.Extensions
 	/// </summary>
 	internal static class StringExtensions
 	{
+		/// <summary>
+		/// Array of strings used to find the newline
+		/// </summary>
+		private static readonly string[] _newLineStrings = ["\r\n", "\r", "\n"];
+
+
 		/// <summary>
 		/// Returns a value indicating whether the specified quoted string occurs within this string
 		/// </summary>
@@ -62,6 +70,25 @@ namespace MsieJavaScriptEngine.Extensions
 
 			return result;
 		}
+
+		/// <summary>
+		/// Removes all leading newline characters from the current <see cref="T:System.String" /> object
+		/// </summary>
+		/// <param name="source">String value</param>
+		/// <returns>The string that remains after all newline characters are removed from the start of
+		/// the current string. If no characters can be trimmed from the current instance, the method returns
+		/// the current instance unchanged.</returns>
+		public static string TrimStartNewLines(this string source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			string result = source.TrimStart(EnvironmentShortcuts.NewLineChars);
+
+			return result;
+		}
 #if NETFRAMEWORK
 
 		/// <summary>
@@ -114,7 +141,7 @@ namespace MsieJavaScriptEngine.Extensions
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			string[] result = source.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+			string[] result = source.Split(_newLineStrings, StringSplitOptions.None);
 
 			return result;
 		}

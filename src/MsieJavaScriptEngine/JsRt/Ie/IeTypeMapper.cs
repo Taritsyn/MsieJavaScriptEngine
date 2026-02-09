@@ -206,8 +206,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 			IeJsValue functionValue = IeJsValue.CreateFunction(nativeFunction);
 			SetNonEnumerableProperty(functionValue, ExternalObjectPropertyName, objValue);
 
-			var embeddedObject = new IeEmbeddedObject(del, functionValue,
-				new List<IeJsNativeFunction> { nativeFunction });
+			var embeddedObject = new IeEmbeddedObject(del, functionValue, [nativeFunction]);
 
 			return embeddedObject;
 		}
@@ -466,7 +465,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 						try
 						{
-							result = property.GetValue(obj, new object[0]);
+							result = property.GetValue(obj, []);
 						}
 						catch (Exception e)
 						{
@@ -522,7 +521,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 
 						try
 						{
-							property.SetValue(obj, value, new object[0]);
+							property.SetValue(obj, value, []);
 						}
 						catch (Exception e)
 						{

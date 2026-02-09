@@ -76,7 +76,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 				}
 				else
 				{
-					processedArgs = new object[0];
+					processedArgs = [];
 				}
 
 				result = del.DynamicInvoke(processedArgs);

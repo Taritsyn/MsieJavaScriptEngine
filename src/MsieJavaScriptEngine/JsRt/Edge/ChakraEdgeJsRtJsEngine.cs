@@ -283,7 +283,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							string rawCallStack = messageWithTypeAndCallStack
 								.TrimStart(messageWithType)
 								.TrimStart("Error")
-								.TrimStart(new char[] { '\n', '\r' })
+								.TrimStartNewLines()
 								;
 
 							CallStackItem[] callStackItems = JsErrorHelpers.ParseCallStack(rawCallStack);

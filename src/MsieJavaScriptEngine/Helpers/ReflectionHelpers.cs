@@ -187,9 +187,8 @@ namespace MsieJavaScriptEngine.Helpers
 
 			try
 			{
-				for (int methodIndex = 0; methodIndex < methodCount; methodIndex++)
+				foreach (MethodBase method in methods)
 				{
-					MethodBase method = methods[methodIndex];
 					ParameterInfo[] parameters = method.GetParameters();
 					ushort compatibilityScore;
 

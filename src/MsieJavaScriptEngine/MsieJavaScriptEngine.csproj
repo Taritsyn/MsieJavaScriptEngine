@@ -27,7 +27,8 @@
     <PackageReleaseNotes>1. Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method;
 2. Added support for .NET Standard 2.1 and .NET 10;
 3. Performed a migration to the modern C# null/not-null checks;
-4. In the `lock` statements for .NET 10 target now uses a instances of the `System.Threading.Lock` class.</PackageReleaseNotes>
+4. In the `lock` statements for .NET 10 target now uses a instances of the `System.Threading.Lock` class;
+5. Reduced a memory allocation by using collection expressions.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>

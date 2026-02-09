@@ -234,7 +234,7 @@ namespace MsieJavaScriptEngine.JsRt
 			int methodCount = methods.Length;
 			if (methodCount == 0)
 			{
-				return new Dictionary<string, List<MethodInfo>>();
+				return [];
 			}
 
 			var availableMethodGroups = new Dictionary<string, List<MethodInfo>>(methodCount);
@@ -256,7 +256,7 @@ namespace MsieJavaScriptEngine.JsRt
 				}
 				else
 				{
-					methodGroup = new List<MethodInfo> { method };
+					methodGroup = [method];
 					availableMethodGroups.Add(methodName, methodGroup);
 				}
 			}
@@ -291,7 +291,7 @@ namespace MsieJavaScriptEngine.JsRt
 			}
 			else
 			{
-				processedArgs = new object[0];
+				processedArgs = [];
 			}
 
 			return processedArgs;

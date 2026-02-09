@@ -315,7 +315,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 							string messageWithType = errorValue.ConvertToString().ToString();
 							string rawCallStack = messageWithTypeAndCallStack
 								.TrimStart(messageWithType)
-								.TrimStart(new char[] { '\n', '\r' })
+								.TrimStartNewLines()
 								;
 
 							CallStackItem[] callStackItems = JsErrorHelpers.ParseCallStack(rawCallStack);
