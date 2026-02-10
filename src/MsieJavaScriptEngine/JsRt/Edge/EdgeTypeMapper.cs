@@ -369,56 +369,59 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				EdgeJsValue getMethodValue = EdgeJsValue.CreateFunction(nativeGetFunction);
 				descriptorValue.SetProperty("get", getMethodValue, true);
 
-				EdgeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
+				if (!field.IsInitOnly)
 				{
-					EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
-
-					if (instance && obj is null)
+					EdgeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
-						CreateAndSetTypeError(string.Format(
-							CommonStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-						return undefinedValue;
-					}
+						EdgeJsValue undefinedValue = EdgeJsValue.Undefined;
 
-					object value = MapToHostType(args[1]);
-					ReflectionHelpers.FixFieldValueType(ref value, field);
-
-					try
-					{
-						field.SetValue(obj, value);
-					}
-					catch (Exception e)
-					{
-						Exception exception = UnwrapException(e);
-						var wrapperException = exception as WrapperException;
-						EdgeJsValue errorValue;
-
-						if (wrapperException is not null)
+						if (instance && obj is null)
 						{
-							errorValue = CreateErrorFromWrapperException(wrapperException);
+							CreateAndSetTypeError(string.Format(
+								CommonStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
+							return undefinedValue;
 						}
-						else
+
+						object value = MapToHostType(args[1]);
+						ReflectionHelpers.FixFieldValueType(ref value, field);
+
+						try
 						{
-							string errorMessage = instance ?
-								string.Format(CommonStrings.Runtime_HostObjectFieldSettingFailed, fieldName,
-									exception.Message)
-								:
-								string.Format(CommonStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName,
-									exception.Message)
-								;
-							errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
+							field.SetValue(obj, value);
 						}
-						EdgeJsContext.SetException(errorValue);
+						catch (Exception e)
+						{
+							Exception exception = UnwrapException(e);
+							var wrapperException = exception as WrapperException;
+							EdgeJsValue errorValue;
+
+							if (wrapperException is not null)
+							{
+								errorValue = CreateErrorFromWrapperException(wrapperException);
+							}
+							else
+							{
+								string errorMessage = instance ?
+									string.Format(CommonStrings.Runtime_HostObjectFieldSettingFailed, fieldName,
+										exception.Message)
+									:
+									string.Format(CommonStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName,
+										exception.Message)
+									;
+								errorValue = EdgeJsErrorHelpers.CreateError(errorMessage);
+							}
+							EdgeJsContext.SetException(errorValue);
+
+							return undefinedValue;
+						}
 
 						return undefinedValue;
-					}
+					};
+					nativeFunctions.Add(nativeSetFunction);
 
-					return undefinedValue;
-				};
-				nativeFunctions.Add(nativeSetFunction);
-
-				EdgeJsValue setMethodValue = EdgeJsValue.CreateFunction(nativeSetFunction);
-				descriptorValue.SetProperty("set", setMethodValue, true);
+					EdgeJsValue setMethodValue = EdgeJsValue.CreateFunction(nativeSetFunction);
+					descriptorValue.SetProperty("set", setMethodValue, true);
+				}
 
 				typeValue.DefineProperty(fieldName, descriptorValue);
 			}
@@ -448,7 +451,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 				EdgeJsValue descriptorValue = EdgeJsValue.CreateObject();
 				descriptorValue.SetProperty("enumerable", EdgeJsValue.True, true);
 
-				if (property.GetGetMethod() is not null)
+				if (property.CanRead)
 				{
 					EdgeJsNativeFunction nativeGetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
@@ -503,7 +506,7 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 					descriptorValue.SetProperty("get", getMethodValue, true);
 				}
 
-				if (property.GetSetMethod() is not null)
+				if (property.CanWrite)
 				{
 					EdgeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{

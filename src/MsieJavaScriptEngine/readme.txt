@@ -26,7 +26,9 @@
    3. Performed a migration to the modern C# null/not-null checks;
    4. In the `lock` statements for .NET 10 target now uses a instances of the
       `System.Threading.Lock` class;
-   5. Reduced a memory allocation by using collection expressions.
+   5. Reduced a memory allocation by using collection expressions;
+   6. The value of a read-only field in an embedded object or type can no longer be
+      changed.
 
    ============
    PROJECT SITE

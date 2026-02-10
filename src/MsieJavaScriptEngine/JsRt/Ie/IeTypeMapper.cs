@@ -369,56 +369,59 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				IeJsValue getMethodValue = IeJsValue.CreateFunction(nativeGetFunction);
 				descriptorValue.SetProperty("get", getMethodValue, true);
 
-				IeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
+				if (!field.IsInitOnly)
 				{
-					IeJsValue undefinedValue = IeJsValue.Undefined;
-
-					if (instance && obj is null)
+					IeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
-						CreateAndSetTypeError(string.Format(
-							CommonStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
-						return undefinedValue;
-					}
+						IeJsValue undefinedValue = IeJsValue.Undefined;
 
-					object value = MapToHostType(args[1]);
-					ReflectionHelpers.FixFieldValueType(ref value, field);
-
-					try
-					{
-						field.SetValue(obj, value);
-					}
-					catch (Exception e)
-					{
-						Exception exception = UnwrapException(e);
-						var wrapperException = exception as WrapperException;
-						IeJsValue errorValue;
-
-						if (wrapperException is not null)
+						if (instance && obj is null)
 						{
-							errorValue = CreateErrorFromWrapperException(wrapperException);
+							CreateAndSetTypeError(string.Format(
+								CommonStrings.Runtime_InvalidThisContextForHostObjectField, fieldName));
+							return undefinedValue;
 						}
-						else
+
+						object value = MapToHostType(args[1]);
+						ReflectionHelpers.FixFieldValueType(ref value, field);
+
+						try
 						{
-							string errorMessage = instance ?
-								string.Format(CommonStrings.Runtime_HostObjectFieldSettingFailed, fieldName,
-									exception.Message)
-								:
-								string.Format(CommonStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName,
-									exception.Message)
-								;
-							errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+							field.SetValue(obj, value);
 						}
-						IeJsContext.SetException(errorValue);
+						catch (Exception e)
+						{
+							Exception exception = UnwrapException(e);
+							var wrapperException = exception as WrapperException;
+							IeJsValue errorValue;
+
+							if (wrapperException is not null)
+							{
+								errorValue = CreateErrorFromWrapperException(wrapperException);
+							}
+							else
+							{
+								string errorMessage = instance ?
+									string.Format(CommonStrings.Runtime_HostObjectFieldSettingFailed, fieldName,
+										exception.Message)
+									:
+									string.Format(CommonStrings.Runtime_HostTypeFieldSettingFailed, fieldName, typeName,
+										exception.Message)
+									;
+								errorValue = IeJsErrorHelpers.CreateError(errorMessage);
+							}
+							IeJsContext.SetException(errorValue);
+
+							return undefinedValue;
+						}
 
 						return undefinedValue;
-					}
+					};
+					nativeFunctions.Add(nativeSetFunction);
 
-					return undefinedValue;
-				};
-				nativeFunctions.Add(nativeSetFunction);
-
-				IeJsValue setMethodValue = IeJsValue.CreateFunction(nativeSetFunction);
-				descriptorValue.SetProperty("set", setMethodValue, true);
+					IeJsValue setMethodValue = IeJsValue.CreateFunction(nativeSetFunction);
+					descriptorValue.SetProperty("set", setMethodValue, true);
+				}
 
 				typeValue.DefineProperty(fieldName, descriptorValue);
 			}
@@ -448,7 +451,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 				IeJsValue descriptorValue = IeJsValue.CreateObject();
 				descriptorValue.SetProperty("enumerable", IeJsValue.True, true);
 
-				if (property.GetGetMethod() is not null)
+				if (property.CanRead)
 				{
 					IeJsNativeFunction nativeGetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{
@@ -503,7 +506,7 @@ namespace MsieJavaScriptEngine.JsRt.Ie
 					descriptorValue.SetProperty("get", getMethodValue, true);
 				}
 
-				if (property.GetSetMethod() is not null)
+				if (property.CanWrite)
 				{
 					IeJsNativeFunction nativeSetFunction = (callee, isConstructCall, args, argCount, callbackData) =>
 					{

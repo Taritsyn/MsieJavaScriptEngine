@@ -190,22 +190,17 @@ namespace MsieJavaScriptEngine.ActiveScript
 			return availableMethods;
 		}
 
-		private bool IsField(string name)
+		private FieldInfo GetField(string name)
 		{
-			bool isField = false;
-			FieldInfo[] fields = _fields;
-			int fieldCount = fields.Length;
-
-			for (int fieldIndex = 0; fieldIndex < fieldCount; fieldIndex++)
+			foreach (FieldInfo field in _fields)
 			{
-				if (fields[fieldIndex].Name.Equals(name, StringComparison.Ordinal))
+				if (field.Name.Equals(name, StringComparison.Ordinal))
 				{
-					isField = true;
-					break;
+					return field;
 				}
 			}
 
-			return isField;
+			return null;
 		}
 
 		protected abstract object InnerInvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target,
@@ -215,25 +210,34 @@ namespace MsieJavaScriptEngine.ActiveScript
 			object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)
 		{
 			BindingFlags processedInvokeAttr = invokeAttr;
-			if ((processedInvokeAttr.HasFlag(BindingFlags.GetProperty)
+			if (processedInvokeAttr.HasFlag(BindingFlags.GetProperty)
 				|| processedInvokeAttr.HasFlag(BindingFlags.SetProperty)
 				|| processedInvokeAttr.HasFlag(BindingFlags.PutDispProperty))
-				&& IsField(name))
 			{
-				if (processedInvokeAttr.HasFlag(BindingFlags.GetProperty))
+				FieldInfo field = GetField(name);
+				if (field is not null)
 				{
-					processedInvokeAttr &= ~BindingFlags.GetProperty;
-					processedInvokeAttr |= BindingFlags.GetField;
-				}
-				else if (processedInvokeAttr.HasFlag(BindingFlags.SetProperty))
-				{
-					processedInvokeAttr &= ~BindingFlags.SetProperty;
-					processedInvokeAttr |= BindingFlags.SetField;
-				}
-				else if (processedInvokeAttr.HasFlag(BindingFlags.PutDispProperty))
-				{
-					processedInvokeAttr &= ~BindingFlags.PutDispProperty;
-					processedInvokeAttr |= BindingFlags.SetField;
+					if (processedInvokeAttr.HasFlag(BindingFlags.GetProperty))
+					{
+						processedInvokeAttr &= ~BindingFlags.GetProperty;
+						processedInvokeAttr |= BindingFlags.GetField;
+					}
+					else if (processedInvokeAttr.HasFlag(BindingFlags.SetProperty))
+					{
+						processedInvokeAttr &= ~BindingFlags.SetProperty;
+						processedInvokeAttr |= BindingFlags.SetField;
+					}
+					else if (processedInvokeAttr.HasFlag(BindingFlags.PutDispProperty))
+					{
+						if (field.IsInitOnly)
+						{
+							// Prevents a setting of value to the read-only field
+							return null;
+						}
+
+						processedInvokeAttr &= ~BindingFlags.PutDispProperty;
+						processedInvokeAttr |= BindingFlags.SetField;
+					}
 				}
 			}
 
