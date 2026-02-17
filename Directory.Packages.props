@@ -1,0 +1,8 @@
+<Project>
+  <ItemGroup>
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="NUnit" Version="3.14.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+</Project>

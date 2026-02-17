@@ -1,6 +1,14 @@
 Change log
 ==========
 
+## v3.3.0 - February 17, 2026
+ * Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method
+ * Added support for .NET Standard 2.1 and .NET 10
+ * Performed a migration to the modern C# null/not-null checks
+ * In the `lock` statements for .NET 10 target now uses a instances of the `System.Threading.Lock` class
+ * Reduced a memory allocation by using collection expressions
+ * The value of a read-only field in an embedded object or type can no longer be changed
+
 ## v3.2.5 - March 1, 2024
  * Added a `README.md` file to NuGet package
 
