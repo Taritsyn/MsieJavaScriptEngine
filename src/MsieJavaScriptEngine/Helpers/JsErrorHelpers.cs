@@ -9,6 +9,7 @@ using AdvancedStringBuilder;
 
 using MsieJavaScriptEngine.Extensions;
 using MsieJavaScriptEngine.Resources;
+using MsieJavaScriptEngine.Utilities;
 
 namespace MsieJavaScriptEngine.Helpers
 {
@@ -28,6 +29,33 @@ namespace MsieJavaScriptEngine.Helpers
 				@"\((?<documentName>" + CommonRegExps.DocumentNamePattern + @"):" +
 				@"(?<lineNumber>\d+):(?<columnNumber>\d+)\)$");
 
+
+		/// <summary>
+		/// Gets a string representation of the script call stack
+		/// </summary>
+		/// <param name="message">Error message with the script call stack</param>
+		/// <param name="messageWithoutCallStack">Error message without the script call stack</param>
+		/// <returns>String representation of the script call stack</returns>
+		internal static string GetCallStackFromMessage(string message, string messageWithoutCallStack)
+		{
+			if (string.IsNullOrWhiteSpace(message))
+			{
+				return string.Empty;
+			}
+
+			if (string.IsNullOrWhiteSpace(messageWithoutCallStack))
+			{
+				return message;
+			}
+
+			string callStack = message
+				.TrimStart(messageWithoutCallStack)
+				.TrimStart(EnvironmentShortcuts.NewLineChars)
+				;
+
+			return callStack;
+		}
+
 		/// <summary>
 		/// Parses a string representation of the script call stack to produce an array of
 		/// <see cref="CallStackItem"/> instances
@@ -41,26 +69,15 @@ namespace MsieJavaScriptEngine.Helpers
 				return [];
 			}
 
-			string[] lines = callStack.SplitToLines();
+			string[] lines = callStack.SplitToLines(StringSplitOptions.RemoveEmptyEntries);
 			int lineCount = lines.Length;
 			var callStackItems = new List<CallStackItem>(lineCount);
 
-			for (int lineIndex = 0; lineIndex < lineCount; lineIndex++)
+			foreach (string line in lines)
 			{
-				string line = lines[lineIndex];
-				Match lineMatch = _callStackLineRegex.Match(line);
-
-				if (lineMatch.Success)
+				CallStackItem callStackItem = MapCallStackItem(line);
+				if (callStackItem is not null)
 				{
-					GroupCollection lineGroups = lineMatch.Groups;
-
-					var callStackItem = new CallStackItem
-					{
-						FunctionName = lineGroups["functionName"].Value,
-						DocumentName = lineGroups["documentName"].Value,
-						LineNumber = int.Parse(lineGroups["lineNumber"].Value),
-						ColumnNumber = int.Parse(lineGroups["columnNumber"].Value)
-					};
 					callStackItems.Add(callStackItem);
 				}
 				else
@@ -71,6 +88,26 @@ namespace MsieJavaScriptEngine.Helpers
 			}
 
 			return callStackItems.ToArray();
+		}
+
+		private static CallStackItem MapCallStackItem(string callStackLine)
+		{
+			CallStackItem item = null;
+			Match lineMatch = _callStackLineRegex.Match(callStackLine);
+
+			if (lineMatch.Success)
+			{
+				GroupCollection lineGroups = lineMatch.Groups;
+				item = new CallStackItem
+				{
+					FunctionName = lineGroups["functionName"].Value,
+					DocumentName = lineGroups["documentName"].Value,
+					LineNumber = int.Parse(lineGroups["lineNumber"].Value),
+					ColumnNumber = int.Parse(lineGroups["columnNumber"].Value)
+				};
+			}
+
+			return item;
 		}
 
 		/// <summary>

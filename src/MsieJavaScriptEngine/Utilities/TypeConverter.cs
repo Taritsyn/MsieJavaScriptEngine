@@ -24,13 +24,13 @@ namespace MsieJavaScriptEngine.Utilities
 		/// List of primitive type codes
 		/// </summary>
 		private static readonly TypeCode[] _primitiveTypeCodes =
-		{
+		[
 			TypeCode.Boolean,
 			TypeCode.SByte, TypeCode.Byte,
 			TypeCode.Int16, TypeCode.UInt16, TypeCode.Int32, TypeCode.UInt32, TypeCode.Int64, TypeCode.UInt64,
 			TypeCode.Single, TypeCode.Double, TypeCode.Decimal,
 			TypeCode.Char, TypeCode.String
-		};
+		];
 
 		/// <summary>
 		/// Converts the specified value to the specified type

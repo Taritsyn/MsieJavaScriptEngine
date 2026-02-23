@@ -21,14 +21,7 @@
    =============
    RELEASE NOTES
    =============
-   1. Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method;
-   2. Added support for .NET Standard 2.1 and .NET 10;
-   3. Performed a migration to the modern C# null/not-null checks;
-   4. In the `lock` statements for .NET 10 target now uses a instances of the
-      `System.Threading.Lock` class;
-   5. Reduced a memory allocation by using collection expressions;
-   6. The value of a read-only field in an embedded object or type can no longer be
-      changed.
+   Was made refactoring.
 
    ============
    PROJECT SITE

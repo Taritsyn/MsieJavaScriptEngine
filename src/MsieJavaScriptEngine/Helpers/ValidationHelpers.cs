@@ -15,9 +15,9 @@ namespace MsieJavaScriptEngine.Helpers
 		/// List of supported types
 		/// </summary>
 		private static readonly Type[] _supportedTypes =
-		{
+		[
 			typeof(Undefined), typeof(Boolean), typeof(Int32), typeof(Double), typeof(String)
-		};
+		];
 
 		/// <summary>
 		/// Regular expression for working with JS names

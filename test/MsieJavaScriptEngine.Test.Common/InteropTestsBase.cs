@@ -1331,7 +1331,7 @@ RuntimeConstants.MaxValue = 100;";
 			Type environmentType = typeof(Environment);
 
 			const string input = "Environment.NewLine";
-			string[] targetOutput = { "\r", "\r\n", "\n", "\n\r" };
+			string[] targetOutput = ["\r", "\r\n", "\n", "\n\r"];
 
 			// Act
 			string output;

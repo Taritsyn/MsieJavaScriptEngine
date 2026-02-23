@@ -280,13 +280,10 @@ namespace MsieJavaScriptEngine.JsRt.Edge
 							string messageWithTypeAndCallStack = stackPropertyValue.ValueType == JsValueType.String ?
 								stackPropertyValue.ToString() : string.Empty;
 							string messageWithType = errorValue.ConvertToString().ToString();
-							string rawCallStack = messageWithTypeAndCallStack
-								.TrimStart(messageWithType)
-								.TrimStart("Error")
-								.TrimStartNewLines()
-								;
-
+							string rawCallStack = JsErrorHelpers.GetCallStackFromMessage(
+								messageWithTypeAndCallStack, messageWithType);
 							CallStackItem[] callStackItems = JsErrorHelpers.ParseCallStack(rawCallStack);
+
 							if (callStackItems.Length > 0)
 							{
 								CallStackItem firstCallStackItem = callStackItems[0];

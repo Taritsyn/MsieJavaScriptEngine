@@ -20,16 +20,16 @@ namespace MsieJavaScriptEngine.Helpers
 	internal static class ReflectionHelpers
 	{
 		private static readonly PropertyInfo[] _disallowedProperties =
-		{
+		[
 			typeof(Delegate).GetProperty("Method"),
 			typeof(Exception).GetProperty("TargetSite")
-		};
+		];
 
 		private static readonly MethodInfo[] _disallowedMethods =
-		{
+		[
 			typeof(object).GetMethod("GetType"),
 			typeof(Exception).GetMethod("GetType")
-		};
+		];
 
 
 		public static BindingFlags GetDefaultBindingFlags(bool instance)

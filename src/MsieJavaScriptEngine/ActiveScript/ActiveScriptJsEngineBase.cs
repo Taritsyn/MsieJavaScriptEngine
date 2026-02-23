@@ -498,7 +498,7 @@ namespace MsieJavaScriptEngine.ActiveScript
 		/// <param name="value">Value of variable</param>
 		protected void InnerSetVariableValue(string variableName, object value)
 		{
-			object[] args = { value };
+			object[] args = [value];
 
 			try
 			{

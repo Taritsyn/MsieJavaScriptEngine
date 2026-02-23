@@ -1,7 +1,5 @@
 ﻿using System;
 
-using MsieJavaScriptEngine.Utilities;
-
 namespace MsieJavaScriptEngine.Extensions
 {
 	/// <summary>
@@ -70,25 +68,6 @@ namespace MsieJavaScriptEngine.Extensions
 
 			return result;
 		}
-
-		/// <summary>
-		/// Removes all leading newline characters from the current <see cref="T:System.String" /> object
-		/// </summary>
-		/// <param name="source">String value</param>
-		/// <returns>The string that remains after all newline characters are removed from the start of
-		/// the current string. If no characters can be trimmed from the current instance, the method returns
-		/// the current instance unchanged.</returns>
-		public static string TrimStartNewLines(this string source)
-		{
-			if (source is null)
-			{
-				throw new ArgumentNullException(nameof(source));
-			}
-
-			string result = source.TrimStart(EnvironmentShortcuts.NewLineChars);
-
-			return result;
-		}
 #if NETFRAMEWORK
 
 		/// <summary>
@@ -133,15 +112,18 @@ namespace MsieJavaScriptEngine.Extensions
 		/// Splits a string into lines
 		/// </summary>
 		/// <param name="source">Instance of <see cref="String"/></param>
+		/// <param name="options"><see cref="StringSplitOptions.RemoveEmptyEntries"/> to omit empty array
+		/// elements from the array returned; or <see cref="StringSplitOptions.None"/> to include empty
+		/// array elements in the array returned</param>
 		/// <returns>An array of lines</returns>
-		public static string[] SplitToLines(this string source)
+		public static string[] SplitToLines(this string source, StringSplitOptions options)
 		{
 			if (source is null)
 			{
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			string[] result = source.Split(_newLineStrings, StringSplitOptions.None);
+			string[] result = source.Split(_newLineStrings, options);
 
 			return result;
 		}
