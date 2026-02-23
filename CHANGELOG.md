@@ -1,6 +1,9 @@
 Change log
 ==========
 
+## v3.3.1 - February 23, 2026
+ * Was made refactoring
+
 ## v3.3.0 - February 17, 2026
  * Optimized a memory usage in the `ReflectionHelpers.GetBestFitMethod` method
  * Added support for .NET Standard 2.1 and .NET 10
